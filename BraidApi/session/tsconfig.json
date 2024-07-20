@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "sourceMap": true,
+    "strict": true,
+    // "rootDirs": [".", "../../../BraidCommon"],
+    "noImplicitAny": true,
+  },
+  "references": [
+   {
+     "path": "../../BraidCommon"
+   }
+ ]
+
+}
