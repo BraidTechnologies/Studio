@@ -1,2 +1,2 @@
-# BraidApi
-Azure APIs to support worked example applications
+# Braid Technologies Worked Examples
+End-end worked example applications
