@@ -3,26 +3,6 @@ import axios from 'axios';
 
 let classifications = ["Business", "Technology", "Politics", "Health", "Lifesyle", "CurrentAffairs"];
 
-/*
-get_speaker_name = {
-   "name": "get_speaker_name",
-   "description": "Get the speaker names for the session.",
-   "parameters": {
-       "type": "object",
-       "properties": {
-           "speakers": {
-               "type": "string",
-               "description": "The speaker names.",
-           }
-       },
-       "required": ["speaker_name"],
-   },
-}
-
-
-openai_functions = [get_speaker_name]
-*/
-
 /**
  * Asynchronously classifies the given text into one of the predefined subject areas using an AI assistant.
  * 
