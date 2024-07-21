@@ -6,8 +6,8 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import {getEnvironment} from '../../../BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../../BraidCommon/src/IEnvironment';
+import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
+import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 
 declare var process: any;
 

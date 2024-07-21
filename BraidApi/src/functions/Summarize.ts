@@ -2,6 +2,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 
 let maxChunkSize = 1024*3;
+let minimumTextLength = 256;
+
 /**
  * Splits the input text into chunks of maximum size defined by 'maxChunkSize'.
  * 
@@ -71,30 +73,37 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
 
     let jsonRequest = await request.json();
     context.log(jsonRequest);      
-    text = (jsonRequest as any)?.data?.text;
 
-    if (((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) && (text && text.length > 0)) {  
+    if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {  
 
-      let chunks = chunkText (text);
-      let summaries = new Array<string> ();
+      text = (jsonRequest as any)?.data?.text;
 
-       // If the text was > threshold, we break it into chunks.
-       // Here we look over each chunk to generate a summary for each
-       for (var i = 0; i < chunks.length; i++) {
+      if (!text || text.length < minimumTextLength) {
+         overallSummary = "Sorry, not enough text to summarise."
+      }
+      else {
+
+         let definitelyText: string = text;
+         let chunks = chunkText (definitelyText);
+         let summaries = new Array<string> ();
+
+          // If the text was > threshold, we break it into chunks.
+          // Here we look over each chunk to generate a summary for each
+          for (var i = 0; i < chunks.length; i++) {
           
-          let summary = await SingleShotSummarize (text);
-          summaries.push (summary);          
-       }  
+             let summary = await SingleShotSummarize (chunks[i]);
+             summaries.push (summary);          
+          }  
        
-       // If we made multiple summaries, we resummarise them
-       if (chunks.length > 1) {
-         let joinedSummaries = summaries.join (" ");
-         overallSummary = await SingleShotSummarize (joinedSummaries);
+          // If we made multiple summaries, we resummarise them
+          if (chunks.length > 1) {
+             let joinedSummaries = summaries.join (" ");
+            overallSummary = await SingleShotSummarize (joinedSummaries);
+          }
+          else {
+            overallSummary = summaries[0];
+          }
        }
-       else {
-         overallSummary = summaries[0];
-       }
-
        context.log("Passed session key validation:" + requestedSession);     
 
        return {

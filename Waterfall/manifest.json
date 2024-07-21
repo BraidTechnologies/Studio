@@ -1,0 +1,23 @@
+{
+	"manifest_version": 2,
+
+	"name": "Waterfall",
+	"description": "A simple page-scraping extension for Chrome that passes the current page text to an LLM to be summarised and catergorised.",
+	"version": "0.1",
+	"author": "@BraidTechnologiesLtd",
+
+	"background": {
+		"scripts": ["popup.js"],
+		"persistent": true
+	},
+
+	"permissions": [
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ],
+	"browser_action": {
+		"default_icon": "public/assets/img/Braid-logo-180x180.png",
+		"default_popup": "popup.html"
+	}
+}
