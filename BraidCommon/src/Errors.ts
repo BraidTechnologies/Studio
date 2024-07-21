@@ -2,6 +2,10 @@
 
 import { logApiError, logCoreError } from "./Logging";
 
+/**
+ * Represents an error thrown when an invalid parameter is encountered.
+ * @param {string} message - The error message describing the invalid parameter.
+ */
 export class InvalidParameterError extends Error {
    constructor(message?: string) {
       super(message);
@@ -13,6 +17,13 @@ export class InvalidParameterError extends Error {
    }
 }
 
+
+/**
+ * Represents an error that occurs when an invalid operation is attempted.
+ * @extends Error
+ * @constructor
+ * @param {string} [message] - The error message.
+ */
 export class InvalidOperationError extends Error {
    constructor(message?: string) {
       super(message);
@@ -24,6 +35,11 @@ export class InvalidOperationError extends Error {
    }
 }
 
+
+/**
+ * Represents an error indicating an invalid state.
+ * @param message - Optional. A message to describe the error.
+ */
 export class InvalidStateError extends Error {
    constructor(message?: string) {
       super(message);
@@ -35,6 +51,13 @@ export class InvalidStateError extends Error {
    }
 }
 
+/**
+ * Represents a custom error class for connection-related errors.
+ * @class ConnectionError
+ * @extends Error
+ * @constructor
+ * @param {string} [message] - The error message.
+ */
 export class ConnectionError extends Error {
    constructor(message?: string) {
       super(message);
@@ -46,6 +69,10 @@ export class ConnectionError extends Error {
    }
 }
 
+/**
+ * Represents an error related to the environment.
+ * @param {string} [message] - The error message.
+ */
 export class EnvironmentError extends Error {
    constructor(message?: string) {
       super(message);
@@ -57,6 +84,10 @@ export class EnvironmentError extends Error {
    }
 }
 
+/**
+ * Represents an error that occurs when an assertion fails.
+ * @param message - Optional. A message to describe the error.
+ */
 export class AssertionFailedError extends Error {
    constructor(message?: string) {
       super(message);

@@ -4,6 +4,12 @@
 import {EEnvironment, IEnvironment} from './IEnvironment';
 import {DevelopmentEnvironment, StagingEnvironment, ProductionEnvironment} from './Environment';
 
+/**
+ * Returns an instance of IEnvironment based on the provided EEnvironment type.
+ * 
+ * @param environmentString - The EEnvironment type to determine the environment.
+ * @returns An instance of IEnvironment corresponding to the specified EEnvironment type.
+ */
 export function getEnvironment (environmentString: EEnvironment) : IEnvironment  {
 
    switch (environmentString) {

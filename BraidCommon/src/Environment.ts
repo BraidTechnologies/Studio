@@ -1,6 +1,10 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import {IEnvironment} from './IEnvironment';
 
+/**
+ * DevelopmentEnvironment class that implements the IEnvironment interface.
+ * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ */
 export class DevelopmentEnvironment implements IEnvironment {
 
    checkSessionApi () : string {
@@ -15,6 +19,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    }
 }
 
+/**
+ * StagingEnvironment class that implements the IEnvironment interface.
+ * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ */
 export class StagingEnvironment{
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
@@ -28,6 +36,10 @@ export class StagingEnvironment{
    }
 }
 
+/**
+ * ProductionEnvironment class that implements the IEnvironment interface.
+ * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ */
 export class ProductionEnvironment {
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
