@@ -4,7 +4,7 @@
    "description": "",
    "main": "public/payload.js",
    "scripts": {
-      "package": "copy dist\\src\\payload.js public",   
+      "package": "copy dist\\src\\content.js public",   
       "build": "npm run compile && npm run package",      
       "compile": "tsc -b",
       "clean": "rimraf dist",

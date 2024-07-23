@@ -22,25 +22,20 @@
 
    <head>
 	   <title>Waterfall</title>	
-   	<script src="popup.js"></script>
-	   <script src="axios.min.js"></script>   
-   	<script>
-      </script>   
+   	<script src="./popup.js"></script>
+	   <script src="./axios.min.js"></script>    
    </head>
 
    <body>
 	   <h3>Waterfall from Braid Technologies</h1>
-      <input type="text" 
-         placeholder="To use the Waterfall plug-in you need to enter the key from your contact at Braid." 
+      <input id = "key" type="text" 
+         placeholder="Enter the key from your contact at Braid." 
          size="156"
-         onchange="changeHandler(this.value)"
-         onkeypress = "this.onchange();"
-         onpaste    = "this.onchange();"
-         oninput    = "this.onchange();"> 
+         > 
       &nbsp;
-      <p id='summarytext'>Waiting.</p>
+      <p id="summarytext">Waiting.</p>
       &nbsp;
-      <p id='classificationtext'>Waiting</p>
+      <p id="classificationtext">Waiting.</p>
    </body>
 
 </html>

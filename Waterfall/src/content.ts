@@ -1,13 +1,17 @@
 
-
 declare var artoo: any;
 declare var chrome: any;
 declare var axios: any;
 
-// Use Artoo to scrape the cumulative text
-if (typeof artoo !== 'undefined') {
+/**
+ * Function that performs a series of actions to summarize and classify text content.
+ * It periodically sends messages to the Chrome runtime for summarization and classification progress.
+ * Retrieves text content from the webpage, summarizes it using an external API, and then classifies the summary.
+ * Utilizes internal organization modules for scraping, summarization, and classification.
+ * @param key - A string key used for internal operations.
+ */
+function startScrape (key: string) : void {
 
-   /*
     let NN = 1024*100; // we only have an 8k buffer, 100k string is 12 calls to LLM then another to summarise that. 
     let haveSummary = false;
     let baseSummaryText = "Summarising ...";
@@ -108,5 +112,23 @@ if (typeof artoo !== 'undefined') {
       });   
 
     }, 500);
-    */
+
 }
+
+let haveStartedScrape = false;
+
+// Listen to messages from the popup.js script 
+chrome.runtime.onMessage.addListener(function (message: any) {
+	
+   console.log ("Got message");   
+   
+   if (message.type === "Key" && !haveStartedScrape) {
+      console.log ("Starting scrape");
+      haveStartedScrape = true;
+      startScrape (message.text);
+   }
+});    
+
+console.log ("Content script loaded");
+
+//startScrape ("49b65194-26e1-4041-ab11-4078229f478a");
