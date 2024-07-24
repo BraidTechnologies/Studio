@@ -22,7 +22,7 @@
 
     "action": {
       "default_popup": "popup.html",
-      "defaault_icon" : "assets/img/Braid-logo-128x128.png"
+      "default_icon" : "assets/img/Braid-logo-128x128.png"
     },
 
     "host_permissions": [
