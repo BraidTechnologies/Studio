@@ -1,11 +1,13 @@
 {
    "name": "waterfall",
-   "version": "1.0.0",
+   "version": "0.1.0",
    "description": "",
-   "main": "public/payload.js",
+   "main": "src/content.ts",
    "scripts": {
-      "package": "copy dist\\src\\content.js public",   
-      "build": "npm run compile && npm run package",      
+      "build": "npm run compile",
+      "package-content": "webpack-cli --config content-webpack-config.js && copy dist\\content.pack.js public && copy dist\\content.pack.js.map public",
+      "package-popup": "webpack-cli --config popup-webpack-config.js && copy dist\\popup.pack.js public && copy dist\\popup.pack.js.map public",
+      "package-all": "npm run compile npm run build-content-package && npm run build-popup-package",
       "compile": "tsc -b",
       "clean": "rimraf dist",
       "prestart": "npm run clean && npm run build",
@@ -15,7 +17,11 @@
       "axios": "^1.7.2"
    },
    "devDependencies": {
+      "ts-loader": "^9.5.1",
       "tsc": "^2.0.4",
-      "typescript": "^5.5.3"
+      "typescript": "^5.5.3",
+      "webpack": "^5.93.0",
+      "webpack-cli": "^5.1.4",
+      "webpack-obfuscator": "^3.5.1"
    }
 }

@@ -1,4 +1,10 @@
-"use strict";
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!************************!*\
+  !*** ./src/content.ts ***!
+  \************************/
+
 var haveStartedScrape = false;
 /**
  * Function to handle unhandled promise rejections by logging a warning message,
@@ -140,4 +146,10 @@ chrome.runtime.onMessage.addListener(function (message) {
 });
 console.log("Content script loaded");
 //startScrape ("49b65194-26e1-4041-ab11-4078229f478a");
-//# sourceMappingURL=content.js.map
+
+var __webpack_export_target__ = window;
+for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
+/******/ })()
+;
+//# sourceMappingURL=content.pack.js.map
