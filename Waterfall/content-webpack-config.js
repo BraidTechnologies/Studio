@@ -4,11 +4,11 @@ const WebpackObfuscator = require('webpack-obfuscator');
 module.exports = {
    devtool: 'source-map',
    entry: "./src/content.ts",
-   mode: "development",
+   mode: "production",
    target: 'web', 
    externals: [],
    output: {
-      filename: "content.pack.js",
+      filename: "content.min.js",
       devtoolModuleFilenameTemplate: '[resource-path]',  // removes the webpack:/// prefix
       libraryTarget: 'window'
    },
@@ -16,10 +16,9 @@ module.exports = {
       extensions: ['.ts'] 
    },
    plugins: [
-      /* // Include block below only for production build 
          new WebpackObfuscator ({
          rotateStringArray: true
-     }, ['excluded_bundle_name.js'])     */
+     }, ['excluded_bundle_name.js'])
    ],   
    module: {
       rules: [
@@ -36,8 +35,7 @@ module.exports = {
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/
-         },       
-/* // Include block below only for production build               
+         },                   
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
@@ -48,8 +46,7 @@ module.exports = {
                     rotateStringArray: true
                 }
             }
-        }   
-            */     
+        }     
       ]
    }  
 }
