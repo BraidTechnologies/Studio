@@ -7,7 +7,7 @@
       "build": "npm run compile",
       "package-content": "webpack-cli --config content-webpack-config.js && copy dist\\content.pack.js public && copy dist\\content.pack.js.map public",
       "package-popup": "webpack-cli --config popup-webpack-config.js && copy dist\\popup.pack.js public && copy dist\\popup.pack.js.map public",
-      "package-all": "npm run compile npm run build-content-package && npm run build-popup-package",
+      "package-all": "npm run compile && npm run package-content && npm run package-popup",
       "compile": "tsc -b",
       "clean": "rimraf dist",
       "prestart": "npm run clean && npm run build",
