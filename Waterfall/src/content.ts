@@ -5,6 +5,13 @@ declare var axios: any;
 
 let haveStartedScrape = false;
 
+/**
+ * Function to handle unhandled promise rejections by logging a warning message,
+ * resetting a flag 'haveStartedScrape' to false, and sending error messages to the background script.
+ * Also prevents the default handling of the rejection event.
+ * 
+ * @param event - The PromiseRejectionEvent object containing information about the unhandled promise rejection.
+ */
 function suppressUnhandledPromiseRejection (event: PromiseRejectionEvent) {
    console.warn(`Unhandled promise rejection: ${event.reason}`); 
  

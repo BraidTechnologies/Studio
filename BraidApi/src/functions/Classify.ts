@@ -1,8 +1,14 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 
-let classifications = ["Business", "Technology", "Politics", "Health"];
+let classifications = ["Business", "Technology", "Politics", "Health", "Sport"];
 
+/**
+ * Decodes the initial classification string to a human-readable format.
+ * 
+ * @param initial - The initial classification string to decode.
+ * @returns The decoded classification in a human-readable format, or "Unknown" if not found.
+ */
 function decodeClassification (initial: string) : string {
 
    for (let i = 0; i < classifications.length; i++) {
