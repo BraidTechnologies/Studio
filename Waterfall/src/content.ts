@@ -5,6 +5,20 @@ declare var axios: any;
 
 let haveStartedScrape = false;
 
+function suppressUnhandledPromiseRejection (event: PromiseRejectionEvent) {
+   console.warn(`Unhandled promise rejection: ${event.reason}`); 
+ 
+   haveStartedScrape = false;
+
+   chrome.runtime.sendMessage({type: "Summary", text: "Sorry, we encountered an error reading this page."}); 
+   chrome.runtime.sendMessage({type: "Classification", text: "Sorry, we encountered an error reading this page."}); 
+
+   // Prevent the default handling (such as outputting the
+   // error to the console)
+   event.preventDefault();
+}
+
+
 /**
  * Function that performs a series of actions to summarize and classify text content.
  * It periodically sends messages to the Chrome runtime for summarization and classification progress.
@@ -46,6 +60,8 @@ function startScrape (key: string) : void {
     setTimeout (() => {
 
       try {
+         window.addEventListener("unhandledrejection", suppressUnhandledPromiseRejection);
+
          // First try to get all plain text, if that doesnt work, get the headers
          // If that doesnt work, scarape all divs (like 'the guardian' website)
          var scraped = artoo.scrape('p', 'text');
@@ -62,8 +78,11 @@ function startScrape (key: string) : void {
 
          if (allText.length > NN) 
             allText = allText.substring(0, NN);
+
+         window.removeEventListener("unhandledrejection", suppressUnhandledPromiseRejection);         
       }
       catch {
+         window.removeEventListener("unhandledrejection", suppressUnhandledPromiseRejection);          
          allText = "";
       }
 
