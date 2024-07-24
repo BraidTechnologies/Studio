@@ -148,35 +148,7 @@ describe("Classify", async function () {
       expect (summary && summary?.length > 0).toBe (true) ;     
       expect (summary?.includes("Health")).toBe (true) ;     
 
-   }).timeout(20000);     
-
-   it("Needs to summarise a simple message about Lifestyle", async function () {
-
-      let sampleText = "Ten great things to do near London." ;      
-      let environment = getEnvironment(EEnvironment.kLocal);
-
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
-
-      let summary = await validClassifyCall (apiUrl, sampleText);
-
-      expect (summary && summary?.length > 0).toBe (true) ;     
-      expect (summary?.includes("Lifestyle")).toBe (true) ;     
-
-   }).timeout(20000);     
-
-   it("Needs to summarise a simple message about Current Affairs", async function () {
-
-      let sampleText = "Burglaries are on the increase in London." ;      
-      let environment = getEnvironment(EEnvironment.kLocal);
-
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
-
-      let summary = await validClassifyCall (apiUrl, sampleText);
-
-      expect (summary && summary?.length > 0).toBe (true) ;     
-      expect (summary?.includes("CurrentAffairs")).toBe (true) ;     
-
-   }).timeout(20000);     
+   }).timeout(20000);         
 
   /* 
    it("Needs to summarise a simple message against production", async function () {

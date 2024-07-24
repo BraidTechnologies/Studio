@@ -52,6 +52,33 @@ async function SingleShotSummarize (text: string) : Promise <string> {
    return (response.data.choices[0].message.content);   
 }
 
+async function RecursiveSummarize (text: string, level: number) : Promise <string> {
+
+   let overallSummary : string | undefined = undefined; 
+   let chunks = chunkText (text);
+   let summaries = new Array<string> ();
+
+   console.log ("Recursive summarise level:" + level.toString());
+
+    // If the text was > threshold, we break it into chunks.
+    // Here we look over each chunk to generate a summary for each
+    for (var i = 0; i < chunks.length; i++) {
+    
+       let summary = await SingleShotSummarize (chunks[i]);
+       summaries.push (summary);          
+    }  
+ 
+    // If we made multiple summaries, we resummarise them
+    if (chunks.length > 1) {
+       let joinedSummaries = summaries.join (" ");
+      overallSummary = await RecursiveSummarize (joinedSummaries, level + 1);
+    }
+    else {
+      overallSummary = summaries[0];
+    }  
+    
+    return overallSummary;
+}
 
 /**
  * Asynchronous function to summarize text based on the requested session key and input text.
@@ -71,8 +98,7 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
             requestedSession = value;                
     }
 
-    let jsonRequest = await request.json();
-    context.log(jsonRequest);      
+    let jsonRequest = await request.json();     
 
     if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {  
 
@@ -84,25 +110,7 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
       else {
 
          let definitelyText: string = text;
-         let chunks = chunkText (definitelyText);
-         let summaries = new Array<string> ();
-
-          // If the text was > threshold, we break it into chunks.
-          // Here we look over each chunk to generate a summary for each
-          for (var i = 0; i < chunks.length; i++) {
-          
-             let summary = await SingleShotSummarize (chunks[i]);
-             summaries.push (summary);          
-          }  
-       
-          // If we made multiple summaries, we resummarise them
-          if (chunks.length > 1) {
-             let joinedSummaries = summaries.join (" ");
-            overallSummary = await SingleShotSummarize (joinedSummaries);
-          }
-          else {
-            overallSummary = summaries[0];
-          }
+         overallSummary = await RecursiveSummarize (definitelyText, 0);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 

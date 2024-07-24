@@ -1,7 +1,20 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 
-let classifications = ["Business", "Technology", "Politics", "Health", "Lifesyle", "CurrentAffairs"];
+let classifications = ["Business", "Technology", "Politics", "Health"];
+
+function decodeClassification (initial: string) : string {
+
+   for (let i = 0; i < classifications.length; i++) {
+      if (initial.includes (classifications[i])) {
+         if (classifications[i] === "CurrentAffairs")
+            return "Current Affairs";
+         return classifications[i];
+      }
+   }
+
+   return "Unknow"
+}
 
 /**
  * Asynchronously classifies the given text into one of the predefined subject areas using an AI assistant.
@@ -36,7 +49,9 @@ async function SingleShotClassify (text: string) : Promise <string> {
       }
    );
 
-   return (response.data.choices[0].message.content);   
+   let decoded = decodeClassification (response.data.choices[0].message.content);
+
+   return (decoded);   
 }
 
 

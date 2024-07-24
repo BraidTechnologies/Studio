@@ -1,4 +1,5 @@
 "use strict";
+var haveStartedScrape = false;
 /**
  * Function that performs a series of actions to summarize and classify text content.
  * It periodically sends messages to the Chrome runtime for summarization and classification progress.
@@ -13,6 +14,7 @@ function startScrape(key) {
     var haveClassification = false;
     var baseClassificationText = "Classifying ...";
     var allText = "";
+    // This interval loop sends progress messages 
     var interval = setInterval(function () {
         if (!haveSummary || !haveClassification) {
             if (!haveSummary) {
@@ -28,14 +30,19 @@ function startScrape(key) {
             clearInterval(interval);
         }
     }, 1000);
+    // This timeout does the actual scrape  
     setTimeout(function () {
         try {
             // First try to get all plain text, if that doesnt work, get the headers
+            // If that doesnt work, scarape all divs (like 'the guardian' website)
             var scraped = artoo.scrape('p', 'text');
             if (scraped.length === 0) {
                 for (var i = 0; i < 6; i++) {
                     scraped = scraped = artoo.scrape('h' + i.toString(), 'text');
                 }
+            }
+            if (scraped.length === 0) {
+                scraped = artoo.scrape('div', 'text');
             }
             allText = scraped.join(' \n');
             if (allText.length > NN)
@@ -72,11 +79,15 @@ function startScrape(key) {
                     else {
                         chrome.runtime.sendMessage({ type: "Classification", text: "Sorry, could not fetch a classification from the Waterfall server." });
                     }
+                    // whenever we finish scraping - either successfully or a fail - we allow the user to start another one
+                    haveStartedScrape = false;
                 })
                     .catch(function (e) {
                     haveClassification = true;
                     console.error(e);
                     chrome.runtime.sendMessage({ type: "Classification", text: "Sorry, could not fetch a classification from the Waterfall server." });
+                    // whenever we finish scraping - either successfully or a fail - we allow the user to start another one
+                    haveStartedScrape = false;
                 });
             }
             else {
@@ -84,6 +95,8 @@ function startScrape(key) {
                 haveClassification = true;
                 chrome.runtime.sendMessage({ type: "Summary", text: "Sorry, could not fetch a summary from the Waterfall server." });
                 chrome.runtime.sendMessage({ type: "Classification", text: "Sorry, could not fetch a classification from the Waterfall server." });
+                // whenever we finish scraping - either successfully or a fail - we allow the user to start another one
+                haveStartedScrape = false;
             }
         })
             .catch(function (e) {
@@ -92,10 +105,11 @@ function startScrape(key) {
             console.error(e);
             chrome.runtime.sendMessage({ type: "Summary", text: "Sorry, could not fetch a summary from the Waterfall server." });
             chrome.runtime.sendMessage({ type: "Classification", text: "Sorry, could not fetch a classification from the Waterfall server." });
+            // whenever we finish scraping - either successfully or a fail - we allow the user to start another one
+            haveStartedScrape = false;
         });
     }, 500);
 }
-var haveStartedScrape = false;
 // Listen to messages from the popup.js script 
 chrome.runtime.onMessage.addListener(function (message) {
     console.log("Got message");

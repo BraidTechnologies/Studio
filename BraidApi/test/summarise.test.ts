@@ -98,7 +98,7 @@ describe("Summarise", async function () {
 
       let baseText = "My name is Jon and I am founding an AI project acceleration company." ;  
       let sampleText = baseText;  
-      for (var i = 0; i < 500; i++)  {
+      for (var i = 0; i < 1000; i++)  {
          sampleText = sampleText + " " + baseText;
       }
 
