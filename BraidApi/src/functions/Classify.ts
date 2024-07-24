@@ -13,7 +13,7 @@ function decodeClassification (initial: string) : string {
       }
    }
 
-   return "Unknow"
+   return "Unknown";
 }
 
 /**
@@ -30,9 +30,9 @@ async function SingleShotClassify (text: string) : Promise <string> {
          {
             role: 'system',
             content: "You are an AI asistant that can classify text into one of the following subjects: " 
-            + classifications.join (" ") 
+            + classifications.join (",") 
             + "try to classify the subject of the following text. The classification is a single word from the list " 
-            + classifications.join (" ") 
+            + classifications.join (",") 
             + ". If you cannot classify it well, answer 'Unknown'"
          },
          {
