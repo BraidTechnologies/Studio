@@ -29,9 +29,7 @@ class HtmlFileDownloader:
     Args:
         path (str): The path to the HTML file to download.
         output_location (str): The location to save the downloaded file.
-
-    Returns:
-        str: The content of the downloaded HTML file.
+        
    """
 
    def __init__(self, path : str, output_location: str):
