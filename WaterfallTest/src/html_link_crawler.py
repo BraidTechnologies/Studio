@@ -22,65 +22,73 @@ headers = {
 }  
 
 class HtmlLinkCrawler:
-    """Utility class to crawl an HTML page for links, then recurse as necessary to build a full tree for search of files included in the same site"""
+   """Utility class to crawl an HTML page for links and recursively build a full tree for file search within the same site.
 
-    def __init__(self, path : str, output_location: str, max_depth: int = 10):
-        """initialize the counter"""
-        self.path = path
-        self.output_location = output_location
-        self.max_depth = max_depth        
+   Attributes:
+      path (str): The URL path to start crawling.
+      output_location (str): The location to store the crawled links.
+      max_depth (int): The maximum depth of recursion allowed.
 
-    def crawl(self) -> list[str]: 
-       links = []
-       self.crawl_links_recursively (self.path, self.output_location, links, 0)
-       return links
+   Methods:
+     crawl() -> list[str]: Initiates the crawling process and returns a list of crawled links.
+     crawl_links_recursively(path: str, output_location: str, links: list[str], current_depth: int) -> None: Recursively crawls links on an HTML page to build a full tree for file search within the same site.
+   """
+
+   def __init__(self, path : str, output_location: str, max_depth: int = 10):
+      self.path = path
+      self.output_location = output_location
+      self.max_depth = max_depth        
+
+   def crawl(self) -> list[str]: 
+      links = []
+      self.crawl_links_recursively (self.path, self.output_location, links, 0)
+      return links
         
-    def crawl_links_recursively (self, path: str, output_location: str, links: list[str], current_depth: int):
-       """Recursively crawl links on an HTML page to build a full tree for file search within the same site.
+   def crawl_links_recursively (self, path: str, output_location: str, links: list[str], current_depth: int):
+      """Recursively crawl links on an HTML page to build a full tree for file search within the same site.
 
-       Args:
-           path (str): The URL path to crawl.
-           output_location (str): The location to store the crawled links.
-           links (list[str]): List of links crawled so far.
-           current_depth (int): The current depth of recursion.
+      Args:
+         path (str): The URL path to crawl.
+         output_location (str): The location to store the crawled links.
+         links (list[str]): List of links crawled so far.
+         current_depth (int): The current depth of recursion.
 
-       Returns:
-           None
-       """      
-       logger.debug("Crawling: %s", path)
+      Returns:
+         None
+      """      
+      logger.debug("Crawling: %s", path)
 
-       # Bail if we hit maximum depth
-       current_depth = current_depth + 1
-       if current_depth > self.max_depth:
-          logger.debug("Depth exceeded: %s", path)
-          return        
+      # Bail if we hit maximum depth
+      current_depth = current_depth + 1
+      if current_depth > self.max_depth:
+         logger.debug("Depth exceeded: %s", path)
+         return        
 
-       session = requests.Session()
-       if (path.find("http") != -1):
-          # Add headers in case the website expects cookies and/or JavaScript
-          html_content = session.get(path, headers=headers).text         
-       else:
-          with open(path, 'r', encoding='utf-8') as file:
-             html_content = file.read()          
+      session = requests.Session()
+      if (path.find("http") != -1):
+         # Add headers in case the website expects cookies and/or JavaScript
+         html_content = session.get(path, headers=headers).text         
+      else:
+         with open(path, 'r', encoding='utf-8') as file:
+            html_content = file.read()          
 
-       soup = BeautifulSoup(html_content, "html.parser")
+      soup = BeautifulSoup(html_content, "html.parser")
 
-       links.append(path)
+      links.append(path)
 
-       subLinks = soup.find_all('a')
-       subUrls = []
+      subLinks = soup.find_all('a')
+      subUrls = []
+      for link in subLinks:
+         url = str(link.get('href'))
+         subUrls.append(url)
 
-       for link in subLinks:
-          url = str(link.get('href'))
-          subUrls.append(url)
+      full = add_prefix(path, subUrls)
+      deduped = deduplicate(links, full)
+      trimmed = remove_exits(path, deduped)
 
-       full = add_prefix(path, subUrls)
-       deduped = deduplicate(links, full)
-       trimmed = remove_exits(path, deduped)
-
-       for link in trimmed:
-          if link not in links:
-             self.crawl_links_recursively (link, output_location, links, current_depth + 1)     
+      for link in trimmed:
+         if link not in links:
+            self.crawl_links_recursively (link, output_location, links, current_depth + 1)     
 
 def deduplicate(currentLinks: list[str], newLinks: list[str]) -> list[str]: # remove duplicates 
    """Remove duplicates from a list of new links by comparing them with the current links list.

@@ -24,40 +24,69 @@ headers = {
 }  
 
 class HtmlFileDownloader:
-    """Utility class to download an HTML file"""
+   """Utility class to download an HTML file
 
-    def __init__(self, path : str, output_location: str):
-        """initialize the counter"""
-        self.path = path
-        self.output_location = output_location       
+    Args:
+        path (str): The path to the HTML file to download.
+        output_location (str): The location to save the downloaded file.
 
-    def download(self): 
-       path = self.path
+    Returns:
+        str: The content of the downloaded HTML file.
+   """
 
-       logger.debug("Downloading: %s", path)
+   def __init__(self, path : str, output_location: str):
+      """initialize the counter"""
+      self.path = path
+      self.output_location = output_location       
 
-       session = requests.Session()
-       if (path.find("http") != -1):
-          # Add headers in case the website expects cookies and/or JavaScript
-          html_content = session.get(path, headers=headers).text         
-       else:
-          with open(path, 'r', encoding='utf-8') as file:
-             html_content = file.read()          
+   def download(self) -> str: 
+      """
+       Downloads the HTML content from the specified path and saves it to the output location.
+       
+       Returns:
+           str: The content of the downloaded HTML file.
+      """       
+     
+      path = self.path
+      fake_name = makeLocalFilePath (path)
+      contentOutputFileName = os.path.join(self.output_location, f"{fake_name}.text")       
 
-       soup = BeautifulSoup(html_content, "html.parser") 
-       full_text = soup.get_text()
+      if os.path.exists(contentOutputFileName):
+         with open(contentOutputFileName, 'r', encoding='utf-8') as file:
+            contents = file.read()  
+         return contents
 
-       path_only = makePathOnly (path)
-       fakeName = path_only.replace("//", "_").replace("/", "_")
-       if not os.path.exists(self.output_location):
-          os.makedirs(self.output_location)
-       contentOutputFileName = os.path.join(self.output_location, f"{fakeName}.text")
+      logger.debug("Downloading: %s", path)
 
-       # save the plain text content as a .json.mdd file
-       with open(contentOutputFileName, "w+", encoding="utf-8") as file:
-          json.dump(full_text, file, indent=4, ensure_ascii=False)
+      session = requests.Session()
+      if (path.find("http") != -1):
+         # Add headers in case the website expects cookies and/or JavaScript
+         html_content = session.get(path, headers=headers).text         
+      else:
+         with open(path, 'r', encoding='utf-8') as file:
+            html_content = file.read()          
 
-       return full_text
+      soup = BeautifulSoup(html_content, "html.parser") 
+      full_text = soup.get_text()
+
+      if not os.path.exists(self.output_location):
+         os.makedirs(self.output_location)
+
+      # save the plain text content as a .json.mdd file
+      with open(contentOutputFileName, "w+", encoding="utf-8") as file:
+         json.dump(full_text, file, indent=4, ensure_ascii=False)
+
+      return full_text
+
+
+def makeLocalFilePath (url: str) -> str:
+   '''
+   Generates a fake file name based on the URL by replacing certain characters with underscores.
+   '''   
+   path_only = makePathOnly (url)       
+   fake_name = path_only.replace("//", "_").replace("/", "_")
+   
+   return fake_name
 
 
 
