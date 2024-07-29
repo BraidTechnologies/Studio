@@ -46,11 +46,13 @@ class Summariser:
       session = requests.Session()
 
       summaryUrl = f"https://braidapi.azurewebsites.net/api/Summarize?session={SESSION_KEY}"
-      data = {
+      input = {
+         'data': {
          'text': self.text
+         }
       }
 
-      response = session.post(summaryUrl, json=data, headers=headers)
+      response = session.post(summaryUrl, json=input, headers=headers)
       summary = response.text         
 
       if not os.path.exists(self.output_location):

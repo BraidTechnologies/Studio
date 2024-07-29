@@ -11,6 +11,7 @@ logging.getLogger().setLevel(logging.DEBUG)
  
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
+from summariser import Summariser
 
 class WaterfallDataPipeline:
    '''
@@ -40,7 +41,11 @@ class WaterfallDataPipeline:
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
          content = downloader.download ()
-         content_list.append (content)
+
+         summariser = Summariser (link, content, self.output_location)
+         summary = summariser.summarise ();
+
+         content_list.append (summary)
       
       return content_list
       
