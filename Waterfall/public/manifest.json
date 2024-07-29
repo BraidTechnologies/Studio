@@ -8,7 +8,7 @@
 
    "content_scripts": [{
       "matches" : ["<all_urls>"],
-      "js" : ["./axios.min.js", "./jquery-2.1.3.min.js", "./artoo.chrome.js", "./content.pack.js"],
+      "js" : ["./axios.min.js", "./jquery-2.1.3.min.js", "./artoo.chrome.js", "./content.min.js"],
       "run_at" : "document_idle"
    }],
 

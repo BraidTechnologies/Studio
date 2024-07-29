@@ -8,7 +8,7 @@ module.exports = {
    target: 'web', 
    externals: [],
    output: {
-      filename: "popup.pack.js",
+      filename: "popup.min.js",
       devtoolModuleFilenameTemplate: '[resource-path]',  // removes the webpack:/// prefix
       libraryTarget: 'window'
    },
