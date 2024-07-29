@@ -15,7 +15,7 @@ The current worked example is 'Waterfall'. Waterfall is a text analyser / classi
 
 The 'BraidApi' directory contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. 'BraidCommon' contains untility classes used across multiple applications. Both subsystems are written in Typescript. 
 
-The second example, 'Boxer', is in the process of being moved to this repo. Boxed is an AI-enabled learning assistant to help developers build generative AI applications more quickly.  
+The second example, 'Boxer', is in the process of being moved to this repo. Boxer is an AI-enabled learning assistant to help developers build generative AI applications more quickly.  
 
 ## Technologies
 
