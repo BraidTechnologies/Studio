@@ -110,7 +110,7 @@ describe("Summarise", async function () {
 
       expect (summary && summary?.length > 0).toBe (true) ;     
 
-   }).timeout(10000);   
+   }).timeout(20000);   
 
    
    it("Needs to summarise a simple message against production", async function () {

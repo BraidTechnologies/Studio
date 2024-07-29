@@ -1,5 +1,11 @@
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+// 'func azure functionapp publish BraidApi' to publish to Azure' to run locally
+// 'npm start' to run locally
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
 let maxChunkSize = 1024*3;
 let minimumTextLength = 256;
@@ -29,6 +35,15 @@ function chunkText (text: string) : Array<string> {
  */
 async function SingleShotSummarize (text: string) : Promise <string> {
 
+   // Up to 5 retries if we hit rate limit
+   axiosRetry(axios, {
+      retries: 5,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) => {
+         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
+      }      
+   });
+    
    let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
       messages: [
          {

@@ -107,10 +107,12 @@ function startScrape (key: string) : void {
          haveSummary = true;          
          if (summaryRes.status === 200) {
             chrome.runtime.sendMessage({type: "Summary", text: summaryRes.data});
-            
+            var classifications = ["Business", "Technology", "Politics", "Health", "Sport"];
+
             axios.post(classifyQuery, {
                data: {
-                  text: summaryRes.data
+                  text: summaryRes.data,
+                  classifications: classifications
                },
                headers: {
                   'Content-Type': 'application/json'

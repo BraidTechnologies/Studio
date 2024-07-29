@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "axios-retry": "^4.4.2"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.7",

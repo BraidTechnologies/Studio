@@ -16,11 +16,13 @@ describe("Classify", async function () {
    async function validClassifyCall (apiUrl: string, text: string) : Promise<string | undefined> {
 
       let summary: string | undefined = undefined;
+      let classifications = ["Business", "Technology", "Politics", "Health", "Sport"];
 
       try {
          let response = await axios.post(apiUrl, {
            data: {
-              text: text
+              text: text,
+              classifications: classifications
            },
            headers: {
               'Content-Type': 'application/json'
