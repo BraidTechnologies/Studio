@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 
 	"name": "Waterfall",
-	"description": "A simple page-scraping extension for Edge that passes the current page text to an LLM to be summarised and classified by topic.",
+	"description": "A simple page-scraping extension that passes the current page text to an LLM to be summarised and classified by topic.",
 	"version": "0.1",
 	"author": "@BraidTechnologiesLtd",
 
