@@ -142,11 +142,11 @@ def add_prefix(sourceUrl : str, links : str) -> str:
     full = []
 
     for item in links:
-        newUrl = makeFullyQualified(sourceUrl, item)
+        newUrl = make_fully_qualified_path(sourceUrl, item)
         full.append(newUrl)
 
     return full
 
         
-def makeFullyQualified (base: str, rel: str) -> str:
+def make_fully_qualified_path (base: str, rel: str) -> str:
     return urljoin(base,rel)

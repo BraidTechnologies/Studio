@@ -1,13 +1,14 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
-
 import logging
 import os
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urlsplit
 import json
+
+from make_local_file_path import make_local_file_path
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -29,11 +30,10 @@ class HtmlFileDownloader:
     Args:
         path (str): The path to the HTML file to download.
         output_location (str): The location to save the downloaded file.
-        
+
    """
 
    def __init__(self, path : str, output_location: str):
-      """initialize the counter"""
       self.path = path
       self.output_location = output_location       
 
@@ -46,7 +46,7 @@ class HtmlFileDownloader:
       """       
      
       path = self.path
-      fake_name = makeLocalFilePath (path)
+      fake_name = make_local_file_path (path)
       contentOutputFileName = os.path.join(self.output_location, f"{fake_name}.text")       
 
       if os.path.exists(contentOutputFileName):
@@ -70,32 +70,12 @@ class HtmlFileDownloader:
       if not os.path.exists(self.output_location):
          os.makedirs(self.output_location)
 
-      # save the plain text content as a .json.mdd file
+      # save the plain text content 
       with open(contentOutputFileName, "w+", encoding="utf-8") as file:
          json.dump(full_text, file, indent=4, ensure_ascii=False)
 
       return full_text
 
 
-def makeLocalFilePath (url: str) -> str:
-   '''
-   Generates a fake file name based on the URL by replacing certain characters with underscores.
-   '''   
-   path_only = makePathOnly (url)       
-   fake_name = path_only.replace("//", "_").replace("/", "_")
-   
-   return fake_name
 
 
-
-def makePathOnly (url: str) -> str:
-   '''
-   Extracts the path from the given URL and returns a clean path by combining the netloc and path components.
-   '''    
-   split_url = urlsplit(url)
-   # split_url.scheme   "http"
-   # split_url.netloc   "127.0.0.1" 
-   # split_url.path     "/asdf/login.php"
-   # Use all the path 
-   clean_path = str(split_url.netloc) + split_url.path
-   return clean_path
