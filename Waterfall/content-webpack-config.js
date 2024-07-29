@@ -8,7 +8,7 @@ module.exports = {
    target: 'web', 
    externals: [],
    output: {
-      filename: "content.min.js",
+      filename: "content.pack.js",
       devtoolModuleFilenameTemplate: '[resource-path]',  // removes the webpack:/// prefix
       libraryTarget: 'window'
    },
@@ -35,7 +35,7 @@ module.exports = {
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/
-         },                   
+         } /*,                   
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
@@ -46,7 +46,7 @@ module.exports = {
                     rotateStringArray: true
                 }
             }
-        }     
+        }    */ 
       ]
    }  
 }
