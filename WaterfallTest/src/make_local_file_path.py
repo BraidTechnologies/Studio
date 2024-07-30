@@ -10,6 +10,6 @@ def make_local_file_path (url: str) -> str:
    # split_url.path     "/asdf/login.php"
    clean_path = str(split_url.netloc) + split_url.path + split_url.query
     
-   fake_name = clean_path.replace("//", "_").replace("/", "_").replace("=", "_")
+   fake_name = clean_path.replace("//", "_").replace("/", "_").replace("=", "_").replace("&", "_").replace("%", "_")
    
-   return fake_name
+   return fake_name[0:200]
