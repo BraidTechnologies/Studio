@@ -13,6 +13,7 @@ export interface IEnvironment {
    checkSessionApi () : string;
    summariseApi () : string;
    classifyApi () : string;
+   embedApi() : string;
 }
 
 

@@ -8,7 +8,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 let maxChunkSize = 1024*3;
-let minimumTextLength = 256;
+let minimumTextLength = 64;
 
 /**
  * Splits the input text into chunks of maximum size defined by 'maxChunkSize'.
