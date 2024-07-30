@@ -7,15 +7,15 @@
 
 This repo contains a set of end-end worked example applications, for use by Braid's clients. 
 
-The current worked example is 'Waterfall'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classificication system for Braid's clients. It illustrates the following:
+The current worked example is 'Waterfall'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classification system for Braid's clients. It illustrates the following:
 
 - A front end - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Waterfall' directory. Waterfall is all written in typescript/javascript. 
 
-- A data analysis back end. This illustrates a date pipleine to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'WaterfallTest' directory. WaterfallTest is written in Python. 
+- A data analysis back end. This illustrates a date pipleine to download web pages, summarise them, and then uses cluster analysis to find the most common topics. This is the 'WaterfallTest' directory. WaterfallTest is written in Python. 
 
 The 'BraidApi' directory contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. 'BraidCommon' contains untility classes used across multiple applications. Both subsystems are written in Typescript. 
 
-The second example, 'Boxer', is in the process of being moved to this repo. 
+The second example, 'Boxer', is in the process of being moved to this repo. Boxer is an AI-enabled learning assistant to help developers build generative AI applications more quickly.  
 
 ## Technologies
 

@@ -17,6 +17,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    classifyApi () : string {
       return "http://localhost:7071/api/Classify"; 
    }
+   embedApi () : string {
+      return "http://localhost:7071/api/Embed"; 
+   }
 }
 
 /**
@@ -34,6 +37,9 @@ export class StagingEnvironment{
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
    }
+   embedApi () : string {
+      return "https://braidapi.azurewebsites.net/api/Embed"; 
+   }   
 }
 
 /**
@@ -51,4 +57,7 @@ export class ProductionEnvironment {
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
    }
+   embedApi () : string {
+      return "https://braidapi.azurewebsites.net/api/Embed"; 
+   }    
 }
