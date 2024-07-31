@@ -16,7 +16,7 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
-from src.html_file_downloader import HtmlFileDownloader
+from src.text_repository_facade import TextRespositoryFacade
 
 # Fixture to create a temporary directory for test output
 @pytest.fixture
@@ -26,22 +26,39 @@ def test_output_dir(tmpdir):
     yield str(dir_path)
     # Clean up after the test
     logger.info(f"Cleaning up test output directory: {dir_path}")
+    os.chdir ("..")    
     shutil.rmtree(str(dir_path))
 
 def test_basic ():
-    test_path = 'test'
     test_output_location = 'test_output'
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    assert downloader.path == test_path   
+    repository = TextRespositoryFacade (test_output_location)
+    assert repository.output_location == test_output_location   
 
 def test_with_output (test_output_dir):
-    test_root = os.path.dirname(__file__)
-    os.chdir (test_root)
-    test_path = 'simple_test.html'
-    test_output_location = 'test_output'
 
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    text = downloader.download ()    
-    assert len(text) > 0
+    os.chdir (test_output_dir)
+    test_path = 'pass_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
 
+    repository = TextRespositoryFacade (test_output_location)  
+    repository.save (test_path, text)
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
 
+    assert exists == True
+    assert saved == text
+
+def test_with_no_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'fail_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = TextRespositoryFacade (test_output_location)  
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
+
+    assert exists == False
+    assert saved != text
