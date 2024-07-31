@@ -95,7 +95,6 @@ class FileRespository:
          os.makedirs(self.output_location)
          return False
 
-      fake_name = make_local_file_path (path)
       if os.path.exists(contentOutputFileName):         
          return True
 
