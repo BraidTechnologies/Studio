@@ -8,7 +8,7 @@ import requests
 from urllib.parse import urlsplit
 import json
 
-from make_local_file_path import make_local_file_path
+from text_repository_facade import TextRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -46,13 +46,9 @@ class HtmlFileDownloader:
       """       
      
       path = self.path
-      fake_name = make_local_file_path (path)
-      contentOutputFileName = os.path.join(self.output_location, f"{fake_name}.text")       
-
-      if os.path.exists(contentOutputFileName):
-         with open(contentOutputFileName, 'r', encoding='utf-8') as file:
-            contents = file.read()  
-         return contents
+      repository = TextRespositoryFacade (self.output_location)      
+      if repository.exists (path):          
+         return repository.load (path)
 
       logger.debug("Downloading: %s", path)
 
@@ -67,12 +63,7 @@ class HtmlFileDownloader:
       soup = BeautifulSoup(html_content, "html.parser") 
       full_text = soup.get_text()
 
-      if not os.path.exists(self.output_location):
-         os.makedirs(self.output_location)
-
-      # save the plain text content 
-      with open(contentOutputFileName, "w+", encoding="utf-8") as file:
-         json.dump(full_text, file, indent=4, ensure_ascii=False)
+      repository.save (path, full_text)
 
       return full_text
 
