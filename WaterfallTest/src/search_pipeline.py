@@ -13,6 +13,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
+from embedder import Embedder
 
 class WaterfallDataPipeline:
    '''
@@ -38,20 +39,25 @@ class WaterfallDataPipeline:
 
       links = searcher.search ()
 
-      content_list = []
+      summaries = []
+      embeddings = []
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
-         content = downloader.download ()
+         summary = downloader.download ()
 
-         summariser = Summariser (link, content, self.output_location)
+         summariser = Summariser (link, summary, self.output_location)
          summary = summariser.summarise ()
+         summaries.append (summary)
 
-         content_list.append (summary)
+         embedder = Embedder (link, summary, self.output_location)
+         embedding = embedder.embed ()
+         embeddings.append (embedding)         
 
       output_results = []
-      for i, content in enumerate(content_list):
+      for i, summary in enumerate(summaries):
          output_item = dict()
-         output_item["summary"] = content
+         output_item["summary"] = summary
+         output_item["embedding"] = embeddings[i]
          output_item["path"] = links[i]
          output_results.append (output_item)
       
@@ -60,7 +66,7 @@ class WaterfallDataPipeline:
       with open(output_file, "w+", encoding="utf-8") as f:
          json.dump(output_results, f)        
         
-      return content_list
+      return summaries
       
         
 
