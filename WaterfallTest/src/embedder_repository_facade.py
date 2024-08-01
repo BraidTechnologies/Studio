@@ -2,15 +2,15 @@
 
 from file_repository import FileRespository
 
-class TextRespositoryFacade:
+class EmbeddingRespositoryFacade:
    #...
    # Class providing an interface to load, save, and existence check for files in the file system. 
    #...
 
    def __init__(self, output_location: str):
-      self.file__repository = FileRespository (output_location)   
-      self.output_location = output_location   
-      self.extension = "txt" 
+      self.file__repository = FileRespository (output_location)       
+      self.output_location = output_location  
+      self.extension = "embed.txt" 
 
    def save(self, path: str, text: str) -> None: 
       '''

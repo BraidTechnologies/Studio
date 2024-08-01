@@ -5,7 +5,7 @@ import logging
 import os
 import requests
 
-from summary_repository_facade import SummaryRespositoryFacade
+from embedder_repository_facade import EmbeddingRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -20,39 +20,44 @@ headers = {
    'Accept': 'application/json'
 }  
 
-class Summariser:
+class Embedder:
 
    def __init__(self, path : str, text: str, output_location: str):
+      '''
+      Initializes the Embedder object with the provided path, text content, and output location.
+      '''
       self.path = path
       self.text = text
       self.output_location = output_location       
 
-   def summarise(self) -> str: 
+   def embed(self) -> str: 
       '''
-      Summarises the text content by either loading an existing summary from the specified path or generating a new summary using an external API. 
-      If an existing summary is found, it is returned; otherwise, a new summary is generated and saved at the specified path. 
-      Returns the generated or loaded summary as a string.
-      '''
+      Embeds the text content provided in the object to a file at the specified path within the output location. If the file already exists, the existing content is returned. If the file does not exist, a new embedding is generated using an external API, saved to the file, and returned.
+
+      Returns:
+         str: The embedded text content.
+      ''' 
+
       path = self.path
-      repository = SummaryRespositoryFacade (self.output_location)      
+      repository = EmbeddingRespositoryFacade (self.output_location)      
       if repository.exists (path):          
          return repository.load (path)
 
-      logger.debug("Summarising: %s", path)
+      logger.debug("Embedding: %s", path)
 
       session = requests.Session()
 
-      summaryUrl = f"https://braidapi.azurewebsites.net/api/Summarize?session={SESSION_KEY}"
+      embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"
       input = {
          'data': {
          'text': self.text
          }
       }
 
-      response = session.post(summaryUrl, json=input, headers=headers)
-      summary = response.text         
+      response = session.post(embedUrl, json=input, headers=headers)
+      embedding = response.text         
 
-      repository.save (path, summary)
+      repository.save (path, embedding)
 
-      return summary
+      return embedding
 
