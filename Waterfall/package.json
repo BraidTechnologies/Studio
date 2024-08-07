@@ -5,8 +5,8 @@
    "main": "src/content.ts",
    "scripts": {
       "build": "npm run compile",
-      "package-content": "webpack-cli --config content-webpack-config.js && copy dist\\content.pack.js public",
-      "package-popup": "webpack-cli --config popup-webpack-config.js && copy dist\\popup.pack.js public",
+      "package-content": "copy dist\\src\\content.js public",
+      "package-popup": "copy src\\popup.js public",
       "package-all": "npm run compile && npm run package-content && npm run package-popup",
       "compile": "tsc -b",
       "clean": "rimraf dist",
