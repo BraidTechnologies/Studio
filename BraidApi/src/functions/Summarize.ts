@@ -145,7 +145,7 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
     }
 };
 
-app.http('summarize', {
+app.http('Summarize', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
     handler: Summarize

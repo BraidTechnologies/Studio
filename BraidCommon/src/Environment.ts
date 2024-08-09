@@ -20,6 +20,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    embedApi () : string {
       return "http://localhost:7071/api/Embed"; 
    }
+   saveActivityApi(): string {
+      return "http://localhost:7071/api/SaveActivity"
+   }
 }
 
 /**
@@ -39,6 +42,9 @@ export class StagingEnvironment{
    }
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
+   }   
+   saveActivityApi(): string {
+      return "https://braidapi.azurewebsites.net/api/SaveActivity"
    }   
 }
 
@@ -60,4 +66,7 @@ export class ProductionEnvironment {
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
    }    
+   saveActivityApi(): string {
+      return "https://braidapi.azurewebsites.net/api/SaveActivity"
+   }     
 }

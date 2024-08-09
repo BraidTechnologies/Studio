@@ -140,7 +140,7 @@ describe("Classify", async function () {
 
    it("Needs to summarise a simple message about Health", async function () {
 
-      let sampleText = "Taking a small dose of aspirin each da has been shown to reduce the chances of heart desease." ;      
+      let sampleText = "Taking a small dose of aspirin each day has been shown to reduce the chances of heart desease." ;      
       let environment = getEnvironment(EEnvironment.kLocal);
 
       let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();

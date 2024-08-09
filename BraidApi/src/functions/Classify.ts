@@ -92,8 +92,7 @@ export async function Classify (request: HttpRequest, context: InvocationContext
             requestedSession = value;                
     }
 
-    let jsonRequest = await request.json();
-    context.log(jsonRequest);      
+    let jsonRequest = await request.json();    
     text = (jsonRequest as any)?.data?.text;
     classifications = (jsonRequest as any)?.data?.classifications;    
 

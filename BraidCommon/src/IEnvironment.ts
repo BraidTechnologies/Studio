@@ -14,6 +14,7 @@ export interface IEnvironment {
    summariseApi () : string;
    classifyApi () : string;
    embedApi() : string;
+   saveActivityApi(): string;
 }
 
 
