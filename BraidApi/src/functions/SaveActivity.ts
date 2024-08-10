@@ -9,7 +9,8 @@ import axios from "axios";
 var crypto = require("crypto");   
 
 // Internal imports
-//import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
+import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
+import { IStorable } from "../../../BraidCommon/src/IStorable";
 
 const defaultPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
 
@@ -36,7 +37,7 @@ export async function SaveActivity(request: HttpRequest, context: InvocationCont
 
       context.log("Passed session key validation:" + requestedSession);  
       
-      let jsonRequest: any = await request.json();    
+      let jsonRequest: IStorable = await request.json() as IStorable;    
 
       try {
          await saveActivity (jsonRequest, context);
@@ -116,7 +117,7 @@ function makePostActivityHeader (key : string, time : string, defaultPartitionKe
    };
 }
 
-async function saveActivity (record : any, context: InvocationContext) : Promise<boolean> {
+async function saveActivity (record : IStorable, context: InvocationContext) : Promise<boolean> {
       
       let dbkey = process.env.CosmosApiKey;   
 
@@ -127,7 +128,7 @@ async function saveActivity (record : any, context: InvocationContext) : Promise
       let document = JSON.parse(stream);
       document.data = record;
 
-      //throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makePostActivityToken(time, dbkey as string); 
       let headers = makePostActivityHeader (key, time, defaultPartitionKey); 
 

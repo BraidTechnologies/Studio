@@ -1,5 +1,13 @@
 {
-  "devDependencies": {
-    "typescript": "^5.5.3"
-  }
+   "name": "braidcommon",
+   "version": "0.1.0",
+   "description": "",
+   "devDependencies": {
+      "typescript": "^5.5.4"
+   },
+   "scripts": {
+      "build": "tsc -b",
+      "watch": "tsc -b -w",
+      "clean": "rimraf dist"
+   }
 }

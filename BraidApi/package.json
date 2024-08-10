@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
+    "pull": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
     "clean": "rimraf dist",
     "prestart": "npm run clean && npm run build",
     "start": "func start",
