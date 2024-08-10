@@ -8,6 +8,8 @@ import axios from 'axios';
 
 import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi'
+
 
 declare var process: any;
 
@@ -52,49 +54,61 @@ describe("SaveActivity", async function () {
 
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let environment = getEnvironment(EEnvironment.kLocal);
+      let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
-      let apiUrl = environment.saveActivityApi() + "?session=" + process.env.SessionKey.toString();
+      let record = {
+         id: Math.random().toString(),
+         test: "Some test data"
+      }
 
-      let summary = await validSaveActivityCall (apiUrl);
+      let ok = await api.save (record); 
 
-      expect (summary && summary?.length > 0).toBe (true) ;         
+      expect (ok).toBe (true) ;         
 
    }).timeout(20000);
 
    it("Needs to succeed with valid key in production environment", async function () {
       
-      let environment = getEnvironment(EEnvironment.kProduction);
+      let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
 
-      let apiUrl = environment.saveActivityApi() + "?session=" + process.env.SessionKey.toString();
+      let record = {
+         id: Math.random().toString(),
+         test: "Some test data"
+      }
 
-      let summary = await validSaveActivityCall (apiUrl);
+      let ok = await api.save (record); 
 
-      expect (summary && summary?.length > 0).toBe (true) ;   
+      expect (ok).toBe (true) ;   
 
    }).timeout(20000);
 
    it("Needs to fail with invalid key.", async function () {
 
-      let environment = getEnvironment(EEnvironment.kLocal);
+      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
-      let apiUrl = environment.saveActivityApi() + "?session=" + "thiswillfail";
+      let record = {
+         id: Math.random().toString(),
+         test: "Some test data"
+      }
 
-      let caught = await invalidSaveActivityCall (apiUrl);
-      
-      expect (caught).toBe (true) ;         
+      let ok = await api.save (record); 
+
+      expect (ok).toBe (false) ;        
 
   }).timeout(20000);
 
   it("Needs to fail with invalid key in production environment.", async function () {
 
-      let environment = getEnvironment(EEnvironment.kProduction);
+   let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
-      let apiUrl = environment.saveActivityApi() + "?session=" + "thiswillfail";
+   let record = {
+      id: Math.random().toString(),
+      test: "Some test data"
+   }
 
-      let caught = await invalidSaveActivityCall (apiUrl);
-      
-      expect (caught).toBe (true) ;         
+   let ok = await api.save (record);    
+   
+   expect (ok).toBe (false) ;              
 
 }).timeout(20000);
 
