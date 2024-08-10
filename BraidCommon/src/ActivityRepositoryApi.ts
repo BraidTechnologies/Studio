@@ -32,7 +32,6 @@ export class ActivityRepostoryApi {
 
       let apiUrl = this._environment.saveActivityApi() + "?session=" + this._sessionKey.toString();
       var response: any;
-      let summary : string | undefined = undefined;
 
       try {
          response = await axios.post(apiUrl, {
@@ -40,13 +39,41 @@ export class ActivityRepostoryApi {
             data: record
          });
 
-         return true;
+         if (response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return false;
+         }
       } catch (e: any) {       
 
-         console.error ("Error: " + e);   
+         console.error ("Error: " + e?.response?.data);   
          return false;       
       }          
    }
 
+   async remove (record: IStorable) : Promise<boolean> {
 
+      let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, {
+            id: record.id
+         });
+
+         if (response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return false;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return false;       
+      }          
+   }
 }

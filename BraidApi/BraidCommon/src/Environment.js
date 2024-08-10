@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductionEnvironment = exports.StagingEnvironment = exports.DevelopmentEnvironment = void 0;
 /**
- * DevelopmentEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing the Development Environment with methods to retrieve various API endpoints.
+ * @class DevelopmentEnvironment
  */
 class DevelopmentEnvironment {
     checkSessionApi() {
@@ -21,11 +21,14 @@ class DevelopmentEnvironment {
     saveActivityApi() {
         return "http://localhost:7071/api/SaveActivity";
     }
+    removeActivityApi() {
+        return "http://localhost:7071/api/RemoveActivity";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
- * StagingEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing the Staging Environment with methods to retrieve various API endpoints.
+ * @class StagingEnvironment
  */
 class StagingEnvironment {
     checkSessionApi() {
@@ -43,11 +46,14 @@ class StagingEnvironment {
     saveActivityApi() {
         return "https://braidapi.azurewebsites.net/api/SaveActivity";
     }
+    removeActivityApi() {
+        return "https://braidapi.azurewebsites.net/api/RemoveActivity";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
- * ProductionEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing a Production Environment with methods to retrieve various API endpoints.
+ * @class ProductionEnvironment
  */
 class ProductionEnvironment {
     checkSessionApi() {
@@ -64,6 +70,9 @@ class ProductionEnvironment {
     }
     saveActivityApi() {
         return "https://braidapi.azurewebsites.net/api/SaveActivity";
+    }
+    removeActivityApi() {
+        return "https://braidapi.azurewebsites.net/api/RemoveActivity";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

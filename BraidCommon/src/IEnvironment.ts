@@ -4,8 +4,7 @@ export enum EEnvironment {
 
    kLocal = "Local", 
    kStaging = "Staging", 
-   kProduction = "Production"
-   
+   kProduction = "Production"   
 };
 
 export interface IEnvironment {
@@ -15,6 +14,7 @@ export interface IEnvironment {
    classifyApi () : string;
    embedApi() : string;
    saveActivityApi(): string;
+   removeActivityApi(): string;
 }
 
 

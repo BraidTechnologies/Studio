@@ -19,7 +19,7 @@ function randomKey () : string {
    return randomInt (0, 1000000000).toString();
 }
 
-describe("SaveActivity", async function () {
+describe("RemoveActivity", async function () {
 
    it("Needs to succeed with valid key in local environment", async function () {
       
@@ -30,9 +30,13 @@ describe("SaveActivity", async function () {
          test: "Some test data"
       }
 
-      let ok = await api.save (record); 
+      let notremoved = await api.remove (record);     
+      let stored = await api.save (record); 
+      let removed = await api.remove (record);       
 
-      expect (ok).toBe (true) ;         
+      expect (notremoved).toBe (false) ;       
+      expect (stored).toBe (true) ;         
+      expect (removed).toBe (true) ;     
 
    }).timeout(20000);
 
@@ -45,9 +49,13 @@ describe("SaveActivity", async function () {
          test: "Some test data"
       }
 
-      let ok = await api.save (record); 
+      let notremoved = await api.remove (record);     
+      let stored = await api.save (record); 
+      let removed = await api.remove (record);       
 
-      expect (ok).toBe (true) ;   
+      expect (notremoved).toBe (false) ;       
+      expect (stored).toBe (true) ;         
+      expect (removed).toBe (true) ;   
 
    }).timeout(20000);
 
@@ -60,7 +68,7 @@ describe("SaveActivity", async function () {
          test: "Some test data"
       }
 
-      let ok = await api.save (record); 
+      let ok = await api.remove (record); 
 
       expect (ok).toBe (false) ;        
 
@@ -75,7 +83,7 @@ describe("SaveActivity", async function () {
          test: "Some test data"
       }
 
-      let ok = await api.save (record);    
+      let ok = await api.remove (record);    
 
       expect (ok).toBe (false) ;              
 

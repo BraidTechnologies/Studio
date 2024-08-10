@@ -2,8 +2,8 @@
 import {IEnvironment} from './IEnvironment';
 
 /**
- * DevelopmentEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing the Development Environment with methods to retrieve various API endpoints.
+ * @class DevelopmentEnvironment
  */
 export class DevelopmentEnvironment implements IEnvironment {
 
@@ -23,11 +23,14 @@ export class DevelopmentEnvironment implements IEnvironment {
    saveActivityApi(): string {
       return "http://localhost:7071/api/SaveActivity"
    }
+   removeActivityApi(): string {
+      return "http://localhost:7071/api/RemoveActivity"
+   }   
 }
 
 /**
- * StagingEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing the Staging Environment with methods to retrieve various API endpoints.
+ * @class StagingEnvironment
  */
 export class StagingEnvironment{
    checkSessionApi () : string {
@@ -45,12 +48,15 @@ export class StagingEnvironment{
    }   
    saveActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/SaveActivity"
-   }   
+   }  
+   removeActivityApi(): string {
+      return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+   }    
 }
 
 /**
- * ProductionEnvironment class that implements the IEnvironment interface.
- * Provides methods to retrieve URLs for checking session, summarizing, and classifying APIs.
+ * Class representing a Production Environment with methods to retrieve various API endpoints.
+ * @class ProductionEnvironment
  */
 export class ProductionEnvironment {
    checkSessionApi () : string {
@@ -68,5 +74,8 @@ export class ProductionEnvironment {
    }    
    saveActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/SaveActivity"
-   }     
+   }    
+   removeActivityApi(): string {
+      return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+   }        
 }

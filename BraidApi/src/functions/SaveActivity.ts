@@ -5,14 +5,13 @@
 
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";
-var crypto = require("crypto");   
+import axios from "axios";   
 
 // Internal imports
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
+import {defaultPartitionKey, makePostActivityToken, makePostActivityHeader} from './CosmosRepositoryApi';
 
-const defaultPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
 
 /**
  * Saves an activity record based on the provided request and context.
@@ -44,7 +43,11 @@ export async function SaveActivity(request: HttpRequest, context: InvocationCont
          context.log("Saved:" + jsonRequest.toString());           
       }
       catch (e: any) {
-         context.log("Failed save:" + e);           
+         context.log("Failed save:" + e.toString());
+         return {
+            status: 500 , 
+            body: "Failed save."
+         };                   
       }
 
       return {
@@ -64,58 +67,10 @@ export async function SaveActivity(request: HttpRequest, context: InvocationCont
 };
 
 app.http('SaveActivity', {
-    methods: ['GET', 'POST'],
+    methods: ['POST'],
     authLevel: 'anonymous',
     handler: SaveActivity
 });
-
-function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: string, resourceId: string, date: string, masterKey: string) {  
-
-    var key = Buffer.from(masterKey, "base64");  
-  
-    var text = (verb || "").toLowerCase() + "\n" +   
-               (resourceType || "").toLowerCase() + "\n" +   
-               (resourceId || "") + "\n" +   
-               date.toLowerCase() + "\n" +   
-               "" + "\n";  
-  
-    var body = Buffer.from(text, "utf8");  
-    var signature = crypto.createHmac("sha256", key).update(body).digest("base64");  
-  
-    var MasterToken = "master";  
-  
-    var TokenVersion = "1.0";  
-  
-    var encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);  
-
-    return encoded;
-}
-
-function activityToken(verb: string, time: string, key: string) { 
-
-   //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey( verb, "docs", "dbs/BraidLms/colls/Activity", time, 
-                                               key);
-}
-
-function makePostActivityToken(time: string, key: string) { 
-
-   return activityToken( "post", time, key);
-}
-
-function makePostActivityHeader (key : string, time : string, defaultPartitionKey : string) : object {
-   return {                  
-      "Authorization": key,
-      "Content-Type": "application/json",    
-      "Accept": "application/json",               
-      "x-ms-date": time,
-      "x-ms-version" : "2018-12-31",
-      "Cache-Control": "no-cache",
-      "x-ms-documentdb-is-upsert" : "True",
-      "x-ms-documentdb-partitionkey" : "[\"" + defaultPartitionKey + "\"]", 
-      "x-ms-consistency-level" : "Eventual"
-   };
-}
 
 async function saveActivity (record : IStorable, context: InvocationContext) : Promise<boolean> {
       
