@@ -23,22 +23,22 @@ function randomKey () : string {
 describe("GetActivities", async function () {
 
    let record = {
-      id: randomKey(),
-      timestamp: new Date(),
-      contextId: "madeupId",
-      userId: "madeeupId",
-      test: "Some test data",
-      className: "madeUpClass"
+      storeId: randomKey(),
+      storeTimestamp: new Date(),
+      storeContextId: "madeupId",
+      storeUserId: "madeeupId",
+      storeClassName: "madeUpClass",
+      test: "Some test data"
    }
 
-   let spec = { limit: 1, className: "madeUpClass"}
+   let spec = { limit: 1, storeClassName: "madeUpClass"}
 
    it("Needs to pull a single record with valid key in local environment", async function () {
       
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
 
       let ok = await api.save (myRecord); 
       let stored = await api.recent (spec);
@@ -53,11 +53,11 @@ describe("GetActivities", async function () {
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
       let ok = await api.save (myRecord); 
 
       let myRecord2 = { ...record };
-      myRecord2.id = randomKey();      
+      myRecord2.storeId = randomKey();      
       ok = await api.save (myRecord2); 
 
       let mySpec = { ...spec};

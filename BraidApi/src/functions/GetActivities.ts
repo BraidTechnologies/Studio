@@ -73,15 +73,15 @@ async function loadRecent (querySpec: IStoreQuerySpec, context: InvocationContex
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makePostActivityToken(time, dbkey);     
       let headers = makePostActivityQueryHeader (key, time, defaultPartitionKey);              
-      let query = "SELECT * FROM Activity a WHERE a.data.className = @className ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+      let query = "SELECT * FROM Activity a WHERE a.data.storeClassName = @storeClassName ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs', 
       {
          "query": query,  
          "parameters": [  
            {  
-             "name": "@className",  
-             "value": querySpec.className
+             "name": "@storeClassName",  
+             "value": querySpec.storeClassName
            }
          ]  
       },
