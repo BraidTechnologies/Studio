@@ -37,7 +37,7 @@ export async function RemoveActivity(request: HttpRequest, context: InvocationCo
       let jsonRequest: IStorable = await request.json() as IStorable;    
 
       try {
-         await removeActivity (jsonRequest.id, context);
+         await removeActivity (jsonRequest.storeId, context);
          context.log("Removed:" + jsonRequest.toString());           
       }
       catch (e: any) {

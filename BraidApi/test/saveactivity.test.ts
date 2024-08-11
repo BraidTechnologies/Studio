@@ -22,12 +22,12 @@ function randomKey () : string {
 describe("SaveActivity", async function () {
 
    let record = {
-      id: randomKey(),
-      timestamp: new Date(),
-      contextId: "madeupId",
-      userId: "madeeupId",
-      test: "Some test data",
-      className: "madeUpClass"
+      storeId: randomKey(),
+      storeTimestamp: new Date(),
+      storeContextId: "madeupId",
+      storeUserId: "madeeupId",
+      storeClassName: "madeUpClass",
+      test: "Some test data"
    }
 
    it("Needs to succeed with valid key in local environment", async function () {
@@ -35,7 +35,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -48,7 +48,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -61,7 +61,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -74,7 +74,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.storeId = randomKey();
 
       let ok = await api.save (myRecord);    
 

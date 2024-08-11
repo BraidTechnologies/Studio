@@ -39,7 +39,7 @@ class ActivityRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    id: record.id,
+                    id: record.storeId,
                     data: record
                 });
                 if (response.status === 200) {
@@ -63,7 +63,7 @@ class ActivityRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    id: record.id
+                    storeId: record.storeId
                 });
                 if (response.status === 200) {
                     return true;
