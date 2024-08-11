@@ -122,3 +122,24 @@ export function makeDeleteActivityHeader (key : string, time : string, defaultPa
       "x-ms-consistency-level" : "Eventual"
    };
 }
+
+/**
+ * Creates a header object for a POST activity query with the specified key, time, and default partition key.
+ * @param key The authorization key for the query.
+ * @param time The timestamp for the query.
+ * @param defaultPartitionKey The default partition key for the query.
+ * @returns An object containing the necessary headers for the POST activity query.
+ */
+export function makePostActivityQueryHeader (key : string, time : string, defaultPartitionKey : string) : object {
+   return {                  
+      "Authorization": key,
+      "Content-Type": "application/query+json",    
+      "Accept": "application/json",               
+      "x-ms-date": time,
+      "x-ms-version" : "2018-12-31",
+      "Cache-Control": "no-cache",
+      "x-ms-documentdb-partitionkey" : "[\"" + defaultPartitionKey + "\"]", 
+      "x-ms-consistency-level" : "Eventual",
+      "x-ms-documentdb-isquery" : "True"
+   };
+}

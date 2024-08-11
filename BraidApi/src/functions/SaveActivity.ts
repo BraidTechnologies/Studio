@@ -81,14 +81,12 @@ async function saveActivity (record : IStorable, context: InvocationContext) : P
       let time = new Date().toUTCString();
       let stream = JSON.stringify (record); 
       let document = JSON.parse(stream);
-      document.data = record;
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makePostActivityToken(time, dbkey as string); 
       let headers = makePostActivityHeader (key, time, defaultPartitionKey); 
 
       document.partition = defaultPartitionKey; // Dont need real partitions until 10 GB ... 
-      document.id = document.data.id; // Need to copy ID up from activity object, since MDynamicallyStreamable streams only the class name. 
 
       axios.post('https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs', 
          document,

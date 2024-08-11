@@ -7,6 +7,7 @@ import { describe, it } from 'mocha';
 
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi'
+import { IStoreQuerySpec } from '../../BraidCommon/src/IStorable';
 
 
 declare var process: any;
@@ -19,7 +20,7 @@ function randomKey () : string {
    return randomInt (0, 1000000000).toString();
 }
 
-describe("RemoveActivity", async function () {
+describe("GetActivities", async function () {
 
    let record = {
       id: randomKey(),
@@ -29,24 +30,47 @@ describe("RemoveActivity", async function () {
       test: "Some test data",
       className: "madeUpClass"
    }
-      
-   it("Needs to succeed with valid key in local environment", async function () {
+
+   let spec = { limit: 1, className: "madeUpClass"}
+
+   it("Needs to pull a single record with valid key in local environment", async function () {
       
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.id = randomKey();
 
-      let notremoved = await api.remove (myRecord);     
-      let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord);       
+      let ok = await api.save (myRecord); 
+      let stored = await api.recent (spec);
+      api.remove (myRecord);
 
-      expect (notremoved).toBe (false) ;       
-      expect (stored).toBe (true) ;         
-      expect (removed).toBe (true) ;     
+      expect (stored.length).toBe (1) ;         
 
    }).timeout(20000);
 
+   it("Needs to pull a multiple record with valid key in local environment", async function () {
+      
+      let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
+
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+      let ok = await api.save (myRecord); 
+
+      let myRecord2 = { ...record };
+      myRecord2.id = randomKey();      
+      ok = await api.save (myRecord2); 
+
+      let mySpec = { ...spec};
+      mySpec.limit = 2;
+      let stored = await api.recent (mySpec);
+      api.remove (myRecord);
+      api.remove (myRecord2);      
+
+      expect (stored.length).toBe (2) ;         
+
+   }).timeout(20000);   
+
+   /*
    it("Needs to succeed with valid key in production environment", async function () {
       
       let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
@@ -54,29 +78,25 @@ describe("RemoveActivity", async function () {
       let myRecord = { ...record };
       myRecord.id = randomKey();
 
-      let notremoved = await api.remove (myRecord);     
-      let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord);       
+      let ok = await api.save (record); 
+      let stored = await api.recent (spec);
 
-      expect (notremoved).toBe (false) ;       
-      expect (stored).toBe (true) ;         
-      expect (removed).toBe (true) ;   
+      expect (stored.length === 1).toBe (true) ; 
 
    }).timeout(20000);
+   */
 
    it("Needs to fail with invalid key.", async function () {
 
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
-      let myRecord = { ...record };
-      myRecord.id = randomKey();
+      let stored = await api.recent (spec);
 
-      let ok = await api.remove (myRecord); 
-
-      expect (ok).toBe (false) ;        
+      expect (stored.length === 0).toBe (true) ;        
 
    }).timeout(20000);
 
+   /*
    it("Needs to fail with invalid key in production environment.", async function () {
 
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
@@ -84,10 +104,11 @@ describe("RemoveActivity", async function () {
       let myRecord = { ...record };
       myRecord.id = randomKey();
 
-      let ok = await api.remove (myRecord);    
+      let ok = await api.save (record);    
 
       expect (ok).toBe (false) ;              
 
       }).timeout(20000);
+      */
 
 });

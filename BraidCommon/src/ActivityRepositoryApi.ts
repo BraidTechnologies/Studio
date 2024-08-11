@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
-import { IStorable } from "./IStorable";
+import { IStorable, IStoreQuerySpec } from "./IStorable";
 import { getEnvironment } from "./IEnvironmentFactory";
 import { EEnvironment, IEnvironment } from "./IEnvironment";
 
@@ -76,4 +76,34 @@ export class ActivityRepostoryApi {
          return false;       
       }          
    }
+
+   async recent (querySpec: IStoreQuerySpec) : Promise<Array<IStorable>> {
+
+      let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, querySpec);
+
+         if (response.status === 200) {
+
+            let responseRecords = response.data;
+            let storedRecords = new Array<IStorable>()
+
+            for (let i = 0; i < responseRecords.length; i++) {
+               storedRecords.push (responseRecords[i]);
+            }
+
+            return storedRecords;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return new Array<IStorable>();
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return new Array<IStorable>();       
+      }          
+   }   
 }

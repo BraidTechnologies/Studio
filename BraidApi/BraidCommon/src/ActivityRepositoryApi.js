@@ -79,6 +79,32 @@ class ActivityRepostoryApi {
             }
         });
     }
+    recent(querySpec) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+            var response;
+            try {
+                response = yield axios_1.default.post(apiUrl, querySpec);
+                if (response.status === 200) {
+                    let responseRecords = response.data;
+                    let storedRecords = new Array();
+                    for (let i = 0; i < responseRecords.length; i++) {
+                        storedRecords.push(responseRecords[i]);
+                    }
+                    return storedRecords;
+                }
+                else {
+                    console.error("Error, status: " + response.status);
+                    return new Array();
+                }
+            }
+            catch (e) {
+                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
+                return new Array();
+            }
+        });
+    }
 }
 exports.ActivityRepostoryApi = ActivityRepostoryApi;
 //# sourceMappingURL=ActivityRepositoryApi.js.map

@@ -24,6 +24,9 @@ class DevelopmentEnvironment {
     removeActivityApi() {
         return "http://localhost:7071/api/RemoveActivity";
     }
+    getActivitiesApi() {
+        return "http://localhost:7071/api/GetActivities";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -49,6 +52,9 @@ class StagingEnvironment {
     removeActivityApi() {
         return "https://braidapi.azurewebsites.net/api/RemoveActivity";
     }
+    getActivitiesApi() {
+        return "https://braidapi.azurewebsites.net/api/GetActivities";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -73,6 +79,9 @@ class ProductionEnvironment {
     }
     removeActivityApi() {
         return "https://braidapi.azurewebsites.net/api/RemoveActivity";
+    }
+    getActivitiesApi() {
+        return "https://braidapi.azurewebsites.net/api/GetActivities";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

@@ -21,16 +21,23 @@ function randomKey () : string {
 
 describe("SaveActivity", async function () {
 
+   let record = {
+      id: randomKey(),
+      timestamp: new Date(),
+      contextId: "madeupId",
+      userId: "madeeupId",
+      test: "Some test data",
+      className: "madeUpClass"
+   }
+
    it("Needs to succeed with valid key in local environment", async function () {
       
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
 
-      let record = {
-         id: randomKey(),
-         test: "Some test data"
-      }
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
 
-      let ok = await api.save (record); 
+      let ok = await api.save (myRecord); 
 
       expect (ok).toBe (true) ;         
 
@@ -40,12 +47,10 @@ describe("SaveActivity", async function () {
       
       let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
 
-      let record = {
-         id: randomKey(),
-         test: "Some test data"
-      }
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
 
-      let ok = await api.save (record); 
+      let ok = await api.save (myRecord); 
 
       expect (ok).toBe (true) ;   
 
@@ -55,12 +60,10 @@ describe("SaveActivity", async function () {
 
       let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
-      let record = {
-         id: randomKey(),
-         test: "Some test data"
-      }
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
 
-      let ok = await api.save (record); 
+      let ok = await api.save (myRecord); 
 
       expect (ok).toBe (false) ;        
 
@@ -68,14 +71,12 @@ describe("SaveActivity", async function () {
 
    it("Needs to fail with invalid key in production environment.", async function () {
 
-     let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
+      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
 
-      let record = {
-         id: randomKey(),
-         test: "Some test data"
-      }
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
 
-      let ok = await api.save (record);    
+      let ok = await api.save (myRecord);    
 
       expect (ok).toBe (false) ;              
 

@@ -15,6 +15,7 @@ export interface IEnvironment {
    embedApi() : string;
    saveActivityApi(): string;
    removeActivityApi(): string;
+   getActivitiesApi(): string;
 }
 
 

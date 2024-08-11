@@ -26,6 +26,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    removeActivityApi(): string {
       return "http://localhost:7071/api/RemoveActivity"
    }   
+
+   getActivitiesApi(): string {
+      return "http://localhost:7071/api/GetActivities"      
+   }
 }
 
 /**
@@ -51,6 +55,9 @@ export class StagingEnvironment{
    }  
    removeActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+   }   
+   getActivitiesApi(): string {
+      return "https://braidapi.azurewebsites.net/api/GetActivities"      
    }    
 }
 
@@ -77,5 +84,8 @@ export class ProductionEnvironment {
    }    
    removeActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+   }    
+   getActivitiesApi(): string {
+      return "https://braidapi.azurewebsites.net/api/GetActivities"      
    }        
 }
