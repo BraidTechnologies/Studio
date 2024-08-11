@@ -9,6 +9,9 @@
     "strict": true,
     // "rootDirs": [".", "../../../BraidCommon"],
     "noImplicitAny": true,
-    "composite": true
-  }
+    "declaration": true, 
+    "declarationMap": true, 
+    "composite": true    
+  },
+  "references": []
 }

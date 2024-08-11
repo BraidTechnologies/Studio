@@ -1,6 +1,6 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish BraidApi' to publish to Azure' to run locally
+// 'func azure functionapp publish BraidApi to publish to Azure
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
@@ -145,7 +145,7 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
     }
 };
 
-app.http('summarize', {
+app.http('Summarize', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
     handler: Summarize
