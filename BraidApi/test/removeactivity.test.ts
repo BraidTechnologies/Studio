@@ -6,6 +6,7 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi'
 
 
@@ -32,14 +33,14 @@ describe("RemoveActivity", async function () {
       
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
 
-      let notremoved = await api.remove (myRecord);     
+      let notremoved = await api.remove (myRecord.storeId);     
       let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord);       
+      let removed = await api.remove (myRecord.storeId);       
 
       expect (notremoved).toBe (false) ;       
       expect (stored).toBe (true) ;         
@@ -49,14 +50,14 @@ describe("RemoveActivity", async function () {
 
    it("Needs to succeed with valid key in production environment", async function () {
       
-      let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
 
-      let notremoved = await api.remove (myRecord);     
+      let notremoved = await api.remove (myRecord.storeId);     
       let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord);       
+      let removed = await api.remove (myRecord.storeId);       
 
       expect (notremoved).toBe (false) ;       
       expect (stored).toBe (true) ;         
@@ -66,12 +67,12 @@ describe("RemoveActivity", async function () {
 
    it("Needs to fail with invalid key.", async function () {
 
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
 
-      let ok = await api.remove (myRecord); 
+      let ok = await api.remove (myRecord.storeId); 
 
       expect (ok).toBe (false) ;        
 
@@ -79,12 +80,12 @@ describe("RemoveActivity", async function () {
 
    it("Needs to fail with invalid key in production environment.", async function () {
 
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
 
-      let ok = await api.remove (myRecord);    
+      let ok = await api.remove (myRecord.storeId)  
 
       expect (ok).toBe (false) ;              
 

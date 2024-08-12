@@ -1,14 +1,14 @@
 "use strict";
 // Copyright (c) 2024 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefaultEnvironment = getDefaultEnvironment;
-exports.getEnvironment = getEnvironment;
+exports.getEnvironment = exports.getDefaultEnvironment = void 0;
 // Internal imports
 const IEnvironment_1 = require("./IEnvironment");
 const Environment_1 = require("./Environment");
 function getDefaultEnvironment() {
     return new Environment_1.DevelopmentEnvironment();
 }
+exports.getDefaultEnvironment = getDefaultEnvironment;
 /**
  * Returns an instance of IEnvironment based on the provided EEnvironment type.
  *
@@ -26,4 +26,5 @@ function getEnvironment(environmentString) {
             return new Environment_1.ProductionEnvironment();
     }
 }
+exports.getEnvironment = getEnvironment;
 //# sourceMappingURL=IEnvironmentFactory.js.map

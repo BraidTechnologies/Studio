@@ -6,6 +6,7 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi'
 
 
@@ -32,7 +33,7 @@ describe("SaveActivity", async function () {
 
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, process.env.SessionKey.toString());
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
@@ -45,7 +46,7 @@ describe("SaveActivity", async function () {
 
    it("Needs to succeed with valid key in production environment", async function () {
       
-      let api = new ActivityRepostoryApi (EEnvironment.kProduction, process.env.SessionKey.toString());
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
@@ -58,7 +59,7 @@ describe("SaveActivity", async function () {
 
    it("Needs to fail with invalid key.", async function () {
 
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();
@@ -71,7 +72,7 @@ describe("SaveActivity", async function () {
 
    it("Needs to fail with invalid key in production environment.", async function () {
 
-      let api = new ActivityRepostoryApi (EEnvironment.kLocal, "thiswillfail");
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
       myRecord.storeId = randomKey();

@@ -6,94 +6,52 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
-
 declare var process: any;
+
+import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
+import { SessionApi } from "../../BraidCommon/src/SessionApi"
 
 describe("CheckSession", async function () {
 
-   async function validSessionCall (apiUrl: string) : Promise<string | undefined> {
-      var response: any;
-      let summary : string | undefined = undefined;
-   
-      try {
-         response = await axios.post(apiUrl, {
-         });
-         summary = (response.data as string);
-
-         console.log (apiUrl + ", Returned:" + summary);
-
-      } catch (e: any) {       
-
-         console.error ("Error: " + apiUrl);           
-      }     
-
-      return summary;
-   }
-
-   async function invalidSessionCall (apiUrl: string) : Promise <Boolean> {
-   
-      var response: any;
-      let caught = false;
-
-      try {
-         response = await axios.get(apiUrl, {
-         });
-
-      } catch (e: any) {       
-         caught = true;
-      }     
-
-      return caught;
-   }
-
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let environment = getEnvironment(EEnvironment.kLocal);
+      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
-      let apiUrl = environment.checkSessionApi() + "?session=" + process.env.SessionKey.toString();
+      let session = await api.checkSessionKey ();
 
-      let summary = await validSessionCall (apiUrl);
-
-      expect (summary && summary?.length > 0).toBe (true) ;         
+      expect (session && session?.length > 0).toBe (true) ;         
 
    }).timeout(20000);
 
    it("Needs to succeed with valid key in production environment", async function () {
       
-      let environment = getEnvironment(EEnvironment.kProduction);
+      let api = new SessionApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
 
-      let apiUrl = environment.checkSessionApi() + "?session=" + process.env.SessionKey.toString();
+      let session = await api.checkSessionKey ();
 
-      let summary = await validSessionCall (apiUrl);
-
-      expect (summary && summary?.length > 0).toBe (true) ;   
+      expect (session && session?.length > 0).toBe (true) ;   
 
    }).timeout(20000);
 
    it("Needs to fail with invalid key.", async function () {
 
-      let environment = getEnvironment(EEnvironment.kLocal);
+      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
-      let apiUrl = environment.checkSessionApi() + "?session=" + "thiswillfail";
-
-      let caught = await invalidSessionCall (apiUrl);
+      let session = await api.checkSessionKey ();
       
-      expect (caught).toBe (true) ;         
+      expect (session).toEqual ("") ;         
 
   }).timeout(20000);
 
   it("Needs to fail with invalid key in production environment.", async function () {
 
-      let environment = getEnvironment(EEnvironment.kProduction);
+     let api = new SessionApi (getEnvironment (EEnvironment.kProduction), "thiswillfail");
 
-      let apiUrl = environment.checkSessionApi() + "?session=" + "thiswillfail";
+     let session = await api.checkSessionKey ();
+   
+     expect (session).toEqual ("") ;              
 
-      let caught = await invalidSessionCall (apiUrl);
-      
-      expect (caught).toBe (true) ;         
-
-}).timeout(20000);
+   }).timeout(20000);
 
 });

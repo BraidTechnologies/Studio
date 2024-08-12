@@ -4,6 +4,11 @@
 import {EEnvironment, IEnvironment} from './IEnvironment';
 import {DevelopmentEnvironment, StagingEnvironment, ProductionEnvironment} from './Environment';
 
+export function getDefaultEnvironment () : IEnvironment  {
+
+   return new DevelopmentEnvironment();   
+}
+
 /**
  * Returns an instance of IEnvironment based on the provided EEnvironment type.
  * 
