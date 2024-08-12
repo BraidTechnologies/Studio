@@ -6,7 +6,7 @@ import {DevelopmentEnvironment, StagingEnvironment, ProductionEnvironment} from 
 
 export function getDefaultEnvironment () : IEnvironment  {
 
-   return new DevelopmentEnvironment();   
+   return new ProductionEnvironment();   
 }
 
 /**
