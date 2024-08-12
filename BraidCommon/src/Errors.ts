@@ -17,7 +17,6 @@ export class InvalidParameterError extends Error {
    }
 }
 
-
 /**
  * Represents an error that occurs when an invalid operation is attempted.
  * @extends Error

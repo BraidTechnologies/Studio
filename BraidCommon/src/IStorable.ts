@@ -3,7 +3,7 @@
 
 export interface IStorable {
 
-                            // member variables prefixed 'store' to reduce chances of clashes with derived classes that implement this. 
+                            // member variables prefixed 'store' to reduce chances of clashes with derived classes that implement this.                             
    storeId : string;        // id of the object that is stored
    storeContextId: string;  // id to identify context - such as a conversation in Boxed
    storeUserId: string;     // id to idemtify the user
