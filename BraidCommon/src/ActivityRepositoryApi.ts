@@ -2,8 +2,7 @@
 import axios from 'axios';
 
 import { IStorable, IStoreQuerySpec } from "./IStorable";
-import { getEnvironment } from "./IEnvironmentFactory";
-import { EEnvironment, IEnvironment } from "./IEnvironment";
+import { IEnvironment } from "./IEnvironment";
 
 /**
  * Represents an API for activities.
@@ -17,8 +16,8 @@ export class ActivityRepostoryApi {
    private _environment: IEnvironment;
    private _sessionKey: string;
 
-   public constructor(environemnt_: EEnvironment, sessionKey_: string) {
-      this._environment = getEnvironment(environemnt_);
+   public constructor(environemnt_: IEnvironment, sessionKey_: string) {
+      this._environment = environemnt_;
       this._sessionKey = sessionKey_;
    }  
 
@@ -53,14 +52,20 @@ export class ActivityRepostoryApi {
       }          
    }
 
-   async remove (record: IStorable) : Promise<boolean> {
+   /**
+    * Asynchronously removes a record from the activity repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+    */
+   async remove (recordId: string) : Promise<boolean> {
 
       let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
       var response: any;
 
       try {
          response = await axios.post(apiUrl, {
-            storeId: record.storeId
+            storeId: recordId
          });
 
          if (response.status === 200) {
@@ -77,6 +82,12 @@ export class ActivityRepostoryApi {
       }          
    }
 
+   /**
+    * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    */
    async recent (querySpec: IStoreQuerySpec) : Promise<Array<IStorable>> {
 
       let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();

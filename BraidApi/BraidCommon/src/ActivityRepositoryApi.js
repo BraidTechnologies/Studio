@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActivityRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
-const IEnvironmentFactory_1 = require("./IEnvironmentFactory");
 /**
  * Represents an API for activities.
  *
@@ -23,7 +22,7 @@ const IEnvironmentFactory_1 = require("./IEnvironmentFactory");
  */
 class ActivityRepostoryApi {
     constructor(environemnt_, sessionKey_) {
-        this._environment = (0, IEnvironmentFactory_1.getEnvironment)(environemnt_);
+        this._environment = environemnt_;
         this._sessionKey = sessionKey_;
     }
     /**
@@ -56,14 +55,20 @@ class ActivityRepostoryApi {
             }
         });
     }
-    remove(record) {
+    /**
+     * Asynchronously removes a record from the activity repository API.
+     *
+     * @param recordId - The ID of the record to be removed.
+     * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+     */
+    remove(recordId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    storeId: record.storeId
+                    storeId: recordId
                 });
                 if (response.status === 200) {
                     return true;
@@ -79,6 +84,12 @@ class ActivityRepostoryApi {
             }
         });
     }
+    /**
+     * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+     *
+     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+     */
     recent(querySpec) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
