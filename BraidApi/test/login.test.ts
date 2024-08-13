@@ -35,5 +35,26 @@ describe("Login", async function () {
 
   }).timeout(20000);
 
+  it("Needs to succeed with valid key in production environment", async function () {
+      
+   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
+
+   let session = await api.login ();
+
+   expect (session && session?.length > 0).toBe (true) ;         
+
+}).timeout(20000);
+
+
+it("Needs to fail with invalid key in production environment.", async function () {
+
+   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), "thiswillfail");
+
+   let session = await api.login ();
+   
+   expect (session).toEqual ("") ;         
+
+}).timeout(20000);  
+
 
 });
