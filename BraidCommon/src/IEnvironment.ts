@@ -16,6 +16,9 @@ export interface IEnvironment {
    saveActivityApi(): string;
    removeActivityApi(): string;
    getActivitiesApi(): string;
+   boxerHome(): string;
+   loginWithLinkedInApi(): string;
+   authFromLinkedInApi(): string;
 }
 
 

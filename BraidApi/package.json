@@ -11,17 +11,19 @@
     "prestart": "npm run clean && npm run build",
     "start": "func start",
     "test": "mocha --debug-brk --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --require ts-node/register test/*activit*.test.ts"
+    "test-mini": "mocha --debug-brk --require ts-node/register test/*login*.test.ts"
   },
   "dependencies": {
     "@azure/functions": "^4.5.0",
     "axios": "^1.7.2",
     "axios-retry": "^4.4.2",
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "qs": "^6.13.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.7",
     "@types/node": "22.x",
+    "@types/qs": "^6.9.15",
     "azure-functions-core-tools": "^4.x",
     "expect": "^29.7.0",
     "latest": "^0.2.0",

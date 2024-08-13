@@ -30,6 +30,15 @@ export class DevelopmentEnvironment implements IEnvironment {
    getActivitiesApi(): string {
       return "http://localhost:7071/api/GetActivities"      
    }
+   loginWithLinkedInApi(): string {
+      return "http://localhost:7071/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "http://localhost:7071/api/ProcessAuthFromLinkedIn"; 
+   }   
+   boxerHome(): string {
+      return "http://localhost:1337/aibot.html";
+   }
 }
 
 /**
@@ -51,14 +60,23 @@ export class StagingEnvironment{
       return "https://braidapi.azurewebsites.net/api/Embed"; 
    }   
    saveActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/SaveActivity"
+      return "https://braidapi.azurewebsites.net/api/SaveActivity";
    }  
    removeActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+      return "https://braidapi.azurewebsites.net/api/RemoveActivity";
    }   
    getActivitiesApi(): string {
-      return "https://braidapi.azurewebsites.net/api/GetActivities"      
-   }    
+      return "https://braidapi.azurewebsites.net/api/GetActivities";      
+   }  
+   loginWithLinkedInApi(): string {
+      return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+   }
+   boxerHome(): string {
+      return "https://braidapps.io/aibot.html";
+   }   
 }
 
 /**
@@ -87,5 +105,14 @@ export class ProductionEnvironment {
    }    
    getActivitiesApi(): string {
       return "https://braidapi.azurewebsites.net/api/GetActivities"      
-   }        
+   }       
+   loginWithLinkedInApi(): string {
+      return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+   }    
+   boxerHome(): string {
+      return "https://braidapps.io/aibot.html";
+   }  
 }
