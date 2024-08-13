@@ -6,8 +6,12 @@ exports.getEnvironment = getEnvironment;
 // Internal imports
 const IEnvironment_1 = require("./IEnvironment");
 const Environment_1 = require("./Environment");
+/**
+ * Returns the default environment which is an instance of ProductionEnvironment.
+ * @returns {IEnvironment} The default environment instance.
+ */
 function getDefaultEnvironment() {
-    return new Environment_1.DevelopmentEnvironment();
+    return new Environment_1.ProductionEnvironment();
 }
 /**
  * Returns an instance of IEnvironment based on the provided EEnvironment type.
