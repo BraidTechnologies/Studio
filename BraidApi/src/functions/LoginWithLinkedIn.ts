@@ -55,7 +55,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
    const queryAsObject = Object.fromEntries(request.query.entries());
    const stringifiedQuery = JSON.stringify(queryAsObject);
 
-   let environment = getEnvironment(EEnvironment.kLocal);
+   let environment = getEnvironment(EEnvironment.kProduction);
 
    // https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin%2Fcontext&tabs=HTTPS1
    var clientID = process.env.LinkedInAppId;
@@ -86,7 +86,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
  */
 async function redirectBackHomeWithFullPath (code : string, session: string, conversation: string, secret: string, context: InvocationContext) {
 
-   let environment = getEnvironment(EEnvironment.kLocal);
+   let environment = getEnvironment(EEnvironment.kProduction);
 
    try {
  
