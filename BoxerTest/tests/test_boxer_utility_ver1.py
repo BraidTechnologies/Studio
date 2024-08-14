@@ -237,3 +237,10 @@ def find_best_match(embeddings, document):
             best_match = embedding
             best_cosine_similarity = cosine_similarity
     return {"document": best_match["document"], "cosine_similarity": best_cosine_similarity}
+
+
+
+questions = [
+"What is a Large Language Model (LLM)?",
+"How do Large Language Models (LLMs) work?",
+"What are some common use cases for Large Language Models (LLMs) in applications?"]
