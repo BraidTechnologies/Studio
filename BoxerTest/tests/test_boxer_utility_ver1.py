@@ -254,3 +254,20 @@ questions = [
 "What is a Large Language Model (LLM)?",
 "How do Large Language Models (LLMs) work?",
 "What are some common use cases for Large Language Models (LLMs) in applications?"]
+
+
+'''
+Below is the logic to run the test
+
+'''
+questions = [
+    "What is a Large Language Model (LLM)?",
+    "How do Large Language Models (LLMs) work?",
+    "What are some common use cases for Large Language Models (LLMs) in applications?"
+]
+
+config = ApiConfiguration()  # You'll need to define or import this class
+test_destination_dir = "path/to/output/directory"
+source_dir = "path/to/source/directory"
+
+run_tests(config, test_destination_dir, source_dir, questions)
