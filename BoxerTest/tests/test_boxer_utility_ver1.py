@@ -11,6 +11,7 @@ Follow-up question logic commented out from the code!
 import logging
 import os
 import json
+import sys
 
 # Third-Party Packages
 import openai
@@ -18,6 +19,11 @@ from openai import AzureOpenAI, BadRequestError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 import numpy as np
 from numpy.linalg import norm
+
+# Add the parent directory of the test file to the Python path for importing modules
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
@@ -266,8 +272,11 @@ questions = [
     "What are some common use cases for Large Language Models (LLMs) in applications?"
 ]
 
-config = ApiConfiguration()  # You'll need to define or import this class
-test_destination_dir = "path/to/output/directory"
-source_dir = "path/to/source/directory"
+config = ApiConfiguration()  
+test_destination_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/test output/"
+source_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/data/"
+
+if not os.path.exists(test_destination_dir):
+    os.makedirs(test_destination_dir)
 
 run_tests(config, test_destination_dir, source_dir, questions)
