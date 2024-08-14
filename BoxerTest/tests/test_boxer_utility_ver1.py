@@ -187,21 +187,6 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         json.dump(output_results, f, indent=4)
 
 
-# write a test loop here 
-'''
-
-take as input 100 questiones from a python data structure
-
-For each question, generate the imagined document, and then do a cosine similarity lookup into the datastore ( data store location as per me: data/test/embeddings_lite.json) to see if we have an answer, and if so, what is the cosine similarity
-
-Write all answers out to JSON.
-
-I want to  Manually open results on excel and compare to prior baseline. 
-
-'''
-
-
-
 def test_boxer_utility_ver1_test_loop(questions):
     # Initialize logging
     logger = logging.getLogger(__name__)
@@ -209,7 +194,9 @@ def test_boxer_utility_ver1_test_loop(questions):
     logger.addHandler(logging.StreamHandler())
 
     # Load the test embeddings
-    embeddings_file = os.path.join(os.path.dirname(__file__), "..", "data", "test", "embeddings_lite.json")  #the location of this file in the current moment in the repo is unknown 
+    
+    embeddings_file = os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "embeddings_lite.json")
+    embeddings_file = os.path.abspath(embeddings_file)
     with open(embeddings_file, "r", encoding="utf-8") as f:
         embeddings = json.load(f)
 
