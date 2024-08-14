@@ -12,6 +12,10 @@ class TextRespositoryFacade:
       self.output_location = output_location   
       self.extension = "txt" 
 
+   @staticmethod
+   def spec () -> str: 
+      return "*.txt" 
+   
    def save(self, path: str, text: str) -> None: 
       '''
       Save the provided text to a file at the specified path within the output location.

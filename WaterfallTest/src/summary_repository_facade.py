@@ -12,6 +12,10 @@ class SummaryRespositoryFacade:
       self.output_location = output_location  
       self.extension = "summary.txt" 
 
+   @staticmethod   
+   def spec () -> str: 
+      return "*.summary.txt"
+   
    def save(self, path: str, text: str) -> None: 
       '''
       Save the provided text to a file at the specified path within the output location.
@@ -21,8 +25,8 @@ class SummaryRespositoryFacade:
          text (str): The text content to be saved in the file.
       '''   
 
-      return self.file__repository.save (path, self.extension, text)
-   
+      return self.file__repository.save (path, self.extension, text)   
+     
    def load (self, path: str) -> str: 
       '''
       Load content from a file based on the provided path. 
