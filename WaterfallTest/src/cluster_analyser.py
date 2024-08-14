@@ -22,7 +22,7 @@ class ClusterAnalyser:
       embeddingRepostory = EmbeddingRespositoryFacade (self.output_location)
 
       clusters = []
-      for path in enumerate(self.paths):
+      for path in self.paths:
          embedding = embeddingRepostory.load (path)
          clusters.append (embedding)
 
