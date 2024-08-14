@@ -1,0 +1,39 @@
+{
+   "compilerOptions": {
+      "target": "ES2022",
+      "lib": [ "ES2022", "dom" ],
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "noImplicitAny": true,
+      "strictNullChecks" : true,
+      "module": "CommonJS",        
+      "noEmitOnError": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "jsx": "react",
+      "isolatedModules": true,    
+      "moduleResolution": "Node",
+      "resolveJsonModule" : true
+   },
+   "include": [
+      "./core/**/*.ts",
+      "./ui/**/*.tsx",
+      "./ui/**/*.ts",      
+      "./test/**/*.test.ts",
+      "./scripts/**/*.ts"      
+   ],
+   "exclude": [
+      "./node_modules"
+   ],
+   "awesomeTypescriptLoaderOptions": {
+      "useCache": true,
+      "useBabel": true
+   },
+   "strictPropertyInitialization": true,
+   "ts-node": {
+      // Tell ts-node CLI to install the --loader automatically
+      "esm": true
+    }
+}
