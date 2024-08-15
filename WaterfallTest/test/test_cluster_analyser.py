@@ -37,29 +37,39 @@ def test_basic ():
     test_path = 'test'
     test_output_location = 'test_output'
 
-    analyser = ClusterAnalyser (test_path, test_output_location)
+    path_embedding_tuples = []
+    path_embedding_tuple = (test_path, "[1,2]")
+    path_embedding_tuples.append (path_embedding_tuple)
+        
+    analyser = ClusterAnalyser (path_embedding_tuples, test_output_location)
 
-    assert analyser.path == test_path  
+    assert len(analyser.path_embeddings) == 1  
     assert analyser.output_location == test_output_location
   
 
 def test_with_output (test_output_dir):
+    
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
-    test_path = 'simple_test.html'
+    test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
     test_output_location = 'test_output'
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    text = downloader.download () 
 
-    summariser = Summariser (test_path, text, test_output_location)   
-    summary = summariser.summarise () 
+    path_embedding_tuples = []
 
-    embedder = Embedder (test_path, summary, test_output_location)
-    embedding = embedder.embed ()   
+    for test_path in test_paths:
+       downloader = HtmlFileDownloader (test_path, test_output_location)
+       text = downloader.download () 
 
-    paths = []
-    paths.append (test_path)
-    cluster_analyser = ClusterAnalyser (paths, test_output_location) 
-    cluster = cluster_analyser.analyse ()
+       summariser = Summariser (test_path, text, test_output_location)   
+       summary = summariser.summarise () 
+
+       embedder = Embedder (test_path, summary, test_output_location)
+       embedding = embedder.embed ()   
+
+       path_embedding_tuple = (test_path, embedding)
+       path_embedding_tuples.append (path_embedding_tuple)
+
+    cluster_analyser = ClusterAnalyser (path_embedding_tuples, test_output_location) 
+    cluster = cluster_analyser.analyse (2)
 
     assert 0 == 0

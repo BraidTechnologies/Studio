@@ -43,6 +43,8 @@ class WaterfallDataPipeline:
 
       summaries = []
       embeddings = []
+      path_embedding_tuples = []
+
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
          text = downloader.download ()
@@ -55,7 +57,12 @@ class WaterfallDataPipeline:
          embedding = embedder.embed ()
          embeddings.append (embedding)         
 
-      cluster_analyser = ClusterAnalyser (self.output_location, EmbeddingRespositoryFacade.spec, self.output_location)
+         path_embedding_tuple = (link, embedding)
+         path_embedding_tuples.append (path_embedding_tuple)
+
+      cluster_analyser = ClusterAnalyser (path_embedding_tuples, self.output_location) 
+      cluster_analyser.analyse(3)
+      #cluster_analyser = ClusterAnalyser (self.output_location, EmbeddingRespositoryFacade.spec, self.output_location)
 
       output_results = []
       for i, text in enumerate(summaries):
