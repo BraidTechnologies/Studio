@@ -12,6 +12,7 @@ import logging
 import os
 import json
 import sys
+from logging import Logger
 
 # Third-Party Packages
 import openai
@@ -103,6 +104,17 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
     return call_openai_chat(client, config, messages, logger)
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+    """Get the embedding for a text."""
+    try:
+        embedding = get_embedding(text, client, config)
+        return embedding
+    except Exception as e:
+        logger.error(f"Error getting text embedding: {e}")
+        raise
+
+
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def generate_followup_question(client: AzureOpenAI, config: ApiConfiguration, summary: str, logger: logging.Logger) -> str:
     """Generate a follow-up question based on the provided text."""
     messages = [
@@ -113,14 +125,14 @@ def generate_followup_question(client: AzureOpenAI, config: ApiConfiguration, su
 
 #unfinalized code for assess_followup_relevance: 
 
-# @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-# def assess_followup_relevance(client: AzureOpenAI, config: ApiConfiguration, followup_question: str, logger: logging.Logger) -> str:
-#     """Assess whether the follow-up question is on-topic about AI."""
-#     messages = [
-#         {"role": "system", "content": "You are an AI assistant helping a team of developers understand AI. You explain complex concepts in simple language. You will be asked a question. Respond 'yes' if the question appears to be about AI, otherwise respond 'no'."},
-#         {"role": "user", "content": followup_question},
-#     ]
-#     return call_openai_chat(client, config, messages, logger)
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+def assess_followup_relevance(client: AzureOpenAI, config: ApiConfiguration, followup_question: str, logger: logging.Logger) -> str:
+    """Assess whether the follow-up question is on-topic about AI."""
+    messages = [
+        {"role": "system", "content": "You are an AI assistant helping a team of developers understand AI. You explain complex concepts in simple language. You will be asked a question. Respond 'yes' if the question appears to be about AI, otherwise respond 'no'."},
+        {"role": "user", "content": followup_question},
+    ]
+    return call_openai_chat(client, config, messages, logger)
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float: 
     return np.dot(a, b) / (norm(a) * norm(b))
