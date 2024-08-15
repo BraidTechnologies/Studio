@@ -11,6 +11,7 @@ export interface IEnvironment {
 
    checkSessionApi () : string;
    summariseApi () : string;
+   findThemeApi(): string;
    classifyApi () : string;
    embedApi() : string;
    saveActivityApi(): string;

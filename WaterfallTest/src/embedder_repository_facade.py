@@ -1,6 +1,14 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
+import os
+from glob import glob
+
 from file_repository import FileRespository
+
+spec = "embed.txt"
+
+def read_file_names (path: str, spec: str):
+    return list(glob(os.path.join(path, spec)))
 
 class EmbeddingRespositoryFacade:
    #...
@@ -10,8 +18,23 @@ class EmbeddingRespositoryFacade:
    def __init__(self, output_location: str):
       self.file__repository = FileRespository (output_location)       
       self.output_location = output_location  
-      self.extension = "embed.txt" 
+      self.extension = spec
 
+   @staticmethod
+   def spec () -> str: 
+      return "*." + spec 
+   
+   def list (self) -> list[str]: 
+      paths = read_file_names (self.output_location, EmbeddingRespositoryFacade.spec())
+
+      file_names = []
+      for path in paths:
+         stripped = os.path.splitext(os.path.splitext(path)[0])[0] #strip twice as we have double extensions in file names
+         filename = os.path.basename(stripped)
+         file_names.append (filename)
+      
+      return file_names
+      
    def save(self, path: str, text: str) -> None: 
       '''
       Save the provided text to a file at the specified path within the output location.
@@ -20,9 +43,8 @@ class EmbeddingRespositoryFacade:
          path (str): The path where the file will be saved.
          text (str): The text content to be saved in the file.
       '''   
+      return self.file__repository.save (path, self.extension, text)      
 
-      return self.file__repository.save (path, self.extension, text)
-   
    def load (self, path: str) -> str: 
       '''
       Load content from a file based on the provided path. 

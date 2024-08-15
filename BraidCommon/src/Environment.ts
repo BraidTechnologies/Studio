@@ -14,6 +14,9 @@ export class DevelopmentEnvironment implements IEnvironment {
       return "http://localhost:7071/api/Summarize"; 
 
    }
+   findThemeApi(): string {
+      return "http://localhost:7071/api/FindTheme";
+   }
    classifyApi () : string {
       return "http://localhost:7071/api/Classify"; 
    }
@@ -51,7 +54,9 @@ export class StagingEnvironment{
    }
    summariseApi () : string {
       return "https://braidapi.azurewebsites.net/api/Summarize"; 
-
+   }
+   findThemeApi(): string {
+      return "https://braidapi.azurewebsites.net/api/FindTheme";
    }
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
@@ -90,6 +95,9 @@ export class ProductionEnvironment {
    summariseApi () : string {
       return "https://braidapi.azurewebsites.net/api/Summarize"; 
 
+   }
+   findThemeApi(): string {
+      return "https://braidapi.azurewebsites.net/api/FindTheme";
    }
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
