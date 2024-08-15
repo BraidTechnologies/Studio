@@ -31,7 +31,7 @@ class ClusterAnalyser:
       kmeans = KMeans(n_clusters=clusters)
       kmeans.fit(embeddings)
 
-      #for n in kmeans.labels_.
+      #for n in kmeans.labels_:
 
       reducer = umap.UMAP()
       logger.debug("Reducing cluster")      

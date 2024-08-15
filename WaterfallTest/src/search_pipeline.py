@@ -4,6 +4,9 @@
 import logging
 import os
 import json
+from scipy.spatial import distance
+import plotly.express as px
+import umap.umap_ as umap
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -61,8 +64,16 @@ class WaterfallDataPipeline:
          path_embedding_tuples.append (path_embedding_tuple)
 
       cluster_analyser = ClusterAnalyser (path_embedding_tuples, self.output_location) 
-      cluster_analyser.analyse(3)
-      #cluster_analyser = ClusterAnalyser (self.output_location, EmbeddingRespositoryFacade.spec, self.output_location)
+      classifications = cluster_analyser.analyse(3)
+
+
+      reducer = umap.UMAP()
+      logger.debug("Reducing cluster")      
+      embeddings_2d = reducer.fit_transform(embeddings)
+
+      logger.debug("Generating chart")
+      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=kmeans.labels_)
+      fig.show()
 
       output_results = []
       for i, text in enumerate(summaries):
