@@ -4,7 +4,7 @@
 import logging
 import os
 import json
-from scipy.spatial import distance
+import pandas as pd
 import plotly.express as px
 import umap.umap_ as umap
 
@@ -17,8 +17,8 @@ from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
 from embedder import Embedder
-from embedder_repository_facade import EmbeddingRespositoryFacade
 from cluster_analyser import ClusterAnalyser
+from theme_finder import ThemeFinder
 
 class WaterfallDataPipeline:
    '''
@@ -33,7 +33,7 @@ class WaterfallDataPipeline:
       return
        
 
-   def search (self) -> list[str]: 
+   def search (self, clusters: int) -> list[str]: 
       '''
       Searches for HTML content from a list of links.
 
@@ -46,7 +46,9 @@ class WaterfallDataPipeline:
 
       summaries = []
       embeddings = []
+      embeddings_as_float = []
       path_embedding_tuples = []
+      themes = []
 
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
@@ -54,7 +56,7 @@ class WaterfallDataPipeline:
 
          summariser = Summariser (link, text, self.output_location)
          summary = summariser.summarise ()
-         summaries.append (text)
+         summaries.append (summary)
 
          embedder = Embedder (link, summary, self.output_location)
          embedding = embedder.embed ()
@@ -63,16 +65,39 @@ class WaterfallDataPipeline:
          path_embedding_tuple = (link, embedding)
          path_embedding_tuples.append (path_embedding_tuple)
 
-      cluster_analyser = ClusterAnalyser (path_embedding_tuples, self.output_location) 
-      classifications = cluster_analyser.analyse(3)
+      for embedding in embeddings:           
+         embedding_as_float = Embedder.textToFloat (embedding)
+         embeddings_as_float.append (embedding_as_float)         
 
+      cluster_analyser = ClusterAnalyser (path_embedding_tuples, self.output_location) 
+      classifications = cluster_analyser.analyse(clusters)
+      
+      accumulated_summaries = [""] * clusters
+
+      # Accumulate a set of summaries according to classification
+      for i, summary in enumerate (summaries):
+         accumulated_summaries[classifications[i]] = accumulated_summaries[classifications[i]] + summary
+
+      # Ask the theme finder to find a theme, then store it
+      for accumulated_summary in accumulated_summaries:
+         theme_finder = ThemeFinder (accumulated_summary)
+         theme = theme_finder.find_theme ()
+         themes.append (theme)
 
       reducer = umap.UMAP()
       logger.debug("Reducing cluster")      
-      embeddings_2d = reducer.fit_transform(embeddings)
+      embeddings_2d = reducer.fit_transform(embeddings_as_float)
 
       logger.debug("Generating chart")
-      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=kmeans.labels_)
+      #df = pd.DataFrame({'theme': themes})
+      
+      # Make a list of theme names which gets used as the legend
+      theme_names = []
+      for classification in classifications:
+         theme_name = themes[classification]      
+         theme_names.append(theme_name)
+      
+      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
       fig.show()
 
       output_results = []
@@ -81,6 +106,7 @@ class WaterfallDataPipeline:
          output_item["summary"] = text
          output_item["embedding"] = embeddings[i]
          output_item["path"] = links[i]
+         output_item["theme"] = theme_names[i]
          output_results.append (output_item)
       
       # save the test results to a json file

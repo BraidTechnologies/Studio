@@ -13,8 +13,10 @@ logging.getLogger().setLevel(logging.DEBUG)
  
  # get the API KEY here: https://developers.google.com/custom-search/v1/overview
 GOOGLE_CUSTOM_WEB_SEARCH_API_KEY = os.environ["GOOGLE_CUSTOM_WEB_SEARCH_API_KEY"]
+
 # get your Search Engine ID on your CSE control panel
-SEARCH_ENGINE_ID = "14d670ee7e3574232"
+#https://programmablesearchengine.google.com/controlpanel/all
+SEARCH_ENGINE_ID = "00d305498d8da42e1"
 
 class WebSearcher:
    '''

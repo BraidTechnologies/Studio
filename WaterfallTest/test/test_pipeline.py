@@ -33,13 +33,13 @@ def test_basic ():
     pipeline = WaterfallDataPipeline (test_output_location)
     assert pipeline.output_location == test_output_location 
 
-@pytest.mark.timeout(200)
+@pytest.mark.timeout(2000)
 def test_with_search (test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_output_location = 'test_output'
 
     pipeline = WaterfallDataPipeline (test_output_location)
-    links = pipeline.search ()    
+    links = pipeline.search (7)    
     assert len(links) >= 1   
 
