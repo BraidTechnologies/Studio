@@ -76,7 +76,7 @@ class Embedder:
       characters_to_remove = "[]"  
       translation_table = str.maketrans('', '', characters_to_remove)
    
-      numbers = embedding[1].split(',')
+      numbers = embedding.split(',')
          
       stripped_number_array = [number.translate(translation_table) for number in numbers]            
          

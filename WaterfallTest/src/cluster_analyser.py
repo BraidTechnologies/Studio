@@ -2,10 +2,7 @@
 
 # Standard Library Imports
 import logging
-from scipy.spatial import distance
-import plotly.express as px
 from sklearn.cluster import KMeans
-import umap.umap_ as umap
 
 from embedder import Embedder
 
@@ -31,15 +28,5 @@ class ClusterAnalyser:
       kmeans = KMeans(n_clusters=clusters)
       kmeans.fit(embeddings)
 
-      #for n in kmeans.labels_.
-
-      reducer = umap.UMAP()
-      logger.debug("Reducing cluster")      
-      embeddings_2d = reducer.fit_transform(embeddings)
-
-      logger.debug("Generating chart")
-      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=kmeans.labels_)
-      fig.show()
-
-      return embeddings
+      return kmeans.labels_
 
