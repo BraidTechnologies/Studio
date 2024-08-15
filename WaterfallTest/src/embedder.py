@@ -60,4 +60,28 @@ class Embedder:
       repository.save (path, embedding)
 
       return embedding
+   
+
+   @staticmethod
+   def textToFloat (embedding: str) -> list[float]:
+      '''
+      Converts a string representation of numbers to a list of floating-point numbers.
+
+      Parameters:
+         embedding (str): A string containing numbers to be converted.
+
+      Returns:
+         list: A list of floating-point numbers extracted from the input string.
+      ''' 
+      characters_to_remove = "[]"  
+      translation_table = str.maketrans('', '', characters_to_remove)
+   
+      numbers = embedding[1].split(',')
+         
+      stripped_number_array = [number.translate(translation_table) for number in numbers]            
+         
+      number_array = [float(number) for number in stripped_number_array] 
+
+      return number_array     
+   
 

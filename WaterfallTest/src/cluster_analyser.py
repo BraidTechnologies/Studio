@@ -7,7 +7,7 @@ import plotly.express as px
 from sklearn.cluster import KMeans
 import umap.umap_ as umap
 
-from embedder_repository_facade import EmbeddingRespositoryFacade
+from embedder import Embedder
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -21,20 +21,17 @@ class ClusterAnalyser:
       self.output_location = output_location      
 
    def analyse(self, clusters: int) -> list[str]:       
-
-      characters_to_remove = "[]"  
-      translation_table = str.maketrans('', '', characters_to_remove)
    
       embeddings = []
-      for path_embedding in self.path_embeddings:
-         numbers = path_embedding[1].split(',')
-         stripped_number_array = [number.translate(translation_table) for number in numbers]            
-         number_array = [float(number) for number in stripped_number_array]
+      for path_embedding in self.path_embeddings:           
+         number_array = Embedder.textToFloat (path_embedding[1])
          embeddings.append (number_array)
 
       logger.debug("Making cluster")
       kmeans = KMeans(n_clusters=clusters)
       kmeans.fit(embeddings)
+
+      #for n in kmeans.labels_.
 
       reducer = umap.UMAP()
       logger.debug("Reducing cluster")      
