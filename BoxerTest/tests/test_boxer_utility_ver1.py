@@ -10,6 +10,9 @@ import os
 import json
 import sys
 from logging import Logger
+from typing import List
+import numpy as np
+from numpy.linalg import norm
 
 # Third-Party Packages
 import openai
@@ -25,11 +28,13 @@ sys.path.insert(0, parent_dir)
 
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
-from common.common_functions import get_embedding
+# from common.common_functions import get_embedding
+from . import cosine_similarity
 
-# Local Modules
-from common.ApiConfiguration import ApiConfiguration
-from common.common_functions import get_embedding
+#commnet to check potential path error:
+# from BoxerTest.common.ApiConfiguration import ApiConfiguration
+# from BoxerTest.common.BoxerUtility import generate_enriched_question, get_text_embedding, call_openai_chat
+# from BoxerTest.tests.TestResult import TestResult
 
 # Constants
 OPENAI_PERSONA_PROMPT = (
@@ -103,6 +108,42 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
 
     return content
 
+
+def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
+    """
+    Calculate the cosine similarity between two vectors.
+
+    Args:
+    a (np.ndarray): The first vector.
+    b (np.ndarray): The second vector.
+
+    Returns:
+    float: The cosine similarity between the two vectors.
+    """
+    # Check if the input vectors are numpy arrays
+    if not isinstance(a, np.ndarray) or not isinstance(b, np.ndarray):
+        raise ValueError("Input vectors must be numpy arrays")
+
+    # Check if the input vectors have the same shape
+    if a.shape != b.shape:
+        raise ValueError("Input vectors must have the same shape")
+
+    # Calculate the dot product of the two vectors
+    dot_product = np.dot(a, b)
+
+    # Calculate the L2 norm (magnitude) of each vector
+    a_norm = norm(a)
+    b_norm = norm(b)
+
+    # Check for division by zero
+    if a_norm == 0 or b_norm == 0:
+        raise ValueError("Input vectors must not be zero vectors")
+
+    # Calculate the cosine similarity
+    similarity = dot_product / (a_norm * b_norm)
+
+    return similarity
+
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(InvalidRequestError))
 def generate_enriched_question(config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     """Generate an enriched question using OpenAI's GPT model."""
@@ -124,39 +165,35 @@ def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> n
 
 # Similar functions for follow-up question generation and relevance assessment...
 
-def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: list) -> None:
+def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
     """Run tests with the given questions."""
 
-    logging.basicConfig(level=logging.WARNING)
-    logger = logging.getLogger(__name__)
-
-    configure_openai_for_azure(config)
-   
+    # Check if test_destination_dir is provided
     if not test_destination_dir:
         logger.error("Test data folder not provided")
         exit(1)
 
-    results = []
-
-    # Load existing chunks from a JSON file
-    cache_file = os.path.join(source_dir, "embeddings_lite.json")
+    # Read the stored chunks from the source directory
     current_chunks = []
-    if os.path.isfile(cache_file):
-        with open(cache_file, "r", encoding="utf-8") as f:
-            current_chunks = json.load(f)       
+    for filename in os.listdir(source_dir):
+        if filename.endswith(".json"):
+            file_path = os.path.join(source_dir, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                chunk = json.load(f)
+                current_chunks.append(chunk)
 
-    logger.info("Starting test run, total questions to be processed: %s", len(questions))
-
+    # Run the tests
+    results = []
     for question in questions:
         result = TestResult()
         result.question = question
 
-        result.enriched_question = generate_enriched_question(config, question, logger)
+        result.enriched_question = generate_enriched_question(config, question)
 
         # Convert the text of the enriched question to a vector embedding
-        embedding = get_text_embedding(config, result.enriched_question, logger)
-   
-        # Iterate through the stored chunks 
+        embedding = get_text_embedding(config, result.enriched_question)
+
+        # Iterate through the stored chunks
         for chunk in current_chunks:
             ada_embedding = chunk.get("ada_v2")
             similarity = cosine_similarity(ada_embedding, embedding)
@@ -164,10 +201,10 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
             # Count it as a hit if we pass a reasonableness threshold
             if similarity > 0.8:
                 result.hit = True
-         
+
             # Record the best match
             if similarity > result.hit_relevance:
-                result.hit_relevance = similarity 
+                result.hit_relevance = similarity
                 result.hit_summary = chunk.get("summary")
 
         results.append(result)
@@ -184,7 +221,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         }
         for result in results
     ]
-      
+
     # Save the test results to a JSON file
     output_file = os.path.join(test_destination_dir, "test_output.json")
     with open(output_file, "w", encoding="utf-8") as f:
