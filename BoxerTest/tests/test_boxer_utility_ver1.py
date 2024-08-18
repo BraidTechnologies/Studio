@@ -2,9 +2,6 @@
 This script processes a list of questions through the test pipeline.
 """
 
-'''
-Follow-up question logic commented out from the code! 
-'''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -16,7 +13,7 @@ from logging import Logger
 
 # Third-Party Packages
 import openai
-from openai import AzureOpenAI, BadRequestError
+from openai.errors import OpenAIError, InvalidRequestError  # Importing specific exceptions
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 import numpy as np
 from numpy.linalg import norm
@@ -25,6 +22,10 @@ from numpy.linalg import norm
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
+
+# Local Modules
+from common.ApiConfiguration import ApiConfiguration
+from common.common_functions import get_embedding
 
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
@@ -61,6 +62,13 @@ def get_sanitized_api_key() -> str:
         raise EnvironmentError("API key not set. Ensure that 'AZURE_OPENAI_API_KEY' is set.")
     return api_key.strip()  # Remove any extra whitespace or newlines
 
+# Configure the OpenAI API client for Azure
+def configure_openai_for_azure(config: ApiConfiguration) -> None:
+    openai.api_type = "azure"
+    openai.api_key = get_sanitized_api_key()
+    openai.api_base = config.resourceEndpoint
+    openai.api_version = config.apiVersion
+
 class TestResult:
     def __init__(self) -> None:
         self.question = ""
@@ -71,32 +79,21 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
-def create_openai_client(config: ApiConfiguration) -> AzureOpenAI:
-    """Create and return an AzureOpenAI client instance."""
-    # Use the sanitized API key
-    sanitized_api_key = get_sanitized_api_key()
-    return AzureOpenAI(
-        azure_endpoint=config.resourceEndpoint, 
-        api_key=sanitized_api_key,  # Use sanitized key
-        api_version=config.apiVersion,
-    )
-
-def call_openai_chat(client: AzureOpenAI, config: ApiConfiguration, messages: list, logger: logging.Logger) -> str:
+def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
-    response = client.chat.completions.create(
-        model=config.azureDeploymentName,
+    response = openai.ChatCompletion.create(
+        engine=config.azureDeploymentName,  
         messages=messages,
         temperature=0.7,
         max_tokens=config.maxTokens,
         top_p=0.0,
         frequency_penalty=0,
         presence_penalty=0,
-        stop=None,
         timeout=config.openAiRequestTimeout,
     )
 
-    content = response.choices[0].message.content
-    finish_reason = response.choices[0].finish_reason
+    content = response['choices'][0]['message']['content']
+    finish_reason = response['choices'][0]['finish_reason']
 
     if finish_reason not in {"stop", "length", ""}:
         logger.warning("Unexpected stop reason: %s", finish_reason)
@@ -106,45 +103,26 @@ def call_openai_chat(client: AzureOpenAI, config: ApiConfiguration, messages: li
 
     return content
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(InvalidRequestError))
+def generate_enriched_question(config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     """Generate an enriched question using OpenAI's GPT model."""
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
     ]
-    return call_openai_chat(client, config, messages, logger)
+    return call_openai_chat(messages, config, logger)
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(InvalidRequestError))
+def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text."""
     try:
-        embedding = get_embedding(text, client, config)
+        embedding = get_embedding(text, openai, config)
         return embedding
     except Exception as e:
         logger.error(f"Error getting text embedding: {e}")
         raise
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def generate_followup_question(client: AzureOpenAI, config: ApiConfiguration, summary: str, logger: logging.Logger) -> str:
-    """Generate a follow-up question based on the provided text."""
-    messages = [
-        {"role": "system", "content": FOLLOW_UP_PROMPT},
-        {"role": "user", "content": "Article summary: " + summary},
-    ]
-    return call_openai_chat(client, config, messages, logger)
-
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def assess_followup_relevance(client: AzureOpenAI, config: ApiConfiguration, followup_question: str, logger: logging.Logger) -> str:
-    """Assess whether the follow-up question is on-topic about AI."""
-    messages = [
-        {"role": "system", "content": "You are an AI assistant helping a team of developers understand AI. You explain complex concepts in simple language. You will be asked a question. Respond 'yes' if the question appears to be about AI, otherwise respond 'no'."},
-        {"role": "user", "content": followup_question},
-    ]
-    return call_openai_chat(client, config, messages, logger)
-
-def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float: 
-    return np.dot(a, b) / (norm(a) * norm(b))
+# Similar functions for follow-up question generation and relevance assessment...
 
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: list) -> None:
     """Run tests with the given questions."""
@@ -152,7 +130,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     logging.basicConfig(level=logging.WARNING)
     logger = logging.getLogger(__name__)
 
-    client = create_openai_client(config)
+    configure_openai_for_azure(config)
    
     if not test_destination_dir:
         logger.error("Test data folder not provided")
@@ -173,10 +151,10 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         result = TestResult()
         result.question = question
 
-        result.enriched_question = generate_enriched_question(client, config, question, logger)
+        result.enriched_question = generate_enriched_question(config, question, logger)
 
         # Convert the text of the enriched question to a vector embedding
-        embedding = get_text_embedding(client, config, result.enriched_question, logger)
+        embedding = get_text_embedding(config, result.enriched_question, logger)
    
         # Iterate through the stored chunks 
         for chunk in current_chunks:
@@ -192,11 +170,6 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
                 result.hit_relevance = similarity 
                 result.hit_summary = chunk.get("summary")
 
-        # Ask GPT for a follow-up question on the best match
-        # Then assess if the follow-up is about AI            
-        # result.follow_up = generate_followup_question(client, config, result.hit_summary, logger)
-        # result.follow_up_on_topic = assess_followup_relevance(client, config, result.follow_up, logger)            
-
         results.append(result)
 
     logger.debug("Total tests processed: %s", len(results))
@@ -208,8 +181,6 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
             "hit": result.hit,
             "summary": result.hit_summary,
             "hitRelevance": result.hit_relevance,
-            # "followUp": result.follow_up,
-            # "followUpOnTopic": result.follow_up_on_topic,
         }
         for result in results
     ]
