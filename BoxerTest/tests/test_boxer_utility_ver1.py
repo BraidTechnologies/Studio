@@ -16,7 +16,7 @@ from numpy.linalg import norm
 
 # Third-Party Packages
 import openai
-from openai.errors import OpenAIError, InvalidRequestError  # Importing specific exceptions
+from openai import OpenAIError, BadRequestError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 import numpy as np
 from numpy.linalg import norm
@@ -29,7 +29,7 @@ sys.path.insert(0, parent_dir)
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
 # from common.common_functions import get_embedding
-from . import cosine_similarity
+
 
 #commnet to check potential path error:
 # from BoxerTest.common.ApiConfiguration import ApiConfiguration
@@ -84,29 +84,56 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
+import openai
+from openai import OpenAIError, BadRequestError
+
+# Other imports remain the same...
+
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
-    response = openai.ChatCompletion.create(
-        engine=config.azureDeploymentName,  
-        messages=messages,
-        temperature=0.7,
-        max_tokens=config.maxTokens,
-        top_p=0.0,
-        frequency_penalty=0,
-        presence_penalty=0,
-        timeout=config.openAiRequestTimeout,
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            engine=config.azureDeploymentName,  
+            messages=messages,
+            temperature=0.7,
+            max_tokens=config.maxTokens,
+            top_p=0.0,
+            frequency_penalty=0,
+            presence_penalty=0,
+            timeout=config.openAiRequestTimeout,
+        )
 
-    content = response['choices'][0]['message']['content']
-    finish_reason = response['choices'][0]['finish_reason']
+        content = response['choices'][0]['message']['content']
+        finish_reason = response['choices'][0]['finish_reason']
 
-    if finish_reason not in {"stop", "length", ""}:
-        logger.warning("Unexpected stop reason: %s", finish_reason)
-        logger.warning("Content: %s", content)
-        logger.warning("Consider increasing max tokens and retrying.")
-        exit(1)
+        if finish_reason not in {"stop", "length", ""}:
+            logger.warning("Unexpected stop reason: %s", finish_reason)
+            logger.warning("Content: %s", content)
+            logger.warning("Consider increasing max tokens and retrying.")
+            exit(1)
 
-    return content
+        return content
+
+    except OpenAIError as e:
+        logger.error(f"OpenAI API error: {e}")
+        raise
+
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+    """Get the embedding for a text using OpenAI's embedding model."""
+    try:
+        response = openai.Embedding.create(
+            input=text,
+            engine=config.azureDeploymentName,  # Ensure this is set correctly for your Azure setup
+            timeout=config.openAiRequestTimeout
+        )
+        embedding = response['data'][0]['embedding']
+        return np.array(embedding)
+    except OpenAIError as e:
+        logger.error(f"Error getting text embedding: {e}")
+        raise
+
+# Remaining functions and logic remain the same...
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
@@ -144,7 +171,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 
     return similarity
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(InvalidRequestError))
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     """Generate an enriched question using OpenAI's GPT model."""
     messages = [
@@ -153,7 +180,7 @@ def generate_enriched_question(config: ApiConfiguration, question: str, logger: 
     ]
     return call_openai_chat(messages, config, logger)
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(InvalidRequestError))
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text."""
     try:
@@ -188,10 +215,10 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         result = TestResult()
         result.question = question
 
-        result.enriched_question = generate_enriched_question(config, question)
+        result.enriched_question = generate_enriched_question(config, question, logger)
 
         # Convert the text of the enriched question to a vector embedding
-        embedding = get_text_embedding(config, result.enriched_question)
+        embedding = get_text_embedding(config, result.enriched_question, logger)
 
         # Iterate through the stored chunks
         for chunk in current_chunks:
