@@ -9,8 +9,7 @@ import numpy as np
 from numpy.linalg import norm
 
 # Third-Party Packages
-import openai
-from openai import OpenAIError, BadRequestError
+from openai import OpenAI, OpenAIError, BadRequestError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 
 # Add the parent directory of the test file to the Python path for importing modules
@@ -53,11 +52,12 @@ def get_sanitized_api_key() -> str:
     return api_key.strip()  # Remove any extra whitespace or newlines
 
 # Configure the OpenAI API client for Azure
-def configure_openai_for_azure(config: ApiConfiguration) -> None:
-    openai.api_type = "azure"
-    openai.api_key = config.apiKey
-    openai.api_base = config.resourceEndpoint
-    openai.api_version = config.apiVersion
+def configure_openai_for_azure(config: ApiConfiguration) -> OpenAI:
+    return OpenAI(
+        api_key=config.apiKey,
+        api_base=config.resourceEndpoint,
+        api_version=config.apiVersion
+    )
 
 class TestResult:
     def __init__(self) -> None:
@@ -72,9 +72,9 @@ class TestResult:
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
-        configure_openai_for_azure(config)
-        response = openai.ChatCompletion.create(
-            model=config.azureDeploymentName,  # Replace 'engine' with 'model'
+        client = configure_openai_for_azure(config)
+        response = client.chat.completions.create(
+            model=config.azureDeploymentName,  # Use the model specified in the configuration
             messages=messages,
             temperature=0.7,
             max_tokens=config.maxTokens,
@@ -84,7 +84,8 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
             timeout=config.openAiRequestTimeout,
         )
 
-        content = response.choices[0].message['content']  # Access the response message content
+        # Access the response message content
+        content = response.choices[0].message.content
         finish_reason = response.choices[0].finish_reason  # Access finish reason directly
 
         if finish_reason not in {"stop", "length", ""}:
@@ -103,8 +104,8 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
 def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        configure_openai_for_azure(config)
-        response = openai.Embedding.create(
+        client = configure_openai_for_azure(config)
+        response = client.embeddings.create(
             input=text,
             model=config.azureEmbedDeploymentName,  # Replace 'engine' with 'model'
             timeout=config.openAiRequestTimeout
