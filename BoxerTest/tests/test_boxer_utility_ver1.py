@@ -53,13 +53,11 @@ def get_sanitized_api_key() -> str:
     return api_key.strip()  # Remove any extra whitespace or newlines
 
 # Configure the OpenAI API client for Azure
-def configure_openai_for_azure(config: ApiConfiguration) -> openai.Client:
-    return openai.Client(
-        api_key=config.apiKey,
-        api_type="azure",
-        api_base=config.resourceEndpoint,
-        api_version=config.apiVersion
-    )
+def configure_openai_for_azure(config: ApiConfiguration) -> None:
+    openai.api_type = "azure"
+    openai.api_key = config.apiKey
+    openai.api_base = config.resourceEndpoint
+    openai.api_version = config.apiVersion
 
 class TestResult:
     def __init__(self) -> None:
@@ -74,8 +72,8 @@ class TestResult:
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
-        client = configure_openai_for_azure(config)
-        response = client.chat.completions.create(
+        configure_openai_for_azure(config)
+        response = openai.ChatCompletion.create(
             model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             messages=messages,
             temperature=0.7,
@@ -105,8 +103,8 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
 def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        client = configure_openai_for_azure(config)
-        response = client.embeddings.create(
+        configure_openai_for_azure(config)
+        response = openai.Embedding.create(
             input=text,
             model=config.azureEmbedDeploymentName,  # Replace 'engine' with 'model'
             timeout=config.openAiRequestTimeout
