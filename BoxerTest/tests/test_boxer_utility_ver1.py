@@ -1,8 +1,7 @@
-"""
-This script processes a list of questions through the test pipeline.
-"""
-
-# Copyright (c) 2024 Braid Technologies Ltd
+'''
+client.chat.completions.create()
+Note: Be careful because the API is case-sensitive (i.e., client.Chat.Completions.create() will not work with the new SDK version).
+'''
 
 # Standard Library Imports
 import logging
@@ -18,8 +17,6 @@ from numpy.linalg import norm
 import openai
 from openai import OpenAIError, BadRequestError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
-import numpy as np
-from numpy.linalg import norm
 
 # Add the parent directory of the test file to the Python path for importing modules
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,13 +25,6 @@ sys.path.insert(0, parent_dir)
 
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
-# from common.common_functions import get_embedding
-
-
-#commnet to check potential path error:
-# from BoxerTest.common.ApiConfiguration import ApiConfiguration
-# from BoxerTest.common.BoxerUtility import generate_enriched_question, get_text_embedding, call_openai_chat
-# from BoxerTest.tests.TestResult import TestResult
 
 # Constants
 OPENAI_PERSONA_PROMPT = (
@@ -56,7 +46,7 @@ FOLLOW_UP_PROMPT = (
 )
 
 # Setup Logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Ensure API Key is sanitized in this script
@@ -84,16 +74,11 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
-import openai
-from openai import OpenAIError, BadRequestError
-
-# Other imports remain the same...
-
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
         response = openai.ChatCompletion.create(
-            engine=config.azureDeploymentName,  
+            model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             messages=messages,
             temperature=0.7,
             max_tokens=config.maxTokens,
@@ -103,8 +88,8 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
             timeout=config.openAiRequestTimeout,
         )
 
-        content = response['choices'][0]['message']['content']
-        finish_reason = response['choices'][0]['finish_reason']
+        content = response.choices[0].message['content']  # Access the response message content
+        finish_reason = response.choices[0].finish_reason  # Access finish reason directly
 
         if finish_reason not in {"stop", "length", ""}:
             logger.warning("Unexpected stop reason: %s", finish_reason)
@@ -124,17 +109,14 @@ def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> n
     try:
         response = openai.Embedding.create(
             input=text,
-            engine=config.azureDeploymentName,  # Ensure this is set correctly for your Azure setup
+            model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             timeout=config.openAiRequestTimeout
         )
-        embedding = response['data'][0]['embedding']
+        embedding = response.data[0].embedding
         return np.array(embedding)
     except OpenAIError as e:
         logger.error(f"Error getting text embedding: {e}")
         raise
-
-# Remaining functions and logic remain the same...
-
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     """
@@ -173,24 +155,23 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-    """Generate an enriched question using OpenAI's GPT model."""
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
     ]
-    return call_openai_chat(messages, config, logger)
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
-    """Get the embedding for a text."""
-    try:
-        embedding = get_embedding(text, openai, config)
-        return embedding
-    except Exception as e:
-        logger.error(f"Error getting text embedding: {e}")
-        raise
+    # Log the API request
+    logger.info("Making API request to OpenAI...")
+    logger.info("Request payload:")
+    logger.info(messages)
 
-# Similar functions for follow-up question generation and relevance assessment...
+    response = call_openai_chat(messages, config, logger)
+
+    # Log the API response
+    logger.info("API response received:")
+    logger.info(response)
+
+    return response
 
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
     """Run tests with the given questions."""
@@ -253,7 +234,6 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     output_file = os.path.join(test_destination_dir, "test_output.json")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(output_results, f, indent=4)
-
 
 # Test script logic
 questions = [
