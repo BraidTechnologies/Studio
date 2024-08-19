@@ -1,13 +1,3 @@
-'''
-In the following code replace client.chat.completions.create() with client.Chat.Completions.create()
-Note: Be careful because the API is case-sensitive (i.e., client.Chat.Completions.create() will not work with the new SDK version).
-
-
-This is being done because : 
-openai.ChatCompletion.create method is no longer supported in the latest version of the OpenAI API. 
-This is causing a APIRemovedInV1 exception to be raised, which is then caught by the tenacity library and retried.
-'''
-
 # Standard Library Imports
 import logging
 import os
@@ -82,7 +72,7 @@ class TestResult:
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.Client.Chat.Completions.create(
             model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             messages=messages,
             temperature=0.7,
@@ -112,7 +102,7 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
 def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        response = openai.Embedding.create(
+        response = openai.Client.Embeddings.create(
             input=text,
             model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             timeout=config.openAiRequestTimeout
