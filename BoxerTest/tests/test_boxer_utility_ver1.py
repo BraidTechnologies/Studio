@@ -1,6 +1,11 @@
 '''
-client.chat.completions.create()
+In the following code replace client.chat.completions.create() with client.Chat.Completions.create()
 Note: Be careful because the API is case-sensitive (i.e., client.Chat.Completions.create() will not work with the new SDK version).
+
+
+This is being done because : 
+openai.ChatCompletion.create method is no longer supported in the latest version of the OpenAI API. 
+This is causing a APIRemovedInV1 exception to be raised, which is then caught by the tenacity library and retried.
 '''
 
 # Standard Library Imports
