@@ -72,7 +72,9 @@ class TestResult:
 def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
-        response = openai.Client.Chat.Completions.create(
+        # Replace openai.ChatCompletion.create with client.chat.completions.create()
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
             model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             messages=messages,
             temperature=0.7,
@@ -102,7 +104,9 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
 def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        response = openai.Client.Embeddings.create(
+        # Replace openai.Embedding.create with client.embeddings.create()
+        client = openai.OpenAI()
+        response = client.embeddings.create(
             input=text,
             model=config.azureDeploymentName,  # Replace 'engine' with 'model'
             timeout=config.openAiRequestTimeout
