@@ -9,7 +9,7 @@ import numpy as np
 from numpy.linalg import norm
 
 # Third-Party Packages
-from openai import OpenAI, OpenAIError, BadRequestError
+from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 
 # Add the parent directory of the test file to the Python path for importing modules
@@ -43,18 +43,12 @@ FOLLOW_UP_PROMPT = (
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Ensure API Key is sanitized in this script
-def get_sanitized_api_key() -> str:
-    api_key = os.getenv("AZURE_OPENAI_API_KEY")
-    if not api_key:
-        logger.error("API key not found in environment variables.")
-        raise EnvironmentError("API key not set. Ensure that 'AZURE_OPENAI_API_KEY' is set.")
-    return api_key.strip()  # Remove any extra whitespace or newlines
-
 # Configure the OpenAI API client for Azure
-def configure_openai_for_azure(config: ApiConfiguration) -> OpenAI:
-    return OpenAI(
-        api_key=config.apiKey,
+def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
+    return AzureOpenAI(
+        azure_endpoint=config.resourceEndpoint, 
+        api_key=config.apiKey.strip(),  # Ensure the API key is stripped of any whitespace
+        api_version=config.apiVersion
     )
 
 class TestResult:
@@ -67,7 +61,12 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
-def call_openai_chat(client: OpenAI, messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
+@retry(
+    wait=wait_random_exponential(min=5, max=15), 
+    stop=stop_after_attempt(15), 
+    retry=retry_if_not_exception_type(BadRequestError)
+)
+def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
         response = client.chat.completions.create(
@@ -82,8 +81,8 @@ def call_openai_chat(client: OpenAI, messages: list, config: ApiConfiguration, l
         )
 
         # Access the response message content
-        content = response.choices[0].message.content  # Use message.content instead of subscripting
-        finish_reason = response.choices[0].finish_reason  # Access finish reason directly
+        content = response.choices[0].message.content
+        finish_reason = response.choices[0].finish_reason
 
         if finish_reason not in {"stop", "length", ""}:
             logger.warning("Unexpected stop reason: %s", finish_reason)
@@ -96,9 +95,12 @@ def call_openai_chat(client: OpenAI, messages: list, config: ApiConfiguration, l
     except OpenAIError as e:
         logger.error(f"OpenAI API error: {e}")
         raise
+    except APIConnectionError as e:
+        logger.error(f"API connection error: {e}")
+        raise
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(client: OpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
         response = client.embeddings.create(
@@ -148,7 +150,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return similarity
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def generate_enriched_question(client: OpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
