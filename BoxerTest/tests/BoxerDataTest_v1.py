@@ -1,3 +1,4 @@
+# Copyright (c) 2024 Braid Technologies Ltd
 # Standard Library Imports
 import logging
 import os

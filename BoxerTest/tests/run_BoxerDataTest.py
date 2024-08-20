@@ -1,8 +1,9 @@
+# Copyright (c) 2024 Braid Technologies Ltd
 # Standard Library Imports
 import os
 import sys
 import logging
-from typing import List  
+from typing import List, Dict, Any
 
 # Add the project root and scripts directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
