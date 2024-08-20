@@ -42,5 +42,5 @@ def test_with_output ():
        accumulated_summary = accumulated_summary + "\n\n" + summary
 
     theme_finder = ThemeFinder (accumulated_summary)
-    theme = theme_finder.find_theme ()    
+    theme = theme_finder.find_theme (15)    
     assert len(theme) > 0

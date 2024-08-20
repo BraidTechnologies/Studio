@@ -4,21 +4,35 @@
 import logging
 import os
 import json
-import pandas as pd
 import plotly.express as px
 import umap.umap_ as umap
 
-# Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
- 
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
 from embedder import Embedder
 from cluster_analyser import ClusterAnalyser
 from theme_finder import ThemeFinder
+from embedding_finder import EmbeddingFinder
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.DEBUG)
+
+def sort_array_by_another(arr1: list[str], arr2:list[int]):
+    
+    # Combine the two arrays into a list of tuples
+    combined = list(zip(arr2, arr1))
+    
+    # Sort the combined list by the first element of each tuple (values in arr2)
+    combined.sort(reverse=True)
+    
+    # Extract the sorted arr1 from the combined list
+    sorted_arr1 = [x for _, x in combined]
+    
+    return sorted_arr1
+
 
 class WaterfallDataPipeline:
    '''
@@ -48,7 +62,8 @@ class WaterfallDataPipeline:
       embeddings = []
       embeddings_as_float = []
       path_embedding_tuples = []
-      themes = []
+      short_themes = []
+      long_themes = []
 
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
@@ -73,16 +88,20 @@ class WaterfallDataPipeline:
       classifications = cluster_analyser.analyse(clusters)
       
       accumulated_summaries = [""] * clusters
+      accumulated_counts = [0] * clusters
 
-      # Accumulate a set of summaries according to classification
+      # Accumulate a set of summaries and counts of summaries according to classification
       for i, summary in enumerate (summaries):
          accumulated_summaries[classifications[i]] = accumulated_summaries[classifications[i]] + summary
-
+         accumulated_counts[classifications[i]] = accumulated_counts[classifications[i]] + 1
+     
       # Ask the theme finder to find a theme, then store it
       for accumulated_summary in accumulated_summaries:
          theme_finder = ThemeFinder (accumulated_summary)
-         theme = theme_finder.find_theme ()
-         themes.append (theme)
+         theme = theme_finder.find_theme (15)
+         short_themes.append (theme)
+         theme = theme_finder.find_theme (50)
+         long_themes.append (theme)         
 
       reducer = umap.UMAP()
       logger.debug("Reducing cluster")      
@@ -91,14 +110,30 @@ class WaterfallDataPipeline:
       logger.debug("Generating chart")
       #df = pd.DataFrame({'theme': themes})
       
-      # Make a list of theme names which gets used as the legend
+      # Make a list of theme names which gets used as the legend in the chart
       theme_names = []
       for classification in classifications:
-         theme_name = themes[classification]      
+         theme_name = short_themes[classification]      
          theme_names.append(theme_name)
       
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
       fig.show()
+
+      long_themes = sort_array_by_another(long_themes, accumulated_counts)
+      top_themes = long_themes[:3]
+
+      # Now we are looking for articles that best match the themes
+      embedding_finder = EmbeddingFinder (embeddings_as_float, self.output_location)
+
+      # Ask the embedding finder to find nearest article for top 3 themese
+      nearest_summaries = []
+      nearest_links = []
+      for theme in top_themes:
+         nearest_embedding = embedding_finder.find_nearest (None, theme)
+         for i, embedding in enumerate (embeddings_as_float):
+            if embedding == nearest_embedding:
+               nearest_links.append(links[i])               
+               nearest_summaries.append(summaries[i])
 
       output_results = []
       for i, text in enumerate(summaries):

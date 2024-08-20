@@ -17,14 +17,15 @@ let themedText = "Surfing is a surface water sport in which an individual, a sur
 
 describe("FindTheme", async function () {
 
-   async function validThemeCall (apiUrl: string, text: string) : Promise<string | undefined> {
+   async function validThemeCall (apiUrl: string, text: string, length: number) : Promise<string | undefined> {
 
       let summary: string | undefined = undefined;
 
       try {
          let response = await axios.post(apiUrl, {
            data: {
-              text: text
+              text: text,
+              length: length
            },
            headers: {
               'Content-Type': 'application/json'
@@ -78,7 +79,7 @@ describe("FindTheme", async function () {
 
       let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
 
-      let summary = await validThemeCall (apiUrl, sampleText);
+      let summary = await validThemeCall (apiUrl, sampleText, 10);
 
       expect (summary && summary?.length > 0).toBe (true) ;     
 
@@ -105,7 +106,7 @@ describe("FindTheme", async function () {
 
       let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
 
-      let summary = await validThemeCall (apiUrl, sampleText);
+      let summary = await validThemeCall (apiUrl, sampleText, 10);
 
       expect (summary && summary?.length > 0).toBe (true) ;     
 

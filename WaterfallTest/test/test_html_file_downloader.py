@@ -16,29 +16,38 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 from src.html_file_downloader import HtmlFileDownloader
 
 # Fixture to create a temporary directory for test output
 @pytest.fixture
 def test_output_dir(tmpdir):
-    dir_path = tmpdir.mkdir("test_output_text")
+    dir_path = tmpdir.mkdir("test_output")
     logger.info(f"Created temporary test output directory: {dir_path}")
     yield str(dir_path)
     # Clean up after the test
     logger.info(f"Cleaning up test output directory: {dir_path}")
-    shutil.rmtree(str(dir_path))
+    shutil.rmtree(str(dir_path))    
 
-def test_basic ():
+def test_basic (test_output_dir):
     test_path = 'test'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
     downloader = HtmlFileDownloader (test_path, test_output_location)
     assert downloader.path == test_path   
+
+def test_connected (test_output_dir):
+    test_path = 'https://openai.com/'
+    test_output_location = test_output_dir
+
+    downloader = HtmlFileDownloader (test_path, test_output_location)
+    text = downloader.download ()    
+    assert len(text) > 50
 
 def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_path = 'simple_test.html'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
 
     downloader = HtmlFileDownloader (test_path, test_output_location)
     text = downloader.download ()    

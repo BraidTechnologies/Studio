@@ -57,7 +57,8 @@ class Embedder:
       response = session.post(embedUrl, json=input, headers=headers)
       embedding = response.text         
 
-      repository.save (path, embedding)
+      if path != None:
+         repository.save (path, embedding)
 
       return embedding
    

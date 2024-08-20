@@ -23,7 +23,7 @@ class ThemeFinder:
    def __init__(self, text: str):
       self.text = text   
 
-   def find_theme(self) -> str: 
+   def find_theme(self, length: int) -> str: 
 
       logger.debug("Finding theme: %s", self.text)
 
@@ -32,7 +32,8 @@ class ThemeFinder:
       summaryUrl = f"https://braidapi.azurewebsites.net/api/FindTheme?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': self.text
+         'text': self.text,
+         'length' : length
          }
       }
 

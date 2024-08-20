@@ -88,6 +88,9 @@ class FileRespository:
       Returns:
          bool: True if the file exists, False otherwise.
       '''
+      if not path:
+         return False
+
       fake_name = make_local_file_path (path)
       contentOutputFileName = os.path.join(self.output_location, f"{fake_name}." + extension)  
 

@@ -16,6 +16,7 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 from src.text_repository_facade import TextRespositoryFacade
 
 # Fixture to create a temporary directory for test output
@@ -29,8 +30,8 @@ def test_output_dir(tmpdir):
     os.chdir ("..")    
     shutil.rmtree(str(dir_path))
 
-def test_basic ():
-    test_output_location = 'test_output'
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
     repository = TextRespositoryFacade (test_output_location)
     assert repository.output_location == test_output_location   
 

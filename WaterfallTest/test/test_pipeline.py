@@ -3,7 +3,6 @@
 # Standard Library Imports
 import pytest
 import os
-import shutil
 import sys
 import logging
 
@@ -16,25 +15,22 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 from src.search_pipeline import WaterfallDataPipeline
 
-# Fixture to create a temporary directory for test output
 @pytest.fixture
-def test_output_dir(tmpdir):
-    dir_path = tmpdir.mkdir("test_output")
-    logger.info(f"Created temporary test output directory: {dir_path}")
-    yield str(dir_path)
+def place_holder_fixture():
+    yield str("place_holder")
     # Clean up after the test
-    logger.info(f"Cleaning up test output directory: {dir_path}")
-    shutil.rmtree(str(dir_path))
+    logger.info(f"Cleaning up: {place_holder_fixture}")
 
 def test_basic ():
     test_output_location = 'test_output'
     pipeline = WaterfallDataPipeline (test_output_location)
     assert pipeline.output_location == test_output_location 
 
-@pytest.mark.timeout(2000)
-def test_with_search (test_output_dir):
+@pytest.mark.timeout(3000)
+def test_with_search ():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_output_location = 'test_output'

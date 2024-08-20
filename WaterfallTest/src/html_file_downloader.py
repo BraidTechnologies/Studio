@@ -2,11 +2,10 @@
 
 # Standard Library Imports
 import logging
-import os
+from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urlsplit
-import json
 
 from text_repository_facade import TextRespositoryFacade
 
@@ -55,7 +54,10 @@ class HtmlFileDownloader:
       session = requests.Session()
       if (path.find("http") != -1):
          # Add headers in case the website expects cookies and/or JavaScript
-         html_content = session.get(path, headers=headers).text         
+         #html_content = session.get(path, headers=headers).text             
+         driver = webdriver.Chrome()
+         driver.get(path)   
+         html_content = driver.page_source          
       else:
          with open(path, 'r', encoding='utf-8') as file:
             html_content = file.read()          

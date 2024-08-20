@@ -30,8 +30,8 @@ def test_output_dir(tmpdir):
     os.chdir ("..")    
     shutil.rmtree(str(dir_path))
 
-def test_basic ():
-    test_output_location = 'test_output'
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
     repository = SummaryRespositoryFacade (test_output_location)
     assert repository.output_location == test_output_location   
 

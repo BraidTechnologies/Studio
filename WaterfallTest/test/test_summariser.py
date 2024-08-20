@@ -16,6 +16,7 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 from src.summariser import Summariser
 from src.html_file_downloader import HtmlFileDownloader
 
@@ -29,9 +30,9 @@ def test_output_dir(tmpdir):
     logger.info(f"Cleaning up test output directory: {dir_path}")
     shutil.rmtree(str(dir_path))
 
-def test_basic ():
+def test_basic (test_output_dir):
     test_path = 'test'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
     test_text = "This is some text"
 
     summariser = Summariser (test_path, test_text, test_output_location)
@@ -42,7 +43,7 @@ def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_path = 'simple_test.html'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
     downloader = HtmlFileDownloader (test_path, test_output_location)
     text = downloader.download () 
 
