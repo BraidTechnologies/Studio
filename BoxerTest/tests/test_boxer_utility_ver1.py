@@ -44,31 +44,17 @@ FOLLOW_UP_PROMPT = (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configure the Azure OpenAI API client
+# Function to configure the Azure OpenAI API client
 def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
     return AzureOpenAI(
         azure_endpoint=config.resourceEndpoint, 
-        api_key=config.apiKey.strip(),  # Ensure the API key is stripped of any whitespace
+        api_key=config.apiKey.strip(),
         api_version=config.apiVersion
     )
 
+# Class to hold test results
 class TestResult:
     def __init__(self) -> None:
-        """
-        Initializes a TestResult object with default values.
-        
-        Sets the initial state of the object's properties:
-        - question: an empty string
-        - enriched_question: an empty string
-        - hit: False
-        - hit_relevance: 0.0
-        - hit_summary: an empty string
-        - follow_up: an empty string
-        - follow_up_on_topic: an empty string
-        
-        Returns:
-            None
-        """
         self.question = ""
         self.enriched_question = ""        
         self.hit = False 
@@ -77,16 +63,12 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
-@retry(
-    wait=wait_random_exponential(min=5, max=15), 
-    stop=stop_after_attempt(15), 
-    retry=retry_if_not_exception_type(BadRequestError)
-)
+# Function to call the OpenAI API with retry logic
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
-    """Generic function to call OpenAI chat and handle responses."""
     try:
         response = client.chat.completions.create(
-            model=config.azureDeploymentName,  # Use the model specified in the configuration
+            model=config.azureDeploymentName,
             messages=messages,
             temperature=0.7,
             max_tokens=config.maxTokens,
@@ -95,8 +77,6 @@ def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfigurati
             presence_penalty=0,
             timeout=config.openAiRequestTimeout,
         )
-
-        # Access the response message content
         content = response.choices[0].message.content
         finish_reason = response.choices[0].finish_reason
 
@@ -108,116 +88,82 @@ def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfigurati
 
         return content
 
-    except OpenAIError as e:
-        logger.error(f"OpenAI API error: {e}")
-        raise
-    except APIConnectionError as e:
-        logger.error(f"API connection error: {e}")
+    except (OpenAIError, APIConnectionError) as e:
+        logger.error(f"Error: {e}")
         raise
 
+# Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
-    """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        response = client.embeddings.create(
-            input=text,
-            model=config.azureEmbedDeploymentName,  
-            timeout=config.openAiRequestTimeout
-        )
-        embedding = response.data[0].embedding
+        embedding = get_embedding(text, client, config)
         return np.array(embedding)
     except OpenAIError as e:
         logger.error(f"Error getting text embedding: {e}")
         raise
 
+# Function to calculate cosine similarity between two vectors
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    """
-    Calculate the cosine similarity between two vectors.
-
-    Args:
-    a (np.ndarray): The first vector.
-    b (np.ndarray): The second vector.
-
-    Returns:
-    float: The cosine similarity between the two vectors.
-    """
-    # Try to convert the input vectors to numpy arrays if they are not already
     try:
-        a = np.array(a)
-        b = np.array(b)
+        a, b = np.array(a), np.array(b)
     except Exception:
         raise ValueError("Input vectors must be numpy arrays or convertible to numpy arrays")
 
-    # Check if the input vectors have the same shape
     if a.shape != b.shape:
         raise ValueError("Input vectors must have the same shape")
 
-    # Calculate the dot product of the two vectors
     dot_product = np.dot(a, b)
+    a_norm, b_norm = norm(a), norm(b)
 
-    # Calculate the L2 norm (magnitude) of each vector
-    a_norm = norm(a)
-    b_norm = norm(b)
-
-    # Check for division by zero
     if a_norm == 0 or b_norm == 0:
         raise ValueError("Input vectors must not be zero vectors")
 
-    # Calculate the cosine similarity
-    similarity = dot_product / (a_norm * b_norm)
+    return dot_product / (a_norm * b_norm)
 
-    return similarity
-
+# Function to generate enriched questions using OpenAI API
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-    """
-    Generate an enriched question using the OpenAI API.
-
-    Args:
-    client (AzureOpenAI): The client used to make the API request.
-    config (ApiConfiguration): The configuration for the API request.
-    question (str): The question to be enriched.
-    logger (logging.Logger): The logger used to log the API request and response.
-
-    Returns:
-    str: The enriched question.
-    """
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
     ]
-
-    # Log the API request
     logger.info("Making API request to OpenAI...")
-    logger.info("Request payload:")
-    logger.info(messages)
+    logger.info("Request payload: %s", messages)
 
     response = call_openai_chat(client, messages, config, logger)
-
-    # Log the API response
-    logger.info("API response received:")
-    logger.info(response)
+    logger.info("API response received: %s", response)
 
     return response
 
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) : 
-    """Get the embedding for a text"""
+# Function to process and evaluate test questions
+def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[dict], logger: logging.Logger) -> List[TestResult]:
+    question_results = []
+    
+    for question in questions:
+        question_result = TestResult()
+        question_result.question = question
+        question_result.enriched_question = generate_enriched_question(client, config, question, logger)
+        embedding = get_text_embedding(client, config, question_result.enriched_question, logger)
 
-    embedding = get_embedding (text, client, config)
-    return embedding
+        for chunk in processed_question_chunks:
+            if isinstance(chunk, list) and chunk:
+                ada_embedding = chunk[0].get("ada_v2")
+                similarity = cosine_similarity(ada_embedding, embedding)
 
-def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
-    """Run tests with the given questions."""
-    # Configure the OpenAI client
-    client = configure_openai_for_azure(config)
+                if similarity > 0.8:
+                    question_result.hit = True
 
-    # Check if test_destination_dir is provided
-    if not test_destination_dir:
-        logger.error("Test data folder not provided")
-        exit(1)
+                if similarity > question_result.hit_relevance:
+                    question_result.hit_relevance = similarity
+                    question_result.hit_summary = chunk[0].get("summary")
 
-    # Read the stored chunks from the source directory
+        question_results.append(question_result)
+
+    logger.debug("Total tests processed: %s", len(question_results))
+    return question_results
+
+# Function to read processed chunks from the source directory
+def read_processed_chunks(source_dir: str) -> List[dict]:
     processed_question_chunks = []
     for filename in os.listdir(source_dir):
         if filename.endswith(".json"):
@@ -225,38 +171,10 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
             with open(file_path, "r", encoding="utf-8") as f:
                 chunk = json.load(f)
                 processed_question_chunks.append(chunk)
+    return processed_question_chunks
 
-    # Run the tests
-    question_results = []
-    for question in questions:
-        question_result = TestResult()
-        question_result.question = question
-
-        question_result.enriched_question = generate_enriched_question(client, config, question, logger)
-
-        # Convert the text of the enriched question to a vector embedding
-        embedding = get_text_embedding(client, config, question_result.enriched_question, logger)
-
-        # Iterate through the stored chunks
-        for chunk in processed_question_chunks:
-            if isinstance(chunk, list) and chunk:  # Check if chunk is a non-empty list
-                ada_embedding = chunk[0].get("ada_v2") 
-                 # Access the first element of the inner list (to be check)
-                similarity = cosine_similarity(ada_embedding, embedding)
-
-                # Count it as a hit if we pass a reasonableness threshold
-                if similarity > 0.8:
-                    question_result.hit = True
-
-                # Record the best match
-                if similarity > question_result.hit_relevance:
-                    question_result.hit_relevance = similarity
-                    question_result.hit_summary = chunk[0].get("summary")
-
-            question_results.append(question_result)
-
-    logger.debug("Total tests processed: %s", len(question_results))
-
+# Function to save test results to a file
+def save_results(test_destination_dir: str, question_results: List[TestResult]) -> None:
     output_results = [
         {
             "question": result.question,
@@ -268,20 +186,30 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         for result in question_results
     ]
 
-    # Save the test results to a JSON file
     output_file = os.path.join(test_destination_dir, "test_output.json")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(output_results, f, indent=4)
 
+# Main function to run tests
+def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
+    client = configure_openai_for_azure(config)
+
+    if not test_destination_dir:
+        logger.error("Test data folder not provided")
+        exit(1)
+
+    processed_question_chunks = read_processed_chunks(source_dir)
+    question_results = process_questions(client, config, questions, processed_question_chunks, logger)
+    save_results(test_destination_dir, question_results)
 
 # Test script logic
 questions = [
-"What is a Large Language Model (LLM)?",
-"How do Large Language Models (LLMs) work?",
-"What are some common use cases for Large Language Models (LLMs) in applications?",
+    "What is a Large Language Model (LLM)?",
+    "How do Large Language Models (LLMs) work?",
+    "What are some common use cases for Large Language Models (LLMs) in applications?",
 ]
 
-config = ApiConfiguration()  
+config = ApiConfiguration()
 test_destination_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/test output/"
 source_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/data/"
 
