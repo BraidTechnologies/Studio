@@ -4,7 +4,7 @@ import os
 import json
 import sys
 from logging import Logger
-from typing import List
+from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
 
@@ -22,6 +22,9 @@ from common.ApiConfiguration import ApiConfiguration
 from common.common_functions import get_embedding
 
 # Constants
+SIMILARITY_THRESHOLD = 0.8
+MAX_RETRIES = 15
+
 OPENAI_PERSONA_PROMPT = (
     "You are an AI assistant helping an application developer understand generative AI. "
     "You explain complex concepts in simple language, using Python examples if it helps. "
@@ -55,17 +58,17 @@ def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
 # Class to hold test results
 class TestResult:
     def __init__(self) -> None:
-        self.question = ""
-        self.enriched_question = ""        
-        self.hit = False 
-        self.hit_relevance = 0.0
-        self.hit_summary = ""
-        self.follow_up = ""
-        self.follow_up_on_topic = ""
+        self.question: str = ""
+        self.enriched_question: str = ""
+        self.hit: bool = False
+        self.hit_relevance: float = 0.0
+        self.hit_summary: str = ""
+        self.follow_up: str = ""
+        self.follow_up_on_topic: str = ""
 
 # Function to call the OpenAI API with retry logic
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
     try:
         response = client.chat.completions.create(
             model=config.azureDeploymentName,
@@ -84,7 +87,7 @@ def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfigurati
             logger.warning("Unexpected stop reason: %s", finish_reason)
             logger.warning("Content: %s", content)
             logger.warning("Consider increasing max tokens and retrying.")
-            exit(1)
+            raise RuntimeError("Unexpected finish reason in API response.")
 
         return content
 
@@ -93,7 +96,7 @@ def call_openai_chat(client: AzureOpenAI, messages: list, config: ApiConfigurati
         raise
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     try:
         embedding = get_embedding(text, client, config)
@@ -121,7 +124,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return dot_product / (a_norm * b_norm)
 
 # Function to generate enriched questions using OpenAI API
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
@@ -136,8 +139,8 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
     return response
 
 # Function to process and evaluate test questions
-def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[dict], logger: logging.Logger) -> List[TestResult]:
-    question_results = []
+def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
+    question_results: List[TestResult] = []
     
     for question in questions:
         question_result = TestResult()
@@ -150,7 +153,7 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
                 ada_embedding = chunk[0].get("ada_v2")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
-                if similarity > 0.8:
+                if similarity > SIMILARITY_THRESHOLD:
                     question_result.hit = True
 
                 if similarity > question_result.hit_relevance:
@@ -163,14 +166,18 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
     return question_results
 
 # Function to read processed chunks from the source directory
-def read_processed_chunks(source_dir: str) -> List[dict]:
-    processed_question_chunks = []
-    for filename in os.listdir(source_dir):
-        if filename.endswith(".json"):
-            file_path = os.path.join(source_dir, filename)
-            with open(file_path, "r", encoding="utf-8") as f:
-                chunk = json.load(f)
-                processed_question_chunks.append(chunk)
+def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
+    processed_question_chunks: List[Dict[str, Any]] = []
+    try:
+        for filename in os.listdir(source_dir):
+            if filename.endswith(".json"):
+                file_path = os.path.join(source_dir, filename)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    chunk = json.load(f)
+                    processed_question_chunks.append(chunk)
+    except (FileNotFoundError, IOError) as e:
+        logger.error(f"Error reading files: {e}")
+        raise
     return processed_question_chunks
 
 # Function to save test results to a file
@@ -187,8 +194,12 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
     ]
 
     output_file = os.path.join(test_destination_dir, "test_output.json")
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(output_results, f, indent=4)
+    try:
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(output_results, f, indent=4)
+    except IOError as e:
+        logger.error(f"Error saving results: {e}")
+        raise
 
 # Main function to run tests
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
@@ -196,7 +207,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
 
     if not test_destination_dir:
         logger.error("Test data folder not provided")
-        exit(1)
+        raise ValueError("Test destination directory not provided")
 
     processed_question_chunks = read_processed_chunks(source_dir)
     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
