@@ -9,8 +9,7 @@ import numpy as np
 from numpy.linalg import norm
 
 # Third-Party Packages
-import openai
-from openai import OpenAIError, BadRequestError
+from openai import OpenAI, OpenAIError, BadRequestError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 
 # Add the parent directory of the test file to the Python path for importing modules
@@ -53,11 +52,10 @@ def get_sanitized_api_key() -> str:
     return api_key.strip()  # Remove any extra whitespace or newlines
 
 # Configure the OpenAI API client for Azure
-def configure_openai_for_azure(config: ApiConfiguration) -> None:
-    openai.api_type = "azure"
-    openai.api_key = config.apiKey
-    openai.api_base = config.resourceEndpoint
-    openai.api_version = config.apiVersion
+def configure_openai_for_azure(config: ApiConfiguration) -> OpenAI:
+    return OpenAI(
+        api_key=config.apiKey,
+    )
 
 class TestResult:
     def __init__(self) -> None:
@@ -69,14 +67,10 @@ class TestResult:
         self.follow_up = ""
         self.follow_up_on_topic = ""
 
-def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
+def call_openai_chat(client: OpenAI, messages: list, config: ApiConfiguration, logger: logging.Logger) -> str:
     """Generic function to call OpenAI chat and handle responses."""
     try:
-        # Configure OpenAI globally for Azure
-        configure_openai_for_azure(config)
-        
-        # Call OpenAI ChatCompletion API
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=config.azureDeploymentName,  # Use the model specified in the configuration
             messages=messages,
             temperature=0.7,
@@ -88,7 +82,7 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
         )
 
         # Access the response message content
-        content = response.choices[0].message.content
+        content = response.choices[0].message.content  # Use message.content instead of subscripting
         finish_reason = response.choices[0].finish_reason  # Access finish reason directly
 
         if finish_reason not in {"stop", "length", ""}:
@@ -104,14 +98,10 @@ def call_openai_chat(messages: list, config: ApiConfiguration, logger: logging.L
         raise
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+def get_text_embedding(client: OpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     """Get the embedding for a text using OpenAI's embedding model."""
     try:
-        # Configure OpenAI globally for Azure
-        configure_openai_for_azure(config)
-        
-        # Call OpenAI Embedding API
-        response = openai.Embedding.create(
+        response = client.embeddings.create(
             input=text,
             model=config.azureEmbedDeploymentName,  # Use the model specified in the configuration
             timeout=config.openAiRequestTimeout
@@ -158,7 +148,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return similarity
 
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
-def generate_enriched_question(config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+def generate_enriched_question(client: OpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
@@ -169,7 +159,7 @@ def generate_enriched_question(config: ApiConfiguration, question: str, logger: 
     logger.info("Request payload:")
     logger.info(messages)
 
-    response = call_openai_chat(messages, config, logger)
+    response = call_openai_chat(client, messages, config, logger)
 
     # Log the API response
     logger.info("API response received:")
@@ -179,6 +169,8 @@ def generate_enriched_question(config: ApiConfiguration, question: str, logger: 
 
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
     """Run tests with the given questions."""
+    # Configure the OpenAI client
+    client = configure_openai_for_azure(config)
 
     # Check if test_destination_dir is provided
     if not test_destination_dir:
@@ -200,10 +192,10 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         result = TestResult()
         result.question = question
 
-        result.enriched_question = generate_enriched_question(config, question, logger)
+        result.enriched_question = generate_enriched_question(client, config, question, logger)
 
         # Convert the text of the enriched question to a vector embedding
-        embedding = get_text_embedding(config, result.enriched_question, logger)
+        embedding = get_text_embedding(client, config, result.enriched_question, logger)
 
         # Iterate through the stored chunks
         for chunk in current_chunks:
