@@ -5,10 +5,6 @@ import os
 import sys
 import logging
 
-from src.theme_finder import ThemeFinder
-from src.summariser import Summariser
-from src.html_file_downloader import HtmlFileDownloader
-
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -19,6 +15,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.theme_finder import ThemeFinder
+from src.summariser import Summariser
+from src.html_file_downloader import HtmlFileDownloader
 
 def test_basic ():
     test_text = "This is some text"

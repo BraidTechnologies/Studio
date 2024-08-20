@@ -7,8 +7,6 @@ import shutil
 import sys
 import logging
 
-from src.html_file_downloader import HtmlFileDownloader
-
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -19,6 +17,8 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.html_file_downloader import HtmlFileDownloader
+
 # Fixture to create a temporary directory for test output
 @pytest.fixture
 def test_output_dir(tmpdir):
@@ -27,6 +27,7 @@ def test_output_dir(tmpdir):
     yield str(dir_path)
     # Clean up after the test
     logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))    
 
 def test_basic (test_output_dir):
     test_path = 'test'

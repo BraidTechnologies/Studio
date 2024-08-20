@@ -7,8 +7,6 @@ import shutil
 import sys
 import logging
 
-from src.html_link_crawler import HtmlLinkCrawler
-
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -19,6 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.html_link_crawler import HtmlLinkCrawler
 
 # Fixture to create a temporary directory for test output
 @pytest.fixture

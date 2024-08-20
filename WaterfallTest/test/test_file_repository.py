@@ -7,8 +7,6 @@ import shutil
 import sys
 import logging
 
-from src.file_repository import FileRespository
-
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -18,6 +16,8 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
+from src.file_repository import FileRespository
 
 # Fixture to create a temporary directory for test output
 @pytest.fixture

@@ -32,13 +32,13 @@ def test_output_dir(tmpdir):
     logger.info(f"Cleaning up test output directory: {dir_path}")
     shutil.rmtree(str(dir_path))
 
-def test_basic ():
+def test_basic (test_output_dir):
 
     embeddings = []
     proxy_embedding = 0.0 * 10
     embeddings.append (proxy_embedding)
         
-    finder = EmbeddingFinder (embeddings)
+    finder = EmbeddingFinder (embeddings, test_output_dir)
 
     assert finder.embeddings == embeddings  
 
@@ -49,6 +49,7 @@ def test_with_output (test_output_dir):
     test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
     test_output_location = test_output_dir
 
+    summaries = []
     embeddings_as_float = []
 
     for test_path in test_paths:
@@ -57,6 +58,7 @@ def test_with_output (test_output_dir):
 
        summariser = Summariser (test_path, text, test_output_location)   
        summary = summariser.summarise () 
+       summaries.append(summary)
 
        embedder = Embedder (test_path, summary, test_output_location)
        embedding = embedder.embed ()   
@@ -64,7 +66,7 @@ def test_with_output (test_output_dir):
 
        embeddings_as_float.append (embedding_as_float)
 
-    embedding_finder = EmbeddingFinder (embeddings_as_float) 
-    found = embedding_finder.find_nearest (embeddings_as_float[0])
+    embedding_finder = EmbeddingFinder (embeddings_as_float, test_output_dir) 
+    found = embedding_finder.find_nearest (test_paths[0], summary[0])
 
     assert found == embeddings_as_float[0]

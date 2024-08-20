@@ -7,6 +7,7 @@ import shutil
 import sys
 import logging
 
+# Set paths tp find the 'src' directory
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')

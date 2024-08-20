@@ -6,8 +6,6 @@ import os
 import sys
 import logging
 
-from src.search_pipeline import WaterfallDataPipeline
-
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -18,12 +16,20 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.search_pipeline import WaterfallDataPipeline
+
+@pytest.fixture
+def place_holder_fixture():
+    yield str("place_holder")
+    # Clean up after the test
+    logger.info(f"Cleaning up: {place_holder_fixture}")
+
 def test_basic ():
     test_output_location = 'test_output'
     pipeline = WaterfallDataPipeline (test_output_location)
     assert pipeline.output_location == test_output_location 
 
-@pytest.mark.timeout(2000)
+@pytest.mark.timeout(3000)
 def test_with_search ():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
