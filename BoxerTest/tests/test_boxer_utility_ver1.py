@@ -19,6 +19,7 @@ sys.path.insert(0, parent_dir)
 
 # Local Modules
 from common.ApiConfiguration import ApiConfiguration
+from common.common_functions import get_embedding
 
 # Constants
 OPENAI_PERSONA_PROMPT = (
@@ -125,9 +126,12 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     Returns:
     float: The cosine similarity between the two vectors.
     """
-    # Check if the input vectors are numpy arrays
-    if not isinstance(a, np.ndarray) or not isinstance(b, np.ndarray):
-        raise ValueError("Input vectors must be numpy arrays")
+    # Try to convert the input vectors to numpy arrays if they are not already
+    try:
+        a = np.array(a)
+        b = np.array(b)
+    except Exception:
+        raise ValueError("Input vectors must be numpy arrays or convertible to numpy arrays")
 
     # Check if the input vectors have the same shape
     if a.shape != b.shape:
@@ -169,6 +173,13 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
 
     return response
 
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(15), retry=retry_if_not_exception_type(BadRequestError))
+def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) : 
+    """Get the embedding for a text"""
+
+    embedding = get_embedding (text, client, config)
+    return embedding
+
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
     """Run tests with the given questions."""
     # Configure the OpenAI client
@@ -202,7 +213,8 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         # Iterate through the stored chunks
         for chunk in current_chunks:
             if isinstance(chunk, list) and chunk:  # Check if chunk is a non-empty list
-                ada_embedding = chunk[0].get("ada_v2")  # Access the first element of the inner list (to be check)
+                ada_embedding = chunk[0].get("ada_v2") 
+                 # Access the first element of the inner list (to be check)
                 similarity = cosine_similarity(ada_embedding, embedding)
 
                 # Count it as a hit if we pass a reasonableness threshold
@@ -212,7 +224,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
                 # Record the best match
                 if similarity > result.hit_relevance:
                     result.hit_relevance = similarity
-                    result.hit_summary = chunk.get("summary")
+                    result.hit_summary = chunk[0].get("summary")
 
             results.append(result)
 
@@ -233,6 +245,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     output_file = os.path.join(test_destination_dir, "test_output.json")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(output_results, f, indent=4)
+
 
 # Test script logic
 questions = [
