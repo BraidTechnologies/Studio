@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.cluster_analyser import ClusterAnalyser
+from src.embedding_finder import EmbeddingFinder
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
 from src.embedder import Embedder
@@ -32,28 +32,24 @@ def test_output_dir(tmpdir):
     logger.info(f"Cleaning up test output directory: {dir_path}")
     shutil.rmtree(str(dir_path))
 
-def test_basic (test_output_dir):
-    test_path = 'test'
-    test_output_location = test_output_dir
+def test_basic ():
 
-    path_embedding_tuples = []
-    path_embedding_tuple = (test_path, "[1,2]")
-    path_embedding_tuples.append (path_embedding_tuple)
+    embeddings = []
+    proxy_embedding = 0.0 * 10
+    embeddings.append (proxy_embedding)
         
-    analyser = ClusterAnalyser (path_embedding_tuples, test_output_location)
+    finder = EmbeddingFinder (embeddings)
 
-    assert len(analyser.path_embeddings) == 1  
-    assert analyser.output_location == test_output_location
-  
+    assert finder.embeddings == embeddings  
 
 def test_with_output (test_output_dir):
     
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
 
-    path_embedding_tuples = []
+    embeddings_as_float = []
 
     for test_path in test_paths:
        downloader = HtmlFileDownloader (test_path, test_output_location)
@@ -64,11 +60,11 @@ def test_with_output (test_output_dir):
 
        embedder = Embedder (test_path, summary, test_output_location)
        embedding = embedder.embed ()   
+       embedding_as_float = Embedder.textToFloat (embedding)
 
-       path_embedding_tuple = (test_path, embedding)
-       path_embedding_tuples.append (path_embedding_tuple)
+       embeddings_as_float.append (embedding_as_float)
 
-    cluster_analyser = ClusterAnalyser (path_embedding_tuples, test_output_location) 
-    cluster = cluster_analyser.analyse (2)
+    embedding_finder = EmbeddingFinder (embeddings_as_float) 
+    found = embedding_finder.find_nearest (embeddings_as_float[0])
 
-    assert 0 == 0
+    assert found == embeddings_as_float[0]

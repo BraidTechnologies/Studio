@@ -48,7 +48,8 @@ class WaterfallDataPipeline:
       embeddings = []
       embeddings_as_float = []
       path_embedding_tuples = []
-      themes = []
+      short_themes = []
+      long_themes = []
 
       for link in links:
          downloader = HtmlFileDownloader (link, self.output_location)
@@ -81,8 +82,10 @@ class WaterfallDataPipeline:
       # Ask the theme finder to find a theme, then store it
       for accumulated_summary in accumulated_summaries:
          theme_finder = ThemeFinder (accumulated_summary)
-         theme = theme_finder.find_theme ()
-         themes.append (theme)
+         theme = theme_finder.find_theme (15)
+         short_themes.append (theme)
+         theme = theme_finder.find_theme (50)
+         long_themes.append (theme)         
 
       reducer = umap.UMAP()
       logger.debug("Reducing cluster")      
@@ -94,7 +97,7 @@ class WaterfallDataPipeline:
       # Make a list of theme names which gets used as the legend
       theme_names = []
       for classification in classifications:
-         theme_name = themes[classification]      
+         theme_name = short_themes[classification]      
          theme_names.append(theme_name)
       
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)

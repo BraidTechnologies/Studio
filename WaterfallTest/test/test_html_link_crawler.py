@@ -7,6 +7,8 @@ import shutil
 import sys
 import logging
 
+from src.html_link_crawler import HtmlLinkCrawler
+
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
@@ -16,7 +18,7 @@ sys.path.extend([parent, src_dir])
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
-from src.html_link_crawler import HtmlLinkCrawler
+
 
 # Fixture to create a temporary directory for test output
 @pytest.fixture
@@ -28,9 +30,9 @@ def test_output_dir(tmpdir):
     logger.info(f"Cleaning up test output directory: {dir_path}")
     shutil.rmtree(str(dir_path))
 
-def test_basic ():
+def test_basic (test_output_dir):
     test_path = 'test'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
     crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
     assert crawler.path == test_path
     assert crawler.max_depth == 5    
@@ -39,7 +41,7 @@ def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_path = 'simple_test.html'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
 
     crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
     links = crawler.crawl ()    
@@ -51,7 +53,7 @@ def test_with_one_recursion(test_output_dir):
     os.chdir (test_root)
 
     test_path = 'two.html'
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
 
     crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
     links = crawler.crawl ()    
@@ -61,7 +63,7 @@ def test_with_two_recursions(test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_path = 'three.html'  
-    test_output_location = 'test_output'
+    test_output_location = test_output_dir
 
     crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
     links = crawler.crawl ()    
