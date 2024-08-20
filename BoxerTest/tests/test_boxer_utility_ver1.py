@@ -90,23 +90,23 @@ class TestResult:
 # Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
-        """
-        Retries the OpenAI chat API call with exponential backoff and retry logic.
+    """
+    Retries the OpenAI chat API call with exponential backoff and retry logic.
 
-        :param client: An instance of the AzureOpenAI class.
-        :type client: AzureOpenAI
-        :param messages: A list of dictionaries representing the messages to be sent to the API.
-        :type messages: List[Dict[str, str]]
-        :param config: An instance of the ApiConfiguration class.
-        :type config: ApiConfiguration
-        :param logger: An instance of the logging.Logger class.
-        :type logger: logging.Logger
-        :return: The content of the first choice in the API response.
-        :rtype: str
-        :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
-        :raises OpenAIError: If there is an error with the OpenAI API.
-        :raises APIConnectionError: If there is an error with the API connection.
-        """
+    :param client: An instance of the AzureOpenAI class.
+    :type client: AzureOpenAI
+    :param messages: A list of dictionaries representing the messages to be sent to the API.
+    :type messages: List[Dict[str, str]]
+    :param config: An instance of the ApiConfiguration class.
+    :type config: ApiConfiguration
+    :param logger: An instance of the logging.Logger class.
+    :type logger: logging.Logger
+    :return: The content of the first choice in the API response.
+    :rtype: str
+    :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
+    :raises OpenAIError: If there is an error with the OpenAI API.
+    :raises APIConnectionError: If there is an error with the API connection.
+    """
     try:
         response = client.chat.completions.create(
             model=config.azureDeploymentName,
