@@ -343,19 +343,3 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     processed_question_chunks = read_processed_chunks(source_dir)
     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
     save_results(test_destination_dir, question_results)
-
-# Test script logic
-questions = [
-    "What is a Large Language Model (LLM)?",
-    "How do Large Language Models (LLMs) work?",
-    "What are some common use cases for Large Language Models (LLMs) in applications?",
-]
-
-config = ApiConfiguration()
-test_destination_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/test output/"
-source_dir = "D:/Braid Technologies/BraidTechnologiesRepo/WorkedExamples/BoxerTest/data/"
-
-if not os.path.exists(test_destination_dir):
-    os.makedirs(test_destination_dir)
-
-run_tests(config, test_destination_dir, source_dir, questions)
