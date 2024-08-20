@@ -201,19 +201,20 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
 
         # Iterate through the stored chunks
         for chunk in current_chunks:
-            ada_embedding = chunk.get("ada_v2")
-            similarity = cosine_similarity(ada_embedding, embedding)
+            if isinstance(chunk, list) and chunk:  # Check if chunk is a non-empty list
+                ada_embedding = chunk[0].get("ada_v2")  # Access the first element of the inner list (to be check)
+                similarity = cosine_similarity(ada_embedding, embedding)
 
-            # Count it as a hit if we pass a reasonableness threshold
-            if similarity > 0.8:
-                result.hit = True
+                # Count it as a hit if we pass a reasonableness threshold
+                if similarity > 0.8:
+                    result.hit = True
 
-            # Record the best match
-            if similarity > result.hit_relevance:
-                result.hit_relevance = similarity
-                result.hit_summary = chunk.get("summary")
+                # Record the best match
+                if similarity > result.hit_relevance:
+                    result.hit_relevance = similarity
+                    result.hit_summary = chunk.get("summary")
 
-        results.append(result)
+            results.append(result)
 
     logger.debug("Total tests processed: %s", len(results))
 
