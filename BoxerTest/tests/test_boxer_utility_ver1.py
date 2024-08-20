@@ -12,7 +12,7 @@ from numpy.linalg import norm
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
 
-# Add the parent directory of the test file to the Python path for importing modules
+# Add the project root and scripts directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
@@ -43,7 +43,7 @@ FOLLOW_UP_PROMPT = (
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Configure the OpenAI API client for Azure
+# Configure the Azure OpenAI API client
 def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
     return AzureOpenAI(
         azure_endpoint=config.resourceEndpoint, 
