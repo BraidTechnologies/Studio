@@ -14,9 +14,10 @@ let minimumTextLength = 64;
  * Makes a POST request to an Azure endpoint to get the most common theme in the provided text.
  * Utilizes axios for HTTP requests and axiosRetry for up to 5 retries in case of rate limit errors.
  * @param text The text containing paragraphs to analyze for a common theme.
+ * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function findTheme (text: string) : Promise <string> {
+async function findTheme (text: string, length: number) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -31,7 +32,9 @@ async function findTheme (text: string) : Promise <string> {
       messages: [
          {
             role: 'system',
-            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in 15 words or less. Please find the most common theme in the following text in 15 words. Translate to English if necessary. "
+            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in " 
+            + length.toString() + " words or less. Please find the most common theme in the following text in " 
+            + length.toString() + " words. Translate to English if necessary. "
          },
          {
             role: 'user',
@@ -61,7 +64,9 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined;   
+    let length : number | undefined = undefined;
     let overallSummary : string | undefined = undefined; 
+    const defaultLength = 15;
 
     for (const [key, value] of request.query.entries()) {
         if (key === 'session')
@@ -73,6 +78,7 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
     if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {  
 
       text = (jsonRequest as any)?.data?.text;
+      length = (jsonRequest as any)?.data?.length;
 
       if (!text || text.length < minimumTextLength) {
          overallSummary = "Sorry, not enough text to find a theme."
@@ -80,7 +86,8 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
       else {
 
          let definitelyText: string = text;
-         overallSummary = await findTheme (definitelyText);         
+         let definitelyLength: number = length ? length : defaultLength;         
+         overallSummary = await findTheme (definitelyText, definitelyLength);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 
