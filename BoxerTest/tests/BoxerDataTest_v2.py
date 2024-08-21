@@ -323,25 +323,69 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
         raise
 
 # Main function to run tests
+# def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
+#     """
+#     Runs tests using the provided configuration, test destination directory, source directory, and questions.
+
+#     Args:
+#         config (ApiConfiguration): The configuration for the API.
+#         test_destination_dir (str): The directory where the test results will be saved.
+#         source_dir (str): The directory containing the source files.
+#         questions (List[str]): A list of questions to be processed.
+
+#     Returns:
+#         None
+#     """
+#     client = configure_openai_for_azure(config)
+
+#     if not test_destination_dir:
+#         logger.error("Test data folder not provided")
+#         raise ValueError("Test destination directory not provided")
+
+#     processed_question_chunks = read_processed_chunks(source_dir)
+#     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
+#     save_results(test_destination_dir, question_results)
+
+
+
+#constants
+job_role_list  = ['Developer', 'Analyst', 'Tester' ]
+PERSONA_BASE_PROMPT_LIST = [f"You are a {job_role}. Generate me a list of 100 questions"]
+
+class GeneratePersona: 
+    def __init__(self, client: AzureOpenAI, config: ApiConfiguration, question: str, logger: Logger) -> None:
+        self.client = client
+        self.config = config
+        self.question = question
+        self.logger = logger
+        self.enriched_question = generate_enriched_question(client, config, question, logger)         #make update to not call get_enriched_question() again here
+        self.job_role_list = job_role_list
+        self.PERSONA_BASE_PROMPT_LIST = PERSONA_BASE_PROMPT_LIST
+
+
+    def construct_persona_prompt(self):
+        persona_question_text_list = []
+        for i in range(len(job_role_list)):
+            job_role = job_role_list[i]
+            print('Role :', job_role)
+            for j in range(len(PERSONA_BASE_PROMPT_LIST)):
+                persona_base_prompt_text = PERSONA_BASE_PROMPT_LIST[j]
+                print('Question :',persona_base_prompt_text)
+
+            # print('Question :', sePERSONA_BASE_PROMPT_LIST[i])
+            
+    
+    
+
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
-    """
-    Runs tests using the provided configuration, test destination directory, source directory, and questions.
-
-    Args:
-        config (ApiConfiguration): The configuration for the API.
-        test_destination_dir (str): The directory where the test results will be saved.
-        source_dir (str): The directory containing the source files.
-        questions (List[str]): A list of questions to be processed.
-
-    Returns:
-        None
-    """
     client = configure_openai_for_azure(config)
 
     if not test_destination_dir:
         logger.error("Test data folder not provided")
         raise ValueError("Test destination directory not provided")
 
-    processed_question_chunks = read_processed_chunks(source_dir)
-    question_results = process_questions(client, config, questions, processed_question_chunks, logger)
-    save_results(test_destination_dir, question_results)
+    persona = GeneratePersona(client, config, "test question", logger)
+    output = persona.construct_persona_prompt()
+    print(output)
+
+
