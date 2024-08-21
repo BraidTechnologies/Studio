@@ -81,10 +81,9 @@ class TestResult:
             None
         """
         self.question: str = ""
-        self.enriched_question: str = ""
+        self.enriched_question_summary: str = ""
         self.hit: bool = False
         self.hit_relevance: float = 0.0
-        self.hit_summary: str = ""
         self.follow_up: str = ""
         self.follow_up_on_topic: str = ""
 
@@ -242,20 +241,31 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
     for question in questions:
         question_result = TestResult()
         question_result.question = question
-        question_result.enriched_question = generate_enriched_question(client, config, question, logger)
-        embedding = get_text_embedding(client, config, question_result.enriched_question, logger)
+        question_result.enriched_question_summary = generate_enriched_question(client, config, question, logger)
+        embedding = get_text_embedding(client, config, question_result.enriched_question_summary, logger)
+
+        counter_for_chunk = 0  # Reset counter_for_chunk to 0 for each question
 
         for chunk in processed_question_chunks:
             if isinstance(chunk, list) and chunk:
-                ada_embedding = chunk[0].get("ada_v2")
+                ada_embedding = chunk[counter_for_chunk].get("ada_v2")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
                 if similarity > SIMILARITY_THRESHOLD:
                     question_result.hit = True
-
-                if similarity > question_result.hit_relevance:
                     question_result.hit_relevance = similarity
-                    question_result.hit_summary = chunk[0].get("summary")
+
+                else:
+                    question_result.hit = False
+                    question_result.hit_relevance = similarity
+
+                counter_for_chunk += 1
+
+        if counter_for_chunk == 0:
+            # Handle the case where processed_question_chunks is empty
+            question_result.hit = False
+            question_result.hit_relevance = 0
+            raise ValueError("No chunks found for question: " + question)
 
         question_results.append(question_result)
 
@@ -305,9 +315,8 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
     output_results = [
         {
             "question": result.question,
-            "enriched_question": result.enriched_question,
             "hit": result.hit,
-            "summary": result.hit_summary,
+            "summary": result.enriched_question_summary,
             "hitRelevance": result.hit_relevance,
         }
         for result in question_results
