@@ -11,7 +11,8 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 # Local Imports
-from BoxerDataTest_v1 import run_tests
+# from BoxerDataTest_v1 import run_tests
+from BoxerDataTest_v2 import run_tests
 from common.ApiConfiguration import ApiConfiguration
 
 # Setup Logging

@@ -8,6 +8,7 @@ from logging import Logger
 from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
+import datetime
 
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
@@ -290,7 +291,6 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
         raise
     return processed_question_chunks
 
-# Function to save test results to a file
 def save_results(test_destination_dir: str, question_results: List[TestResult]) -> None:
     """
     Saves the test results to a JSON file in the specified destination directory.
@@ -313,7 +313,8 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
         for result in question_results
     ]
 
-    output_file = os.path.join(test_destination_dir, "test_output.json")
+    current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_file = os.path.join(test_destination_dir, f"test_output_v2_{current_datetime}.json")
     try:
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(output_results, f, indent=4)
