@@ -16,7 +16,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineSpec
 from src.search_pipeline import WaterfallDataPipeline
+from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID
 
 @pytest.fixture
 def place_holder_fixture():
@@ -36,6 +38,10 @@ def test_with_search ():
     test_output_location = 'test_output'
 
     pipeline = WaterfallDataPipeline (test_output_location)
-    links = pipeline.search (7)    
+    pipeline_spec = PipelineSpec()
+    pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10  
+    pipeline_spec.clusters = 7 
+    links = pipeline.search (pipeline_spec)    
     assert len(links) >= 1   
 

@@ -4,9 +4,11 @@
 import logging
 import os
 import json
+import plotly
 import plotly.express as px
 import umap.umap_ as umap
 
+from workflow import PipelineItem, Theme, PipelineSpec, get_embeddings_as_float
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
@@ -20,7 +22,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-def sort_array_by_another(arr1: list[str], arr2:list[int]):
+def sort_array_by_another(arr1: list[Theme], arr2:list[int]) -> list[Theme]:
     
     # Combine the two arrays into a list of tuples
     combined = list(zip(arr2, arr1))
@@ -29,7 +31,7 @@ def sort_array_by_another(arr1: list[str], arr2:list[int]):
     combined.sort(reverse=True)
     
     # Extract the sorted arr1 from the combined list
-    sorted_arr1 = [x for _, x in combined]
+    sorted_arr1 : list[Theme] = [x for _, x in combined]
     
     return sorted_arr1
 
@@ -47,7 +49,7 @@ class WaterfallDataPipeline:
       return
        
 
-   def search (self, clusters: int) -> list[str]: 
+   def search (self, spec: PipelineSpec) -> list[Theme]: 
       '''
       Searches for HTML content from a list of links.
 
@@ -56,91 +58,95 @@ class WaterfallDataPipeline:
       '''
       searcher = WebSearcher (self.output_location)
 
-      links = searcher.search ()
+      links = searcher.search (spec)
 
-      summaries = []
-      embeddings = []
-      embeddings_as_float = []
-      path_embedding_tuples = []
-      short_themes = []
-      long_themes = []
+      items : list [PipelineItem] = []
+      themes : list[Theme] = []
 
       for link in links:
+         item : PipelineItem = PipelineItem()
+         item.path = link
+
          downloader = HtmlFileDownloader (link, self.output_location)
-         text = downloader.download ()
+         item_text = downloader.download ()
 
-         summariser = Summariser (link, text, self.output_location)
-         summary = summariser.summarise ()
-         summaries.append (summary)
+         summariser = Summariser (link, item_text, self.output_location)
+         item.summary = summariser.summarise ()
 
-         embedder = Embedder (link, summary, self.output_location)
-         embedding = embedder.embed ()
-         embeddings.append (embedding)         
+         embedder = Embedder (link, item.summary, self.output_location)
+         item.embedding = embedder.embed ()   
+         item.embedding_as_float = Embedder.textToFloat (item.embedding)    
 
-         path_embedding_tuple = (link, embedding)
-         path_embedding_tuples.append (path_embedding_tuple)
+         items.append (item)        
 
-      for embedding in embeddings:           
-         embedding_as_float = Embedder.textToFloat (embedding)
-         embeddings_as_float.append (embedding_as_float)         
-
-      cluster_analyser = ClusterAnalyser (path_embedding_tuples, self.output_location) 
-      classifications = cluster_analyser.analyse(clusters)
+      cluster_analyser = ClusterAnalyser (items, self.output_location) 
+      classifications = cluster_analyser.analyse(spec.clusters)
       
-      accumulated_summaries = [""] * clusters
-      accumulated_counts = [0] * clusters
+      accumulated_summaries : list [str] = [""] * spec.clusters
+      accumulated_counts : list [int] = [0] * spec.clusters
+      accumulated_members : list [list [PipelineItem ]] = [None] * spec.clusters
+      for x in range(spec.clusters):
+         accumulated_members[x] = []
 
       # Accumulate a set of summaries and counts of summaries according to classification
-      for i, summary in enumerate (summaries):
-         accumulated_summaries[classifications[i]] = accumulated_summaries[classifications[i]] + summary
+      for i, item in enumerate (items):
+         accumulated_summaries[classifications[i]] = accumulated_summaries[classifications[i]] + item.summary
          accumulated_counts[classifications[i]] = accumulated_counts[classifications[i]] + 1
+         accumulated_members[classifications[i]].append (item)
      
       # Ask the theme finder to find a theme, then store it
-      for accumulated_summary in accumulated_summaries:
+      for i, accumulated_summary in enumerate (accumulated_summaries):
          theme_finder = ThemeFinder (accumulated_summary)
-         theme = theme_finder.find_theme (15)
-         short_themes.append (theme)
-         theme = theme_finder.find_theme (50)
-         long_themes.append (theme)         
+         short_description = theme_finder.find_theme (15)
+         long_description = theme_finder.find_theme (50)
+         theme = Theme()
+         theme.member_pipeline_items = accumulated_members[i]
+         theme.short_description = short_description
+         theme.long_description = long_description
+         themes.append (theme)         
 
       reducer = umap.UMAP()
-      logger.debug("Reducing cluster")      
+      logger.debug("Reducing cluster")     
+      embeddings_as_float = get_embeddings_as_float (items) 
       embeddings_2d = reducer.fit_transform(embeddings_as_float)
 
       logger.debug("Generating chart")
       #df = pd.DataFrame({'theme': themes})
       
       # Make a list of theme names which gets used as the legend in the chart
-      theme_names = []
+      theme_names : list [str] = []
       for classification in classifications:
-         theme_name = short_themes[classification]      
+         theme_name = themes[classification].short_description     
          theme_names.append(theme_name)
       
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
-      fig.show()
 
-      long_themes = sort_array_by_another(long_themes, accumulated_counts)
-      top_themes = long_themes[:3]
+      # save an interactive HTML version
+      html_path = os.path.join(self.output_location, "cluster.html")      
+      plotly.offline.plot(fig, filename=html_path)      
+
+      ordered_themes = sort_array_by_another(themes, accumulated_counts)
 
       # Now we are looking for articles that best match the themes
       embedding_finder = EmbeddingFinder (embeddings_as_float, self.output_location)
 
-      # Ask the embedding finder to find nearest article for top 3 themese
-      nearest_summaries = []
-      nearest_links = []
-      for theme in top_themes:
-         nearest_embedding = embedding_finder.find_nearest (None, theme)
-         for i, embedding in enumerate (embeddings_as_float):
-            if embedding == nearest_embedding:
-               nearest_links.append(links[i])               
-               nearest_summaries.append(summaries[i])
+      # Ask the embedding finder to find nearest article for each theme
+      for theme in ordered_themes:
+         nearest_items : list [PipelineItem]= []         
+         nearest_embedding = embedding_finder.find_nearest (None, theme.long_description)
+         for item in items:
+            # TODO - accumulate top 3 items per theme
+            if item.embedding_as_float == nearest_embedding:
+               nearest_items.append(item)  
+               theme.example_pipeline_items = nearest_items
+               break            
 
       output_results = []
-      for i, text in enumerate(summaries):
+      for i, item in enumerate(items):
          output_item = dict()
-         output_item["summary"] = text
-         output_item["embedding"] = embeddings[i]
-         output_item["path"] = links[i]
+         output_item["summary"] = item.summary
+         output_item["embedding"] = item.embedding
+         output_item["path"] = item.path
          output_item["theme"] = theme_names[i]
          output_results.append (output_item)
       
@@ -149,7 +155,7 @@ class WaterfallDataPipeline:
       with open(output_file, "w+", encoding="utf-8") as f:
          json.dump(output_results, f)        
         
-      return summaries
+      return ordered_themes
       
         
 

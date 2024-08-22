@@ -1,11 +1,11 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
-import pytest
 import os
-import shutil
 import sys
 import logging
+
+from src.workflow import PipelineSpec
 
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
@@ -18,28 +18,22 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 from src.search_pipeline import WebSearcher
-
-# Fixture to create a temporary directory for test output
-@pytest.fixture
-def test_output_dir(tmpdir):
-    dir_path = tmpdir.mkdir("test_output")
-    logger.info(f"Created temporary test output directory: {dir_path}")
-    yield str(dir_path)
-    # Clean up after the test
-    logger.info(f"Cleaning up test output directory: {dir_path}")
-    shutil.rmtree(str(dir_path))
+from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID
 
 def test_basic ():
     test_output_location = 'test_output'
     searcher = WebSearcher (test_output_location)
     assert searcher.output_location == test_output_location 
 
-def test_with_search (test_output_dir):
+def test_with_search ():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_output_location = 'test_output'
 
     searcher = WebSearcher (test_output_location)
-    links = searcher.search ()    
+    pipeline = PipelineSpec()
+    pipeline.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+    pipeline.pages = 1
+    links = searcher.search (pipeline)    
     assert len(links) >= 1   
 

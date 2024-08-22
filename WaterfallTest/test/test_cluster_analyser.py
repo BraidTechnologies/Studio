@@ -18,6 +18,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.cluster_analyser import ClusterAnalyser
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
@@ -37,13 +38,16 @@ def test_basic (test_output_dir):
     test_path = 'test'
     test_output_location = test_output_dir
 
-    path_embedding_tuples = []
-    path_embedding_tuple = (test_path, "[1,2]")
-    path_embedding_tuples.append (path_embedding_tuple)
+    items: list [PipelineItem] = []
+    item: PipelineItem = PipelineItem()
+    item.path = test_path
+    item.embedding = "[1.0,2.0]"
+    item.embedding_as_float = Embedder.textToFloat (item.embedding)    
+    items.append (item)
         
-    analyser = ClusterAnalyser (path_embedding_tuples, test_output_location)
+    analyser = ClusterAnalyser (items, test_output_location)
 
-    assert len(analyser.path_embeddings) == 1  
+    assert len(analyser.items) == 1  
     assert analyser.output_location == test_output_location
   
 
@@ -54,7 +58,8 @@ def test_with_output (test_output_dir):
     test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
     test_output_location = 'test_output'
 
-    path_embedding_tuples = []
+    items: list [PipelineItem] = []
+    item: PipelineItem = PipelineItem()
 
     for test_path in test_paths:
        downloader = HtmlFileDownloader (test_path, test_output_location)
@@ -65,11 +70,13 @@ def test_with_output (test_output_dir):
 
        embedder = Embedder (test_path, summary, test_output_location)
        embedding = embedder.embed ()   
+       
+       item.path = test_path
+       item.embedding = embedding
+       item.embedding_as_float = Embedder.textToFloat (item.embedding) 
+       items.append (item)
 
-       path_embedding_tuple = (test_path, embedding)
-       path_embedding_tuples.append (path_embedding_tuple)
+    cluster_analyser = ClusterAnalyser (items, test_output_location) 
+    clusters = cluster_analyser.analyse (2)
 
-    cluster_analyser = ClusterAnalyser (path_embedding_tuples, test_output_location) 
-    cluster = cluster_analyser.analyse (2)
-
-    assert 0 == 0
+    assert len(clusters) == len(items)

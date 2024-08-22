@@ -25,8 +25,6 @@ class ThemeFinder:
 
    def find_theme(self, length: int) -> str: 
 
-      logger.debug("Finding theme: %s", self.text)
-
       session = requests.Session()
 
       summaryUrl = f"https://braidapi.azurewebsites.net/api/FindTheme?session={SESSION_KEY}"
