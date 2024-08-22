@@ -8,6 +8,18 @@
          "restart": true,
          "port": 9229,
          "preLaunchTask": "func: host start"
-      }
+      },
+      {
+         "name": "Python: Current File",
+         "type": "debugpy",
+         "request": "launch",
+         "program": "${file}",
+         "console": "integratedTerminal",
+         "justMyCode": false,
+         "env": {
+             "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/scripts"
+         },
+         "cwd": "${workspaceFolder}"
+     },
    ]
 }
