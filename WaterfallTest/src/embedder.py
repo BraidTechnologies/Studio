@@ -4,6 +4,7 @@
 import logging
 import os
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 from embedder_repository_facade import EmbeddingRespositoryFacade
 
@@ -46,7 +47,9 @@ class Embedder:
       logger.debug("Embedding: %s", path)
 
       session = requests.Session()
-
+      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+      session.mount('https://', HTTPAdapter(max_retries=retries))   
+      
       embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"
       input = {
          'data': {

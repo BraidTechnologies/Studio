@@ -4,6 +4,7 @@
 import logging
 import os
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 from summary_repository_facade import SummaryRespositoryFacade
 
@@ -41,6 +42,8 @@ class Summariser:
       logger.debug("Summarising: %s", path)
 
       session = requests.Session()
+      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+      session.mount('https://', HTTPAdapter(max_retries=retries))      
 
       summaryUrl = f"https://braidapi.azurewebsites.net/api/Summarize?session={SESSION_KEY}"
       input = {

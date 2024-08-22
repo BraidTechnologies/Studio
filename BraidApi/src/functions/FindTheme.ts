@@ -34,7 +34,7 @@ async function findTheme (text: string, length: number) : Promise <string> {
             role: 'system',
             content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in " 
             + length.toString() + " words or less. Please find the most common theme in the following text in " 
-            + length.toString() + " words. Translate to English if necessary. "
+            + length.toString() + " words. Do not start your reply with the phrase 'The most common theme in the test is'. Translate to English if necessary. "
          },
          {
             role: 'user',
