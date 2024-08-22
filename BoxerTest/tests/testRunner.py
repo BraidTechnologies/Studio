@@ -11,9 +11,9 @@ class PersonaSelector:
     def __init__(self):
         self.persona_prompts = {
             "1": "Static questions",
-            "2": programmerPersonaPrompt,
-            "3": testerPersonaPrompt,
-            "4": buisnessAnalystPersonaPrompt
+            "2": "Programmer Persona",
+            "3": "Tester Persona",
+            "4": "Business Analyst Persona"
         }
 
     def get_user_choice(self):
@@ -76,9 +76,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-#take as input choice: "Static questions", "Developer", "Tester", "Buisness Analyst"
 
 
 
