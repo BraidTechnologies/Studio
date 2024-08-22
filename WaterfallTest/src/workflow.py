@@ -51,5 +51,6 @@ class PipelineSpec(Freezable):
       self.search_key = None
       self.description = None
       self.themes = None  
+      self.output_chart_name = None
 
       self._freeze()      

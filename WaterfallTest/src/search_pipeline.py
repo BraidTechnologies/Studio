@@ -122,7 +122,7 @@ class WaterfallDataPipeline:
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
 
       # save an interactive HTML version
-      html_path = os.path.join(self.output_location, "cluster.html")      
+      html_path = os.path.join(self.output_location, spec.output_chart_name)      
       plotly.offline.plot(fig, filename=html_path)      
 
       ordered_themes = sort_array_by_another(themes, accumulated_counts)
