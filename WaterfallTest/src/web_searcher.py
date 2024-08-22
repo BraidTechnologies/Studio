@@ -5,6 +5,7 @@ import logging
 import os
 import requests
 
+from workflow import PipelineSpec
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -16,7 +17,7 @@ GOOGLE_CUSTOM_WEB_SEARCH_API_KEY = os.environ["GOOGLE_CUSTOM_WEB_SEARCH_API_KEY"
 
 # get your Search Engine ID on your CSE control panel
 #https://programmablesearchengine.google.com/controlpanel/all
-SEARCH_ENGINE_ID = "00d305498d8da42e1"
+AI_SUPPLY_STACK_SEARCH_ENGINE_ID = "00d305498d8da42e1"
 
 class WebSearcher:
    '''
@@ -25,16 +26,16 @@ class WebSearcher:
    '''
 
    def __init__(self, output_location: str):
-      self.output_location = output_location       
+      self.output_location = output_location   
       return
        
 
-   def search (self) -> list[str]: 
+   def search (self, pipeline: PipelineSpec) -> list[str]: 
       '''
       Searches for links related to a specific query using the Google Custom Search Engine API.
       Returns a list of URLs extracted from the search results.
       '''
-      # See this link for details o  what we are doing here
+      # See this link for details of what we are doing here
       # https://thepythoncode.com/article/use-google-custom-search-engine-api-in-python?utm_content=cmp-true
 
       links = []
@@ -42,12 +43,12 @@ class WebSearcher:
       query = "Generative AI"
 
       # Pull back 1- pages of results (100 items ...)
-      for page in range(1, 10):
+      for page in range(1, pipeline.pages + 1):
          # constructing the URL
          # doc: https://developers.google.com/custom-search/v1/using_rest
          # calculating start, (page=2) => (start=11), (page=3) => (start=21)
          start = (page - 1) * 10 + 1
-         url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_CUSTOM_WEB_SEARCH_API_KEY}&cx={SEARCH_ENGINE_ID}&q={query}&start={start}&dateRestrict=m[1]"      
+         url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_CUSTOM_WEB_SEARCH_API_KEY}&cx={pipeline.search_key}&q={query}&start={start}&dateRestrict=m[1]"      
 
          # make the API request
          data = requests.get(url).json()

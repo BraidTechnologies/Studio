@@ -48,7 +48,7 @@ async function SingleShotSummarize (text: string) : Promise <string> {
       messages: [
          {
             role: 'system',
-            content: "You are an AI asistant that summarises text in 50 words or less. Please summarise the following text in 50 words. Translate to English if necessary. "
+            content: "You are an AI asistant that summarises text in 50 words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in 50 words.  Translate to English if necessary. "
          },
          {
             role: 'user',
