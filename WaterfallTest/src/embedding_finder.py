@@ -26,8 +26,8 @@ class EmbeddingFinder:
 
    def find_nearest (self, link: str, target_text: str) -> list[float]:       
 
-      embedder = Embedder (link, target_text, self.output_location)
-      embedding = embedder.embed ()
+      embedder = Embedder (link, self.output_location)
+      embedding = embedder.embed (target_text)
       target_embedding_as_float = Embedder.textToFloat (embedding) 
 
       best_similarity = 0.0

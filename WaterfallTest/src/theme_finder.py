@@ -4,6 +4,7 @@
 import logging
 import os
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -20,17 +21,19 @@ headers = {
 
 class ThemeFinder:
 
-   def __init__(self, text: str):
-      self.text = text   
+   def __init__(self): 
+      return
 
-   def find_theme(self, length: int) -> str: 
+   def find_theme(self, text: str, length: int) -> str: 
 
       session = requests.Session()
-
+      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+      session.mount('https://', HTTPAdapter(max_retries=retries))  
+      
       summaryUrl = f"https://braidapi.azurewebsites.net/api/FindTheme?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': self.text,
+         'text': text,
          'length' : length
          }
       }

@@ -56,12 +56,12 @@ def test_with_output (test_output_dir):
        downloader = HtmlFileDownloader (test_path, test_output_location)
        text = downloader.download () 
 
-       summariser = Summariser (test_path, text, test_output_location)   
-       summary = summariser.summarise () 
+       summariser = Summariser (test_path, test_output_location)   
+       summary = summariser.summarise (text) 
        summaries.append(summary)
 
-       embedder = Embedder (test_path, summary, test_output_location)
-       embedding = embedder.embed ()   
+       embedder = Embedder (test_path, test_output_location)
+       embedding = embedder.embed (summary)   
        embedding_as_float = Embedder.textToFloat (embedding)
 
        embeddings_as_float.append (embedding_as_float)

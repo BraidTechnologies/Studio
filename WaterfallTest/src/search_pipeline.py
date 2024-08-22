@@ -70,11 +70,11 @@ class WaterfallDataPipeline:
          downloader = HtmlFileDownloader (link, self.output_location)
          item_text = downloader.download ()
 
-         summariser = Summariser (link, item_text, self.output_location)
-         item.summary = summariser.summarise ()
+         summariser = Summariser (link, self.output_location)
+         item.summary = summariser.summarise (item_text)
 
-         embedder = Embedder (link, item.summary, self.output_location)
-         item.embedding = embedder.embed ()   
+         embedder = Embedder (link, self.output_location)
+         item.embedding = embedder.embed (item.summary, )   
          item.embedding_as_float = Embedder.textToFloat (item.embedding)    
 
          items.append (item)        
@@ -96,9 +96,9 @@ class WaterfallDataPipeline:
      
       # Ask the theme finder to find a theme, then store it
       for i, accumulated_summary in enumerate (accumulated_summaries):
-         theme_finder = ThemeFinder (accumulated_summary)
-         short_description = theme_finder.find_theme (15)
-         long_description = theme_finder.find_theme (50)
+         theme_finder = ThemeFinder ()
+         short_description = theme_finder.find_theme (accumulated_summary, 15)
+         long_description = theme_finder.find_theme (accumulated_summary, 50)
          theme = Theme()
          theme.member_pipeline_items = accumulated_members[i]
          theme.short_description = short_description
@@ -122,7 +122,7 @@ class WaterfallDataPipeline:
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
 
       # save an interactive HTML version
-      html_path = os.path.join(self.output_location, "cluster.html")      
+      html_path = os.path.join(self.output_location, spec.output_chart_name)      
       plotly.offline.plot(fig, filename=html_path)      
 
       ordered_themes = sort_array_by_another(themes, accumulated_counts)

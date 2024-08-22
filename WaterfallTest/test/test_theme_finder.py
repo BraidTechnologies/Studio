@@ -36,11 +36,11 @@ def test_with_output ():
        downloader = HtmlFileDownloader (test_path, test_output_location)
        text = downloader.download () 
 
-       summariser = Summariser (test_path, text, test_output_location)
-       summary = summariser.summarise ()    
+       summariser = Summariser (test_path, test_output_location)
+       summary = summariser.summarise (text)    
 
        accumulated_summary = accumulated_summary + "\n\n" + summary
 
-    theme_finder = ThemeFinder (accumulated_summary)
-    theme = theme_finder.find_theme (15)    
+    theme_finder = ThemeFinder ()
+    theme = theme_finder.find_theme (accumulated_summary, 15)    
     assert len(theme) > 0

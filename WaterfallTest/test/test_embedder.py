@@ -48,6 +48,6 @@ def test_with_output (test_output_dir):
     downloader = HtmlFileDownloader (test_path, test_output_location)
     text = downloader.download () 
 
-    embedder = Embedder (test_path, text, test_output_location)
-    embedding = embedder.embed ()    
+    embedder = Embedder (test_path, test_output_location)
+    embedding = embedder.embed (text)    
     assert len(embedding) > 0

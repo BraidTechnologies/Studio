@@ -64,6 +64,7 @@ def test_pipeline ():
    pipeline.search_key = "1234"
    pipeline.description = "Description"
    pipeline.themes = themes
+   pipeline.output_chart_name = "test.html"
 
    caught = False
    try :
