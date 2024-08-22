@@ -8,6 +8,7 @@ from logging import Logger
 from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
+import datetime
 
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
@@ -322,10 +323,15 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
         for result in question_results
     ]
 
-    output_file = os.path.join(test_destination_dir, "test_output.json")
+
+    current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_file = os.path.join(test_destination_dir, f"test_output_v1_{current_datetime}.json")
+
     try:
+        # Open the output file in write mode, using utf-8 encoding and create it if it doesn't exist
         with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(output_results, f, indent=4)
+            # Write the output results to the file in JSON format 
+            json.dump(output_results, f, indent=4)  # Save the results to the file
     except IOError as e:
         logger.error(f"Error saving results: {e}")
         raise
