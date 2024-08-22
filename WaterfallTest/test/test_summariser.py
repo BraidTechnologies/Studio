@@ -47,6 +47,6 @@ def test_with_output (test_output_dir):
     downloader = HtmlFileDownloader (test_path, test_output_location)
     text = downloader.download () 
 
-    summariser = Summariser (test_path, text, test_output_location)
-    summary = summariser.summarise ()    
+    summariser = Summariser (test_path, test_output_location)
+    summary = summariser.summarise (text)    
     assert len(summary) > 0

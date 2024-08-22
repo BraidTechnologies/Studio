@@ -23,15 +23,14 @@ headers = {
 
 class Embedder:
 
-   def __init__(self, path : str, text: str, output_location: str):
+   def __init__(self, path : str, output_location: str):
       '''
-      Initializes the Embedder object with the provided path, text content, and output location.
+      Initializes the Embedder object with the provided path and output location.
       '''
       self.path = path
-      self.text = text
       self.output_location = output_location       
 
-   def embed(self) -> str: 
+   def embed(self, text: str) -> str: 
       '''
       Embeds the text content provided in the object to a file at the specified path within the output location. If the file already exists, the existing content is returned. If the file does not exist, a new embedding is generated using an external API, saved to the file, and returned.
 
@@ -53,7 +52,7 @@ class Embedder:
       embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': self.text
+         'text': text
          }
       }
 

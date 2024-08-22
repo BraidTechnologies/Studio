@@ -65,11 +65,11 @@ def test_with_output (test_output_dir):
        downloader = HtmlFileDownloader (test_path, test_output_location)
        text = downloader.download () 
 
-       summariser = Summariser (test_path, text, test_output_location)   
-       summary = summariser.summarise () 
+       summariser = Summariser (test_path, test_output_location)   
+       summary = summariser.summarise (text) 
 
-       embedder = Embedder (test_path, summary, test_output_location)
-       embedding = embedder.embed ()   
+       embedder = Embedder (test_path, test_output_location)
+       embedding = embedder.embed (summary)   
        
        item.path = test_path
        item.embedding = embedding

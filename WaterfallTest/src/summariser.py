@@ -23,12 +23,11 @@ headers = {
 
 class Summariser:
 
-   def __init__(self, path : str, text: str, output_location: str):
+   def __init__(self, path : str, output_location: str):
       self.path = path
-      self.text = text
       self.output_location = output_location       
 
-   def summarise(self) -> str: 
+   def summarise(self, text: str, ) -> str: 
       '''
       Summarises the text content by either loading an existing summary from the specified path or generating a new summary using an external API. 
       If an existing summary is found, it is returned; otherwise, a new summary is generated and saved at the specified path. 
@@ -48,7 +47,7 @@ class Summariser:
       summaryUrl = f"https://braidapi.azurewebsites.net/api/Summarize?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': self.text
+         'text': text
          }
       }
 
