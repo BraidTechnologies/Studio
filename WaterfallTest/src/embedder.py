@@ -6,6 +6,7 @@ import os
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from workflow import PipelineItem
 from embedder_repository_facade import EmbeddingRespositoryFacade
 
 # Set up logging to display information about the execution of the script
@@ -23,25 +24,22 @@ headers = {
 
 class Embedder:
 
-   def __init__(self, path : str, output_location: str):
+   def __init__(self, output_location: str):
       '''
-      Initializes the Embedder object with the provided path and output location.
+      Initializes the Embedder object with the provided output location.
       '''
-      self.path = path
       self.output_location = output_location       
 
-   def embed(self, text: str) -> str: 
-      '''
-      Embeds the text content provided in the object to a file at the specified path within the output location. If the file already exists, the existing content is returned. If the file does not exist, a new embedding is generated using an external API, saved to the file, and returned.
+   def embed(self, pipeline_item: PipelineItem) -> PipelineItem: 
 
-      Returns:
-         str: The embedded text content.
-      ''' 
 
-      path = self.path
-      repository = EmbeddingRespositoryFacade (self.output_location)      
+      path = pipeline_item.path
+      repository = EmbeddingRespositoryFacade (self.output_location)                
       if repository.exists (path):          
-         return repository.load (path)
+         embedding = repository.load (path)
+         pipeline_item.embedding = embedding
+         pipeline_item.embedding_as_float = Embedder.textToFloat (embedding)
+         return pipeline_item   
 
       logger.debug("Embedding: %s", path)
 
@@ -52,7 +50,7 @@ class Embedder:
       embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': text
+         'text': pipeline_item.text
          }
       }
 
@@ -62,7 +60,10 @@ class Embedder:
       if path != None:
          repository.save (path, embedding)
 
-      return embedding
+      pipeline_item.embedding = embedding
+      pipeline_item.embedding_as_float = Embedder.textToFloat (embedding)
+
+      return pipeline_item
    
 
    @staticmethod

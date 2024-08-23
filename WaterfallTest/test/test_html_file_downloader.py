@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.html_file_downloader import HtmlFileDownloader
 
 # Fixture to create a temporary directory for test output
@@ -30,18 +31,10 @@ def test_output_dir(tmpdir):
     shutil.rmtree(str(dir_path))    
 
 def test_basic (test_output_dir):
-    test_path = 'test'
     test_output_location = test_output_dir
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    assert downloader.path == test_path   
+    downloader = HtmlFileDownloader (test_output_location)
+    assert downloader.output_location == test_output_location   
 
-def test_connected (test_output_dir):
-    test_path = 'https://openai.com/'
-    test_output_location = test_output_dir
-
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    text = downloader.download ()    
-    assert len(text) > 50
 
 def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
@@ -49,8 +42,23 @@ def test_with_output (test_output_dir):
     test_path = 'simple_test.html'
     test_output_location = test_output_dir
 
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    text = downloader.download ()    
-    assert len(text) > 0
+    downloader = HtmlFileDownloader (test_output_location)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    enriched : PipelineItem = downloader.download (pipeline_item)    
+
+    assert len(enriched.text) > 0
 
 
+def test_connected (test_output_dir):
+    test_path = 'https://openai.com/'
+    test_output_location = test_output_dir
+
+    downloader = HtmlFileDownloader (test_output_location)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    enriched : PipelineItem = downloader.download (pipeline_item) 
+      
+    assert len(enriched.text) > 0

@@ -5,8 +5,8 @@ import logging
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
-from urllib.parse import urlsplit
 
+from workflow import PipelineItem
 from text_repository_facade import TextRespositoryFacade
 
 # Set up logging to display information about the execution of the script
@@ -27,16 +27,14 @@ class HtmlFileDownloader:
    """Utility class to download an HTML file
 
     Args:
-        path (str): The path to the HTML file to download.
         output_location (str): The location to save the downloaded file.
 
    """
 
-   def __init__(self, path : str, output_location: str):
-      self.path = path
+   def __init__(self, output_location: str):
       self.output_location = output_location       
 
-   def download(self) -> str: 
+   def download(self, pipeline_item: PipelineItem) -> PipelineItem: 
       """
        Downloads the HTML content from the specified path and saves it to the output location.
        
@@ -44,10 +42,12 @@ class HtmlFileDownloader:
            str: The content of the downloaded HTML file.
       """       
      
-      path = self.path
+      path = pipeline_item.path
       repository = TextRespositoryFacade (self.output_location)      
-      if repository.exists (path):          
-         return repository.load (path)
+      if path != None and repository.exists (path):          
+         full_text = repository.load (path)
+         pipeline_item.text = full_text
+         return pipeline_item         
 
       logger.debug("Downloading: %s", path)
 
@@ -67,7 +67,9 @@ class HtmlFileDownloader:
 
       repository.save (path, full_text)
 
-      return full_text
+      pipeline_item.text = full_text
+
+      return pipeline_item
 
 
 

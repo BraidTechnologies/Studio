@@ -58,24 +58,21 @@ class WaterfallDataPipeline:
       '''
       searcher = WebSearcher (self.output_location)
 
-      links = searcher.search (spec)
+      input_items = searcher.search (spec)
 
       items : list [PipelineItem] = []
       themes : list[Theme] = []
 
-      for link in links:
-         item : PipelineItem = PipelineItem()
-         item.path = link
+      for item in input_items:
 
-         downloader = HtmlFileDownloader (link, self.output_location)
-         item_text = downloader.download ()
+         downloader = HtmlFileDownloader (self.output_location)
+         item = downloader.download (item)
 
-         summariser = Summariser (link, self.output_location)
-         item.summary = summariser.summarise (item_text)
+         summariser = Summariser (self.output_location)
+         item = summariser.summarise (item)
 
-         embedder = Embedder (link, self.output_location)
-         item.embedding = embedder.embed (item.summary, )   
-         item.embedding_as_float = Embedder.textToFloat (item.embedding)    
+         embedder = Embedder (self.output_location)
+         item = embedder.embed (item)      
 
          items.append (item)        
 

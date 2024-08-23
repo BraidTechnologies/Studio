@@ -34,6 +34,6 @@ def test_with_search ():
     pipeline = PipelineSpec()
     pipeline.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline.pages = 1
-    links = searcher.search (pipeline)    
-    assert len(links) >= 1   
+    pipeline_items = searcher.search (pipeline)    
+    assert len(pipeline_items) >= 1   
 

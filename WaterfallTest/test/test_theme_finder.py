@@ -15,6 +15,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.theme_finder import ThemeFinder
 from src.summariser import Summariser
 from src.html_file_downloader import HtmlFileDownloader
@@ -22,8 +23,8 @@ from src.html_file_downloader import HtmlFileDownloader
 def test_basic ():
     test_text = "This is some text"
 
-    summariser = ThemeFinder  (test_text)
-    assert summariser.text == test_text 
+    summariser = ThemeFinder  ()
+    assert summariser != None
 
 def test_with_output ():
     test_root = os.path.dirname(__file__)
@@ -33,13 +34,16 @@ def test_with_output ():
 
     accumulated_summary = ""
     for test_path in test_paths:
-       downloader = HtmlFileDownloader (test_path, test_output_location)
-       text = downloader.download () 
+       item: PipelineItem = PipelineItem() 
+       item.path = test_path
 
-       summariser = Summariser (test_path, test_output_location)
-       summary = summariser.summarise (text)    
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
 
-       accumulated_summary = accumulated_summary + "\n\n" + summary
+       summariser = Summariser (test_output_location)
+       item = summariser.summarise (item)    
+
+       accumulated_summary = accumulated_summary + "\n\n" + item.summary
 
     theme_finder = ThemeFinder ()
     theme = theme_finder.find_theme (accumulated_summary, 15)    

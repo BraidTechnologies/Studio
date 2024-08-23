@@ -6,6 +6,7 @@ import os
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from workflow import PipelineItem
 from summary_repository_facade import SummaryRespositoryFacade
 
 # Set up logging to display information about the execution of the script
@@ -23,20 +24,21 @@ headers = {
 
 class Summariser:
 
-   def __init__(self, path : str, output_location: str):
-      self.path = path
+   def __init__(self, output_location: str):
       self.output_location = output_location       
 
-   def summarise(self, text: str, ) -> str: 
+   def summarise(self, pipeline_item: PipelineItem) -> PipelineItem: 
       '''
       Summarises the text content by either loading an existing summary from the specified path or generating a new summary using an external API. 
       If an existing summary is found, it is returned; otherwise, a new summary is generated and saved at the specified path. 
       Returns the generated or loaded summary as a string.
       '''
-      path = self.path
+      path = pipeline_item.path
       repository = SummaryRespositoryFacade (self.output_location)      
       if repository.exists (path):          
-         return repository.load (path)
+         summary = repository.load (path)
+         pipeline_item.summary = summary
+         return pipeline_item   
 
       logger.debug("Summarising: %s", path)
 
@@ -47,7 +49,7 @@ class Summariser:
       summaryUrl = f"https://braidapi.azurewebsites.net/api/Summarize?session={SESSION_KEY}"
       input = {
          'data': {
-         'text': text
+         'text': pipeline_item.text
          }
       }
 
@@ -55,6 +57,7 @@ class Summariser:
       summary = response.text         
 
       repository.save (path, summary)
+      pipeline_item.summary = summary
 
-      return summary
+      return pipeline_item
 

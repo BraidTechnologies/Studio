@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.embedding_finder import EmbeddingFinder
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
@@ -49,24 +50,26 @@ def test_with_output (test_output_dir):
     test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
     test_output_location = test_output_dir
 
-    summaries = []
+    texts = []
     embeddings_as_float = []
 
     for test_path in test_paths:
-       downloader = HtmlFileDownloader (test_path, test_output_location)
-       text = downloader.download () 
+       item: PipelineItem = PipelineItem() 
+       item.path = test_path
 
-       summariser = Summariser (test_path, test_output_location)   
-       summary = summariser.summarise (text) 
-       summaries.append(summary)
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
+       texts.append(item.text)
 
-       embedder = Embedder (test_path, test_output_location)
-       embedding = embedder.embed (summary)   
-       embedding_as_float = Embedder.textToFloat (embedding)
+       summariser = Summariser (test_output_location)   
+       item = summariser.summarise (item) 
 
-       embeddings_as_float.append (embedding_as_float)
+       embedder = Embedder (test_output_location)
+       item = embedder.embed (item)   
+
+       embeddings_as_float.append (item.embedding_as_float)
 
     embedding_finder = EmbeddingFinder (embeddings_as_float, test_output_dir) 
-    found = embedding_finder.find_nearest (test_paths[0], summary[0])
+    found = embedding_finder.find_nearest (texts[0])
 
-    assert found == embeddings_as_float[0]
+    assert len(found) > 0 

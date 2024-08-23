@@ -5,7 +5,7 @@ import logging
 import os
 import requests
 
-from workflow import PipelineSpec
+from workflow import PipelineItem, PipelineSpec
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -30,7 +30,7 @@ class WebSearcher:
       return
        
 
-   def search (self, pipeline: PipelineSpec) -> list[str]: 
+   def search (self, pipeline: PipelineSpec) -> list[PipelineItem]: 
       '''
       Searches for links related to a specific query using the Google Custom Search Engine API.
       Returns a list of URLs extracted from the search results.
@@ -38,7 +38,8 @@ class WebSearcher:
       # See this link for details of what we are doing here
       # https://thepythoncode.com/article/use-google-custom-search-engine-api-in-python?utm_content=cmp-true
 
-      links = []
+      pipeline_items = []
+
       # the search query you want
       query = "Generative AI"
 
@@ -61,10 +62,12 @@ class WebSearcher:
             for i, search_item in enumerate(search_items, start=1):   
                # extract the page url
                link = search_item.get("link")
-               links.append (link)
+               pipeline_item = PipelineItem()
+               pipeline_item.path = link
+               pipeline_items.append (pipeline_item)
          else:
             break
 
-      return links
+      return pipeline_items
         
 

@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from workflow import PipelineItem
 from embedder import Embedder
 
 def cosine_similarity(a, b): 
@@ -24,21 +25,22 @@ class EmbeddingFinder:
       self.output_location = output_location
 
 
-   def find_nearest (self, link: str, target_text: str) -> list[float]:       
+   def find_nearest (self, target_text: str) -> list[float]:       
 
-      embedder = Embedder (link, self.output_location)
-      embedding = embedder.embed (target_text)
-      target_embedding_as_float = Embedder.textToFloat (embedding) 
+      pipeline_item = PipelineItem()
+      pipeline_item.text = target_text
+      embedder = Embedder (self.output_location)
+      enriched_embeddding : PipelineItem = embedder.embed (pipeline_item)
 
       best_similarity = 0.0
       this_similarity = 0.0
       best_match = None
       
-      for embedding in self.embeddings:       
-         this_similarity = cosine_similarity(embedding, target_embedding_as_float)
+      for embeddding in self.embeddings:       
+         this_similarity = cosine_similarity(embeddding, enriched_embeddding.embedding_as_float)
          if this_similarity > best_similarity:
             best_similarity = this_similarity
-            best_match = embedding
+            best_match = enriched_embeddding.embedding_as_float
 
       return best_match
    

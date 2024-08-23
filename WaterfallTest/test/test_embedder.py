@@ -18,6 +18,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.embedder import Embedder
 from src.html_file_downloader import HtmlFileDownloader
 
@@ -32,22 +33,24 @@ def test_output_dir(tmpdir):
     shutil.rmtree(str(dir_path))
 
 def test_basic (test_output_dir):
-    test_path = 'test'
     test_output_location = test_output_dir
-    test_text = "This is some text"
 
-    embedder = Embedder (test_path, test_text, test_output_location)
-    assert embedder.path == test_path  
-    assert embedder.text == test_text 
+    embedder = Embedder (test_output_location) 
+    assert embedder.output_location == test_output_location 
 
 def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_path = 'simple_test.html'
     test_output_location = test_output_dir
-    downloader = HtmlFileDownloader (test_path, test_output_location)
-    text = downloader.download () 
 
-    embedder = Embedder (test_path, test_output_location)
-    embedding = embedder.embed (text)    
-    assert len(embedding) > 0
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    embedder = Embedder (test_output_location)
+    enriched_embedding : PipelineItem = embedder.embed (enriched_text)    
+    assert len(enriched_embedding.embedding) > 0
+    assert len(enriched_embedding.embedding_as_float) > 0    

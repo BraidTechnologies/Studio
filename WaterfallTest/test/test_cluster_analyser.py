@@ -59,24 +59,23 @@ def test_with_output (test_output_dir):
     test_output_location = 'test_output'
 
     items: list [PipelineItem] = []
-    item: PipelineItem = PipelineItem()
-
+ 
     for test_path in test_paths:
-       downloader = HtmlFileDownloader (test_path, test_output_location)
-       text = downloader.download () 
-
-       summariser = Summariser (test_path, test_output_location)   
-       summary = summariser.summarise (text) 
-
-       embedder = Embedder (test_path, test_output_location)
-       embedding = embedder.embed (summary)   
-       
+       item: PipelineItem = PipelineItem() 
        item.path = test_path
-       item.embedding = embedding
-       item.embedding_as_float = Embedder.textToFloat (item.embedding) 
+
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
+
+       summariser = Summariser (test_output_location)   
+       item = summariser.summarise (item) 
+
+       embedder = Embedder (test_output_location)
+       item = embedder.embed (item)   
+       
        items.append (item)
 
     cluster_analyser = ClusterAnalyser (items, test_output_location) 
-    clusters = cluster_analyser.analyse (2)
+    cluster_labels = cluster_analyser.analyse (2)
 
-    assert len(clusters) == len(items)
+    assert len(cluster_labels) == len (items)
