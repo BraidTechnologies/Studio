@@ -130,7 +130,7 @@ class WaterfallDataPipeline:
       # Ask the embedding finder to find nearest article for each theme
       for theme in ordered_themes:
          nearest_items : list [PipelineItem]= []         
-         nearest_embedding = embedding_finder.find_nearest (None, theme.long_description)
+         nearest_embedding = embedding_finder.find_nearest (theme.long_description)
          for item in items:
             # TODO - accumulate top 3 items per theme
             if item.embedding_as_float == nearest_embedding:
