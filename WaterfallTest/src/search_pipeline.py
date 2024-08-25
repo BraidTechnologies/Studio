@@ -54,14 +54,34 @@ class WaterfallDataPipeline:
       Searches for HTML content from a list of links.
 
       Returns:
-          list[str]: A list of HTML content downloaded from the specified links.
+          list[Theme]: A list of Theme objects 
+      '''
+      
+      items : list [PipelineSpec]= self.search_and_cluster (spec)
+
+      themes : list[Theme] = self.create_themes (items, spec)   
+
+      self.create_report (items, themes, spec)
+        
+      return themes
+      
+        
+
+   def search_and_cluster (self, spec: PipelineSpec) -> list[PipelineItem]: 
+      '''
+      Searches for HTML content related to a specific query, downloads, summarizes, embeds, and clusters the content.
+
+      Parameters:
+         spec (PipelineSpec): The PipelineSpec object containing search specifications.
+
+      Returns:
+         list[PipelineItem]: A list of PipelineItem objects after clustering.
       '''
       searcher = WebSearcher (self.output_location)
 
       input_items = searcher.search (spec)
 
       items : list [PipelineItem] = []
-      themes : list[Theme] = []
 
       downloader = HtmlFileDownloader (self.output_location)
       summariser = Summariser (self.output_location)    
@@ -75,7 +95,22 @@ class WaterfallDataPipeline:
          items.append (item)        
 
       items = cluster_analyser.analyse(items)
-      
+
+      return items   
+
+   def create_themes (self, items: list[PipelineItem], spec: PipelineSpec) -> list[Theme]: 
+      '''
+      Create themes based on the provided PipelineItems and PipelineSpec.
+
+      Parameters:
+         items (list[PipelineItem]): A list of PipelineItem objects to create themes from.
+         spec (PipelineSpec): The PipelineSpec object containing specifications for theme creation.
+
+      Returns:
+         list[Theme]: A list of Theme objects created based on the provided PipelineItems and PipelineSpec.
+      '''         
+      themes : list [Theme]= []
+
       accumulated_summaries : list [str] = [""] * spec.clusters
       accumulated_counts : list [int] = [0] * spec.clusters
       accumulated_members : list [list [PipelineItem ]] = [None] * spec.clusters
@@ -98,32 +133,14 @@ class WaterfallDataPipeline:
          theme.member_pipeline_items = accumulated_members[i]
          theme.short_description = short_description
          theme.long_description = long_description
-         themes.append (theme)         
-
-      reducer = umap.UMAP()
-      logger.debug("Reducing cluster")     
-      embeddings_as_float = get_embeddings_as_float (items) 
-      embeddings_2d = reducer.fit_transform(embeddings_as_float)
-
-      logger.debug("Generating chart")
-      #df = pd.DataFrame({'theme': themes})
-      
-      # Make a list of theme names which gets used as the legend in the chart
-      theme_names : list [str] = []
-      for item in items:
-         theme_name = themes[item.cluster].short_description     
-         theme_names.append(theme_name)
-      
-      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
-
-      # save an interactive HTML version
-      html_path = os.path.join(self.output_location, spec.output_chart_name)      
-      plotly.offline.plot(fig, filename=html_path)      
+         themes.append (theme) 
 
       logger.debug("Ordering themes")
       ordered_themes = sort_array_by_another(themes, accumulated_counts)
 
       logger.debug("Finding nearest embedding")
+      embeddings_as_float = get_embeddings_as_float (items) 
+
       # Now we are looking for articles that best match the themes
       embedding_finder = EmbeddingFinder (embeddings_as_float, self.output_location)
 
@@ -136,9 +153,44 @@ class WaterfallDataPipeline:
             if item.embedding_as_float == nearest_embedding:
                nearest_items.append(item)  
                theme.example_pipeline_items = nearest_items
-               break            
+               break   
 
+      return ordered_themes       
+   
+   def create_report (self, items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) -> list[Theme]: 
+      '''
+      Generates a report based on the provided PipelineItems, Themes, and PipelineSpec. 
+
+      Parameters:
+      - items (list[PipelineItem]): A list of PipelineItem objects to generate the report from.
+      - themes (list[Theme]): A list of Theme objects associated with the PipelineItems.
+      - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
+
+      Returns:
+      - list[Theme]: A list of Theme objects representing the report generated.
+      ''' 
+
+      reducer = umap.UMAP()
+      logger.debug("Reducing cluster")     
+      embeddings_as_float = get_embeddings_as_float (items) 
+      embeddings_2d = reducer.fit_transform(embeddings_as_float)
+
+      logger.debug("Generating chart")
+      
+      # Make a list of theme names which gets used as the legend in the chart
+      theme_names : list [str] = []
+      for item in items:
+         theme_name = themes[item.cluster].short_description     
+         theme_names.append(theme_name)
+      
+      fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
+
+      # save an interactive HTML version
+      html_path = os.path.join(self.output_location, spec.output_chart_name)      
+      plotly.offline.plot(fig, filename=html_path)      
+         
       logger.debug("writing output")
+
       output_results = []
       for i, item in enumerate(items):
          output_item = dict()
@@ -149,11 +201,6 @@ class WaterfallDataPipeline:
          output_results.append (output_item)
       
       # save the test results to a json file
-      output_file = os.path.join(self.output_location, "test_output.json")
+      output_file = os.path.join(self.output_location, spec.output_data_name)
       with open(output_file, "w+", encoding="utf-8") as f:
-         json.dump(output_results, f)        
-        
-      return ordered_themes
-      
-        
-
+         json.dump(output_results, f)             

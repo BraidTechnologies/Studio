@@ -38,11 +38,14 @@ def test_with_search ():
     test_output_location = 'test_output'
 
     pipeline = WaterfallDataPipeline (test_output_location)
+
     pipeline_spec = PipelineSpec()
     pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 10  
     pipeline_spec.clusters = 7 
     pipeline_spec.output_chart_name = 'supply_cluster.html'
+    pipeline_spec.output_data_name = "supply_cluster_output.json"
+
     links = pipeline.search (pipeline_spec)    
     assert len(links) >= 1   
 
