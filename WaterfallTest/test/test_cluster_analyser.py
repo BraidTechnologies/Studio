@@ -45,9 +45,8 @@ def test_basic (test_output_dir):
     item.embedding_as_float = Embedder.textToFloat (item.embedding)    
     items.append (item)
         
-    analyser = ClusterAnalyser (items, test_output_location)
+    analyser = ClusterAnalyser (test_output_location, 2)
 
-    assert len(analyser.items) == 1  
     assert analyser.output_location == test_output_location
   
 
@@ -75,7 +74,7 @@ def test_with_output (test_output_dir):
        
        items.append (item)
 
-    cluster_analyser = ClusterAnalyser (items, test_output_location) 
-    cluster_labels = cluster_analyser.analyse (2)
+    cluster_analyser = ClusterAnalyser (test_output_location, 2) 
+    cluster_labels = cluster_analyser.analyse (items)
 
     assert len(cluster_labels) == len (items)

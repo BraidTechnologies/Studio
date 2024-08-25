@@ -63,21 +63,18 @@ class WaterfallDataPipeline:
       items : list [PipelineItem] = []
       themes : list[Theme] = []
 
+      downloader = HtmlFileDownloader (self.output_location)
+      summariser = Summariser (self.output_location)    
+      embedder = Embedder (self.output_location)        
+      cluster_analyser = ClusterAnalyser (self.output_location, spec.clusters) 
+
       for item in input_items:
-
-         downloader = HtmlFileDownloader (self.output_location)
          item = downloader.download (item)
-
-         summariser = Summariser (self.output_location)
          item = summariser.summarise (item)
-
-         embedder = Embedder (self.output_location)
          item = embedder.embed (item)      
-
          items.append (item)        
 
-      cluster_analyser = ClusterAnalyser (items, self.output_location) 
-      items = cluster_analyser.analyse(spec.clusters)
+      items = cluster_analyser.analyse(items)
       
       accumulated_summaries : list [str] = [""] * spec.clusters
       accumulated_counts : list [int] = [0] * spec.clusters
