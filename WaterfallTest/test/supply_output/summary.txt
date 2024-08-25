@@ -1,0 +1,17 @@
+Dear Braid Leadership,
+
+Please find below the result of the GenAI Supply Side cluster analysis (100samples).
+
+The top 3 clusters are:
+The most common theme in the text is the use of generative AI in various applications.
+The closest example of this theme is: The text discusses how generative AI can support learning according to parents and students. It mentions real-time feedback for parents, enhanced learning in unfamiliar subjects, and personalized pathways for learning differences. It emphasizes that human educators are still necessary in the classroom., https://blog.google/technology/ai/3-things-parents-and-students-told-us-about-how-generative-ai-can-support-learning/
+This cluster has 38 members.
+
+The most common theme in the given text is Microsoft Azure's generative AI capabilities and updates.
+The closest example of this theme is: The text highlights the use of generative AI technologies, specifically with Microsoft Azure, to benefit operators. It mentions the development of various tools and features that assist operators in data analysis, network management, and proactive issue prevention. The text also emphasizes partnerships and resources for building AI applications with Azure., https://azure.microsoft.com/en-us/blog/empowering-operators-through-generative-ai-technologies-with-azure-for-operators/
+This cluster has 26 members.
+
+The most common theme in the text is the use of generative AI in various industries.
+The closest example of this theme is: The text is about Microsoft Azure and its services and resources, including hybrid cloud, backup and recovery, high-performance computing, quantum computing, and more. It also discusses the potential of generative AI to transform industries, automate content generation, and enhance decision-making. Companies like CarMax and the City of Kelowna are using generative AI to improve customer service and streamline operations. Microsoft emphasizes building AI responsibly and ethically., https://azure.microsoft.com/en-us/blog/welcoming-the-generative-ai-era-with-microsoft-azure/
+This cluster has 21 members.
+

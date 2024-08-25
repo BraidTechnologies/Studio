@@ -1,0 +1,1 @@
+"Generative artificial intelligence (GenAI) can create text, images, videos, or other data based on patterns learned from input training data. It responds to prompts by generating new data with similar characteristics."

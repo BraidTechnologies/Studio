@@ -18,6 +18,7 @@ GOOGLE_CUSTOM_WEB_SEARCH_API_KEY = os.environ["GOOGLE_CUSTOM_WEB_SEARCH_API_KEY"
 # get your Search Engine ID on your CSE control panel
 #https://programmablesearchengine.google.com/controlpanel/all
 AI_SUPPLY_STACK_SEARCH_ENGINE_ID = "00d305498d8da42e1"
+AI_DEMAND_STACK_SEARCH_ENGINE_ID = "22fafd262192b4c06"
 
 class WebSearcher:
    '''

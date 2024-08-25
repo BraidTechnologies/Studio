@@ -26,7 +26,15 @@ class EmbeddingFinder:
 
 
    def find_nearest (self, target_text: str) -> list[float]:       
+      '''
+      Find the nearest embedding to the target text based on cosine similarity.
 
+      Parameters:
+      target_text (str): The text to find the nearest embedding for.
+
+      Returns:
+      list[float]: The nearest embedding to the target text.
+      '''
       pipeline_item = PipelineItem()
       pipeline_item.text = target_text
       embedder = Embedder (self.output_location)
@@ -40,7 +48,7 @@ class EmbeddingFinder:
          this_similarity = cosine_similarity(embeddding, enriched_embeddding.embedding_as_float)
          if this_similarity > best_similarity:
             best_similarity = this_similarity
-            best_match = enriched_embeddding.embedding_as_float
+            best_match = embeddding
 
       return best_match
    

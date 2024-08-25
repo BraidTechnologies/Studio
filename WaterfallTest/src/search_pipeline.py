@@ -109,7 +109,7 @@ class WaterfallDataPipeline:
       Returns:
          list[Theme]: A list of Theme objects created based on the provided PipelineItems and PipelineSpec.
       '''         
-      themes : list [Theme]= []
+      themes : list [Theme] = []
 
       accumulated_summaries : list [str] = [""] * spec.clusters
       accumulated_counts : list [int] = [0] * spec.clusters
@@ -143,6 +143,7 @@ class WaterfallDataPipeline:
 
       # Now we are looking for articles that best match the themes
       embedding_finder = EmbeddingFinder (embeddings_as_float, self.output_location)
+      enriched_themes = []
 
       # Ask the embedding finder to find nearest article for each theme
       for theme in ordered_themes:
@@ -153,9 +154,10 @@ class WaterfallDataPipeline:
             if item.embedding_as_float == nearest_embedding:
                nearest_items.append(item)  
                theme.example_pipeline_items = nearest_items
+               enriched_themes.append(theme)
                break   
 
-      return ordered_themes       
+      return enriched_themes       
    
    def create_report (self, items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) -> list[Theme]: 
       '''
@@ -187,9 +189,23 @@ class WaterfallDataPipeline:
 
       # save an interactive HTML version
       html_path = os.path.join(self.output_location, spec.output_chart_name)      
-      plotly.offline.plot(fig, filename=html_path)      
-         
-      logger.debug("writing output")
+      plotly.offline.plot(fig, filename=html_path)   
+               
+      logger.debug("Writing summary")
+      size = min (len(themes), spec.clusters_in_summary)
+      top_themes = themes[:size]
+      summary = "Dear Braid Leadership,\n\nPlease find below the result of the " + spec.description + " cluster analysis (" + str(len(items)) + " samples).\n\n"
+      summary = summary + "The top " + str(spec.clusters_in_summary) + " clusters are:\n"
+      for theme in top_themes:
+         summary = summary + theme.short_description + "\n"
+         summary = summary + "The closest example of this theme is: " + theme.example_pipeline_items[0].summary + ", " + theme.example_pipeline_items[0].path + "\n"
+         summary = summary + "This cluster has " + str(len(theme.member_pipeline_items)) + " members.\n\n"
+      
+      output_file = os.path.join(self.output_location, 'summary.txt')      
+      with open(output_file, 'w+') as f:
+         f.write(summary)    
+      
+      logger.debug("Writing output file")
 
       output_results = []
       for i, item in enumerate(items):
@@ -203,4 +219,6 @@ class WaterfallDataPipeline:
       # save the test results to a json file
       output_file = os.path.join(self.output_location, spec.output_data_name)
       with open(output_file, "w+", encoding="utf-8") as f:
-         json.dump(output_results, f)             
+         json.dump(output_results, f)    
+
+      return themes

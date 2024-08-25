@@ -89,6 +89,7 @@ class PipelineSpec(Freezable):
       '''
       self.pages = 1 #default is to pull back one page
       self.clusters = 2
+      self.clusters_in_summary = 2
       self.search_key = None
       self.description = None
       self.themes = None  

@@ -1,0 +1,1 @@
+"NVIDIA has introduced Omniverse Cloud Sensor RTX, a set of services that enable realistic sensor simulation for the development of autonomous machines. This allows developers to test sensor perception and AI software in virtual environments before real-world deployment, improving safety and efficiency. The technology will be available later this year."

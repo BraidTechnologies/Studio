@@ -1,0 +1,1 @@
+"NVIDIA and Medtronic are collaborating to integrate AI technology into Medtronic's GI Genius endoscopy module. The aim is to improve patient care outcomes by leveraging NVIDIA's healthcare and edge AI technologies, and to scale the development of real-time AI algorithms for procedures. The first AI-assisted colonoscopy systems will be available later this year."

@@ -44,7 +44,7 @@ class Embedder (PipelineStep):
       logger.debug("Embedding: %s", path)
 
       session = requests.Session()
-      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 500, 502, 503, 504 ])
       session.mount('https://', HTTPAdapter(max_retries=retries))   
       
       embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"

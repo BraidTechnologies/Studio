@@ -1,0 +1,1 @@
+"Amazon Web Services (AWS) and NVIDIA will collaborate to develop an AI infrastructure specifically designed for training large language models and generative AI applications. This will involve using powerful NVIDIA GPUs on AWS EC2 P5 instances, providing high-performance computing capabilities for AI workloads."

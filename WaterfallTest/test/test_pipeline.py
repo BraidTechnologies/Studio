@@ -18,7 +18,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 from src.workflow import PipelineSpec
 from src.search_pipeline import WaterfallDataPipeline
-from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID, AI_DEMAND_STACK_SEARCH_ENGINE_ID
 
 @pytest.fixture
 def place_holder_fixture():
@@ -31,21 +31,44 @@ def test_basic ():
     pipeline = WaterfallDataPipeline (test_output_location)
     assert pipeline.output_location == test_output_location 
 
-@pytest.mark.timeout(3000)
-def test_with_search ():
+@pytest.mark.timeout(9000)
+def test_with_search_supply ():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
-    test_output_location = 'test_output'
+    test_output_location = 'supply_output'
 
     pipeline = WaterfallDataPipeline (test_output_location)
 
     pipeline_spec = PipelineSpec()
     pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10  
-    pipeline_spec.clusters = 7 
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 3
+    pipeline_spec.description = "GenAI Supply Side"
     pipeline_spec.output_chart_name = 'supply_cluster.html'
     pipeline_spec.output_data_name = "supply_cluster_output.json"
 
     links = pipeline.search (pipeline_spec)    
     assert len(links) >= 1   
 
+@pytest.mark.timeout(9000)
+def test_with_search_demand ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'demand_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = PipelineSpec()
+    pipeline_spec.search_key = AI_DEMAND_STACK_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 3
+    pipeline_spec.description = "GenAI Demand Side"
+    pipeline_spec.output_chart_name = 'demand_cluster.html'
+    pipeline_spec.output_data_name = "demand_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec)    
+    assert len(links) >= 1   
+
+   
