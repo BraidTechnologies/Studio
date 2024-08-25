@@ -6,7 +6,7 @@ import os
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from workflow import PipelineItem
+from workflow import PipelineItem, PipelineStep
 from embedder_repository_facade import EmbeddingRespositoryFacade
 
 # Set up logging to display information about the execution of the script
@@ -22,13 +22,13 @@ headers = {
    'Accept': 'application/json'
 }  
 
-class Embedder:
+class Embedder (PipelineStep): 
 
    def __init__(self, output_location: str):
       '''
       Initializes the Embedder object with the provided output location.
       '''
-      self.output_location = output_location       
+      super(Embedder, self).__init__(output_location)      
 
    def embed(self, pipeline_item: PipelineItem) -> PipelineItem: 
 

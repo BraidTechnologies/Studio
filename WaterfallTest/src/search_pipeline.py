@@ -77,7 +77,7 @@ class WaterfallDataPipeline:
          items.append (item)        
 
       cluster_analyser = ClusterAnalyser (items, self.output_location) 
-      classifications = cluster_analyser.analyse(spec.clusters)
+      items = cluster_analyser.analyse(spec.clusters)
       
       accumulated_summaries : list [str] = [""] * spec.clusters
       accumulated_counts : list [int] = [0] * spec.clusters
@@ -87,9 +87,10 @@ class WaterfallDataPipeline:
 
       # Accumulate a set of summaries and counts of summaries according to classification
       for i, item in enumerate (items):
-         accumulated_summaries[classifications[i]] = accumulated_summaries[classifications[i]] + item.summary
-         accumulated_counts[classifications[i]] = accumulated_counts[classifications[i]] + 1
-         accumulated_members[classifications[i]].append (item)
+         cluster = items[i].cluster
+         accumulated_summaries[cluster] = accumulated_summaries[cluster] + item.summary
+         accumulated_counts[cluster] = accumulated_counts[cluster] + 1
+         accumulated_members[cluster].append (item)
      
       # Ask the theme finder to find a theme, then store it
       for i, accumulated_summary in enumerate (accumulated_summaries):
@@ -112,8 +113,8 @@ class WaterfallDataPipeline:
       
       # Make a list of theme names which gets used as the legend in the chart
       theme_names : list [str] = []
-      for classification in classifications:
-         theme_name = themes[classification].short_description     
+      for item in items:
+         theme_name = themes[item.cluster].short_description     
          theme_names.append(theme_name)
       
       fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], color=theme_names)
@@ -122,8 +123,10 @@ class WaterfallDataPipeline:
       html_path = os.path.join(self.output_location, spec.output_chart_name)      
       plotly.offline.plot(fig, filename=html_path)      
 
+      logger.debug("Ordering themes")
       ordered_themes = sort_array_by_another(themes, accumulated_counts)
 
+      logger.debug("Finding nearest embedding")
       # Now we are looking for articles that best match the themes
       embedding_finder = EmbeddingFinder (embeddings_as_float, self.output_location)
 
@@ -138,6 +141,7 @@ class WaterfallDataPipeline:
                theme.example_pipeline_items = nearest_items
                break            
 
+      logger.debug("writing output")
       output_results = []
       for i, item in enumerate(items):
          output_item = dict()

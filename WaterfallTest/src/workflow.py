@@ -1,5 +1,7 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
+import functools
+
 class Freezable(object):
     __isfrozen = False
     def __setattr__(self, key, value):
@@ -10,6 +12,7 @@ class Freezable(object):
     def _freeze(self):
         self.__isfrozen = True
 
+@functools.total_ordering
 class PipelineItem(Freezable):
 
    def __init__(self):
@@ -21,15 +24,35 @@ class PipelineItem(Freezable):
       self.summary = None
       self.embedding = None  
       self.embedding_as_float = None
+      self.cluster = None
 
       self._freeze()   
 
+   def _is_valid_operand(self, other):
+        return (hasattr(other, "path") and
+                hasattr(other, "long_description"))
+
+   # https://stackoverflow.com/questions/5824382/enabling-comparison-for-classes
+   def __eq__(self, other):
+      if not self._is_valid_operand(other):
+         return NotImplemented
+      return ((self.path.lower(), self.summary.lower()) ==
+         (other.path.lower(), other.summary.lower()))
+
+   def __lt__(self, other):
+      if not self._is_valid_operand(other):
+         return NotImplemented
+      return ((self.path.lower(), self.summary.lower()) <
+                (other.path.lower(), other.summary.lower())) 
+   
 def get_embeddings_as_float (items: list[PipelineItem]) -> list[list[float]]:
    embeddings_as_float : list [ list [float]] = []
    for item in items:
       embeddings_as_float.append(item.embedding_as_float) 
    return embeddings_as_float
 
+
+@functools.total_ordering
 class Theme(Freezable):
 
    def __init__(self):
@@ -40,6 +63,23 @@ class Theme(Freezable):
       self.member_pipeline_items = None
 
       self._freeze()   
+
+   def _is_valid_operand(self, other):
+        return (hasattr(other, "short_description") and
+                hasattr(other, "long_description"))
+
+   # https://stackoverflow.com/questions/5824382/enabling-comparison-for-classes
+   def __eq__(self, other):
+      if not self._is_valid_operand(other):
+         return NotImplemented
+      return ((self.short_description.lower(), self.long_description.lower()) ==
+         (other.short_description.lower(), other.long_description.lower()))
+
+   def __lt__(self, other):
+      if not self._is_valid_operand(other):
+         return NotImplemented
+      return ((self.short_description.lower(), self.long_description.lower()) <
+                (other.short_description.lower(), other.long_description.lower()))      
 
 class PipelineSpec(Freezable):
 
@@ -55,3 +95,14 @@ class PipelineSpec(Freezable):
       self.output_chart_name = None
 
       self._freeze()      
+
+
+class PipelineStep ():
+   def __init__(self, output_location: str):
+      """
+      Initialize the PipelineStep with the specified output location.
+
+      Parameters:
+      output_location (str): The location where the output will be stored.
+      """
+      self.output_location = output_location 

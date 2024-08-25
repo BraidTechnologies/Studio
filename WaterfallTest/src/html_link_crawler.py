@@ -11,6 +11,8 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from workflow import PipelineItem, PipelineStep
+
 headers = {
    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -20,41 +22,36 @@ headers = {
    'Connection': 'keep-alive'       
 }  
 
-class HtmlLinkCrawler:
-   """Utility class to crawl an HTML page for links and recursively build a full tree for file search within the same site.
+class HtmlLinkCrawler (PipelineStep):
 
-   Attributes:
-      path (str): The URL path to start crawling.
-      output_location (str): The location to store the crawled links.
-      max_depth (int): The maximum depth of recursion allowed.
+   def __init__(self, output_location: str, max_depth: int = 10):
+      """Initialize the HtmlLinkCrawler with the specified output location and maximum depth.
 
-   Methods:
-     crawl() -> list[str]: Initiates the crawling process and returns a list of crawled links.
-     crawl_links_recursively(path: str, output_location: str, links: list[str], current_depth: int) -> None: Recursively crawls links on an HTML page to build a full tree for file search within the same site.
-   """
-
-   def __init__(self, path : str, output_location: str, max_depth: int = 10):
-      self.path = path
-      self.output_location = output_location
+      Parameters:
+         output_location (str): The location where the output will be stored.
+         max_depth (int): The maximum depth for crawling links, default is 10.
+      """
+      super(HtmlLinkCrawler, self).__init__(output_location)  
       self.max_depth = max_depth        
 
-   def crawl(self) -> list[str]: 
-      links = []
-      self.crawl_links_recursively (self.path, self.output_location, links, 0)
+   def crawl(self, pipeline_item : PipelineItem) -> list[PipelineItem]: 
+      links : list[PipelineItem]= []
+      self.crawl_links_recursively (pipeline_item.path, self.output_location, links, 0)
       return links
         
-   def crawl_links_recursively (self, path: str, output_location: str, links: list[str], current_depth: int):
-      """Recursively crawl links on an HTML page to build a full tree for file search within the same site.
+   def crawl_links_recursively (self, path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int):
+      """
+      Recursively crawl links on an HTML page to build a full tree for file search within the same site.
 
       Args:
          path (str): The URL path to crawl.
          output_location (str): The location to store the crawled links.
-         links (list[str]): List of links crawled so far.
+         pipeline_items (list[PipelineItem]): List of links crawled so far.
          current_depth (int): The current depth of recursion.
 
       Returns:
          None
-      """      
+      """   
       logger.debug("Crawling: %s", path)
 
       # Bail if we hit maximum depth
@@ -73,7 +70,9 @@ class HtmlLinkCrawler:
 
       soup = BeautifulSoup(html_content, "html.parser")
 
-      links.append(path)
+      pipeline_item = PipelineItem()
+      pipeline_item.path = path
+      pipeline_items.append(pipeline_item)
 
       subLinks = soup.find_all('a')
       subUrls = []
@@ -82,12 +81,12 @@ class HtmlLinkCrawler:
          subUrls.append(url)
 
       full = add_prefix(path, subUrls)
-      deduped = deduplicate(links, full)
+      deduped = deduplicate(pipeline_items, full)
       trimmed = remove_exits(path, deduped)
 
       for link in trimmed:
-         if link not in links:
-            self.crawl_links_recursively (link, output_location, links, current_depth + 1)     
+         if link not in pipeline_items:
+            self.crawl_links_recursively (link, output_location, pipeline_items, current_depth + 1)     
 
 def deduplicate(currentLinks: list[str], newLinks: list[str]) -> list[str]: # remove duplicates 
    """Remove duplicates from a list of new links by comparing them with the current links list.

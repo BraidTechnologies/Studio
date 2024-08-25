@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
+from src.workflow import PipelineItem
 from src.html_link_crawler import HtmlLinkCrawler
 
 # Fixture to create a temporary directory for test output
@@ -32,8 +33,8 @@ def test_output_dir(tmpdir):
 def test_basic (test_output_dir):
     test_path = 'test'
     test_output_location = test_output_dir
-    crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
-    assert crawler.path == test_path
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    assert crawler.output_location == test_output_location
     assert crawler.max_depth == 5    
 
 def test_with_output (test_output_dir):
@@ -42,8 +43,10 @@ def test_with_output (test_output_dir):
     test_path = 'simple_test.html'
     test_output_location = test_output_dir
 
-    crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
-    links = crawler.crawl ()    
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)    
     assert len(links) == 1
 
 
@@ -54,8 +57,10 @@ def test_with_one_recursion(test_output_dir):
     test_path = 'two.html'
     test_output_location = test_output_dir
 
-    crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
-    links = crawler.crawl ()    
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)     
     assert len(links) == 2
 
 def test_with_two_recursions(test_output_dir):
@@ -64,8 +69,10 @@ def test_with_two_recursions(test_output_dir):
     test_path = 'three.html'  
     test_output_location = test_output_dir
 
-    crawler = HtmlLinkCrawler (test_path, test_output_location, 5)
-    links = crawler.crawl ()    
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
     assert len(links) == 3
 
 

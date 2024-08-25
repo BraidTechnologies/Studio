@@ -6,7 +6,7 @@ import os
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from workflow import PipelineItem
+from workflow import PipelineItem, PipelineStep
 from summary_repository_facade import SummaryRespositoryFacade
 
 # Set up logging to display information about the execution of the script
@@ -22,10 +22,13 @@ headers = {
    'Accept': 'application/json'
 }  
 
-class Summariser:
+class Summariser (PipelineStep):
 
    def __init__(self, output_location: str):
-      self.output_location = output_location       
+      '''
+      Initializes the Summariser object with the provided output location.
+      '''
+      super(Summariser, self).__init__(output_location)      
 
    def summarise(self, pipeline_item: PipelineItem) -> PipelineItem: 
       '''

@@ -17,7 +17,16 @@ class ClusterAnalyser:
       self.items = items
       self.output_location = output_location      
 
-   def analyse(self, clusters: int) -> list[str]:       
+   def analyse(self, clusters: int) -> list[PipelineItem]:  
+      '''
+      Analyzes the given clusters using KMeans clustering algorithm.
+
+      Parameters:
+         clusters (int): The number of clusters to form as part of the KMeans algorithm.
+ 
+      Returns:
+         list[PipelineItem]: A list of PipelineItem objects with updated cluster assignments.
+      '''     
    
       embeddings = []
       for item in self.items:           
@@ -27,5 +36,8 @@ class ClusterAnalyser:
       kmeans = KMeans(n_clusters=clusters)
       kmeans.fit(embeddings)
 
-      return kmeans.labels_
+      for i, item in enumerate(self.items):
+         item.cluster = int (kmeans.labels_[i])
+
+      return self.items
 
