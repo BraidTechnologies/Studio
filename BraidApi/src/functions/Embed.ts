@@ -7,6 +7,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
+import { maxChunkSize } from "./Model";
+
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
  * 
@@ -23,6 +25,7 @@ async function CalculateEmbedding (text: string) : Promise <Array<number>> {
          return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
       }      
    });
+
 
    let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlmse/embeddings?api-version=2024-02-01', {
          input: text,
@@ -52,7 +55,7 @@ export async function Embed (request: HttpRequest, context: InvocationContext): 
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined; 
-    let classifications : Array<string> | undefined = undefined;  
+ 
 
     for (const [key, value] of request.query.entries()) {
         if (key === 'session')
@@ -66,8 +69,26 @@ export async function Embed (request: HttpRequest, context: InvocationContext): 
     if (((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) 
       && (text && text.length > 0)) {  
 
-       let embedding = await CalculateEmbedding (text);
-       context.log("Passed session key validation:" + requestedSession);     
+      context.log("Passed session key validation:" + requestedSession);  
+
+      let definitelyText : string = text;
+
+      // If the text is bigger than available context, we have to summarise it
+      if (text.length > maxChunkSize) {
+         let response = await axios.post('https://braidapi.azurewebsites.net/api/Summarize?session=' + requestedSession, {
+            data: { text : text },
+         },
+         {
+            headers: {
+               'Content-Type': 'application/json'
+            }
+         });
+         
+         definitelyText = (response.data as string);      
+         context.log("Summarised");             
+      }
+
+       let embedding = await CalculateEmbedding (definitelyText);  
 
        return {
           status: 200, // Ok

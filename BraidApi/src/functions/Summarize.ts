@@ -7,7 +7,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-let maxChunkSize = 1024*3;
+import { maxChunkSize } from "./Model";
+
 let minimumTextLength = 64;
 
 /**

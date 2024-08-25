@@ -106,4 +106,22 @@ describe("Embed", async function () {
 
    }).timeout(20000); 
 
+   it("Needs to embed a long message", async function () {
+
+      let baseText = "My name is Jon and I am founding an AI project acceleration company." ;  
+      let sampleText = baseText;  
+      for (var i = 0; i < 1000; i++)  {
+         sampleText = sampleText + " " + baseText;
+      }
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validEmbedCall (apiUrl, sampleText);
+
+      expect (summary && summary?.length > 0).toBe (true) ;     
+
+   }).timeout(20000);     
+
 });
