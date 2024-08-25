@@ -3,15 +3,15 @@ Dear Braid Leadership,
 Please find below the result of the GenAI Supply Side cluster analysis (100 samples).
 
 The top 3 clusters are:
-The common theme in the text is Microsoft Azure's generative AI capabilities and its applications in various industries.
-The closest example of this theme is: The text highlights the use of generative AI technologies, specifically with Microsoft Azure, to benefit operators. It mentions the development of various tools and features that assist operators in data analysis, network management, and proactive issue prevention. The text also emphasizes partnerships and resources for building AI applications with Azure., https://azure.microsoft.com/en-us/blog/empowering-operators-through-generative-ai-technologies-with-azure-for-operators/
-This cluster has 28 members.
-
-The most common theme in the text is the use and adoption of generative AI in various industries.
+The most common theme in the text is NVIDIA's generative AI technology and its applications in various industries.
 The closest example of this theme is: NVIDIA has launched four inference platforms focused on generative AI applications, including video generation and language models. These platforms utilize NVIDIAs latest processors and software, offering improved performance for various AI workloads. Early customers, including Google Cloud and Kuaishou, have already adopted these platforms. NVIDIA has also introduced new GPUs and processors for AI applications and partnered with Hewlett Packard Enterprise for the generative AI industrial revolution., https://nvidianews.nvidia.com/news/nvidia-launches-inference-platforms-for-large-language-models-and-generative-ai-workloads
-This cluster has 24 members.
+This cluster has 27 members.
 
-The most common theme in the given text is the use and advancements of generative AI.
-The closest example of this theme is: The text discusses how generative AI can support learning according to parents and students. It mentions real-time feedback for parents, enhanced learning in unfamiliar subjects, and personalized pathways for learning differences. It emphasizes that human educators are still necessary in the classroom., https://blog.google/technology/ai/3-things-parents-and-students-told-us-about-how-generative-ai-can-support-learning/
-This cluster has 18 members.
+The most common theme in the paragraphs is the use and capabilities of Microsoft Azure's generative AI services.
+The closest example of this theme is: The text highlights the use of generative AI technologies, specifically with Microsoft Azure, to benefit operators. It mentions the development of various tools and features that assist operators in data analysis, network management, and proactive issue prevention. The text also emphasizes partnerships and resources for building AI applications with Azure., https://azure.microsoft.com/en-us/blog/empowering-operators-through-generative-ai-technologies-with-azure-for-operators/
+This cluster has 26 members.
+
+The most common theme in the text is the use of generative AI in various applications and industries.
+The closest example of this theme is: Generative AI is being utilized in advertising to accelerate content production, gain audience insights, and expand campaign reach. While AI can improve the creative process, it still lacks taste and originality. Interest in AI application has grown, as demonstrated by Googles showcase of how professionals use AI in storytelling, illustrations, and idea generation. AI tools offer boundless possibilities for creativity and innovation., https://blog.google/products/ads-commerce/generative-ai-creative-experimentation/
+This cluster has 23 members.
 
