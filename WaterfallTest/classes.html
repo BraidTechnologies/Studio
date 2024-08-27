@@ -1,0 +1,114 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class ClusterAnalyser {
+            clusters : int
+            analyse(items: list[PipelineItem]) list[PipelineItem]
+          }
+          class Embedder {
+            embed(pipeline_item: PipelineItem) PipelineItem
+            test_to_float(embedding: str) list[float]
+          }
+          class EmbeddingFinder {
+            embeddings : list[float]
+            output_location : str
+            find_nearest(target_text: str) list[float]
+          }
+          class EmbeddingRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            list() list[str]
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class FileRespository {
+            output_location : str
+            exists(path: str, extension: str) bool
+            load(path: str, extension: str) str
+            save(path: str, extension: str, text: str) None
+          }
+          class Freezable {
+          }
+          class HtmlFileDownloader {
+            download(pipeline_item: PipelineItem) PipelineItem
+          }
+          class HtmlLinkCrawler {
+            max_depth : int
+            crawl(pipeline_item: PipelineItem) list[PipelineItem]
+            crawl_links_recursively(path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int)
+          }
+          class PipelineItem {
+            cluster : NoneType
+            embedding : NoneType
+            embedding_as_float : NoneType
+            path : NoneType
+            summary : NoneType
+            text : NoneType
+          }
+          class PipelineSpec {
+            clusters : int
+            clusters_in_summary : int
+            description : NoneType
+            output_chart_name : NoneType
+            output_data_name : NoneType
+            pages : int
+            search_key : NoneType
+            themes : NoneType
+          }
+          class PipelineStep {
+            output_location : str
+          }
+          class Summariser {
+            summarise(pipeline_item: PipelineItem) PipelineItem
+          }
+          class SummaryRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class TextRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class Theme {
+            example_pipeline_items : NoneType
+            long_description : NoneType
+            member_pipeline_items : NoneType
+            short_description : NoneType
+          }
+          class ThemeFinder {
+            find_theme(text: str, length: int) str
+          }
+          class WaterfallDataPipeline {
+            output_location : str
+            create_report(items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) list[Theme]
+            create_themes(items: list[PipelineItem], spec: PipelineSpec) list[Theme]
+            search(spec: PipelineSpec) list[Theme]
+            search_and_cluster(spec: PipelineSpec) list[PipelineItem]
+          }
+          class WebSearcher {
+            output_location : str
+            search(pipeline: PipelineSpec) list[PipelineItem]
+          }
+          PipelineItem --|> Freezable
+          PipelineSpec --|> Freezable
+          Theme --|> Freezable
+  
+       </div>
+  </body>
+</html>

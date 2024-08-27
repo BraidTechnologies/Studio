@@ -1,0 +1,43 @@
+digraph "packages" {
+rankdir=BT
+charset="utf-8"
+"src" [color="black", label=<src>, shape="box", style="solid"];
+"src.cluster_analyser" [color="black", label=<src.cluster_analyser>, shape="box", style="solid"];
+"src.embedder" [color="black", label=<src.embedder>, shape="box", style="solid"];
+"src.embedder_repository_facade" [color="black", label=<src.embedder_repository_facade>, shape="box", style="solid"];
+"src.embedding_finder" [color="black", label=<src.embedding_finder>, shape="box", style="solid"];
+"src.file_repository" [color="black", label=<src.file_repository>, shape="box", style="solid"];
+"src.html_file_downloader" [color="black", label=<src.html_file_downloader>, shape="box", style="solid"];
+"src.html_link_crawler" [color="black", label=<src.html_link_crawler>, shape="box", style="solid"];
+"src.make_local_file_path" [color="black", label=<src.make_local_file_path>, shape="box", style="solid"];
+"src.search_pipeline" [color="black", label=<src.search_pipeline>, shape="box", style="solid"];
+"src.summariser" [color="black", label=<src.summariser>, shape="box", style="solid"];
+"src.summary_repository_facade" [color="black", label=<src.summary_repository_facade>, shape="box", style="solid"];
+"src.text_repository_facade" [color="black", label=<src.text_repository_facade>, shape="box", style="solid"];
+"src.theme_finder" [color="black", label=<src.theme_finder>, shape="box", style="solid"];
+"src.web_searcher" [color="black", label=<src.web_searcher>, shape="box", style="solid"];
+"src.workflow" [color="black", label=<src.workflow>, shape="box", style="solid"];
+"src.cluster_analyser" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.embedder" -> "src.embedder_repository_facade" [arrowhead="open", arrowtail="none"];
+"src.embedder" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.embedder_repository_facade" -> "src.file_repository" [arrowhead="open", arrowtail="none"];
+"src.embedding_finder" -> "src.embedder" [arrowhead="open", arrowtail="none"];
+"src.embedding_finder" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.file_repository" -> "src.make_local_file_path" [arrowhead="open", arrowtail="none"];
+"src.html_file_downloader" -> "src.text_repository_facade" [arrowhead="open", arrowtail="none"];
+"src.html_file_downloader" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.html_link_crawler" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.cluster_analyser" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.embedder" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.embedding_finder" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.html_file_downloader" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.summariser" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.theme_finder" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.web_searcher" [arrowhead="open", arrowtail="none"];
+"src.search_pipeline" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.summariser" -> "src.summary_repository_facade" [arrowhead="open", arrowtail="none"];
+"src.summariser" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+"src.summary_repository_facade" -> "src.file_repository" [arrowhead="open", arrowtail="none"];
+"src.text_repository_facade" -> "src.file_repository" [arrowhead="open", arrowtail="none"];
+"src.web_searcher" -> "src.workflow" [arrowhead="open", arrowtail="none"];
+}

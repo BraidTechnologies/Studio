@@ -1,3 +1,4 @@
+'''PipelineStep to create the embedding for a text string'''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -10,82 +11,85 @@ from workflow import PipelineItem, PipelineStep
 from embedder_repository_facade import EmbeddingRespositoryFacade
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-SESSION_KEY = os.environ["SessionKey"]
+SESSION_KEY = os.environ['SessionKey']
 
 headers = {
-   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
-   'Content-Type': 'application/json',   
-   'Accept': 'application/json'
-}  
-
-class Embedder (PipelineStep): 
-
-   def __init__(self, output_location: str):
-      '''
-      Initializes the Embedder object with the provided output location.
-      '''
-      super(Embedder, self).__init__(output_location)      
-
-   def embed(self, pipeline_item: PipelineItem) -> PipelineItem: 
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+}
 
 
-      path = pipeline_item.path
-      repository = EmbeddingRespositoryFacade (self.output_location)                
-      if repository.exists (path):          
-         embedding = repository.load (path)
-         pipeline_item.embedding = embedding
-         pipeline_item.embedding_as_float = Embedder.textToFloat (embedding)
-         return pipeline_item   
+class Embedder (PipelineStep):
+    '''PipelineStep to create the embedding for a text string'''
 
-      logger.debug("Embedding: %s", path)
+    def __init__(self, output_location: str):
+        '''
+        Initializes the Embedder object with the provided output location.
+        '''
+        # pylint: disable-next=useless-parent-delegation TODO - investigate how superclass argument passing works
+        super(Embedder, self).__init__(output_location)
 
-      session = requests.Session()
-      retries = Retry(total=5, backoff_factor=1, status_forcelist=[ 500, 502, 503, 504 ])
-      session.mount('https://', HTTPAdapter(max_retries=retries))   
-      
-      embedUrl = f"https://braidapi.azurewebsites.net/api/Embed?session={SESSION_KEY}"
-      input = {
-         'data': {
-         'text': pipeline_item.text
-         }
-      }
+    def embed(self, pipeline_item: PipelineItem) -> PipelineItem:
 
-      response = session.post(embedUrl, json=input, headers=headers)
-      embedding = response.text         
+        path = pipeline_item.path
+        repository = EmbeddingRespositoryFacade(self.output_location)
+        if repository.exists(path):
+            embedding = repository.load(path)
+            pipeline_item.embedding = embedding
+            pipeline_item.embedding_as_float = Embedder.test_to_float(embedding)
+            return pipeline_item
 
-      if path != None:
-         repository.save (path, embedding)
+        logger.debug('Embedding: %s', path)
 
-      pipeline_item.embedding = embedding
-      pipeline_item.embedding_as_float = Embedder.textToFloat (embedding)
+        session = requests.Session()
+        retries = Retry(total=5, backoff_factor=1,
+                        status_forcelist=[500, 502, 503, 504])
+        session.mount('https://', HTTPAdapter(max_retries=retries))
 
-      return pipeline_item
-   
+        embed_url = f'https://braidapi.azurewebsites.net/api/Embed?session={
+            SESSION_KEY}'
+        json_input = {
+            'data': {
+                'text': pipeline_item.text
+            }
+        }
 
-   @staticmethod
-   def textToFloat (embedding: str) -> list[float]:
-      '''
-      Converts a string representation of numbers to a list of floating-point numbers.
+        response = session.post(embed_url, json=json_input, headers=headers)
+        embedding = response.text
 
-      Parameters:
-         embedding (str): A string containing numbers to be converted.
+        if path is not None:
+            repository.save(path, embedding)
 
-      Returns:
-         list: A list of floating-point numbers extracted from the input string.
-      ''' 
-      characters_to_remove = "[]"  
-      translation_table = str.maketrans('', '', characters_to_remove)
-   
-      numbers = embedding.split(',')
-         
-      stripped_number_array = [number.translate(translation_table) for number in numbers]            
-         
-      number_array = [float(number) for number in stripped_number_array] 
+        pipeline_item.embedding = embedding
+        pipeline_item.embedding_as_float = Embedder.test_to_float(embedding)
 
-      return number_array     
-   
+        return pipeline_item
 
+    @staticmethod
+    def test_to_float(embedding: str) -> list[float]:
+        '''
+        Converts a string representation of numbers to a list of floating-point numbers.
+
+        Parameters:
+           embedding (str): A string containing numbers to be converted.
+
+        Returns:
+           list: A list of floating-point numbers extracted from the input string.
+        '''
+        characters_to_remove = '[]'
+        translation_table = str.maketrans('', '', characters_to_remove)
+
+        numbers = embedding.split(',')
+
+        stripped_number_array = [number.translate(
+            translation_table) for number in numbers]
+
+        number_array = [float(number) for number in stripped_number_array]
+
+        return number_array
