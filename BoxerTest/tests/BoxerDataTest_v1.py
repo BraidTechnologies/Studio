@@ -27,23 +27,9 @@ from common.common_functions import get_embedding
 SIMILARITY_THRESHOLD = 0.8
 MAX_RETRIES = 15
 
-OPENAI_PERSONA_PROMPT = (
-    "You are an AI assistant helping an application developer understand generative AI. "
-    "You explain complex concepts in simple language, using Python examples if it helps. "
-    "You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. "
-    "If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
-)
-ENRICHMENT_PROMPT = (
-    "You will be provided with a question about building applications that use generative AI technology. "
-    "Write a 50-word summary of an article that would be a great answer to the question. "
-    "Consider enriching the question with additional topics that the question asker might want to understand. "
-    "Write the summary in the present tense, as though the article exists. "
-    "If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
-)
-FOLLOW_UP_PROMPT = (
-    "You will be provided with a summary of an article about building applications that use generative AI technology. "
-    "Write a question of no more than 10 words that a reader might ask as a follow-up to reading the article."
-)
+OPENAI_PERSONA_PROMPT =  "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
+ENRICHMENT_PROMPT = "You will be provided with a question about building applications that use generative AI technology. Write a 50 word summary of an article that would be a great answer to the question. Consider enriching the question with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n"
+FOLLOW_UP_PROMPT =  "You will be provided with a summary of an article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might ask as a follow up to reading the article."
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -222,7 +208,6 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
 
     return response
 
-# Function to process and evaluate test questions
 def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
     """
     Processes a list of test questions and evaluates their relevance based on their similarity to pre-processed question chunks.
@@ -245,33 +230,31 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
         question_result.enriched_question_summary = generate_enriched_question(client, config, question, logger)
         embedding = get_text_embedding(client, config, question_result.enriched_question_summary, logger)
 
-        counter_for_chunk = 0  # Reset counter_for_chunk to 0 for each question
+        best_hit_relevance = 0  # To track the highest similarity score
+        best_hit_summary = None  # To track the summary corresponding to the highest similarity
 
         for chunk in processed_question_chunks:
-            if isinstance(chunk, list) and chunk:
-                ada_embedding = chunk[counter_for_chunk].get("ada_v2")
+            if chunk and isinstance(chunk, dict) :  
+                ada_embedding = chunk.get("ada_v2")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
                 if similarity > SIMILARITY_THRESHOLD:
                     question_result.hit = True
-                    question_result.hit_relevance = similarity
 
-                else:
-                    question_result.hit = False
-                    question_result.hit_relevance = similarity
+                # Check if this is the best match so far
+                if similarity > best_hit_relevance:
+                    best_hit_relevance = similarity
+                    best_hit_summary = chunk.get("summary")
 
-                counter_for_chunk += 1
-
-        if counter_for_chunk == 0:
-            # Handle the case where processed_question_chunks is empty
-            question_result.hit = False
-            question_result.hit_relevance = 0
-            raise ValueError("No chunks found for question: " + question)
+        # Set the best hit relevance and summary for the question result
+        question_result.hit_relevance = best_hit_relevance
+        question_result.hit_summary = best_hit_summary
 
         question_results.append(question_result)
 
     logger.debug("Total tests processed: %s", len(question_results))
     return question_results
+
 
 # Function to read processed chunks from the source directory
 def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
@@ -295,13 +278,12 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
                 file_path = os.path.join(source_dir, filename)
                 with open(file_path, "r", encoding="utf-8") as f:
                     chunk = json.load(f)
-                    processed_question_chunks.append(chunk)
+                    processed_question_chunks = chunk
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
         raise
     return processed_question_chunks
 
-# Function to save test results to a file
 def save_results(test_destination_dir: str, question_results: List[TestResult]) -> None:
     """
     Saves the test results to a JSON file in the specified destination directory.
@@ -313,17 +295,19 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
     Returns:
         None
     """
+    # Define the output structure with the specified columns
     output_results = [
         {
             "question": result.question,
+            "enriched_question": result.enriched_question_summary, 
             "hit": result.hit,
-            "summary": result.enriched_question_summary,
-            "hitRelevance": result.hit_relevance,
+            "summary": result.hit_summary, 
+            "hitRelevance": result.hit_relevance,  
         }
         for result in question_results
     ]
 
-
+    # Create a timestamp for the output file name
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     output_file = os.path.join(test_destination_dir, f"test_output_v1_{current_datetime}.json")
 
@@ -331,10 +315,12 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
         # Open the output file in write mode, using utf-8 encoding and create it if it doesn't exist
         with open(output_file, "w", encoding="utf-8") as f:
             # Write the output results to the file in JSON format 
-            json.dump(output_results, f, indent=4)  # Save the results to the file
+            json.dump(output_results, f, indent=4)  # Save the results to the file 
+        logger.info(f"Test results saved to: {output_file}")
     except IOError as e:
         logger.error(f"Error saving results: {e}")
         raise
+
 
 # Main function to run tests
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str]) -> None:
