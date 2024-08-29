@@ -14,6 +14,7 @@ export interface IEnvironment {
    findThemeApi(): string;
    classifyApi () : string;
    embedApi() : string;
+   suppressSummariseFail(): string;
    saveActivityApi(): string;
    removeActivityApi(): string;
    getActivitiesApi(): string;

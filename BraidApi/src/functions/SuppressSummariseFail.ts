@@ -17,7 +17,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function findTheme (text: string, length: number) : Promise <string> {
+async function suppressSummariseFail (text: string, length: number) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -32,9 +32,8 @@ async function findTheme (text: string, length: number) : Promise <string> {
       messages: [
          {
             role: 'system',
-            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in " 
-            + length.toString() + " words or less. Please find the most common theme in the following text in " 
-            + length.toString() + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. "
+            content: "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. " 
+            + " Please review the following summary and reply 'Yes' if the summariser has not been able to create a good summary. " 
          },
          {
             role: 'user',
@@ -60,7 +59,7 @@ async function findTheme (text: string, length: number) : Promise <string> {
  * @param context - The invocation context for logging and validation.
  * @returns A promise of an HTTP response with the theme summary or an authorization error message.
  */
-export async function FindTheme(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function SuppressSummariseFail(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined;   
@@ -81,13 +80,13 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
       length = (jsonRequest as any)?.data?.length;
 
       if (!text || text.length < minimumTextLength) {
-         overallSummary = "Sorry, not enough text to find a theme."
+         overallSummary = "No."
       }
       else {
 
          let definitelyText: string = text;
          let definitelyLength: number = length ? length : defaultLength;         
-         overallSummary = await findTheme (definitelyText, definitelyLength);         
+         overallSummary = await suppressSummariseFail (definitelyText, definitelyLength);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 
@@ -107,9 +106,9 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
     }
 };
 
-app.http('FindTheme', {
+app.http('SuppressSummariseFail', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: FindTheme
+    handler: SuppressSummariseFail
 });
 

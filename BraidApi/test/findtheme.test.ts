@@ -72,7 +72,7 @@ describe("FindTheme", async function () {
 
    }).timeout(20000);
 
-   it("Needs to summarise a simple message", async function () {
+   it("Needs to find theme of a simple message", async function () {
 
       let sampleText = themedText ;      
       let environment = getEnvironment(EEnvironment.kLocal);
@@ -99,7 +99,7 @@ describe("FindTheme", async function () {
 
    }).timeout(20000);   
    
-   it("Needs to summarise a simple message against production", async function () {
+   it("Needs to find theme of a simple message against production", async function () {
 
       let sampleText = themedText;      
       let environment = getEnvironment(EEnvironment.kProduction);

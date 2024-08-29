@@ -23,13 +23,15 @@ export class DevelopmentEnvironment implements IEnvironment {
    embedApi () : string {
       return "http://localhost:7071/api/Embed"; 
    }
+   suppressSummariseFail(): string {
+      return "http://localhost:7071/api/SuppressSummariseFail";
+   }
    saveActivityApi(): string {
       return "http://localhost:7071/api/SaveActivity"
    }
    removeActivityApi(): string {
       return "http://localhost:7071/api/RemoveActivity"
    }   
-
    getActivitiesApi(): string {
       return "http://localhost:7071/api/GetActivities"      
    }
@@ -48,7 +50,7 @@ export class DevelopmentEnvironment implements IEnvironment {
  * Class representing the Staging Environment with methods to retrieve various API endpoints.
  * @class StagingEnvironment
  */
-export class StagingEnvironment{
+export class StagingEnvironment implements IEnvironment {
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
    }
@@ -63,6 +65,9 @@ export class StagingEnvironment{
    }
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
+   }   
+   suppressSummariseFail(): string {
+      return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
    }   
    saveActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/SaveActivity";
@@ -88,7 +93,7 @@ export class StagingEnvironment{
  * Class representing a Production Environment with methods to retrieve various API endpoints.
  * @class ProductionEnvironment
  */
-export class ProductionEnvironment {
+export class ProductionEnvironment implements IEnvironment {
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
    }
@@ -105,6 +110,9 @@ export class ProductionEnvironment {
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
    }    
+   suppressSummariseFail(): string {
+      return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
+   }      
    saveActivityApi(): string {
       return "https://braidapi.azurewebsites.net/api/SaveActivity"
    }    
