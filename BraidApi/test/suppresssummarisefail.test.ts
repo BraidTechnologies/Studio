@@ -73,7 +73,7 @@ describe("SuppressSummariseFail", async function () {
 
    }).timeout(20000);
 
-   it("Needs to suppress excample fails", async function () {
+   it("Needs to suppress example fails", async function () {
 
       for (let i = 0; i < summariseFails.length; i++) {   
          let sampleText = summariseFails[i];
@@ -90,5 +90,34 @@ describe("SuppressSummariseFail", async function () {
 
    }).timeout(20000);
 
+   it("Needs to fail if session key is incorrect", async function () {
+
+      let sampleText : string | undefined = summariseFails[0] ;      
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.suppressSummariseFail() + "?session=" + "thiswillfail";
+
+      let caught = await invalidCall (apiUrl, sampleText);
+
+      expect (caught).toBe (true) ;     
+
+   }).timeout(20000);
+
+   it("Needs to suppress example fails against production", async function () {
+
+      for (let i = 0; i < summariseFails.length; i++) {   
+         let sampleText = summariseFails[i];
+
+         let environment = getEnvironment(EEnvironment.kProduction);
+  
+         let apiUrl = environment.suppressSummariseFail() + "?session=" + process.env.SessionKey.toString();
+
+         let summary = await validCall (apiUrl, sampleText, 10);
+
+         expect (summary && summary?.length > 0).toBe (true) ;  
+         expect (summary).toBe ("Yes") ;           
+      }   
+
+   }).timeout(20000);
 
 });
