@@ -13,6 +13,7 @@ from workflow import PipelineItem, Theme, PipelineSpec, get_embeddings_as_float
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
+from summarise_fail_suppressor import SummariseFailSuppressor
 from embedder import Embedder
 from cluster_analyser import ClusterAnalyser
 from theme_finder import ThemeFinder
@@ -86,14 +87,17 @@ class WaterfallDataPipeline:
 
         downloader = HtmlFileDownloader(self.output_location)
         summariser = Summariser(self.output_location)
+        suppressor = SummariseFailSuppressor (self.output_location)
         embedder = Embedder(self.output_location)
         cluster_analyser = ClusterAnalyser(self.output_location, spec.clusters)
 
         for item in input_items:
             item = downloader.download(item)
             item = summariser.summarise(item)
-            item = embedder.embed(item)
-            items.append(item)
+            item = suppressor.should_suppress(item)            
+            if item:
+               item = embedder.embed(item)
+               items.append(item)
 
         items = cluster_analyser.analyse(items)
 

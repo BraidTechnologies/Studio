@@ -25,47 +25,45 @@ headers = {
 }
 
 
-class Summariser (PipelineStep):
+class SummariseFailSuppressor (PipelineStep):
     '''PipelineStep to create a summary for a text string'''
 
     def __init__(self, output_location: str):
         '''
-        Initializes the Summariser object with the provided output location.
+        Initializes the SummariseFailSuppressor object with the provided output location.
         '''
-        super(Summariser, self).__init__(output_location)
+        super(SummariseFailSuppressor, self).__init__(output_location)
 
-    def summarise(self, pipeline_item: PipelineItem) -> PipelineItem:
+    def should_suppress(self, pipeline_item: PipelineItem) -> PipelineItem:
         '''
-        Summarises the text content by either loading an existing summary from the specified path or generating a new summary using an external API. 
-        If an existing summary is found, it is returned; otherwise, a new summary is generated and saved at the specified path. 
-        Returns the generated or loaded summary as a string.
-        '''
-        path = pipeline_item.path
-        repository = SummaryRespositoryFacade(self.output_location)
-        if repository.exists(path):
-            summary = repository.load(path)
-            pipeline_item.summary = summary
-            return pipeline_item
+        Checks if the given PipelineItem should be suppressed based on evaluation criteria.
 
-        logger.debug('Summarising: %s', path)
+        Args:
+          pipeline_item (PipelineItem): The PipelineItem to evaluate for suppression.
+
+        Returns:
+          PipelineItem: The PipelineItem if suppression is not needed, otherwise None.
+        '''
+
+        logger.debug('Evaluation for suppression: %s', pipeline_item.path)
 
         session = requests.Session()
         retries = Retry(total=5, backoff_factor=1,
                         status_forcelist=[500, 502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
-        summary_url = f'https://braidapi.azurewebsites.net/api/Summarize?session={
+        summary_url = f'https://braidapi.azurewebsites.net/api/SuppressSummariseFail?session={
             SESSION_KEY}'
         input_json = {
             'data': {
-                'text': pipeline_item.text
+                'text': pipeline_item.summary
             }
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        summary = response.text
+        suppress: bool = (response.text == 'No')
 
-        repository.save(path, summary)
-        pipeline_item.summary = summary
-
-        return pipeline_item
+        if suppress:
+            return None
+        else:
+            return pipeline_item

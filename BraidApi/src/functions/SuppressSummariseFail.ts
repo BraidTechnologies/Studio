@@ -33,7 +33,7 @@ async function suppressSummariseFail (text: string, length: number) : Promise <s
          {
             role: 'system',
             content: "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. " 
-            + " Please review the following summary and reply 'Yes' if the summariser has not been able to create a good summary. " 
+            + " Please review the following summary and reply 'No' if the summariser has not been able to create a good summary. Reply 'Yes' if the summary is ok" 
          },
          {
             role: 'user',

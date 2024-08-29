@@ -85,7 +85,7 @@ describe("SuppressSummariseFail", async function () {
          let summary = await validCall (apiUrl, sampleText, 10);
 
          expect (summary && summary?.length > 0).toBe (true) ;  
-         expect (summary).toBe ("Yes") ;           
+         expect (summary).toBe ("No") ;           
       }   
 
    }).timeout(20000);
@@ -115,7 +115,7 @@ describe("SuppressSummariseFail", async function () {
          let summary = await validCall (apiUrl, sampleText, 10);
 
          expect (summary && summary?.length > 0).toBe (true) ;  
-         expect (summary).toBe ("Yes") ;           
+         expect (summary).toBe ("No") ;           
       }   
 
    }).timeout(20000);
