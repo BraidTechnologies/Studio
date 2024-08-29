@@ -199,25 +199,25 @@ class WaterfallDataPipeline:
         logger.debug('Writing summary')
         size = min(len(themes), spec.clusters_in_summary)
         top_themes = themes[:size]
-        summary = 'Dear Braid Leadership,\n\nThis is an automated mail, please do not reply to this address.\n\nPlease find below the result of the ' + \
+        summary = '<p>Dear Braid Leadership,</p><p>This is an automated mail, please do not reply to this address.</p><p>Please find below the result of the ' + \
             spec.description + \
-            ' cluster analysis (' + str(len(items)) + ' samples).\n\n'
-        summary = summary + 'The top ' + \
-            str(spec.clusters_in_summary) + ' clusters are:\n\n'
+            ' cluster analysis (' + str(len(items)) + ' samples).</p>'
+        summary = summary + '<p>The top ' + \
+            str(spec.clusters_in_summary) + ' clusters are:</p>'
         for i, theme in enumerate(top_themes):
-            summary = summary + str(int(i+1)) + '.' + theme.short_description + '\n'
-            summary = summary + 'The closest example of this theme is: ' + \
+            summary = summary + '<p>' + str(int(i+1)) + ' .' + theme.short_description + '</p>'
+            summary = summary + '<p>The closest example of this theme is: ' + \
                 theme.example_pipeline_items[0].summary + ', ' + \
-                theme.example_pipeline_items[0].path + '\n'
-            summary = summary + 'This cluster has ' + \
-                str(len(theme.member_pipeline_items)) + ' members.\n\n'
+                theme.example_pipeline_items[0].path + '</p>'
+            summary = summary + '<p>This cluster has ' + \
+                str(len(theme.member_pipeline_items)) + ' members.</p>'
 
-        summary = summary + '\n\nThis message is for the designated recipient only and may contain privileged, proprietary, or otherwise confidential information.' + \
+        summary = summary + '<p>This message is for the designated recipient only and may contain privileged, proprietary, or otherwise confidential information.' + \
          'If you have received it in error, please notify the sender immediately and delete the original. Any other use of the e-mail by you is prohibited.' + \
          'Where allowed by local law, electronic communications with Braid Technologies Ltd (Braid), including e-mail and instant messaging (including content),' + \
-         'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.' + \
-         'Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
-         'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy'
+         'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.</p>' + \
+         '<p>Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
+         'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy</p>'
         send_mail (self.output_location, summary, spec.output_chart_name, spec)
         
         #output_file = os.path.join(self.output_location, 'summary.txt')

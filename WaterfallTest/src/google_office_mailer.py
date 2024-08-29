@@ -67,15 +67,14 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
         # create gmail api client
         message = EmailMessage()
 
+        #Body in HTML format
+        message.add_header('Content-Type','text/html')
+        message.set_payload(body)
+
         # headers
         message['To'] = 'jon@braidtech.ai'
         message['From'] = 'waterfall@braidapps.io'
         message['Subject'] = spec.description
-
-        # text
-        message.set_content(
-            body
-        )
 
         # attachment
         attachment_path = os.path.join(output_location, attachment)        
