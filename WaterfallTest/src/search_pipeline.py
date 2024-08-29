@@ -17,6 +17,7 @@ from embedder import Embedder
 from cluster_analyser import ClusterAnalyser
 from theme_finder import ThemeFinder
 from embedding_finder import EmbeddingFinder
+from google_office_mailer import send_mail
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -198,22 +199,30 @@ class WaterfallDataPipeline:
         logger.debug('Writing summary')
         size = min(len(themes), spec.clusters_in_summary)
         top_themes = themes[:size]
-        summary = 'Dear Braid Leadership,\n\nPlease find below the result of the ' + \
+        summary = 'Dear Braid Leadership,\n\nThis is an automated mail, please do not reply to this address.\n\nPlease find below the result of the ' + \
             spec.description + \
             ' cluster analysis (' + str(len(items)) + ' samples).\n\n'
         summary = summary + 'The top ' + \
-            str(spec.clusters_in_summary) + ' clusters are:\n'
-        for theme in top_themes:
-            summary = summary + theme.short_description + '\n'
+            str(spec.clusters_in_summary) + ' clusters are:\n\n'
+        for i, theme in enumerate(top_themes):
+            summary = summary + str(int(i+1)) + '.' + theme.short_description + '\n'
             summary = summary + 'The closest example of this theme is: ' + \
                 theme.example_pipeline_items[0].summary + ', ' + \
                 theme.example_pipeline_items[0].path + '\n'
             summary = summary + 'This cluster has ' + \
                 str(len(theme.member_pipeline_items)) + ' members.\n\n'
 
-        output_file = os.path.join(self.output_location, 'summary.txt')
-        with open(output_file, 'w+', encoding='utf-8') as f:
-            f.write(summary)
+        summary = summary + '\n\nThis message is for the designated recipient only and may contain privileged, proprietary, or otherwise confidential information.' + \
+         'If you have received it in error, please notify the sender immediately and delete the original. Any other use of the e-mail by you is prohibited.' + \
+         'Where allowed by local law, electronic communications with Braid Technologies Ltd (Braid), including e-mail and instant messaging (including content),' + \
+         'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.' + \
+         'Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
+         'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy'
+        send_mail (self.output_location, summary, spec.output_chart_name, spec)
+        
+        #output_file = os.path.join(self.output_location, 'summary.txt')
+        #with open(output_file, 'w+', encoding='utf-8') as f:
+            #f.write(summary)
 
         logger.debug('Writing output file')
 

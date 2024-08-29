@@ -32,7 +32,7 @@ class FileRespository:
         Save the provided text to a file at the specified path within the output location.
 
         Parameters:
-           path (str): The path where the file will be saved.
+           path (str): An Http path.
            extension (str): The extension of the file.
            text (str): The text content to be saved in the file.
         '''
@@ -59,7 +59,7 @@ class FileRespository:
         If the file does not exist, an empty string is returned.
 
         Parameters:
-           path (str): The path of the file.
+           path (str): An Http path.
            extension (str): The extension of the file.
 
         Returns:
@@ -88,7 +88,7 @@ class FileRespository:
         Checks if a file with the specified path and extension exists in the output location of the FileRepository.
 
         Parameters:
-           path (str): The path of the file.
+           path (str): An Http path.
            extension (str): The extension of the file.
 
         Returns:

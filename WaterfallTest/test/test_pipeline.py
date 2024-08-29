@@ -43,7 +43,7 @@ def test_with_search_supply ():
     pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 10
     pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 3
+    pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI Supply Side"
     pipeline_spec.output_chart_name = 'supply_cluster.html'
     pipeline_spec.output_data_name = "supply_cluster_output.json"
@@ -63,7 +63,7 @@ def test_with_search_demand ():
     pipeline_spec.search_key = AI_DEMAND_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 10
     pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 3
+    pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI Demand Side"
     pipeline_spec.output_chart_name = 'demand_cluster.html'
     pipeline_spec.output_data_name = "demand_cluster_output.json"
