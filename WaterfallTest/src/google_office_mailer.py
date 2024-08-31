@@ -72,7 +72,7 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
         message.set_payload(body)
 
         # headers
-        message['To'] = 'jon@braidtech.ai'
+        message['To'] = spec.mail_to
         message['From'] = 'waterfall@braidapps.io'
         message['Subject'] = spec.description
 

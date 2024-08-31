@@ -101,6 +101,7 @@ class PipelineSpec(Freezable):
         self.clusters_in_summary = 2
         self.search_key = None
         self.description = None
+        self.mail_to = None
         self.themes = None
         self.output_chart_name = None
         self.output_data_name = None

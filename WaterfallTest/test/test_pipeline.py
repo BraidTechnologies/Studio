@@ -45,6 +45,7 @@ def test_with_search_supply ():
     pipeline_spec.clusters = 7
     pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI Supply Side"
+    pipeline_spec.mail_to = "jon@braidtech.ai, andy@braidtech.ai, ajvautier@aol.com"
     pipeline_spec.output_chart_name = 'supply_cluster.html'
     pipeline_spec.output_data_name = "supply_cluster_output.json"
 
@@ -65,6 +66,7 @@ def test_with_search_demand ():
     pipeline_spec.clusters = 7
     pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI Demand Side"
+    pipeline_spec.mail_to = "jon@braidtech.ai, andy@braidtech.ai, ajvautier@aol.com"
     pipeline_spec.output_chart_name = 'demand_cluster.html'
     pipeline_spec.output_data_name = "demand_cluster_output.json"
 
