@@ -15,7 +15,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
  * @param context - The invocation context for logging and other context-specific operations.
  * @returns A promise that resolves to an HTTP response object with the appropriate status and body.
  */
-export async function CheckSession(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function checkSession(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let requestedSession : string | null = null;     
 
@@ -48,5 +48,5 @@ export async function CheckSession(request: HttpRequest, context: InvocationCont
 app.http('CheckSession', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: CheckSession
+    handler: checkSession
 });

@@ -155,7 +155,7 @@ async function redirectBackHomeWithFullPath (code : string, session: string, con
  * @param context - The invocation context for the Azure Function.
  * @returns A promise that resolves to an HTTP response initialization object.
  */
-async function ProcessAuthFromLinkedIn (request: HttpRequest, context: InvocationContext) : Promise<HttpResponseInit> {
+async function processAuthFromLinkedIn (request: HttpRequest, context: InvocationContext) : Promise<HttpResponseInit> {
  
    let code : string | null = null;    
    let state : string | null = null; 
@@ -194,5 +194,5 @@ async function ProcessAuthFromLinkedIn (request: HttpRequest, context: Invocatio
  app.http('ProcessAuthFromLinkedIn', {
    methods: ['GET', 'POST'],
    authLevel: 'anonymous',
-   handler: ProcessAuthFromLinkedIn
+   handler: processAuthFromLinkedIn
 });

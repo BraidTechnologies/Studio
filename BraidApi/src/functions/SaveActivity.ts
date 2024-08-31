@@ -10,7 +10,7 @@ import axios from "axios";
 // Internal imports
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
-import {defaultPartitionKey, makePostActivityToken, makePostActivityHeader} from './CosmosRepositoryApi';
+import { defaultPartitionKey, makePostActivityToken, makePostActivityHeader } from './CosmosRepositoryApi';
 
 
 /**
@@ -23,7 +23,7 @@ import {defaultPartitionKey, makePostActivityToken, makePostActivityHeader} from
  * @param context - The context for the current invocation.
  * @returns A promise that resolves to an HTTP response with the status and response body.
  */
-export async function SaveActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function saveActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let requestedSession : string | null = null;     
 
@@ -39,7 +39,7 @@ export async function SaveActivity(request: HttpRequest, context: InvocationCont
       let jsonRequest: IStorable = await request.json() as IStorable;    
 
       try {
-         await saveActivity (jsonRequest, context);
+         await saveActivityDb (jsonRequest, context);
          context.log("Saved:" + jsonRequest.toString());           
       }
       catch (e: any) {
@@ -69,10 +69,10 @@ export async function SaveActivity(request: HttpRequest, context: InvocationCont
 app.http('SaveActivity', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    handler: SaveActivity
+    handler: saveActivity
 });
 
-async function saveActivity (record : IStorable, context: InvocationContext) : Promise<boolean> {
+async function saveActivityDb (record : IStorable, context: InvocationContext) : Promise<boolean> {
       
       let dbkey = process.env.CosmosApiKey;   
 

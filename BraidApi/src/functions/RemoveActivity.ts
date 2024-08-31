@@ -21,7 +21,7 @@ import {defaultPartitionKey, makeDeleteActivityToken, makeDeleteActivityHeader} 
  * @param context - The context object for logging and error handling.
  * @returns A promise of an HTTP response indicating the status of the removal operation.
  */
-export async function RemoveActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function removeActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let requestedSession : string | null = null;     
 
@@ -37,7 +37,7 @@ export async function RemoveActivity(request: HttpRequest, context: InvocationCo
       let jsonRequest: IStorable = await request.json() as IStorable;    
 
       try {
-         await removeActivity (jsonRequest.storeId, context);
+         await removeActivityDb (jsonRequest.storeId, context);
          context.log("Removed:" + jsonRequest.toString());           
       }
       catch (e: any) {
@@ -67,7 +67,7 @@ export async function RemoveActivity(request: HttpRequest, context: InvocationCo
 app.http('RemoveActivity', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    handler: RemoveActivity
+    handler: removeActivity
 });
 
 /**
@@ -77,7 +77,7 @@ app.http('RemoveActivity', {
  * @param context - The invocation context for logging purposes.
  * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
  */
-async function removeActivity (messageId: string, context: InvocationContext) : Promise<boolean> {
+async function removeActivityDb (messageId: string, context: InvocationContext) : Promise<boolean> {
 
    let dbkey = process.env.CosmosApiKey; 
 

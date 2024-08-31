@@ -15,7 +15,9 @@ let summariseFails = ["Im sorry, but it seems that the text you provided does no
   "The given text is not the main body of the page and does not contain any relevant information for summarizing. It appears to be a website navigation menu and does not provide any meaningful content to summarize.",
   "There is no relevant information to summarise as the text appears to be a website navigation menu and includes irrelevant information such as contact information and other web page elements.",
   "Im sorry, but I cannot summarize the given text as the relevant information is not clear. It seems to be a mixture of web page navigation items, company descriptions, and consent form options for selecting cookies on a website. Please provide a specific body of text that you woild like me to summarise.",
-  "I apologize for the inconvenience, but it appears that the text provided is not suitable for generating a meaningful summary. It contains irrelevant information or is incomplete. If you can provide a more specific and complete text, I would be happy to assist you in summasising other content."]
+  "I apologize for the inconvenience, but it appears that the text provided is not suitable for generating a meaningful summary. It contains irrelevant information or is incomplete. If you can provide a more specific and complete text, I would be happy to assist you in summasising other content.",
+  "There is no main body of text.",
+  "I apologize for the inconvenience, but there is no main body of text, I cannot provide a summary."]
 
 describe("SuppressSummariseFail", async function () {
 

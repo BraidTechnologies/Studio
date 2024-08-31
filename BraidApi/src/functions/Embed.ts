@@ -7,7 +7,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { maxChunkSize } from "./Model";
+import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
 
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
@@ -15,7 +15,7 @@ import { maxChunkSize } from "./Model";
  * @param text The text for which the embedding needs to be calculated.
  * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
  */
-async function CalculateEmbedding (text: string) : Promise <Array<number>> {
+async function calculateEmbedding (text: string) : Promise <Array<number>> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -51,7 +51,7 @@ async function CalculateEmbedding (text: string) : Promise <Array<number>> {
  * @param context - The context object for logging and validation.
  * @returns A Promise that resolves to an HTTP response with the embedding or an authorization error.
  */
-export async function Embed (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function embed (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined; 
@@ -74,7 +74,8 @@ export async function Embed (request: HttpRequest, context: InvocationContext): 
       let definitelyText : string = text;
 
       // If the text is bigger than available context, we have to summarise it
-      if (text.length > maxChunkSize) {
+      let model = getDefaultModel();
+      if (! model.fitsInContext (text)) {
          let response = await axios.post('https://braidapi.azurewebsites.net/api/Summarize?session=' + requestedSession, {
             data: { text : text },
          },
@@ -88,7 +89,7 @@ export async function Embed (request: HttpRequest, context: InvocationContext): 
          context.log("Summarised");             
       }
 
-       let embedding = await CalculateEmbedding (definitelyText);  
+       let embedding = await calculateEmbedding (definitelyText);  
 
        return {
           status: 200, // Ok
@@ -109,5 +110,5 @@ export async function Embed (request: HttpRequest, context: InvocationContext): 
 app.http('Embed', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: Embed
+    handler: embed
 });

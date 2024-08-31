@@ -7,7 +7,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { maxChunkSize } from "./Model";
+import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
 
 let minimumTextLength = 64;
 
@@ -19,11 +19,8 @@ let minimumTextLength = 64;
  */
 function chunkText (text: string) : Array<string> {
    
-   let chunks = new Array<string> ();
-
-   for (var chunked = 0; chunked < text.length; chunked += maxChunkSize) {
-      chunks.push (text.substring (chunked, chunked + maxChunkSize))
-   }
+   let model = getDefaultModel();   
+   let chunks = model.chunkText(text);
 
    return chunks;
 }
@@ -34,7 +31,7 @@ function chunkText (text: string) : Array<string> {
  * @param text The text to be summarized.
  * @returns A Promise that resolves to the summarized text.
  */
-async function SingleShotSummarize (text: string) : Promise <string> {
+async function singleShotSummarize (text: string) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -68,7 +65,7 @@ async function SingleShotSummarize (text: string) : Promise <string> {
    return (response.data.choices[0].message.content);   
 }
 
-async function RecursiveSummarize (text: string, level: number) : Promise <string> {
+async function recursiveSummarize (text: string, level: number) : Promise <string> {
 
    let overallSummary : string | undefined = undefined; 
    let chunks = chunkText (text);
@@ -80,14 +77,14 @@ async function RecursiveSummarize (text: string, level: number) : Promise <strin
     // Here we look over each chunk to generate a summary for each
     for (var i = 0; i < chunks.length; i++) {
     
-       let summary = await SingleShotSummarize (chunks[i]);
+       let summary = await singleShotSummarize (chunks[i]);
        summaries.push (summary);          
     }  
  
     // If we made multiple summaries, we resummarise them
     if (chunks.length > 1) {
        let joinedSummaries = summaries.join (" ");
-      overallSummary = await RecursiveSummarize (joinedSummaries, level + 1);
+      overallSummary = await recursiveSummarize (joinedSummaries, level + 1);
     }
     else {
       overallSummary = summaries[0];
@@ -103,7 +100,7 @@ async function RecursiveSummarize (text: string, level: number) : Promise <strin
  * @param context - The context object for the function invocation.
  * @returns A promise that resolves to an HTTP response with the summarized text or an error message.
  */
-export async function Summarize(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function summarize(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined;   
@@ -126,7 +123,7 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
       else {
 
          let definitelyText: string = text;
-         overallSummary = await RecursiveSummarize (definitelyText, 0);         
+         overallSummary = await recursiveSummarize (definitelyText, 0);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 
@@ -149,6 +146,6 @@ export async function Summarize(request: HttpRequest, context: InvocationContext
 app.http('Summarize', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: Summarize
+    handler: summarize
 });
 

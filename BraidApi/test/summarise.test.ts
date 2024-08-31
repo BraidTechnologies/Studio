@@ -1,7 +1,6 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 
-
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';

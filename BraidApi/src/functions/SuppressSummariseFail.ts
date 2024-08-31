@@ -17,7 +17,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function suppressSummariseFail (text: string, length: number) : Promise <string> {
+async function suppressSummariseFailCall (text: string, length: number) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -59,7 +59,7 @@ async function suppressSummariseFail (text: string, length: number) : Promise <s
  * @param context - The invocation context for logging and validation.
  * @returns A promise of an HTTP response with the theme summary or an authorization error message.
  */
-export async function SuppressSummariseFail(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function suppressSummariseFail(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined;   
@@ -80,13 +80,13 @@ export async function SuppressSummariseFail(request: HttpRequest, context: Invoc
       length = (jsonRequest as any)?.data?.length;
 
       if (!text || text.length < minimumTextLength) {
-         overallSummary = "No."
+         overallSummary = "No"
       }
       else {
 
          let definitelyText: string = text;
          let definitelyLength: number = length ? length : defaultLength;         
-         overallSummary = await suppressSummariseFail (definitelyText, definitelyLength);         
+         overallSummary = await suppressSummariseFailCall (definitelyText, definitelyLength);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 
@@ -109,6 +109,6 @@ export async function SuppressSummariseFail(request: HttpRequest, context: Invoc
 app.http('SuppressSummariseFail', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: SuppressSummariseFail
+    handler: suppressSummariseFail
 });
 

@@ -4,6 +4,9 @@
    "description": "",
    "devDependencies": {
       "axios": "^1.7.3",
+      "gpt4-tokenizer": "^1.3.0",
+      "rimraff": "^0.0.1-security",
+      "tslib": "^2.7.0",
       "typescript": "^5.5.4"
    },
    "scripts": {

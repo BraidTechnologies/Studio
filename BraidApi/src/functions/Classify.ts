@@ -33,7 +33,7 @@ function decodeClassification (initial: string, classifications: Array<string>) 
  * @param text The text to be classified.
  * @returns A Promise that resolves to a string representing the classification result.
  */
-async function SingleShotClassify (text: string, classifications: Array<string>) : Promise <string> {
+async function singleShotClassify (text: string, classifications: Array<string>) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -81,7 +81,7 @@ async function SingleShotClassify (text: string, classifications: Array<string>)
  * @param context - The invocation context for logging and other context-specific operations.
  * @returns A Promise that resolves to an HTTP response with the classification result or an error message.
  */
-export async function Classify (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function classify (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined; 
@@ -100,7 +100,7 @@ export async function Classify (request: HttpRequest, context: InvocationContext
       && (text && text.length > 0)
       && (classifications && classifications.length > 0)) {  
 
-       let summaryClassification = await SingleShotClassify (text, classifications);
+       let summaryClassification = await singleShotClassify (text, classifications);
        context.log("Passed session key validation:" + requestedSession);     
 
        return {
@@ -122,5 +122,5 @@ export async function Classify (request: HttpRequest, context: InvocationContext
 app.http('Classify', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: Classify
+    handler: classify
 });

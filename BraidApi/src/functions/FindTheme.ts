@@ -17,7 +17,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function findTheme (text: string, length: number) : Promise <string> {
+async function findThemeCall (text: string, length: number) : Promise <string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -60,7 +60,7 @@ async function findTheme (text: string, length: number) : Promise <string> {
  * @param context - The invocation context for logging and validation.
  * @returns A promise of an HTTP response with the theme summary or an authorization error message.
  */
-export async function FindTheme(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function findTheme(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     let requestedSession : string | undefined = undefined;     
     let text : string | undefined = undefined;   
@@ -87,7 +87,7 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
 
          let definitelyText: string = text;
          let definitelyLength: number = length ? length : defaultLength;         
-         overallSummary = await findTheme (definitelyText, definitelyLength);         
+         overallSummary = await findThemeCall (definitelyText, definitelyLength);         
        }
        context.log("Passed session key validation:" + requestedSession);     
 
@@ -110,6 +110,6 @@ export async function FindTheme(request: HttpRequest, context: InvocationContext
 app.http('FindTheme', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: FindTheme
+    handler: findTheme
 });
 

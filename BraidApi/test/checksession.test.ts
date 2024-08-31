@@ -4,7 +4,6 @@
 
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
-import axios from 'axios';
 
 declare var process: any;
 

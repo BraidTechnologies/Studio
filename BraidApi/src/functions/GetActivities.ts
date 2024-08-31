@@ -13,7 +13,7 @@ import { IStorable, IStoreQuerySpec } from "../../../BraidCommon/src/IStorable";
 import {defaultPartitionKey, makePostActivityToken, makePostActivityQueryHeader} from './CosmosRepositoryApi';
 
 
-export async function GetActivities(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function getActivities(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let requestedSession : string | null = null;     
 
@@ -60,7 +60,7 @@ export async function GetActivities(request: HttpRequest, context: InvocationCon
 app.http('GetActivities', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: GetActivities
+    handler: getActivities
 });
 
 async function loadRecent (querySpec: IStoreQuerySpec, context: InvocationContext) : Promise<Array<IStorable>> {

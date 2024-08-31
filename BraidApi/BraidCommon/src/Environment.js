@@ -12,11 +12,17 @@ class DevelopmentEnvironment {
     summariseApi() {
         return "http://localhost:7071/api/Summarize";
     }
+    findThemeApi() {
+        return "http://localhost:7071/api/FindTheme";
+    }
     classifyApi() {
         return "http://localhost:7071/api/Classify";
     }
     embedApi() {
         return "http://localhost:7071/api/Embed";
+    }
+    suppressSummariseFail() {
+        return "http://localhost:7071/api/SuppressSummariseFail";
     }
     saveActivityApi() {
         return "http://localhost:7071/api/SaveActivity";
@@ -49,11 +55,17 @@ class StagingEnvironment {
     summariseApi() {
         return "https://braidapi.azurewebsites.net/api/Summarize";
     }
+    findThemeApi() {
+        return "https://braidapi.azurewebsites.net/api/FindTheme";
+    }
     classifyApi() {
         return "https://braidapi.azurewebsites.net/api/Classify";
     }
     embedApi() {
         return "https://braidapi.azurewebsites.net/api/Embed";
+    }
+    suppressSummariseFail() {
+        return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
     }
     saveActivityApi() {
         return "https://braidapi.azurewebsites.net/api/SaveActivity";
@@ -86,11 +98,17 @@ class ProductionEnvironment {
     summariseApi() {
         return "https://braidapi.azurewebsites.net/api/Summarize";
     }
+    findThemeApi() {
+        return "https://braidapi.azurewebsites.net/api/FindTheme";
+    }
     classifyApi() {
         return "https://braidapi.azurewebsites.net/api/Classify";
     }
     embedApi() {
         return "https://braidapi.azurewebsites.net/api/Embed";
+    }
+    suppressSummariseFail() {
+        return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
     }
     saveActivityApi() {
         return "https://braidapi.azurewebsites.net/api/SaveActivity";
