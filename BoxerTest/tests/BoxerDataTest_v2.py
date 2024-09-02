@@ -287,20 +287,18 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
 
 
 # Function to save the results and generated questions
-def save_results(test_destination_dir: str, question_results: List[TestResult], questions: List[str] = None) -> None:
-    output_data = {
-        "test_results": [
-            {
-                "question": result.question,
-                "enriched_question": result.enriched_question_summary,
-                "hit": result.hit,
-                "summary": result.hit_summary,
-                "hitRelevance": result.hit_relevance,
-            }
-            for result in question_results
-        ],
-        "questions": questions if questions else []
-    }
+def save_results(test_destination_dir: str, question_results: List[TestResult]) -> None:
+    # Define the output structure with the specified columns
+    output_data = [
+        {
+            "question": result.question,
+            "enriched_question": result.enriched_question_summary, 
+            "hit": result.hit,
+            "summary": result.hit_summary, 
+            "hitRelevance": result.hit_relevance,  
+        }
+        for result in question_results
+    ]
 
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     output_file = os.path.join(test_destination_dir, f"test_output_v2_{current_datetime}.json")
@@ -327,4 +325,4 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
 
     processed_question_chunks = read_processed_chunks(source_dir)
     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
-    save_results(test_destination_dir, question_results, questions)
+    save_results(test_destination_dir, question_results)
