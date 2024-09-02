@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 # get the API KEY here: https://developers.google.com/custom-search/v1/overview
-GOOGLE_CUSTOM_WEB_SEARCH_API_KEY = os.environ['GOOGLE_CUSTOM_WEB_SEARCH_API_KEY']
+GOOGLE_DEVELOPER_API_KEY = os.environ['GOOGLE_DEVELOPER_API_KEY']
 
 # get your Search Engine ID on your CSE control panel
 # https://programmablesearchengine.google.com/controlpanel/all
@@ -52,7 +52,7 @@ class WebSearcher:
             # doc: https://developers.google.com/custom-search/v1/using_rest
             # calculating start, (page=2) => (start=11), (page=3) => (start=21)
             start = (page - 1) * 10 + 1
-            url = f'https://www.googleapis.com/customsearch/v1?key={GOOGLE_CUSTOM_WEB_SEARCH_API_KEY}&cx={
+            url = f'https://www.googleapis.com/customsearch/v1?key={GOOGLE_DEVELOPER_API_KEY}&cx={
                 pipeline.search_key}&q={query}&start={start}&dateRestrict=m[1]'
 
             # make the API request
