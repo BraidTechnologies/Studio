@@ -12,10 +12,15 @@ parent_dir = os.path.dirname(current_dir)
 # Add the parent directory to the Python path
 sys.path.insert(0, parent_dir)
 
-from BoxerDataTest_v2 import run_tests
+
+from BoxerDataTest_v2 import run_tests, call_openai_chat
 from common.ApiConfiguration import ApiConfiguration
 from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
+
+# Setup Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def TestRunner():
     config = ApiConfiguration()
