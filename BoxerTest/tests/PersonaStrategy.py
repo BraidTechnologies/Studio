@@ -1,3 +1,5 @@
+# Copyright (c) 2024 Braid Technologies Ltd
+
 from abc import ABC, abstractmethod
 from typing import List
 import logging
