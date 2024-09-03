@@ -27,6 +27,7 @@ from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, Bus
 # Constants
 SIMILARITY_THRESHOLD = 0.8
 MAX_RETRIES = 15
+NUM_QUESTIONS = 100
 
 OPENAI_PERSONA_PROMPT =  "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
 ENRICHMENT_PROMPT = "You will be provided with a question about building applications that use generative AI technology. Write a 50 word summary of an article that would be a great answer to the question. Consider enriching the question with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n"
@@ -322,7 +323,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         raise ValueError("Test destination directory not provided")
 
     if persona_strategy:
-        questions = persona_strategy.generate_questions(client, config, num_questions, logger)
+        questions = persona_strategy.generate_questions(client, config, NUM_QUESTIONS, logger)
         # Determine the test mode based on the strategy
         test_mode = persona_strategy.__class__.__name__.replace('PersonaStrategy', '').lower()
 
