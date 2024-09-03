@@ -313,7 +313,7 @@ def save_results(test_destination_dir: str, question_results: List[TestResult]) 
 
 
 # Main test-running function
-def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
+def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, num_questions: int = 100, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
     client = configure_openai_for_azure(config)
 
     if not test_destination_dir:
@@ -321,8 +321,9 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         raise ValueError("Test destination directory not provided")
 
     if persona_strategy:
-        questions = persona_strategy.generate_questions(client, config, 3, logger)
+        questions = persona_strategy.generate_questions(client, config, num_questions, logger)
 
     processed_question_chunks = read_processed_chunks(source_dir)
     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
     save_results(test_destination_dir, question_results)
+
