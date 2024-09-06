@@ -4,8 +4,12 @@
 import os
 
 azure = True                  
-
-if azure:
+if os.getenv("GEMINI_API_KEY"):
+    API_TYPE = "gemini"
+    API_KEY = os.getenv("GEMINI_API_KEY")
+    RESOURCE_ENDPOINT = "https://api.gemini.com/v1"  # Example endpoint
+    API_VERSION = "2024-09-01"  # Define the appropriate version
+elif azure:
    API_TYPE = "Azure" #AZURE VERSION WAS "Azure"
    # API_KEY = os.environ["AZURE_OPENAI_API_KEY"] #AZURE VERSION WAS os.environ["AZURE_OPENAI_API_KEY"]           #uncomment if code breaks - changes for script to exectable on both Windows and Unix machines.  
    API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  # Use os.getenv() to safely retrieve environment variables       #comment if code breaks  - changes for script to exectable on both Windows and Unix machines. 
