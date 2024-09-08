@@ -11,7 +11,7 @@
     "prestart": "npm run clean && npm run pull && npm run build",
     "start": "func start",
     "test": "mocha --debug-brk --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --require ts-node/register test/*suppress*.test.ts"
+    "test-mini": "mocha --debug-brk --require ts-node/register test/*chunks*.test.ts"
   },
   "dependencies": {
     "@azure/functions": "^4.5.0",
