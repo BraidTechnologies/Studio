@@ -7,6 +7,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
+import { isSessionValid, sessionFailResponse } from "./Utility";
+
 let minimumTextLength = 64;
 
 /**
@@ -17,7 +19,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function findThemeCall (text: string, length: number) : Promise <string> {
+async function findThemeCall(text: string, length: number): Promise<string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -25,23 +27,23 @@ async function findThemeCall (text: string, length: number) : Promise <string> {
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => {
          return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }      
+      }
    });
-    
+
    let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
       messages: [
          {
             role: 'system',
-            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in " 
-            + length.toString() + " words or less. Please find the most common theme in the following text in " 
-            + length.toString() + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. "
+            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in "
+               + length.toString() + " words or less. Please find the most common theme in the following text in "
+               + length.toString() + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. "
          },
          {
             role: 'user',
             content: text
          }
-         ],
-      },
+      ],
+   },
       {
          headers: {
             'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ async function findThemeCall (text: string, length: number) : Promise <string> {
       }
    );
 
-   return (response.data.choices[0].message.content);   
+   return (response.data.choices[0].message.content);
 }
 
 /**
@@ -62,20 +64,20 @@ async function findThemeCall (text: string, length: number) : Promise <string> {
  */
 export async function findTheme(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-    let requestedSession : string | undefined = undefined;     
-    let text : string | undefined = undefined;   
-    let length : number | undefined = undefined;
-    let overallSummary : string | undefined = undefined; 
-    const defaultLength = 15;
+   let requestedSession: string | undefined = undefined;
+   let text: string | undefined = undefined;
+   let length: number | undefined = undefined;
+   let overallSummary: string | undefined = undefined;
+   const defaultLength = 15;
 
-    for (const [key, value] of request.query.entries()) {
-        if (key === 'session')
-            requestedSession = value;                
-    }
+   for (const [key, value] of request.query.entries()) {
+      if (key === 'session')
+         requestedSession = value;
+   }
 
-    let jsonRequest = await request.json();     
+   let jsonRequest = await request.json();
 
-    if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {  
+   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
 
       text = (jsonRequest as any)?.data?.text;
       length = (jsonRequest as any)?.data?.length;
@@ -86,30 +88,24 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
       else {
 
          let definitelyText: string = text;
-         let definitelyLength: number = length ? length : defaultLength;         
-         overallSummary = await findThemeCall (definitelyText, definitelyLength);         
-       }
-       context.log("Passed session key validation:" + requestedSession);     
+         let definitelyLength: number = length ? length : defaultLength;
+         overallSummary = await findThemeCall(definitelyText, definitelyLength);
+      }
+      context.log("Passed session key validation:" + requestedSession);
 
-       return {
-          status: 200, // Ok
-          body: overallSummary
-       };         
-    }
-    else 
-    {
-        context.log("Failed session key validation:" + requestedSession);  
-
-        return {
-           status: 401, // Unauthorised
-           body: "Authorization check failed."
-        };             
-    }
+      return {
+         status: 200, // Ok
+         body: overallSummary
+      };
+   }
+   else {
+      return sessionFailResponse();
+   }
 };
 
 app.http('FindTheme', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: findTheme
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: findTheme
 });
 

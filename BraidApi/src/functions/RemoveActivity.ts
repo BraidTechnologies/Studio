@@ -5,12 +5,13 @@
 
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";  
+import axios from "axios";
 
 // Internal imports
+import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
-import {defaultPartitionKey, makeDeleteActivityToken, makeDeleteActivityHeader} from './CosmosRepositoryApi';
+import { defaultPartitionKey, makeDeleteActivityToken, makeDeleteActivityHeader } from './CosmosRepositoryApi';
 
 /**
  * Asynchronous function to handle the removal of an activity based on the provided request and context.
@@ -23,51 +24,34 @@ import {defaultPartitionKey, makeDeleteActivityToken, makeDeleteActivityHeader} 
  */
 export async function removeActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let requestedSession : string | null = null;     
 
-   for (const [key, value] of request.query.entries()) {
-       if (key === 'session')
-           requestedSession = value;                
-   }
+   if (isSessionValid(request, context)) {
 
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {       
-
-      context.log("Passed session key validation:" + requestedSession);  
-      
-      let jsonRequest: IStorable = await request.json() as IStorable;    
+      let jsonRequest: IStorable = await request.json() as IStorable;
 
       try {
-         await removeActivityDb (jsonRequest.storeId, context);
-         context.log("Removed:" + jsonRequest.toString());           
+         await removeActivityDb(jsonRequest.storeId, context);
+         context.log("Removed:" + jsonRequest.toString());
       }
       catch (e: any) {
          context.log("Failed remove:" + e.toString());
          return {
-            status: 500 , 
+            status: 500,
             body: "Failed remove."
-         };                    
+         };
       }
 
-      return {
-         status: 200, // Ok
-         body: requestedSession
-      };         
+      return defaultOkResponse();
    }
-   else 
-   {
-       context.log("Failed session key validation:" + requestedSession);  
-
-       return {
-          status: 401, // Unauthorised
-          body: "Authorization check failed."
-       };             
+   else {
+      return sessionFailResponse();
    }
 };
 
 app.http('RemoveActivity', {
-    methods: ['POST'],
-    authLevel: 'anonymous',
-    handler: removeActivity
+   methods: ['POST'],
+   authLevel: 'anonymous',
+   handler: removeActivity
 });
 
 /**
@@ -77,33 +61,33 @@ app.http('RemoveActivity', {
  * @param context - The invocation context for logging purposes.
  * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
  */
-async function removeActivityDb (messageId: string, context: InvocationContext) : Promise<boolean> {
+async function removeActivityDb(messageId: string, context: InvocationContext): Promise<boolean> {
 
-   let dbkey = process.env.CosmosApiKey; 
+   let dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<boolean >(function(resolve, reject) {
+   let done = new Promise<boolean>(function (resolve, reject) {
 
       let time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeDeleteActivityToken(time, dbkey, messageId);     
-      let headers = makeDeleteActivityHeader (key, time, defaultPartitionKey); 
-      let deletePath = 'https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs/' + messageId;           
+      let key = makeDeleteActivityToken(time, dbkey, messageId);
+      let headers = makeDeleteActivityHeader(key, time, defaultPartitionKey);
+      let deletePath = 'https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs/' + messageId;
 
-      axios.delete(deletePath, 
-      {
-         headers: headers           
-      })
-      .then((resp : any) => {
+      axios.delete(deletePath,
+         {
+            headers: headers
+         })
+         .then((resp: any) => {
 
-         resolve(true);
-      })
-      .catch((error: any) => {   
+            resolve(true);
+         })
+         .catch((error: any) => {
 
-         context.log ("Error calling database:", error);  
-         reject(false);     
-      });  
+            context.log("Error calling database:", error);
+            reject(false);
+         });
    });
-   
+
    return done;
 }
 

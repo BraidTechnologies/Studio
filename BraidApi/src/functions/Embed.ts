@@ -7,7 +7,11 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
+import { isSessionValid, sessionFailResponse } from "./Utility";
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
+import { recursiveSummarize } from "./Summarize";
+
+let model = getDefaultModel();
 
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
@@ -15,7 +19,7 @@ import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
  * @param text The text for which the embedding needs to be calculated.
  * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
  */
-async function calculateEmbedding (text: string) : Promise <Array<number>> {
+async function calculateEmbedding(text: string): Promise<Array<number>> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -23,13 +27,13 @@ async function calculateEmbedding (text: string) : Promise <Array<number>> {
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => {
          return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }      
+      }
    });
 
 
    let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlmse/embeddings?api-version=2024-02-01', {
-         input: text,
-      },
+      input: text,
+   },
       {
          headers: {
             'Content-Type': 'application/json',
@@ -38,9 +42,9 @@ async function calculateEmbedding (text: string) : Promise <Array<number>> {
       }
    );
 
-   let embedding = response.data.data[0].embedding as Array<number>;     
+   let embedding = response.data.data[0].embedding as Array<number>;
 
-   return (embedding);   
+   return (embedding);
 }
 
 
@@ -51,64 +55,40 @@ async function calculateEmbedding (text: string) : Promise <Array<number>> {
  * @param context - The context object for logging and validation.
  * @returns A Promise that resolves to an HTTP response with the embedding or an authorization error.
  */
-export async function embed (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function embed(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-    let requestedSession : string | undefined = undefined;     
-    let text : string | undefined = undefined; 
- 
+   let text: string | undefined = undefined;
 
-    for (const [key, value] of request.query.entries()) {
-        if (key === 'session')
-            requestedSession = value;                
-    }
+   let jsonRequest = await request.json();
+   context.log(jsonRequest);
+   text = (jsonRequest as any)?.data?.text;
 
-    let jsonRequest = await request.json();
-    context.log(jsonRequest);      
-    text = (jsonRequest as any)?.data?.text;   
+   if ((isSessionValid(request, context))
+      && (text && text.length > 0)) {
 
-    if (((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) 
-      && (text && text.length > 0)) {  
-
-      context.log("Passed session key validation:" + requestedSession);  
-
-      let definitelyText : string = text;
+      let definitelyText: string = text;
 
       // If the text is bigger than available context, we have to summarise it
-      let model = getDefaultModel();
-      if (! model.fitsInContext (text)) {
-         let response = await axios.post('https://braidapi.azurewebsites.net/api/Summarize?session=' + requestedSession, {
-            data: { text : text },
-         },
-         {
-            headers: {
-               'Content-Type': 'application/json'
-            }
-         });
-         
-         definitelyText = (response.data as string);      
-         context.log("Summarised");             
+      if (!model.fitsInContext(definitelyText)) {
+         definitelyText = await recursiveSummarize(definitelyText, 0, model.contextWindowSize)
+
+         context.log("Summarised");
       }
 
-       let embedding = await calculateEmbedding (definitelyText);  
+      let embedding = await calculateEmbedding(definitelyText);
 
-       return {
-          status: 200, // Ok
-          body: JSON.stringify (embedding) 
-       };         
-    }
-    else 
-    {
-        context.log("Failed session key validation:" + requestedSession);  
-
-        return {
-           status: 401, // Unauthorised
-           body: "Authorization check failed."
-        };             
-    }
+      return {
+         status: 200, // Ok
+         body: JSON.stringify(embedding)
+      };
+   }
+   else {
+      return sessionFailResponse();
+   }
 };
 
 app.http('Embed', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: embed
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: embed
 });

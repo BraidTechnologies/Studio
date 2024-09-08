@@ -67,7 +67,6 @@ describe("Model", async function () {
           text = text + text;
 
       expect (model.chunkText(text).length > 1).toBe (true) ;   
-
    });  
 
 });

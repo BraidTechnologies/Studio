@@ -4,6 +4,7 @@
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
 
 /**
  * Validates the session key provided in the request query parameters.
@@ -17,36 +18,17 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
  */
 export async function checkSession(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let requestedSession : string | null = null;     
+   if (isSessionValid(request, context)) {
 
-   for (const [key, value] of request.query.entries()) {
-       if (key === 'session')
-           requestedSession = value;                
+      return defaultOkResponse();
    }
-
-
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {       
-
-      context.log("Passed session key validation:" + requestedSession);     
-
-      return {
-         status: 200, // Ok
-         body: requestedSession
-      };         
-   }
-   else 
-   {
-       context.log("Failed session key validation:" + requestedSession);  
-
-       return {
-          status: 401, // Unauthorised
-          body: "Authorization check failed."
-       };             
+   else {
+      return sessionFailResponse();
    }
 };
 
 app.http('CheckSession', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: checkSession
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: checkSession
 });

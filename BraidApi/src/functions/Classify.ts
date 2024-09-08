@@ -6,7 +6,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-
+import { isSessionValid, sessionFailResponse } from "./Utility";
 
 /**
  * Decodes the initial classification string to a human-readable format.
@@ -14,10 +14,10 @@ import axiosRetry from 'axios-retry';
  * @param initial - The initial classification string to decode.
  * @returns The decoded classification in a human-readable format, or "Unknown" if not found.
  */
-function decodeClassification (initial: string, classifications: Array<string>) : string {
+function decodeClassification(initial: string, classifications: Array<string>): string {
 
    for (let i = 0; i < classifications.length; i++) {
-      if (initial.includes (classifications[i])) {
+      if (initial.includes(classifications[i])) {
          if (classifications[i] === "CurrentAffairs")
             return "Current Affairs";
          return classifications[i];
@@ -33,7 +33,7 @@ function decodeClassification (initial: string, classifications: Array<string>) 
  * @param text The text to be classified.
  * @returns A Promise that resolves to a string representing the classification result.
  */
-async function singleShotClassify (text: string, classifications: Array<string>) : Promise <string> {
+async function singleShotClassify(text: string, classifications: Array<string>): Promise<string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -41,25 +41,25 @@ async function singleShotClassify (text: string, classifications: Array<string>)
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => {
          return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }      
+      }
    });
 
    let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
       messages: [
          {
             role: 'system',
-            content: "You are an asistant that can classify text into one of the following subjects: " 
-            + classifications.join (",") + "." 
-            + "Try to classify the subject of the following text. The classification is a single word from the list " 
-            + classifications.join (",") 
-            + ". If you cannot classify it well, answer 'Unknown'."
+            content: "You are an asistant that can classify text into one of the following subjects: "
+               + classifications.join(",") + "."
+               + "Try to classify the subject of the following text. The classification is a single word from the list "
+               + classifications.join(",")
+               + ". If you cannot classify it well, answer 'Unknown'."
          },
          {
             role: 'user',
             content: text
          }
-         ]
-      },
+      ]
+   },
       {
          headers: {
             'Content-Type': 'application/json',
@@ -68,9 +68,9 @@ async function singleShotClassify (text: string, classifications: Array<string>)
       }
    );
 
-   let decoded = decodeClassification (response.data.choices[0].message.content, classifications);
+   let decoded = decodeClassification(response.data.choices[0].message.content, classifications);
 
-   return (decoded);   
+   return (decoded);
 }
 
 
@@ -81,46 +81,33 @@ async function singleShotClassify (text: string, classifications: Array<string>)
  * @param context - The invocation context for logging and other context-specific operations.
  * @returns A Promise that resolves to an HTTP response with the classification result or an error message.
  */
-export async function classify (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function classify(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-    let requestedSession : string | undefined = undefined;     
-    let text : string | undefined = undefined; 
-    let classifications : Array<string> | undefined = undefined;  
+   let text: string | undefined = undefined;
+   let classifications: Array<string> | undefined = undefined;
 
-    for (const [key, value] of request.query.entries()) {
-        if (key === 'session')
-            requestedSession = value;                
-    }
+   let jsonRequest = await request.json();
+   text = (jsonRequest as any)?.data?.text;
+   classifications = (jsonRequest as any)?.data?.classifications;
 
-    let jsonRequest = await request.json();    
-    text = (jsonRequest as any)?.data?.text;
-    classifications = (jsonRequest as any)?.data?.classifications;    
-
-    if (((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) 
+   if ((isSessionValid(request, context))
       && (text && text.length > 0)
-      && (classifications && classifications.length > 0)) {  
+      && (classifications && classifications.length > 0)) {
 
-       let summaryClassification = await singleShotClassify (text, classifications);
-       context.log("Passed session key validation:" + requestedSession);     
+      let summaryClassification = await singleShotClassify(text, classifications);
 
-       return {
-          status: 200, // Ok
-          body: summaryClassification
-       };         
-    }
-    else 
-    {
-        context.log("Failed session key validation:" + requestedSession);  
-
-        return {
-           status: 401, // Unauthorised
-           body: "Authorization check failed."
-        };             
-    }
+      return {
+         status: 200, // Ok
+         body: summaryClassification
+      };
+   }
+   else {
+      return sessionFailResponse();
+   }
 };
 
 app.http('Classify', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: classify
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: classify
 });
