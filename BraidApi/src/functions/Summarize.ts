@@ -72,6 +72,14 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
    return (response.data.choices[0].message.content);
 }
 
+/**
+ * Asynchronously generates a recursive summary of the input text based on the specified level and word limit.
+ * 
+ * @param text The text to be summarized.
+ * @param level The current level of recursion.
+ * @param words The maximum number of words in the summary.
+ * @returns A Promise that resolves to the generated summary string.
+ */
 export async function recursiveSummarize(text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;

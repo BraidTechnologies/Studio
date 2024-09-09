@@ -12,17 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FindEnrichedChunkApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+/**
+ * Class representing an API for finding enriched chunks.
+ */
 class FindEnrichedChunkApi {
     constructor(environment_, sessionKey_) {
         this._environment = environment_;
         this._sessionKey = sessionKey_;
     }
+    /**
+     * Asynchronously finds an enriched chunk summary based on the provided URL query.
+     *
+     * @param urlQuery - The URL query specifying the URL to search for the enriched chunk.
+     * @returns An IEnrichedChunkSummary objects representing the found enriched chunk summary, or undefined.
+     */
     findChunkFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             let apiUrl = this._environment.findEnrichedChunkFromUrl() + "?session=" + this._sessionKey.toString();
             var response;
-            let empty = new Array();
+            let empty = undefined;
             try {
                 response = yield axios_1.default.post(apiUrl, {
                     data: urlQuery
@@ -41,6 +50,12 @@ class FindEnrichedChunkApi {
             }
         });
     }
+    /**
+     * Asynchronously finds relevant enriched chunks based on the provided URL query.
+     *
+     * @param urlQuery - The URL query specifying the URL to search for relevant enriched chunks.
+     * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
+     */
     findRelevantChunksFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -65,7 +80,13 @@ class FindEnrichedChunkApi {
             }
         });
     }
-    findRelevantChunksForSummary(urlQuery) {
+    /**
+     * Asynchronously finds relevant enriched chunks based on the provided summary query.
+     *
+     * @param urlQuery - The summary query specifying the summary to search for relevant enriched chunks.
+     * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
+     */
+    findRelevantChunksFromSummary(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             let apiUrl = this._environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this._sessionKey.toString();

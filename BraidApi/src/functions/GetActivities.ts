@@ -13,7 +13,13 @@ import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable, IStoreQuerySpec } from "../../../BraidCommon/src/IStorable";
 import { defaultPartitionKey, makePostActivityToken, makePostActivityQueryHeader } from './CosmosRepositoryApi';
 
-
+/**
+ * Asynchronous function to handle retrieving activities based on the provided request and context.
+ * 
+ * @param request - The HTTP request object containing query parameters.
+ * @param context - The invocation context for logging and other operations.
+ * @returns A promise that resolves to an HTTP response initialization object.
+ */
 export async function getActivities(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let requestedSession: string | null = null;
@@ -58,6 +64,13 @@ app.http('GetActivities', {
    handler: getActivities
 });
 
+/**
+ * Asynchronously loads recent activities based on the provided query specifications.
+ * 
+ * @param querySpec - The query specifications including the limit and storeClassName.
+ * @param context - The invocation context for logging and tracing.
+ * @returns A promise that resolves to an array of storable objects representing the loaded activities.
+ */
 async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext): Promise<Array<IStorable>> {
 
    let dbkey = process.env.CosmosApiKey;

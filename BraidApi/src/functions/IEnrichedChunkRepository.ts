@@ -24,7 +24,7 @@ export interface IEnrichedChunkRepository  {
     * lookupFromUrl 
     * find the whole chunk given its URL
     */   
-   lookupFromUrl (spec: IChunkQueryRelevantToUrlSpec) : Promise<Array<IEnrichedChunkSummary>>;     
+   lookupFromUrl (spec: IChunkQueryRelevantToUrlSpec) : Promise<IEnrichedChunkSummary | undefined>;     
 }
 
 

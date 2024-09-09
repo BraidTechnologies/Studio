@@ -72,7 +72,7 @@ describe("FindEnrichedChunks", async function () {
 
          let response = await api.findChunkFromUrl(urlQuery);
 
-         expect(response.length === 1).toBe(true);
+         expect(response !== undefined).toBe(true);
       }
 
    }).timeout(20000);

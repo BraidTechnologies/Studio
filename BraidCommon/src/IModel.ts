@@ -5,6 +5,10 @@ export enum EModel {
    kLarge = "Large"  
 };
 
+/**
+ * Represents a model with deployment information.
+ * @interface
+ */
 export interface IModel {
 
    deploymentName : string;

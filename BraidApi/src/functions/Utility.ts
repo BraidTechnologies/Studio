@@ -58,6 +58,11 @@ export function defaultOkResponse(): HttpResponseInit {
    };
 }
 
+/**
+ * Generates a default HTTP response for server errors.
+ * Returns a response with status code 500 (Server error) and a message indicating an unexpected problem.
+ * @returns {HttpResponseInit} The default error response object
+ */
 export function defaultErrorResponse(): HttpResponseInit {
 
    return {

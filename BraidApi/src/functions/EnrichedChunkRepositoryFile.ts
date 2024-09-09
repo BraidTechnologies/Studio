@@ -32,6 +32,13 @@ function cosineSimilarity(vector1: number[], vector2: number[]): number {
 const youTubeHostname = "www.youtube.com";
 const gitHubHostname = "github.com";
 
+/**
+ * Compares two URLs to determine if they are from the same source.
+ * 
+ * @param url1 - The first URL to compare.
+ * @param url2 - The second URL to compare.
+ * @returns True if the URLs are from the same source, false otherwise.
+ */
 export function lookLikeSameSource(url1: string, url2: string): boolean {
 
    const URLLeft = new URL(url1);
@@ -79,6 +86,13 @@ export function lookLikeSameSource(url1: string, url2: string): boolean {
    return false;
 }
 
+/**
+ * Finds the index of the entry with the lowest relevance in the given array of IRelevantEnrichedChunk objects.
+ * If a URL is provided, it checks for entries with the same source and replaces if a better one is found.
+ * @param urlIn The URL to compare with the chunk URLs.
+ * @param current An array of IRelevantEnrichedChunk objects to search for the lowest relevance.
+ * @returns The index of the entry with the lowest relevance, or -1 if the array is empty.
+ */
 function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnrichedChunk>): number {
 
    if (current.length === 0)
@@ -132,6 +146,15 @@ function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnri
    return lowestIndex;
 }
 
+/**
+ * Replaces a candidate enriched chunk in the current array if it meets certain criteria.
+ * 
+ * @param candidate - The candidate enriched chunk to be considered for replacement.
+ * @param spec - The query specification defining the maximum count and similarity threshold.
+ * @param urlIn - The URL to compare with the candidate's URL for source similarity.
+ * @param current - The array of current relevant enriched chunks to evaluate for replacement.
+ * @returns True if the candidate is successfully replaced, false otherwise.
+ */
 function replaceIfBeatsCurrent(candidate: IRelevantEnrichedChunk,
    spec: IChunkQuerySpec,
    urlIn: string | undefined,
@@ -272,27 +295,25 @@ export class EnrichedChunkRepositoryFile implements IEnrichedChunkRepository {
     * lookupFromUrl 
     * look to see of we have similar content to a given URL from other sources
     */
-      async lookupFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IEnrichedChunkSummary>> {
+   async lookupFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<IEnrichedChunkSummary | undefined> {
 
-         let enrichedChunks = enrichedChunksFile as Array<IEnrichedChunk>;
-         let targetChunk: IEnrichedChunkSummary | undefined = undefined;
-         let accumulator = new Array<IEnrichedChunkSummary>();
+      let enrichedChunks = enrichedChunksFile as Array<IEnrichedChunk>;
+      let accumulator : IEnrichedChunkSummary | undefined = undefined;
    
-         for (let i = 0; i < enrichedChunks.length && !targetChunk; i++) {
-            let url = enrichedChunks[i].url;
-            if (url == spec.url) {
-               targetChunk = { 
-                  url: enrichedChunks[i].url,
-                  summary: enrichedChunks[i].summary,
-                  text: enrichedChunks[i].text
-               };
-               accumulator.push (targetChunk);
-               break;
-            }
+      for (let i = 0; i < enrichedChunks.length && !accumulator; i++) {
+         let url = enrichedChunks[i].url;
+         if (url == spec.url) {
+            let targetChunk = { 
+               url: enrichedChunks[i].url,
+               summary: enrichedChunks[i].summary,
+               text: enrichedChunks[i].text
+            };
+            accumulator = targetChunk;
+            break;
          }
-
-         return accumulator;
       }
-   
+
+      return accumulator;
+   }   
 }
 

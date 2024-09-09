@@ -7,6 +7,9 @@ export enum EChunkRepository {
    kBoxer = "Boxer"
 };
 
+// Default is we only consider >= 85% relevant to present to the user
+export const kDefaultSimilarityThreshold = 0.85;
+
 /**
  * Represents a Chunk enriched with specific properties.
  * This is a summary class that can be passed between client & server. 
@@ -42,6 +45,13 @@ export interface IRelevantEnrichedChunk {
    relevance: number;
 }
 
+/**
+ * Defines the structure of a chunk query specification object.
+ * 
+ * @property {EChunkRepository} repositoryId - The ID of the repository to query.
+ * @property {number} maxCount - The maximum number of results to retrieve.
+ * @property {number} similarityThreshold - The threshold for similarity comparison.
+ */
 export interface IChunkQuerySpec {
 
    repositoryId: EChunkRepository;
@@ -49,11 +59,17 @@ export interface IChunkQuerySpec {
    similarityThreshold: number;
 }
 
+/**
+ * Extends the IChunkQuerySpec interface to include a 'url' property of type string.
+ */
 export interface IChunkQueryRelevantToUrlSpec extends IChunkQuerySpec {
 
    url: string;
 }
 
+/**
+ * Extends the IChunkQuerySpec interface to include a 'summary' property of type string.
+ */
 export interface IChunkQueryRelevantToSummarySpec extends IChunkQuerySpec {
 
    summary: string;
