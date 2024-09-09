@@ -123,6 +123,15 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
         logger.error(f"Error: {e}")
         raise
 
+def call_gemini_chat(client: GeminiAPI, messages: List[Dict], config: ApiConfiguration, logger: logging.Logger) -> str:
+    try:
+        response = client.chat(messages)
+        logger.info(f"Gemini response: {response}")
+        return response['choices'][0]['message']['content']
+    except GeminiAPIError as e:
+        logger.error(f"Gemini API error: {e}")
+        raise
+
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
