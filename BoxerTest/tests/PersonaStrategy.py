@@ -15,7 +15,7 @@ sys.path.insert(0, parent_dir)
 from common.ApiConfiguration import ApiConfiguration
 from common.common_functions import get_embedding
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
-from BoxerDataTest_v3 import call_openai_chat
+from BoxerDataTest_v3 import call_openai_chat, call_gemini_chat
 
 
 # Setup Logging
@@ -33,12 +33,20 @@ class PersonaStrategy(ABC):
         pass  # This is an abstract method to be implemented by subclasses
 
     def _generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
-        messages = [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
-        ]
-        logger.info("Generating questions with the following prompt: %s", prompt)
-        response = call_openai_chat(client, messages, config, logger)
+        
+        if config.apiType == "Azure":
+            messages = [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
+            ]
+            logger.info("Generating questions with the following prompt using ChatGPT 4o: %s", prompt)
+            response = call_openai_chat(client, messages, config, logger)
+        elif config.apiType == "Gemini":
+            response = call_gemini_chat(client, messages, config, logger)
+            pass
+        else:
+            raise ValueError("Unknown API type")
+        
         questions = response.split('\n')
         return [q for q in questions if q.strip()]
 
