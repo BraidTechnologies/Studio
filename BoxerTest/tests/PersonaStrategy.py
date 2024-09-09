@@ -15,7 +15,7 @@ sys.path.insert(0, parent_dir)
 from common.ApiConfiguration import ApiConfiguration
 from common.common_functions import get_embedding
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
-from BoxerDataTest_v1 import call_openai_chat
+from BoxerDataTest_v3 import call_openai_chat
 
 
 # Setup Logging
