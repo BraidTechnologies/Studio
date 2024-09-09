@@ -330,42 +330,6 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
 
 
 # Main test-running function
-def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, num_questions: int = 100, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
-    """
-    Runs tests using the provided configuration, test destination directory, source directory, and questions.
-
-    Args:
-        config (ApiConfiguration): The configuration for the API.
-        test_destination_dir (str): The path to the directory where the test results will be saved.
-        source_dir (str): The directory containing the source files.
-        num_questions (int): The number of questions to generate using the persona strategy.
-        questions (List[str]): A list of questions to be processed.
-        persona_strategy (PersonaStrategy): The persona strategy to use for generating questions.
-
-    Returns:
-        None
-    """
-    client = configure_openai_for_azure(config)
-
-    if not test_destination_dir:
-        logger.error("Test data folder not provided")
-        raise ValueError("Test destination directory not provided")
-    
-    if persona_strategy:
-        questions = persona_strategy.generate_questions(client, config, NUM_QUESTIONS, logger)
-
-    if not questions:
-        logger.error("Generated questions are None or empty. Exiting the test.")
-        return
-    # Determine the test mode based on the strategy
-    test_mode = persona_strategy.__class__.__name__.replace('PersonaStrategy', '').lower()
-
-    processed_question_chunks = read_processed_chunks(source_dir)
-    question_results = process_questions(client, config, questions, processed_question_chunks, logger)
-    save_results(test_destination_dir, question_results, test_mode)
-
-
-
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions=None, persona_strategy=None):
     if config.apiType == "Azure":
         client = AzureOpenAI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
