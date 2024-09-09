@@ -3,6 +3,7 @@
 import logging
 import os
 import sys
+import google.generativeai as genai 
 
 # Set up logging to display information about the execution of the script
 
