@@ -20,46 +20,48 @@ class FindEnrichedChunkApi {
     findForUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findEnrichedChunksRelevantToUrl() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this._environment.findEnrichedChunksRelevantFromUrl() + "?session=" + this._sessionKey.toString();
             var response;
+            let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
                     data: urlQuery
                 });
                 if (response.status === 200) {
-                    return true;
+                    return response.data;
                 }
                 else {
                     console.error("Error, status: " + response.status);
-                    return false;
+                    return empty;
                 }
             }
             catch (e) {
                 console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
+                return empty;
             }
         });
     }
     findForSummary(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findEnrichedChunksRelevantToSummary() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this._environment.findEnrichedChunksRelevantFromSummary() + "?session=" + this._sessionKey.toString();
             var response;
+            let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
                     data: urlQuery
                 });
                 if (response.status === 200) {
-                    return true;
+                    return response.data;
                 }
                 else {
                     console.error("Error, status: " + response.status);
-                    return false;
+                    return empty;
                 }
             }
             catch (e) {
                 console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
+                return empty;
             }
         });
     }

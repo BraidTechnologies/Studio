@@ -57,3 +57,11 @@ export function defaultOkResponse(): HttpResponseInit {
       body: "Ok"
    };
 }
+
+export function defaultErrorResponse(): HttpResponseInit {
+
+   return {
+      status: 500, // Server error
+      body: "The server encountered an unpexcted problem."
+   };
+}

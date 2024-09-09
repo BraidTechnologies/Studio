@@ -44,10 +44,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    boxerHome(): string {
       return "http://localhost:1337/aibot.html";
    }
-   findEnrichedChunksRelevantToUrl (): string {
+   findEnrichedChunksRelevantFromUrl (): string {
       return "http://localhost:7071/api/FindEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantToSummary(): string{
+   findEnrichedChunksRelevantFromSummary(): string{
       return "http://localhost:7071/api/findEnrichedChunksFromSummary";
    }
 }
@@ -93,10 +93,10 @@ export class StagingEnvironment implements IEnvironment {
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }   
-   findEnrichedChunksRelevantToUrl (): string {
+   findEnrichedChunksRelevantFromUrl (): string {
       return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantToSummary(): string{
+   findEnrichedChunksRelevantFromSummary(): string{
       return "https://braidapps.io/api/findEnrichedChunksFromSummary";
    }   
 }
@@ -143,10 +143,10 @@ export class ProductionEnvironment implements IEnvironment {
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }  
-   findEnrichedChunksRelevantToUrl (): string {
+   findEnrichedChunksRelevantFromUrl (): string {
       return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantToSummary(): string {
+   findEnrichedChunksRelevantFromSummary(): string {
       return "https://braidapps.io/api/findEnrichedChunksFromSummary";   
    }
 }

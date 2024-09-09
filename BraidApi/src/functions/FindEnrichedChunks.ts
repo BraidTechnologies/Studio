@@ -5,17 +5,28 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../BraidCommon/src/EnrichedChunk";
-import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultOkResponse, defaultErrorResponse } from "./Utility";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
-
 
 export async function FindEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
 
-      let jsonRequest: IChunkQueryRelevantToSummarySpec = await request.json() as IChunkQueryRelevantToSummarySpec;
+      try {
+         let spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
 
-      return defaultOkResponse();
+         let repository = getEnrichedChunkRepository();
+
+         let chunks = await repository.lookupRelevantFromSummary (spec);
+
+         return {
+            status: 200, // Ok
+            body: JSON.stringify (chunks)
+         };
+      }
+      catch (e) {
+         return defaultErrorResponse();
+      }      
    }
    else {
       return sessionFailResponse();
@@ -26,16 +37,21 @@ export async function FindEnrichedChunksFromUrl (request: HttpRequest, context: 
 
    if (isSessionValid(request, context)) {
 
-      let jsonRequest: IChunkQueryRelevantToUrlSpec = await request.json() as IChunkQueryRelevantToUrlSpec;
+      try {
+         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-      let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository();
 
-      let chunks = repository.lookupRelevantfromUrl (jsonRequest);
+         let chunks = await repository.lookupRelevantfromUrl (spec);
 
-      return {
-         status: 200, // Ok
-         body: JSON.stringify (chunks)
-      };
+         return {
+            status: 200, // Ok
+            body: JSON.stringify (chunks)
+         };
+      }
+      catch (e) {
+         return defaultErrorResponse();
+      }
    }
    else {
       return sessionFailResponse();

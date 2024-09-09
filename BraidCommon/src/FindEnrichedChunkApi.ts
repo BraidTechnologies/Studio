@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import { IEnvironment } from "./IEnvironment";
-import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec } from './EnrichedChunk';
+import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrichedChunk } from './EnrichedChunk';
 
 
 export class FindEnrichedChunkApi {
@@ -15,10 +15,11 @@ export class FindEnrichedChunkApi {
    }  
 
 
-   async findForUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<boolean> {
+   async findForUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<Array<IEnrichedChunk>> {
 
-      let apiUrl = this._environment.findEnrichedChunksRelevantToUrl() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this._environment.findEnrichedChunksRelevantFromUrl() + "?session=" + this._sessionKey.toString();
       var response: any;
+      let empty = new Array<IEnrichedChunk> ();
 
       try {
          response = await axios.post(apiUrl, {
@@ -26,23 +27,24 @@ export class FindEnrichedChunkApi {
          });
 
          if (response.status === 200) {
-            return true;
+            return response.data;
          }
          else {
             console.error ("Error, status: " + response.status);               
-            return false;
+            return empty;
          }
       } catch (e: any) {       
 
          console.error ("Error: " + e?.response?.data);   
-         return false;       
+         return empty;      
       }          
    }
 
-   async findForSummary (urlQuery: IChunkQueryRelevantToSummarySpec) : Promise<boolean> {
+   async findForSummary (urlQuery: IChunkQueryRelevantToSummarySpec) : Promise<Array<IEnrichedChunk>> {
 
-      let apiUrl = this._environment.findEnrichedChunksRelevantToSummary() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this._environment.findEnrichedChunksRelevantFromSummary() + "?session=" + this._sessionKey.toString();
       var response: any;
+      let empty = new Array<IEnrichedChunk> ();      
 
       try {
          response = await axios.post(apiUrl, {
@@ -50,16 +52,16 @@ export class FindEnrichedChunkApi {
          });
 
          if (response.status === 200) {
-            return true;
+            return response.data;
          }
          else {
             console.error ("Error, status: " + response.status);               
-            return false;
+            return empty;
          }
       } catch (e: any) {       
 
          console.error ("Error: " + e?.response?.data);   
-         return false;       
+         return empty;    
       }          
    }
 }

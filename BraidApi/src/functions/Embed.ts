@@ -19,7 +19,7 @@ let model = getDefaultModel();
  * @param text The text for which the embedding needs to be calculated.
  * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
  */
-async function calculateEmbedding(text: string): Promise<Array<number>> {
+export async function calculateEmbedding(text: string): Promise<Array<number>> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {

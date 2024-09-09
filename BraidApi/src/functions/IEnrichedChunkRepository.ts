@@ -12,13 +12,13 @@ export interface IEnrichedChunkRepository  {
     * lookupRelevantFromSummary 
     * look to see of we have similar content 
     */      
-   lookupRelevantFromSummary (spec: IChunkQueryRelevantToSummarySpec) : Array<IRelevantEnrichedChunk>;
+   lookupRelevantFromSummary (spec: IChunkQueryRelevantToSummarySpec) : Promise<Array<IRelevantEnrichedChunk>>;
 
    /**
     * lookUpSimilarfromUrl 
     * look to see of we have similar content from other sources
     */   
-   lookupRelevantfromUrl (spec: IChunkQueryRelevantToUrlSpec) : Array<IRelevantEnrichedChunk>;  
+   lookupRelevantfromUrl (spec: IChunkQueryRelevantToUrlSpec) : Promise<Array<IRelevantEnrichedChunk>>;  
 }
 
 
