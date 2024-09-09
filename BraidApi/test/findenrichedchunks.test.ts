@@ -32,7 +32,7 @@ describe("FindEnrichedChunks", async function () {
          similarityThreshold: 0.75
       };
 
-      let response = await api.findForSummary(urlQuery);
+      let response = await api.findRelevantChunksFromSummary(urlQuery);
 
       expect(response.length > 0).toBe(true);
 
@@ -50,9 +50,29 @@ describe("FindEnrichedChunks", async function () {
             similarityThreshold: 0.75
          };
 
-         let response = await api.findForUrl(urlQuery);
+         let response = await api.findRelevantChunksFromUrl(urlQuery);
 
          expect(response.length > 0).toBe(true);
+      }
+
+   }).timeout(20000);
+
+   
+   it("Needs to find same chunks from a matching URL.", async function () {
+
+      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      for (let i = 0; i < urls.length; i++) {
+         let urlQuery = {
+            maxCount: 2,
+            repositoryId: EChunkRepository.kBoxer,
+            url: urls[i],
+            similarityThreshold: 0.75
+         };
+
+         let response = await api.findChunkFromUrl(urlQuery);
+
+         expect(response.length === 1).toBe(true);
       }
 
    }).timeout(20000);

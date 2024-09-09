@@ -18,7 +18,7 @@ export interface IEnrichedChunkSummary {
 
    url: string;
    text: string;
-   summary: string;   
+   summary: string;
 }
 
 /**
@@ -28,8 +28,8 @@ export interface IEnrichedChunkSummary {
  * @property {Array<number>} embedding - An array of numbers representing the embedding of the chunk.
  */
 export interface IEnrichedChunk extends IEnrichedChunkSummary {
-  
-   id: string;   
+
+   id: string;
    embedding: number[];
 }
 
@@ -42,7 +42,6 @@ export interface IRelevantEnrichedChunk {
    relevance: number;
 }
 
-
 export interface IChunkQuerySpec {
 
    repositoryId: EChunkRepository;
@@ -50,12 +49,10 @@ export interface IChunkQuerySpec {
    similarityThreshold: number;
 }
 
-
 export interface IChunkQueryRelevantToUrlSpec extends IChunkQuerySpec {
 
    url: string;
 }
-
 
 export interface IChunkQueryRelevantToSummarySpec extends IChunkQuerySpec {
 

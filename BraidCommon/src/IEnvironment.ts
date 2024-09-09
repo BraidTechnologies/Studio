@@ -21,8 +21,9 @@ export interface IEnvironment {
    boxerHome(): string;
    loginWithLinkedInApi(): string;
    authFromLinkedInApi(): string;
-   findEnrichedChunksRelevantFromUrl(): string;
-   findEnrichedChunksRelevantFromSummary(): string;   
+   findRelevantEnrichedChunksFromUrl(): string;
+   findRelevantEnrichedChunksFromSummary(): string;   
+   findEnrichedChunkFromUrl(): string;   
 }
 
 

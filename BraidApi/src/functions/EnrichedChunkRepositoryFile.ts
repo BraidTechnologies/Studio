@@ -2,7 +2,7 @@
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
 import { calculateEmbedding } from "./Embed";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk } from "../../../BraidCommon/src/EnrichedChunk";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IEnrichedChunkSummary } from "../../../BraidCommon/src/EnrichedChunk";
 import { IRelevantEnrichedChunk, IChunkQuerySpec } from "../../../BraidCommon/src/EnrichedChunk";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import enrichedChunksFile from "../../api_embeddings_lite.json";
@@ -217,7 +217,7 @@ export class EnrichedChunkRepositoryFile implements IEnrichedChunkRepository {
     * lookupRelevantfromUrl 
     * look to see of we have similar content to a given URL from other sources
     */
-   async lookupRelevantfromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IRelevantEnrichedChunk>> {
+   async lookupRelevantFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IRelevantEnrichedChunk>> {
 
       let enrichedChunks = enrichedChunksFile as Array<IEnrichedChunk>;
       let targetChunk: IEnrichedChunk | undefined = undefined;
@@ -268,5 +268,31 @@ export class EnrichedChunkRepositoryFile implements IEnrichedChunkRepository {
       return accumulator;
    }
 
+   /**
+    * lookupFromUrl 
+    * look to see of we have similar content to a given URL from other sources
+    */
+      async lookupFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IEnrichedChunkSummary>> {
+
+         let enrichedChunks = enrichedChunksFile as Array<IEnrichedChunk>;
+         let targetChunk: IEnrichedChunkSummary | undefined = undefined;
+         let accumulator = new Array<IEnrichedChunkSummary>();
+   
+         for (let i = 0; i < enrichedChunks.length && !targetChunk; i++) {
+            let url = enrichedChunks[i].url;
+            if (url == spec.url) {
+               targetChunk = { 
+                  url: enrichedChunks[i].url,
+                  summary: enrichedChunks[i].summary,
+                  text: enrichedChunks[i].text
+               };
+               accumulator.push (targetChunk);
+               break;
+            }
+         }
+
+         return accumulator;
+      }
+   
 }
 

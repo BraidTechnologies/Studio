@@ -13,14 +13,14 @@ exports.FindEnrichedChunkApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
 class FindEnrichedChunkApi {
-    constructor(environemnt_, sessionKey_) {
-        this._environment = environemnt_;
+    constructor(environment_, sessionKey_) {
+        this._environment = environment_;
         this._sessionKey = sessionKey_;
     }
-    findForUrl(urlQuery) {
+    findChunkFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findEnrichedChunksRelevantFromUrl() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this._environment.findEnrichedChunkFromUrl() + "?session=" + this._sessionKey.toString();
             var response;
             let empty = new Array();
             try {
@@ -41,10 +41,34 @@ class FindEnrichedChunkApi {
             }
         });
     }
-    findForSummary(urlQuery) {
+    findRelevantChunksFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findEnrichedChunksRelevantFromSummary() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this._environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this._sessionKey.toString();
+            var response;
+            let empty = new Array();
+            try {
+                response = yield axios_1.default.post(apiUrl, {
+                    data: urlQuery
+                });
+                if (response.status === 200) {
+                    return response.data;
+                }
+                else {
+                    console.error("Error, status: " + response.status);
+                    return empty;
+                }
+            }
+            catch (e) {
+                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
+                return empty;
+            }
+        });
+    }
+    findRelevantChunksForSummary(urlQuery) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            let apiUrl = this._environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this._sessionKey.toString();
             var response;
             let empty = new Array();
             try {

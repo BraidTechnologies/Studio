@@ -42,11 +42,14 @@ class DevelopmentEnvironment {
     boxerHome() {
         return "http://localhost:1337/aibot.html";
     }
-    findEnrichedChunksRelevantFromUrl() {
-        return "http://localhost:7071/api/FindEnrichedChunksFromUrl";
+    findRelevantEnrichedChunksFromUrl() {
+        return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";
     }
-    findEnrichedChunksRelevantFromSummary() {
-        return "http://localhost:7071/api/findEnrichedChunksFromSummary";
+    findRelevantEnrichedChunksFromSummary() {
+        return "http://localhost:7071/api/FindRelevantEnrichedChunksFromSummary";
+    }
+    findEnrichedChunkFromUrl() {
+        return "http://localhost:7071/api/FindEnrichedChunkFromUrl";
     }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
@@ -91,11 +94,14 @@ class StagingEnvironment {
     boxerHome() {
         return "https://braidapps.io/aibot.html";
     }
-    findEnrichedChunksRelevantFromUrl() {
-        return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
+    findRelevantEnrichedChunksFromUrl() {
+        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
     }
-    findEnrichedChunksRelevantFromSummary() {
-        return "https://braidapps.io/api/findEnrichedChunksFromSummary";
+    findRelevantEnrichedChunksFromSummary() {
+        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+    }
+    findEnrichedChunkFromUrl() {
+        return "https://braidapps.io/api/FindEnrichedChunkFromUrl";
     }
 }
 exports.StagingEnvironment = StagingEnvironment;
@@ -140,11 +146,14 @@ class ProductionEnvironment {
     boxerHome() {
         return "https://braidapps.io/aibot.html";
     }
-    findEnrichedChunksRelevantFromUrl() {
-        return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
+    findRelevantEnrichedChunksFromUrl() {
+        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
     }
-    findEnrichedChunksRelevantFromSummary() {
-        return "https://braidapps.io/api/findEnrichedChunksFromSummary";
+    findRelevantEnrichedChunksFromSummary() {
+        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+    }
+    findEnrichedChunkFromUrl() {
+        return "https://braidapps.io/api/FindEnrichedChunkFromUrl";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

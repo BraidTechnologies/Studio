@@ -44,11 +44,14 @@ export class DevelopmentEnvironment implements IEnvironment {
    boxerHome(): string {
       return "http://localhost:1337/aibot.html";
    }
-   findEnrichedChunksRelevantFromUrl (): string {
-      return "http://localhost:7071/api/FindEnrichedChunksFromUrl";
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantFromSummary(): string{
-      return "http://localhost:7071/api/findEnrichedChunksFromSummary";
+   findRelevantEnrichedChunksFromSummary(): string{
+      return "http://localhost:7071/api/FindRelevantEnrichedChunksFromSummary";
+   }
+   findEnrichedChunkFromUrl(): string {
+      return "http://localhost:7071/api/FindEnrichedChunkFromUrl";      
    }
 }
 
@@ -93,11 +96,14 @@ export class StagingEnvironment implements IEnvironment {
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }   
-   findEnrichedChunksRelevantFromUrl (): string {
-      return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantFromSummary(): string{
-      return "https://braidapps.io/api/findEnrichedChunksFromSummary";
+   findRelevantEnrichedChunksFromSummary(): string{
+      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+   }   
+   findEnrichedChunkFromUrl(): string {
+      return "https://braidapps.io/api/FindEnrichedChunkFromUrl";      
    }   
 }
 
@@ -143,10 +149,13 @@ export class ProductionEnvironment implements IEnvironment {
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }  
-   findEnrichedChunksRelevantFromUrl (): string {
-      return "https://braidapps.io/api/FindEnrichedChunksFromUrl";
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
    }
-   findEnrichedChunksRelevantFromSummary(): string {
-      return "https://braidapps.io/api/findEnrichedChunksFromSummary";   
+   findRelevantEnrichedChunksFromSummary(): string {
+      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";   
    }
+   findEnrichedChunkFromUrl(): string {
+      return "https://braidapps.io/api/FindEnrichedChunkFromUrl";      
+   }    
 }

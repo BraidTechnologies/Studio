@@ -8,7 +8,7 @@ import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "
 import { isSessionValid, sessionFailResponse, defaultOkResponse, defaultErrorResponse } from "./Utility";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 
-export async function FindEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
 
@@ -33,7 +33,7 @@ export async function FindEnrichedChunksFromSummary(request: HttpRequest, contex
    }
 };
 
-export async function FindEnrichedChunksFromUrl (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
 
@@ -42,7 +42,7 @@ export async function FindEnrichedChunksFromUrl (request: HttpRequest, context: 
 
          let repository = getEnrichedChunkRepository();
 
-         let chunks = await repository.lookupRelevantfromUrl (spec);
+         let chunks = await repository.lookupRelevantFromUrl (spec);
 
          return {
             status: 200, // Ok
@@ -58,14 +58,45 @@ export async function FindEnrichedChunksFromUrl (request: HttpRequest, context: 
    }
 };
 
-app.http('FindEnrichedChunksFromSummary', {
+export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+
+   if (isSessionValid(request, context)) {
+
+      try {
+         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+
+         let repository = getEnrichedChunkRepository();
+
+         let chunks = await repository.lookupFromUrl (spec);
+
+         return {
+            status: 200, // Ok
+            body: JSON.stringify (chunks)
+         };
+      }
+      catch (e) {
+         return defaultErrorResponse();
+      }
+   }
+   else {
+      return sessionFailResponse();
+   }
+};
+
+app.http('FindRelevantEnrichedChunksFromSummary', {
    methods: ['GET', 'POST'],
    authLevel: 'anonymous',
-   handler: FindEnrichedChunksFromSummary
+   handler: FindRelevantEnrichedChunksFromSummary
 });
 
-app.http('FindEnrichedChunksFromUrl', {
+app.http('FindRelevantEnrichedChunksFromUrl', {
    methods: ['GET', 'POST'],
    authLevel: 'anonymous',
-   handler: FindEnrichedChunksFromUrl
+   handler: FindRelevantEnrichedChunksFromUrl
+});
+
+app.http('FindEnrichedChunkFromUrl', {
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: FindEnrichedChunkFromUrl
 });
