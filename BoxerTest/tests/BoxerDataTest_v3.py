@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
 import datetime
-from gemini import GeminiAPI  # use the corresponding Gemini lib 
+import google.generativeai as genai 
 
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
