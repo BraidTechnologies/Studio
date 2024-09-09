@@ -4,22 +4,17 @@
 import os
 
 azure = True                  
-if os.getenv("GEMINI_API_KEY"):
-    API_TYPE = "gemini"
-    API_KEY = os.getenv("GEMINI_API_KEY")
-    RESOURCE_ENDPOINT = "https://api.gemini.com/v1"  # Example endpoint
-    API_VERSION = "2024-09-01"  # Define the appropriate version
-elif azure:
-   API_TYPE = "Azure" #AZURE VERSION WAS "Azure"
-   # API_KEY = os.environ["AZURE_OPENAI_API_KEY"] #AZURE VERSION WAS os.environ["AZURE_OPENAI_API_KEY"]           #uncomment if code breaks - changes for script to exectable on both Windows and Unix machines.  
-   API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  # Use os.getenv() to safely retrieve environment variables       #comment if code breaks  - changes for script to exectable on both Windows and Unix machines. 
+
+if azure:
+   API_TYPE = "Azure" 
+   API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  
    API_VERSION = "2024-02-01" #AZURE VERSION WAS "2023-07-01-preview"
-   RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" #AZURE VERSION WAS os.environ["AZURE_OPENAI_ENDPOINT"] 
+   RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" 
 else:
    API_TYPE = "open_ai" #AZURE VERSION WAS "Azure"
-   API_KEY = os.environ["OPENAI_API_KEY"] #AZURE VERSION WAS os.environ["AZURE_OPENAI_API_KEY"] 
+   API_KEY = os.environ["OPENAI_API_KEY"] 
    API_VERSION = "2020-11-07" #AZURE VERSION WAS "2023-07-01-preview"
-   RESOURCE_ENDPOINT = "https://api.openai.com/v1" #AZURE VERSION WAS os.environ["AZURE_OPENAI_ENDPOINT"] 
+   RESOURCE_ENDPOINT = "https://api.openai.com/v1" 
 
 
 
@@ -53,6 +48,3 @@ class ApiConfiguration:
     chunkDurationMins: int
     maxTokens: int
     discardIfBelow: int 
-
-
-
