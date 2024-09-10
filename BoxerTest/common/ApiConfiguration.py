@@ -10,7 +10,8 @@ genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 '''
 
 
-azure = True                  
+azure = False    
+gemini = True              
 
 if azure:
    API_TYPE = "Azure" 
