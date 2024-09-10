@@ -1,11 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import {IEnvironment} from './IEnvironment';
+import {EEnvironment, IEnvironment} from './IEnvironment';
 
 /**
  * Class representing the Development Environment with methods to retrieve various API endpoints.
  * @class DevelopmentEnvironment
  */
 export class DevelopmentEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kLocal;
 
    checkSessionApi () : string {
       return "http://localhost:7071/api/CheckSession"; 
@@ -60,6 +62,9 @@ export class DevelopmentEnvironment implements IEnvironment {
  * @class StagingEnvironment
  */
 export class StagingEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kStaging;
+
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
    }
@@ -97,13 +102,13 @@ export class StagingEnvironment implements IEnvironment {
       return "https://braidapps.io/aibot.html";
    }   
    findRelevantEnrichedChunksFromUrl (): string {
-      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
+      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
    }
    findRelevantEnrichedChunksFromSummary(): string{
-      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
    }   
    findEnrichedChunkFromUrl(): string {
-      return "https://braidapps.io/api/FindEnrichedChunkFromUrl";      
+      return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
    }   
 }
 
@@ -112,6 +117,9 @@ export class StagingEnvironment implements IEnvironment {
  * @class ProductionEnvironment
  */
 export class ProductionEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kProduction;
+   
    checkSessionApi () : string {
       return "https://braidapi.azurewebsites.net/api/CheckSession";
    }
@@ -150,12 +158,12 @@ export class ProductionEnvironment implements IEnvironment {
       return "https://braidapps.io/aibot.html";
    }  
    findRelevantEnrichedChunksFromUrl (): string {
-      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
+      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
    }
    findRelevantEnrichedChunksFromSummary(): string {
-      return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";   
+      return "https:/braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";   
    }
    findEnrichedChunkFromUrl(): string {
-      return "https://braidapps.io/api/FindEnrichedChunkFromUrl";      
+      return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
    }    
 }

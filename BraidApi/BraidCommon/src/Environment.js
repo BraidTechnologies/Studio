@@ -1,11 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductionEnvironment = exports.StagingEnvironment = exports.DevelopmentEnvironment = void 0;
+// Copyright (c) 2024 Braid Technologies Ltd
+const IEnvironment_1 = require("./IEnvironment");
 /**
  * Class representing the Development Environment with methods to retrieve various API endpoints.
  * @class DevelopmentEnvironment
  */
 class DevelopmentEnvironment {
+    constructor() {
+        this.name = IEnvironment_1.EEnvironment.kLocal;
+    }
     checkSessionApi() {
         return "http://localhost:7071/api/CheckSession";
     }
@@ -58,6 +63,9 @@ exports.DevelopmentEnvironment = DevelopmentEnvironment;
  * @class StagingEnvironment
  */
 class StagingEnvironment {
+    constructor() {
+        this.name = IEnvironment_1.EEnvironment.kStaging;
+    }
     checkSessionApi() {
         return "https://braidapi.azurewebsites.net/api/CheckSession";
     }
@@ -110,6 +118,9 @@ exports.StagingEnvironment = StagingEnvironment;
  * @class ProductionEnvironment
  */
 class ProductionEnvironment {
+    constructor() {
+        this.name = IEnvironment_1.EEnvironment.kProduction;
+    }
     checkSessionApi() {
         return "https://braidapi.azurewebsites.net/api/CheckSession";
     }

@@ -7,8 +7,7 @@ import axios from "axios";
 import * as QueryString from "qs";
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { isSessionValid, sessionFailResponse } from "./Utility";
-import { getEnvironment } from "../../../BraidCommon/src/IEnvironmentFactory";
+import { getDefaultEnvironment } from "../../../BraidCommon/src/IEnvironmentFactory";
 import { EEnvironment } from "../../../BraidCommon/src/IEnvironment";
 
 export async function LoginWithLinkedIn(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
@@ -56,7 +55,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
    const queryAsObject = Object.fromEntries(request.query.entries());
    const stringifiedQuery = JSON.stringify(queryAsObject);
 
-   let environment = getEnvironment(EEnvironment.kProduction);
+   let environment = getDefaultEnvironment();
 
    // https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin%2Fcontext&tabs=HTTPS1
    var clientID = process.env.LinkedInAppId;
@@ -87,7 +86,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
  */
 async function redirectBackHomeWithFullPath(code: string, session: string, conversation: string, secret: string, context: InvocationContext) {
 
-   let environment = getEnvironment(EEnvironment.kProduction);
+   let environment = getDefaultEnvironment();
 
    try {
 

@@ -1,5 +1,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
+export const BRAID_ENVIRONMENT_KEY = "BRAID_ENVIRONMENT"
+
 export enum EEnvironment {
 
    kLocal = "Local", 
@@ -9,6 +11,7 @@ export enum EEnvironment {
 
 export interface IEnvironment {
 
+   name : string;
    checkSessionApi () : string;
    summariseApi () : string;
    findThemeApi(): string;
