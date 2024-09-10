@@ -9,7 +9,8 @@ from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
 import datetime
-import google.generativeai as genai 
+import google.generativeai as genai
+from google.generativeai import types  # For generation config, etc.
 
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
