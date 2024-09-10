@@ -215,34 +215,65 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return dot_product / (a_norm * b_norm)
 
 # Function to generate enriched questions using OpenAI API
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+# @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+# def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+#     """
+#     Generates an enriched question using the OpenAI API.
+
+#     Args:
+#         client (AzureOpenAI): The OpenAI client instance.
+#         config (ApiConfiguration): The API configuration instance.
+#         question (str): The question to be enriched.
+#         logger (logging.Logger): The logger instance.
+
+#     Returns:
+#         str: The enriched question.
+
+#     Raises:
+#         BadRequestError: If the API request fails.
+#     """
+#     messages = [
+#         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
+#         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
+#     ]
+#     logger.info("Making API request to OpenAI...")
+#     logger.info("Request payload: %s", messages)
+
+#     response = call_openai_chat(client, messages, config, logger)
+#     logger.info("API response received: %s", response)
+
+#     return response
+
+def generate_enriched_question(client: genai.GenerativeModel, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     """
-    Generates an enriched question using the OpenAI API.
+    Generates an enriched question using the Gemini API.
 
     Args:
-        client (AzureOpenAI): The OpenAI client instance.
+        client (GenerativeModel): The Gemini client instance.
         config (ApiConfiguration): The API configuration instance.
         question (str): The question to be enriched.
-        logger (logging.Logger): The logger instance.
+        logger (Logger): The logger instance.
 
     Returns:
-        str: The enriched question.
+        str: The enriched question content.
 
     Raises:
-        BadRequestError: If the API request fails.
+        Exception: If there is any error with the Gemini API.
     """
-    messages = [
-        {"role": "system", "content": OPENAI_PERSONA_PROMPT},
-        {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
-    ]
-    logger.info("Making API request to OpenAI...")
-    logger.info("Request payload: %s", messages)
+    try:
+        logger.info("Generating content with Gemini...")
+        response = client.generate_content(
+            question,
+            generation_config=types.GenerationConfig(
+                max_output_tokens=config.maxTokens,
+                temperature=0.7
+            )
+        )
+        return response.text
 
-    response = call_openai_chat(client, messages, config, logger)
-    logger.info("API response received: %s", response)
-
-    return response
+    except Exception as e:
+        logger.error(f"Error generating content with Gemini: {e}")
+        raise
 
 def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
     """
