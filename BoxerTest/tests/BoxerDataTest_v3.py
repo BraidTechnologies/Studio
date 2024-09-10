@@ -124,14 +124,37 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
         logger.error(f"Error: {e}")
         raise
 
-def call_gemini_chat(client: GeminiAPI, messages: List[Dict], config: ApiConfiguration, logger: logging.Logger) -> str:
+def call_gemini_chat(client: genai.GenerativeModel, messages: List[Dict], config: ApiConfiguration, logger: logging.Logger) -> str:
+    """
+    Calls the Gemini API for chat completion.
+
+    Args:
+        client (GenerativeModel): The Gemini client instance.
+        messages (List[Dict]): The messages to be sent to the chat.
+        config (ApiConfiguration): The API configuration instance.
+        logger (Logger): The logger instance.
+
+    Returns:
+        str: The response content from the Gemini API.
+
+    Raises:
+        Exception: If there is any error with the Gemini API.
+    """
     try:
-        response = client.chat(messages)
-        logger.info(f"Gemini response: {response}")
-        return response['choices'][0]['message']['content']
-    except GeminiAPIError as e:
+        # Initialize chat conversation if it's the first message
+        history = [{"role": msg['role'], "parts": msg['content']} for msg in messages]
+
+        chat = client.start_chat(history=history)
+        last_message = messages[-1]['content']
+        response = chat.send_message(last_message)
+
+        logger.info(f"Gemini response: {response.text}")
+        return response.text
+
+    except Exception as e:
         logger.error(f"Gemini API error: {e}")
         raise
+
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
