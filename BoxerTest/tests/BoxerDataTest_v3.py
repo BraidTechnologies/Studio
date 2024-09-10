@@ -391,8 +391,6 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
         logger.error(f"Error saving results: {e}")
         raise
 
-
-
 # Main test-running function
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions=None, persona_strategy=None):
     if config.apiType == "Azure":
@@ -400,7 +398,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     elif config.apiType == "open_ai":
         client = OpenAI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
     elif config.apiType == "Gemini":
-        client = GeminiAPI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
+        client = genai.GenerativeModel("gemini-1.5-flash")
     else:
         raise ValueError("Unknown API type")
     
