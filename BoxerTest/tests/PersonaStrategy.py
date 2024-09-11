@@ -1,7 +1,7 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Any
 import logging
 from openai import AzureOpenAI
 import os
@@ -29,35 +29,39 @@ BUSINESS_ANALYST_PROMPT = "You are a business analyst interested in how people c
 
 class PersonaStrategy(ABC):
     @abstractmethod
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+    def generate_questions(self, client: Any, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
         pass  # This is an abstract method to be implemented by subclasses
 
-    def _generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
+    def _generate_questions(self, client: Any, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
+        
+        # Conditional logic to switch between Azure and Gemini based on client input
+        messages = [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
+        ]
         
         if config.apiType == "Azure":
-            messages = [
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
-            ]
-            logger.info("Generating questions with the following prompt using ChatGPT 4o: %s", prompt)
+            logger.info("Generating questions with the following prompt using ChatGPT 4.0 (Azure): %s", prompt)
             response = call_openai_chat(client, messages, config, logger)
         elif config.apiType == "Gemini":
+            logger.info("Generating questions with the following prompt using Gemini: %s", prompt)
             response = call_gemini_chat(client, messages, config, logger)
-            pass
         else:
             raise ValueError("Unknown API type")
-        
+
         questions = response.split('\n')
         return [q for q in questions if q.strip()]
 
+# Define specific personas
 class DeveloperPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+    def generate_questions(self, client: Any, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
         return self._generate_questions(client, config, DEVELOPER_PROMPT, num_questions, logger)
 
 class TesterPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+    def generate_questions(self, client: Any, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
         return self._generate_questions(client, config, TESTER_PROMPT, num_questions, logger)
 
 class BusinessAnalystPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+    def generate_questions(self, client: Any, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
         return self._generate_questions(client, config, BUSINESS_ANALYST_PROMPT, num_questions, logger)
+
