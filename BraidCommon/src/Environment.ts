@@ -55,6 +55,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    findEnrichedChunkFromUrl(): string {
       return "http://localhost:7071/api/FindEnrichedChunkFromUrl";      
    }
+   queryModelWithEnrichment(): string {
+      return "http://localhost:7071/api/QueryModelWithEnrichment";        
+   }
 }
 
 /**
@@ -109,6 +112,9 @@ export class StagingEnvironment implements IEnvironment {
    }   
    findEnrichedChunkFromUrl(): string {
       return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+   }   
+   queryModelWithEnrichment(): string {
+      return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
    }   
 }
 
@@ -165,5 +171,8 @@ export class ProductionEnvironment implements IEnvironment {
    }
    findEnrichedChunkFromUrl(): string {
       return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+   }    
+   queryModelWithEnrichment(): string {
+      return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
    }    
 }

@@ -27,6 +27,9 @@ class GPTMini {
         }
         return chunks;
     }
+    estimateTokens(text) {
+        return tokenizer.estimateTokenCount(text);
+    }
 }
 exports.GPTMini = GPTMini;
 //# sourceMappingURL=Model.js.map

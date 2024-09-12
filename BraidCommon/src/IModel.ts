@@ -1,4 +1,10 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * Enum representing different sizes of a model.
+ * 
+ * @enum {string}
+ */
 export enum EModel {
 
    kSmall = "Small", 
@@ -6,7 +12,7 @@ export enum EModel {
 };
 
 /**
- * Represents a model with deployment information.
+ * Represents an interface for a model with deployment information.
  * @interface
  */
 export interface IModel {
@@ -15,6 +21,7 @@ export interface IModel {
    contextWindowSize : number;
    fitsInContext(text: string): boolean;
    chunkText (text: string): Array<string>;
+   estimateTokens (text: string): number;
 }
 
 

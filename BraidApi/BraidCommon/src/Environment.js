@@ -56,6 +56,9 @@ class DevelopmentEnvironment {
     findEnrichedChunkFromUrl() {
         return "http://localhost:7071/api/FindEnrichedChunkFromUrl";
     }
+    queryModelWithEnrichment() {
+        return "http://localhost:7071/api/QueryModelWithEnrichment";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -103,13 +106,16 @@ class StagingEnvironment {
         return "https://braidapps.io/aibot.html";
     }
     findRelevantEnrichedChunksFromUrl() {
-        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
+        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
     }
     findRelevantEnrichedChunksFromSummary() {
-        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
     }
     findEnrichedChunkFromUrl() {
-        return "https://braidapps.io/api/FindEnrichedChunkFromUrl";
+        return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";
+    }
+    queryModelWithEnrichment() {
+        return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
     }
 }
 exports.StagingEnvironment = StagingEnvironment;
@@ -158,13 +164,16 @@ class ProductionEnvironment {
         return "https://braidapps.io/aibot.html";
     }
     findRelevantEnrichedChunksFromUrl() {
-        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromUrl";
+        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
     }
     findRelevantEnrichedChunksFromSummary() {
-        return "https://braidapps.io/api/FindRelevantEnrichedChunksFromSummary";
+        return "https:/braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
     }
     findEnrichedChunkFromUrl() {
-        return "https://braidapps.io/api/FindEnrichedChunkFromUrl";
+        return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";
+    }
+    queryModelWithEnrichment() {
+        return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

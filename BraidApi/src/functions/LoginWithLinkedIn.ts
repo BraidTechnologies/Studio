@@ -143,7 +143,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
       console.error(err);
 
       return {
-         status: 400
+         status: 500
       };
    }
 }

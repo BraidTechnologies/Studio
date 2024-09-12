@@ -37,5 +37,10 @@ export class GPTMini implements IModel {
          chunks.push(chunked[i].text);
       }
       return chunks;
-   }   
+   }  
+   
+   estimateTokens (text: string): number  {
+      
+      return tokenizer.estimateTokenCount(text);
+   }    
 }

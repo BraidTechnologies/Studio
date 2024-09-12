@@ -34,7 +34,7 @@ export async function removeActivity(request: HttpRequest, context: InvocationCo
          context.log("Removed:" + jsonRequest.toString());
       }
       catch (e: any) {
-         context.log("Failed remove:" + e.toString());
+         context.error ("Failed remove:" + e.toString());
          return {
             status: 500,
             body: "Failed remove."
@@ -82,8 +82,7 @@ async function removeActivityDb(messageId: string, context: InvocationContext): 
             resolve(true);
          })
          .catch((error: any) => {
-
-            context.log("Error calling database:", error);
+            context.error ("Error calling database:", error);
             reject(false);
          });
    });

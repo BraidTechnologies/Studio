@@ -5,7 +5,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../BraidCommon/src/EnrichedChunk";
-import { isSessionValid, sessionFailResponse, defaultOkResponse, defaultErrorResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 
 export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {

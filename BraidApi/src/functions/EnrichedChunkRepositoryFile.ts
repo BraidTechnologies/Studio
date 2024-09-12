@@ -233,6 +233,12 @@ export class EnrichedChunkRepositoryFile implements IEnrichedChunkRepository {
          }
       }
 
+      function compareFn (a: IRelevantEnrichedChunk, b: IRelevantEnrichedChunk) : number {
+         return b.relevance - a.relevance;
+      }
+
+      accumulator.sort (compareFn);
+      
       return accumulator;
    }
 

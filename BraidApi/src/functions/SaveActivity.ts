@@ -36,7 +36,7 @@ export async function saveActivity(request: HttpRequest, context: InvocationCont
          context.log("Saved:" + jsonRequest.toString());
       }
       catch (e: any) {
-         context.log("Failed save:" + e.toString());
+         context.error("Failed save:" + e.toString());
          return {
             status: 500,
             body: "Failed save."

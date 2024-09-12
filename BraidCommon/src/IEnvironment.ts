@@ -27,6 +27,7 @@ export interface IEnvironment {
    findRelevantEnrichedChunksFromUrl(): string;
    findRelevantEnrichedChunksFromSummary(): string;   
    findEnrichedChunkFromUrl(): string;   
+   queryModelWithEnrichment(): string;
 }
 
 

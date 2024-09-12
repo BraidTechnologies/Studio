@@ -109,7 +109,7 @@ async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext
          })
          .catch((error: any) => {
 
-            context.log("Error calling database:", error);
+            context.error ("Error calling database:", error);
             reject(new Array<IStorable>());
          });
    });
