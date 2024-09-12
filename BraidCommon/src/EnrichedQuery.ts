@@ -46,3 +46,23 @@ export interface IEnrichedResponse {
    answer: string;
    chunks: Array<IRelevantEnrichedChunk>;
 }
+
+/**
+ * Interface for generating questions query.
+ * Contains persona prompt, question generation prompt, and summary fields.
+ */
+export interface IGenerateQuestionQuery {
+
+   personaPrompt: string;
+   questionGenerationPrompt: string;
+   summary: string;
+}
+
+/**
+ * Defines the structure of a response object for question generation.
+ * Contains a property 'question' of type string representing the generated question.
+ */
+export interface IQuestionGenerationResponse {
+
+   question: string;
+}

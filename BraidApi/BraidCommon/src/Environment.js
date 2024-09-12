@@ -59,6 +59,9 @@ class DevelopmentEnvironment {
     queryModelWithEnrichment() {
         return "http://localhost:7071/api/QueryModelWithEnrichment";
     }
+    generateQuestion() {
+        return "http://localhost:7071/api/GenerateQuestion";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -117,6 +120,9 @@ class StagingEnvironment {
     queryModelWithEnrichment() {
         return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
     }
+    generateQuestion() {
+        return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -174,6 +180,9 @@ class ProductionEnvironment {
     }
     queryModelWithEnrichment() {
         return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
+    }
+    generateQuestion() {
+        return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

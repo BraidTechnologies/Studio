@@ -58,6 +58,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    queryModelWithEnrichment(): string {
       return "http://localhost:7071/api/QueryModelWithEnrichment";        
    }
+   generateQuestion(): string{
+      return "http://localhost:7071/api/GenerateQuestion";       
+   }      
 }
 
 /**
@@ -116,6 +119,9 @@ export class StagingEnvironment implements IEnvironment {
    queryModelWithEnrichment(): string {
       return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
    }   
+   generateQuestion(): string{
+      return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
+   }      
 }
 
 /**
@@ -174,5 +180,8 @@ export class ProductionEnvironment implements IEnvironment {
    }    
    queryModelWithEnrichment(): string {
       return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
-   }    
+   } 
+   generateQuestion(): string{
+      return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
+   }   
 }
