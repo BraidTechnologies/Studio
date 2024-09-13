@@ -12,13 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FindEnrichedChunkApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const Api_1 = require("./Api");
 /**
  * Class representing an API for finding enriched chunks.
  */
-class FindEnrichedChunkApi {
+class FindEnrichedChunkApi extends Api_1.Api {
     constructor(environment_, sessionKey_) {
-        this._environment = environment_;
-        this._sessionKey = sessionKey_;
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously finds an enriched chunk summary based on the provided URL query.
@@ -29,7 +29,7 @@ class FindEnrichedChunkApi {
     findChunkFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findEnrichedChunkFromUrl() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.findEnrichedChunkFromUrl() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {
@@ -59,7 +59,7 @@ class FindEnrichedChunkApi {
     findRelevantChunksFromUrl(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = new Array();
             try {
@@ -89,7 +89,7 @@ class FindEnrichedChunkApi {
     findRelevantChunksFromSummary(urlQuery) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = new Array();
             try {

@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
+import { Api } from './Api';
 import { IStorable, IStoreQuerySpec } from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
 
@@ -12,13 +13,10 @@ import { IEnvironment } from "./IEnvironment";
  * 
  * @method save - Saves a record to the activity API.
  */
-export class ActivityRepostoryApi {
-   private _environment: IEnvironment;
-   private _sessionKey: string;
+export class ActivityRepostoryApi extends Api {
 
-   public constructor(environemnt_: IEnvironment, sessionKey_: string) {
-      this._environment = environemnt_;
-      this._sessionKey = sessionKey_;
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
    }  
 
    /**
@@ -29,7 +27,7 @@ export class ActivityRepostoryApi {
     */
    async save (record: IStorable) : Promise<boolean> {
 
-      let apiUrl = this._environment.saveActivityApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -60,7 +58,7 @@ export class ActivityRepostoryApi {
     */
    async remove (recordId: string) : Promise<boolean> {
 
-      let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -90,7 +88,7 @@ export class ActivityRepostoryApi {
     */
    async recent (querySpec: IStoreQuerySpec) : Promise<Array<IStorable>> {
 
-      let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {

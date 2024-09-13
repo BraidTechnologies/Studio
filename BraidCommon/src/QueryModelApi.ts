@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
+import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from './EnrichedQuery';
 
@@ -10,13 +11,11 @@ import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGen
  * @param environment_ - The environment to interact with.
  * @param sessionKey_ - The session key for authentication.
  */
-export class QueryModelApi {
-   private _environment: IEnvironment;
-   private _sessionKey: string;
+export class QueryModelApi extends Api {
+
 
    public constructor(environment_: IEnvironment, sessionKey_: string) {
-      this._environment = environment_;
-      this._sessionKey = sessionKey_;
+      super (environment_, sessionKey_);
    }  
 
    /**
@@ -27,7 +26,7 @@ export class QueryModelApi {
     */
    async queryModelWithEnrichment (query: IEnrichedQuery) : Promise<IEnrichedResponse | undefined> {
 
-      let apiUrl = this._environment.queryModelWithEnrichment() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = undefined;
 
@@ -58,7 +57,7 @@ export class QueryModelApi {
     */
    async generateQuestion (query: IGenerateQuestionQuery) : Promise<IQuestionGenerationResponse | undefined> {
 
-      let apiUrl = this._environment.generateQuestion() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = undefined;
 

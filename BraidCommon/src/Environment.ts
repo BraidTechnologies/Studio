@@ -22,6 +22,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    classifyApi () : string {
       return "http://localhost:7071/api/Classify"; 
    }
+   chunkApi () : string {
+      return "http://localhost:7071/api/Chunk"; 
+   }
    embedApi () : string {
       return "http://localhost:7071/api/Embed"; 
    }
@@ -82,6 +85,9 @@ export class StagingEnvironment implements IEnvironment {
    }
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
+   }
+   chunkApi () : string {
+      return "https://braidapi.azurewebsites.net/api/Chunk"; 
    }
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
@@ -145,6 +151,9 @@ export class ProductionEnvironment implements IEnvironment {
    classifyApi () : string {
       return "https://braidapi.azurewebsites.net/api/Classify"; 
    }
+   chunkApi () : string {
+      return "https://braidapi.azurewebsites.net/api/Chunk"; 
+   }   
    embedApi () : string {
       return "https://braidapi.azurewebsites.net/api/Embed"; 
    }    

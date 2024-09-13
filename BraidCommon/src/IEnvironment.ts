@@ -15,6 +15,7 @@ export interface IEnvironment {
    checkSessionApi () : string;
    summariseApi () : string;
    findThemeApi(): string;
+   chunkApi () : string;   
    classifyApi () : string;
    embedApi() : string;
    suppressSummariseFail(): string;

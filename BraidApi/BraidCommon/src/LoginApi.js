@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const Api_1 = require("./Api");
 /**
  * Represents a class for handling login operations.
  * @constructor
@@ -19,10 +20,9 @@ const axios_1 = require("axios");
  * @param sessionKey_ - The session key for the current login session.
  * @returns A Promise that resolves to a string indicating the login status.
  */
-class LoginApi {
+class LoginApi extends Api_1.Api {
     constructor(environment_, sessionKey_) {
-        this._environment = environment_;
-        this._sessionKey = sessionKey_;
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously logs in using LinkedIn API.
@@ -32,7 +32,7 @@ class LoginApi {
     login() {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.loginWithLinkedInApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.loginWithLinkedInApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {});

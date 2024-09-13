@@ -12,16 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QueryModelApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const Api_1 = require("./Api");
 /**
  * Represents a QueryModelApi class that interacts with the specified environment to query models with enrichment and generate questions.
  * @constructor
  * @param environment_ - The environment to interact with.
  * @param sessionKey_ - The session key for authentication.
  */
-class QueryModelApi {
+class QueryModelApi extends Api_1.Api {
     constructor(environment_, sessionKey_) {
-        this._environment = environment_;
-        this._sessionKey = sessionKey_;
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously queries the model with enrichment data.
@@ -32,7 +32,7 @@ class QueryModelApi {
     queryModelWithEnrichment(query) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.queryModelWithEnrichment() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {
@@ -62,7 +62,7 @@ class QueryModelApi {
     generateQuestion(query) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.generateQuestion() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {

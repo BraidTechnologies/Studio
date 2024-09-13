@@ -23,6 +23,9 @@ class DevelopmentEnvironment {
     classifyApi() {
         return "http://localhost:7071/api/Classify";
     }
+    chunkApi() {
+        return "http://localhost:7071/api/Chunk";
+    }
     embedApi() {
         return "http://localhost:7071/api/Embed";
     }
@@ -84,6 +87,9 @@ class StagingEnvironment {
     classifyApi() {
         return "https://braidapi.azurewebsites.net/api/Classify";
     }
+    chunkApi() {
+        return "https://braidapi.azurewebsites.net/api/Chunk";
+    }
     embedApi() {
         return "https://braidapi.azurewebsites.net/api/Embed";
     }
@@ -144,6 +150,9 @@ class ProductionEnvironment {
     }
     classifyApi() {
         return "https://braidapi.azurewebsites.net/api/Classify";
+    }
+    chunkApi() {
+        return "https://braidapi.azurewebsites.net/api/Chunk";
     }
     embedApi() {
         return "https://braidapi.azurewebsites.net/api/Embed";

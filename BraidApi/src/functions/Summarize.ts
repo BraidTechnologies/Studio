@@ -14,7 +14,7 @@ let minimumTextLength = 64;
 let model = getDefaultModel();
 
 /**
- * Splits the input text into chunks of maximum size defined by 'maxChunkSize'.
+ * Splits the input text into chunks of maximum size defined by the model
  * 
  * @param text The text to be chunked.
  * @returns An array of strings, each representing a chunk of the input text.

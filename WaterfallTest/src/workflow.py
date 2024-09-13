@@ -26,6 +26,7 @@ class PipelineItem(Freezable):
         '''
         self.path = None
         self.text = None
+        self.chunk = 0
         self.summary = None
         self.embedding = None
         self.embedding_as_float = None

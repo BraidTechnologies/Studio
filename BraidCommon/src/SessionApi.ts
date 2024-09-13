@@ -1,16 +1,15 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
+import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 
 
-export class SessionApi {
-   private _environment: IEnvironment;
-   private _sessionKey: string;
+export class SessionApi extends Api {
 
-   public constructor(environemnt_: IEnvironment, sessionKey_: string) {
-      this._environment = environemnt_;
-      this._sessionKey = sessionKey_;
+
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
    }  
 
    /**
@@ -20,7 +19,7 @@ export class SessionApi {
     */
    async checkSessionKey () : Promise<string> {
 
-      let apiUrl = this._environment.checkSessionApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.checkSessionApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {

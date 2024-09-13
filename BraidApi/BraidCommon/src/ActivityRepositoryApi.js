@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActivityRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const Api_1 = require("./Api");
 /**
  * Represents an API for activities.
  *
@@ -20,10 +21,9 @@ const axios_1 = require("axios");
  *
  * @method save - Saves a record to the activity API.
  */
-class ActivityRepostoryApi {
-    constructor(environemnt_, sessionKey_) {
-        this._environment = environemnt_;
-        this._sessionKey = sessionKey_;
+class ActivityRepostoryApi extends Api_1.Api {
+    constructor(environment_, sessionKey_) {
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously saves a record to the activity repository API.
@@ -34,7 +34,7 @@ class ActivityRepostoryApi {
     save(record) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.saveActivityApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
@@ -64,7 +64,7 @@ class ActivityRepostoryApi {
     remove(recordId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
@@ -93,7 +93,7 @@ class ActivityRepostoryApi {
     recent(querySpec) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, querySpec);

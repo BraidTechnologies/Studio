@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
+import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrichedChunkSummary, IRelevantEnrichedChunk } from './EnrichedChunk';
 
@@ -8,13 +9,10 @@ import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrich
 /**
  * Class representing an API for finding enriched chunks.
  */
-export class FindEnrichedChunkApi {
-   private _environment: IEnvironment;
-   private _sessionKey: string;
+export class FindEnrichedChunkApi extends Api {
 
    public constructor(environment_: IEnvironment, sessionKey_: string) {
-      this._environment = environment_;
-      this._sessionKey = sessionKey_;
+      super (environment_, sessionKey_);
    }  
 
 
@@ -26,7 +24,7 @@ export class FindEnrichedChunkApi {
     */
    async findChunkFromUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<IEnrichedChunkSummary | undefined> {
 
-      let apiUrl = this._environment.findEnrichedChunkFromUrl() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.findEnrichedChunkFromUrl() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = undefined;
 
@@ -57,7 +55,7 @@ export class FindEnrichedChunkApi {
     */
    async findRelevantChunksFromUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<Array<IRelevantEnrichedChunk>> {
 
-      let apiUrl = this._environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = new Array<IRelevantEnrichedChunk> ();
 
@@ -88,7 +86,7 @@ export class FindEnrichedChunkApi {
     */
    async findRelevantChunksFromSummary (urlQuery: IChunkQueryRelevantToSummarySpec) : Promise<Array<IRelevantEnrichedChunk>> {
 
-      let apiUrl = this._environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = new Array<IRelevantEnrichedChunk> ();      
 
