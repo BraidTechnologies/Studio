@@ -18,7 +18,7 @@ let personaPrompt = "You are an AI assistant helping an application developer un
 let enrichmentDocumentPrompt = "You will be provided with a question about generative AI. Write a 50 word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'. \n\n ###The Question:";
 let question = "What are the main user interface considerations for building an application using an LLM?"
 
-let questionGenerationPrompt = "You will be provided with a short summary of article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might ask as a follow up to reading the article. \n\n ###The Summary:";
+let questionGenerationPrompt = "You will be provided with a short summary of article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might after they have read the article. \n\n ###The Summary of the Article:";
 let summary = "Financial services will adopt generative AI, powered by large language models (LLMs), faster than expected. LLMs can create new content by training on vast amounts of unstructured data, with unlimited computational power. This transformation has the potential to revolutionize the financial services market, going beyond traditional AI/ML capabilities.";
 
 let priorQuestions = ["How does an LLM work?", "What are LLMs bad at?"];
