@@ -322,6 +322,7 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
         client = OpenAI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
     elif config.apiType == "Gemini":
         client = genai.GenerativeModel("gemini-1.5-flash")
+        genai.configure(api_key=config.apiKey)
     else:
         raise ValueError("Unknown API type")
     

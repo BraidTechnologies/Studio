@@ -116,9 +116,11 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
         logger.error(f"Error: {e}")
         raise
 
+# Add retry logic to call Gemini API with retry decorator
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(Exception))
 def call_gemini_chat(client: genai.GenerativeModel, messages: List[Dict], config: ApiConfiguration, logger: logging.Logger) -> str:
     """
-    Calls the Gemini API for chat completion.
+    Calls the Gemini API for chat completion with retry logic.
 
     Args:
         client (GenerativeModel): The Gemini client instance.

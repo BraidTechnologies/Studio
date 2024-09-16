@@ -46,6 +46,7 @@ class PersonaStrategy(ABC):
                 ]
             logger.info("Generating questions with the following prompt using ChatGPT 4.0 (Azure): %s", prompt)
             response = call_openai_chat(client, messages, config, logger)
+            
         elif config.apiType == "Gemini":
             messages = [
                 {"role": "model", "parts": prompt},

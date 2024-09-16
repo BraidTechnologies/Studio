@@ -3,8 +3,8 @@
 # Standard library imports
 import os
 
-azure = False    
-gemini = True              
+azure = True    
+gemini = False              
 
 if azure:
    API_TYPE = "Azure" 
