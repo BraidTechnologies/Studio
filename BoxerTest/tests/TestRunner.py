@@ -16,7 +16,7 @@ sys.path.insert(0, parent_dir)
 
 # Import necessary modules and classes for running the tests
 # from BoxerDataTest_v2 import run_tests, call_openai_chat
-from BoxerDataTest_v3 import run_tests, call_openai_chat, call_gemini_chat
+from BoxerDataTest_v3 import run_tests
 from common.ApiConfiguration import ApiConfiguration
 from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
