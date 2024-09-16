@@ -9,8 +9,7 @@ from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
 import datetime
-import google.generativeai as genai
-from google.generativeai import types  # For generation config, etc.
+
 
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
@@ -78,6 +77,51 @@ class TestResult:
         self.follow_up: str = ""
         self.follow_up_on_topic: str = ""
 
+# Function to call the OpenAI API with retry logic
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
+    """
+    Retries the OpenAI chat API call with exponential backoff and retry logic.
+
+    :param client: An instance of the AzureOpenAI class.
+    :type client: AzureOpenAI
+    :param messages: A list of dictionaries representing the messages to be sent to the API.
+    :type messages: List[Dict[str, str]]
+    :param config: An instance of the ApiConfiguration class.
+    :type config: ApiConfiguration
+    :param logger: An instance of the logging.Logger class.
+    :type logger: logging.Logger
+    :return: The content of the first choice in the API response.
+    :rtype: str
+    :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
+    :raises OpenAIError: If there is an error with the OpenAI API.
+    :raises APIConnectionError: If there is an error with the API connection.
+    """
+    try:
+        response = client.chat.completions.create(
+            model=config.azureDeploymentName,
+            messages=messages,
+            temperature=0.7,
+            max_tokens=config.maxTokens,
+            top_p=0.0,
+            frequency_penalty=0,
+            presence_penalty=0,
+            timeout=config.openAiRequestTimeout,
+        )
+        content = response.choices[0].message.content
+        finish_reason = response.choices[0].finish_reason
+
+        if finish_reason not in {"stop", "length", ""}:
+            logger.warning("Unexpected stop reason: %s", finish_reason)
+            logger.warning("Content: %s", content)
+            logger.warning("Consider increasing max tokens and retrying.")
+            raise RuntimeError("Unexpected finish reason in API response.")
+
+        return content
+
+    except (OpenAIError, APIConnectionError) as e:
+        logger.error(f"Error: {e}")
+        raise
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
@@ -138,65 +182,34 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return dot_product / (a_norm * b_norm)
 
 # Function to generate enriched questions using OpenAI API
-# @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-# def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-#     """
-#     Generates an enriched question using the OpenAI API.
-
-#     Args:
-#         client (AzureOpenAI): The OpenAI client instance.
-#         config (ApiConfiguration): The API configuration instance.
-#         question (str): The question to be enriched.
-#         logger (logging.Logger): The logger instance.
-
-#     Returns:
-#         str: The enriched question.
-
-#     Raises:
-#         BadRequestError: If the API request fails.
-#     """
-#     messages = [
-#         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
-#         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
-#     ]
-#     logger.info("Making API request to OpenAI...")
-#     logger.info("Request payload: %s", messages)
-
-#     response = call_openai_chat(client, messages, config, logger)
-#     logger.info("API response received: %s", response)
-
-#     return response
-
-def generate_enriched_question(client: genai.GenerativeModel, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     """
-    Generates an enriched question using the Gemini API.
+    Generates an enriched question using the OpenAI API.
 
     Args:
-        client (GenerativeModel): The Gemini client instance.
+        client (AzureOpenAI): The OpenAI client instance.
         config (ApiConfiguration): The API configuration instance.
         question (str): The question to be enriched.
-        logger (Logger): The logger instance.
+        logger (logging.Logger): The logger instance.
 
     Returns:
-        str: The enriched question content.
+        str: The enriched question.
 
     Raises:
-        Exception: If there is any error with the Gemini API.
+        BadRequestError: If the API request fails.
     """
-    try:
-        logger.info("Generating content with Gemini...")
-        response = client.generate_content(
-            question,
-            generation_config=types.GenerationConfig(
-                max_output_tokens=config.maxTokens,
-                temperature=0.7
-            )
-        )
-        return response.text
+    messages = [
+        {"role": "system", "content": OPENAI_PERSONA_PROMPT},
+        {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
+    ]
+    logger.info("Making API request to OpenAI...")
+    logger.info("Request payload: %s", messages)
 
-    except Exception as e:
-        logger.error(f"Error generating content with Gemini: {e}")
-        raise
+    response = call_openai_chat(client, messages, config, logger)
+    logger.info("API response received: %s", response)
+
+    return response
 
 def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
     """
@@ -314,18 +327,26 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
         logger.error(f"Error saving results: {e}")
         raise
 
+
+
 # Main test-running function
-def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, questions=None, persona_strategy=None):
-    if config.apiType == "Azure":
-        client = AzureOpenAI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
-    elif config.apiType == "open_ai":
-        client = OpenAI(api_key=config.apiKey, api_version=config.apiVersion, endpoint=config.resourceEndpoint)
-    elif config.apiType == "Gemini":
-        client = genai.GenerativeModel("gemini-1.5-flash")
-        genai.configure(api_key=config.apiKey)
-    else:
-        raise ValueError("Unknown API type")
-    
+def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, num_questions: int = 100, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
+    """
+    Runs tests using the provided configuration, test destination directory, source directory, and questions.
+
+    Args:
+        config (ApiConfiguration): The configuration for the API.
+        test_destination_dir (str): The path to the directory where the test results will be saved.
+        source_dir (str): The directory containing the source files.
+        num_questions (int): The number of questions to generate using the persona strategy.
+        questions (List[str]): A list of questions to be processed.
+        persona_strategy (PersonaStrategy): The persona strategy to use for generating questions.
+
+    Returns:
+        None
+    """
+    client = configure_openai_for_azure(config)
+
     if not test_destination_dir:
         logger.error("Test data folder not provided")
         raise ValueError("Test destination directory not provided")
@@ -342,4 +363,3 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     processed_question_chunks = read_processed_chunks(source_dir)
     question_results = process_questions(client, config, questions, processed_question_chunks, logger)
     save_results(test_destination_dir, question_results, test_mode)
-
