@@ -13,10 +13,8 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 from common.ApiConfiguration import ApiConfiguration
-from common.common_functions import get_embedding
+from common.common_functions import get_embedding, call_openai_chat, call_gemini_chat
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
-from BoxerDataTest_v3 import call_openai_chat, call_gemini_chat
-
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -41,9 +39,18 @@ class PersonaStrategy(ABC):
         ]
         
         if config.apiType == "Azure":
+            
+            messages = [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
+                ]
             logger.info("Generating questions with the following prompt using ChatGPT 4.0 (Azure): %s", prompt)
             response = call_openai_chat(client, messages, config, logger)
         elif config.apiType == "Gemini":
+            messages = [
+                {"role": "model", "parts": prompt},
+                {"role": "user", "parts": f"Generate {num_questions} questions about this topic."},
+                ]
             logger.info("Generating questions with the following prompt using Gemini: %s", prompt)
             response = call_gemini_chat(client, messages, config, logger)
         else:
