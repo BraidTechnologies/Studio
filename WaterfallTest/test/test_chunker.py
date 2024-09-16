@@ -76,6 +76,33 @@ def test_long (test_output_dir):
        i = i + 1
 
     enriched_text.text = long_text
-    chunks : list[PipelineItem] = chunker.chunk (enriched_text)  
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text)  
 
-    assert len(chunks) > 1
+    assert len(chunks_overlapped) > 1
+
+def test_long_with_overlap (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+
+    max = 15
+    i = 0
+    long_text = "this is going to be long "
+    while i < max:
+       long_text = long_text + long_text
+       i = i + 1
+
+    enriched_text.text = long_text
+    chunks : list[PipelineItem] = chunker.chunk (enriched_text, 0)      
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 1024)  
+
+    assert len(chunks_overlapped) > len (chunks)

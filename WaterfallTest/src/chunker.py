@@ -34,12 +34,13 @@ class Chunker (PipelineStep):
         '''
         super(Chunker, self).__init__(output_location)
 
-    def chunk(self, pipeline_item: PipelineItem) -> list[PipelineItem]:
+    def chunk(self, pipeline_item: PipelineItem, overlapWords: int) -> list[PipelineItem]:
         '''
         Chunk a text string into smaller parts and return a list of PipelineItem objects representing each chunk. Uses an external API to perform the chunking process. 
 
         Parameters:
             - pipeline_item: PipelineItem - The item to be chunked.
+            - overlapWords - how many words to use to overlap chunks. 0 = no overlap. 
 
         Returns:
             - List of PipelineItem - List of PipelineItem objects representing the chunks.
@@ -56,7 +57,8 @@ class Chunker (PipelineStep):
             SESSION_KEY}'
         input_json = {
             'data': {
-                'text': pipeline_item.text
+                'text': pipeline_item.text,
+                'overlapWords' : overlapWords
             }
         }
 

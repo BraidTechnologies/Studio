@@ -11,17 +11,19 @@ import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
 import { isSessionValid, sessionFailResponse } from "./Utility";
 
 let minimumTextLength = 64;
+let defaultOverlapWords = 50
 let model = getDefaultModel();
 
 /**
  * Splits the input text into chunks of maximum size defined by the model
  * 
  * @param text The text to be chunked.
+ * @param overlapwords - how may words to put in overlap of chunks
  * @returns An array of strings, each representing a chunk of the input text.
  */
-function chunkText(text: string): Array<string> {
+function chunkText(text: string, overlapWords: number): Array<string> {
 
-   let chunks = model.chunkText(text);
+   let chunks = model.chunkText(text, overlapWords);
 
    return chunks;
 }
@@ -83,7 +85,7 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
 export async function recursiveSummarize(text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
-   let chunks = chunkText(text);
+   let chunks = chunkText(text, defaultOverlapWords);
    let summaries = new Array<string>();
 
    let recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
