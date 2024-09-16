@@ -1,6 +1,7 @@
 {
    "version": "0.2.0",
    "configurations": [      
+
       {
          "name": "Attach to Node Functions",
          "type": "node",
@@ -18,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/**/chunk.test.ts"
+           "${workspaceFolder}/test/**/model.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

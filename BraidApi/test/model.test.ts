@@ -54,7 +54,7 @@ describe("Model", async function () {
       let model = getModel(EModel.kSmall);
       let text = "small text";
 
-      expect (model.chunkText(text).length).toBe (1);
+      expect (model.chunkText(text, undefined).length).toBe (1);
 
    });   
 
@@ -62,11 +62,25 @@ describe("Model", async function () {
       
       let model = getModel(EModel.kSmall);
 
-      let text = "small text";
+      let text = "small text ";
       for (let i = 0; i < 12; i++)
           text = text + text;
 
-      expect (model.chunkText(text).length > 1).toBe (true) ;   
+      expect (model.chunkText(text, undefined).length > 1).toBe (true) ;   
+   });  
+
+   it("Needs to chunk large text with overlaps", async function () {
+      
+      let model = getModel(EModel.kSmall);
+
+      let text = "small text ";
+      for (let i = 0; i < 12; i++)
+          text = text + text;
+
+      let baseLength = model.chunkText(text, undefined).length;
+      let overlappedLength = model.chunkText(text, 2048).length;
+
+      expect (overlappedLength > baseLength).toBe (true) ;   
    });  
 
 });

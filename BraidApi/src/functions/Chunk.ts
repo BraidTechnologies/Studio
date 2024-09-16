@@ -17,9 +17,9 @@ let model = getDefaultModel();
  * @param text The text to be chunked.
  * @returns An array of strings, each representing a chunk of the input text.
  */
-function chunkText(text: string): Array<string> {
+function chunkText(text: string, overlapWords: number | undefined): Array<string> {
 
-   let chunks = model.chunkText(text);
+   let chunks = model.chunkText(text, overlapWords);
 
    return chunks;
 }
@@ -35,6 +35,7 @@ function chunkText(text: string): Array<string> {
 export async function chunk(request: HttpRequest, context: InvocationContext): Promise < HttpResponseInit > {
 
    let text: string | undefined = undefined;
+   let overlapWords : number | undefined = undefined;
    let chunks = new Array<string>();
 
    if (isSessionValid(request, context)) {
@@ -43,9 +44,10 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
          let jsonRequest = await request.json();
 
          text = (jsonRequest as any)?.data?.text;
+         overlapWords = (jsonRequest as any)?.data?.overlapWords;         
 
          if (text)
-            chunks = chunkText(text);
+            chunks = chunkText(text, overlapWords);
 
          return {
             status: 200, // Ok
