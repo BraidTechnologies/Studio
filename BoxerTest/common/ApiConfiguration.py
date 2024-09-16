@@ -3,13 +3,6 @@
 # Standard library imports
 import os
 
-'''
-import os
-genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
-
-'''
-
-
 azure = False    
 gemini = True              
 
@@ -33,6 +26,12 @@ else:
 
 class ApiConfiguration:
     def __init__(self) -> None:
+        if azure:
+            self.apiType = "Azure"
+        elif gemini:
+            self.apiType = "Gemini"
+        else:
+            self.apiType = "open_ai"
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
