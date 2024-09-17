@@ -33,6 +33,7 @@ NUM_QUESTIONS = 100
 OPENAI_PERSONA_PROMPT =  "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
 ENRICHMENT_PROMPT = "You will be provided with a question about building applications that use generative AI technology. Write a 50 word summary of an article that would be a great answer to the question. Consider enriching the question with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n"
 FOLLOW_UP_PROMPT =  "You will be provided with a summary of an article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might ask as a follow up to reading the article."
+FOLLOW_UP_ON_TOPIC_PROMPT = "You are an AI assistant helping a team of developers understand AI. You explain complex concepts in simple language. Respond 'yes' if the follow-up question is about AI, otherwise respond 'no'."
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -211,6 +212,37 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
     response = call_openai_chat(client, messages, config, logger)
     logger.info("API response received: %s", response)
 
+    return response
+
+def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+    messages = [
+        {"role": "system", "content": OPENAI_PERSONA_PROMPT},
+        {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
+    ]
+    logger.info("Making API request to OpenAI...")
+    logger.info("Request payload: %s", messages)
+
+    response = call_openai_chat(client, messages, config, logger)
+    logger.info("API response received: %s", response)
+
+    return response
+
+
+def generate_follow_up_question(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: logging.Logger) -> str:
+    messages = [
+        {"role": "system", "content": FOLLOW_UP_PROMPT},
+        {"role": "user", "content": text},
+    ]
+    response = call_openai_chat(client, messages, config, logger)
+    return response
+
+
+def assess_follow_up_on_topic(client: AzureOpenAI, config: ApiConfiguration, follow_up: str, logger: logging.Logger) -> str:
+    messages = [
+        {"role": "system", "content": FOLLOW_UP_ON_TOPIC_PROMPT},
+        {"role": "user", "content": follow_up},
+    ]
+    response = call_openai_chat(client, messages, config, logger)
     return response
 
 def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
