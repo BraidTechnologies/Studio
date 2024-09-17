@@ -75,8 +75,6 @@ class TestResult:
         self.enriched_question_summary: str = ""
         self.hit: bool = False
         self.hit_relevance: float = 0.0
-        self.follow_up: str = ""
-        self.follow_up_on_topic: str = ""
         self.follow_up: str = ""  # Adding followUp field
         self.follow_up_on_topic: str = ""  # Adding followUpOnTopic field
 
@@ -264,14 +262,16 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
     for question in questions:
         question_result = TestResult()
         question_result.question = question
-        question_result.enriched_question_summary = generate_enriched_question(client, config, question, logger)
-        embedding = get_text_embedding(client, config, question_result.enriched_question_summary, logger)
+        question_result.enriched_question_summary = generate_enriched_question(client, config, question, logger)  # Generate enriched question summary
+        
+        embedding = get_text_embedding(client, config, question_result.enriched_question_summary, logger)  # Get embedding for the enriched question
 
         best_hit_relevance = 0  # To track the highest similarity score
         best_hit_summary = None  # To track the summary corresponding to the highest similarity
 
+        # Iterate through the processed chunks to find the best hit
         for chunk in processed_question_chunks:
-            if chunk and isinstance(chunk, dict) :  
+            if chunk and isinstance(chunk, dict):
                 ada_embedding = chunk.get("ada_v2")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
@@ -287,11 +287,15 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
         question_result.hit_relevance = best_hit_relevance
         question_result.hit_summary = best_hit_summary
 
+        # Now, generate the follow-up question if a best hit summary exists
+        if question_result.hit_summary:
+            question_result.follow_up = generate_follow_up_question(client, config, question_result.hit_summary, logger)  # Generate follow-up question
+            question_result.follow_up_on_topic = assess_follow_up_on_topic(client, config, question_result.follow_up, logger)  # Assess if follow-up question is on-topic
+
         question_results.append(question_result)
 
     logger.debug("Total tests processed: %s", len(question_results))
     return question_results
-
 
 # Function to read processed chunks from the source directory
 def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
@@ -327,7 +331,6 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
 
 # Function to save the results and generated questions
 def save_results(test_destination_dir: str, question_results: List[TestResult], test_mode: str) -> None:
-    # Define the output structure with the specified columns
     """
     Saves the test results to a JSON file in the specified destination directory.
 
@@ -345,7 +348,9 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
             "enriched_question": result.enriched_question_summary, 
             "hit": result.hit,
             "summary": result.hit_summary, 
-            "hitRelevance": result.hit_relevance,  
+            "hitRelevance": result.hit_relevance,
+            "follow_up": result.follow_up,  # Add follow_up to the output
+            "follow_up_on_topic": result.follow_up_on_topic  # Add follow_up_on_topic to the output
         }
         for result in question_results
     ]
@@ -360,8 +365,6 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
     except IOError as e:
         logger.error(f"Error saving results: {e}")
         raise
-
-
 
 # Main test-running function
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, num_questions: int = 100, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
