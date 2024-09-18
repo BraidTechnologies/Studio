@@ -72,7 +72,7 @@ async function saveActivityDb(record: IStorable, context: InvocationContext): Pr
 
       document.partition = defaultPartitionKey; // Dont need real partitions until 10 GB ... 
 
-      axios.post('https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs',
+      axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/',
          document,
          {
             headers: headers

@@ -51,7 +51,7 @@ export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: 
 export function activityToken(verb: string, time: string, key: string) {
 
    //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/BraidLms/colls/Activity", time,
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Activity", time,
       key);
 }
 
@@ -77,7 +77,7 @@ export function makePostActivityToken(time: string, key: string) {
  */
 export function makeDeleteActivityToken(time: string, key: string, id: string) {
 
-   return getAuthorizationTokenUsingMasterKey("delete", "docs", "dbs/BraidLms/colls/Activity/docs/" + id,
+   return getAuthorizationTokenUsingMasterKey("delete", "docs", "dbs/Studio/colls/Activity/docs/" + id,
       time,
       key);
 }

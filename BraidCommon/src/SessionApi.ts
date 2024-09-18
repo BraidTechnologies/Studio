@@ -7,7 +7,12 @@ import { IEnvironment } from "./IEnvironment";
 
 export class SessionApi extends Api {
 
-
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
    public constructor(environment_: IEnvironment, sessionKey_: string) {
       super (environment_, sessionKey_);
    }  

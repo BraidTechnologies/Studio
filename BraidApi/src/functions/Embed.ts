@@ -31,7 +31,7 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
    });
 
 
-   let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlmse/embeddings?api-version=2024-02-01', {
+   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
       input: text,
    },
       {

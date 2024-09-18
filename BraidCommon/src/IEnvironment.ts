@@ -30,6 +30,7 @@ export interface IEnvironment {
    findEnrichedChunkFromUrl(): string;   
    queryModelWithEnrichment(): string;
    generateQuestion(): string;   
+   generateFluidToken(): string;
 }
 
 

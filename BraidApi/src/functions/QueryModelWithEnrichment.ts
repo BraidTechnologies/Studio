@@ -43,7 +43,7 @@ async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
    fullPrompt = fullPrompt.concat(query.history);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
+   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {
@@ -59,7 +59,7 @@ async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
    enrichmentPrompt = enrichmentPrompt.concat(query.history);
    enrichmentPrompt.push(enrichedElement);
 
-   let enrichmentPromise = axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
+   let enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-06-01', {
       messages: enrichmentPrompt,
    },
       {

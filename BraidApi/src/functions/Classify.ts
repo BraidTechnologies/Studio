@@ -44,7 +44,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       }
    });
 
-   let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
+   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',

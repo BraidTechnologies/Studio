@@ -64,6 +64,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    generateQuestion(): string{
       return "http://localhost:7071/api/GenerateQuestion";       
    }      
+   generateFluidToken(): string {
+      return "http://localhost:7071/api/GenerateFluidToken";        
+   }   
 }
 
 /**
@@ -127,7 +130,10 @@ export class StagingEnvironment implements IEnvironment {
    }   
    generateQuestion(): string{
       return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
-   }      
+   }     
+   generateFluidToken(): string {
+      return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
+   }    
 }
 
 /**
@@ -193,4 +199,7 @@ export class ProductionEnvironment implements IEnvironment {
    generateQuestion(): string{
       return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
    }   
+   generateFluidToken(): string {
+      return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
+   }
 }

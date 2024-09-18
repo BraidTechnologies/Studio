@@ -16,12 +16,20 @@ const Api_1 = require("./Api");
 /**
  * Represents an API for activities.
  *
- * @param {EEnvironment} environemnt_ - The environment to use for saving activities.
+ * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  *
  * @method save - Saves a record to the activity API.
+ * @method remove - removes a record
+ * @method recent - return a list of recent activities
  */
 class ActivityRepostoryApi extends Api_1.Api {
+    /**
+     * Initializes a new instance of the class with the provided environment and session key.
+     *
+     * @param environment_ The environment settings to be used.
+     * @param sessionKey_ The session key for authentication.
+     */
     constructor(environment_, sessionKey_) {
         super(environment_, sessionKey_);
     }

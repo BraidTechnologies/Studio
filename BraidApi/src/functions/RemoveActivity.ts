@@ -71,7 +71,7 @@ async function removeActivityDb(messageId: string, context: InvocationContext): 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makeDeleteActivityToken(time, dbkey, messageId);
       let headers = makeDeleteActivityHeader(key, time, defaultPartitionKey);
-      let deletePath = 'https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs/' + messageId;
+      let deletePath = 'https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/' + messageId;
 
       axios.delete(deletePath,
          {

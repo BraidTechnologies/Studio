@@ -65,6 +65,9 @@ class DevelopmentEnvironment {
     generateQuestion() {
         return "http://localhost:7071/api/GenerateQuestion";
     }
+    generateFluidToken() {
+        return "http://localhost:7071/api/GenerateFluidToken";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -129,6 +132,9 @@ class StagingEnvironment {
     generateQuestion() {
         return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
     }
+    generateFluidToken() {
+        return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -192,6 +198,9 @@ class ProductionEnvironment {
     }
     generateQuestion() {
         return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
+    }
+    generateFluidToken() {
+        return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

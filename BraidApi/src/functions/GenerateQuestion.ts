@@ -29,7 +29,7 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
    fullPrompt.push(systemPromptElement);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlms/chat/completions?api-version=2024-02-01', {
+   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {

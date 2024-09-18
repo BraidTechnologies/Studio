@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SessionApi = void 0;
+exports.FluidApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
 const Api_1 = require("./Api");
-class SessionApi extends Api_1.Api {
+class FluidApi extends Api_1.Api {
     /**
      * Initializes a new instance of the class with the provided environment and session key.
      *
@@ -24,31 +24,35 @@ class SessionApi extends Api_1.Api {
         super(environment_, sessionKey_);
     }
     /**
-     * Asynchronously checks the validity of a session key by sending a POST request to the session API endpoint.
+     * Asynchronously generates a token using the provided query parameters.
      *
-     * @returns A Promise that resolves to a boolean value indicating the validity of the session key.
+     * @param query - The request object containing documentId, userId, and userName.
+     * @returns A Promise that resolves to a string if successful, otherwise undefined.
      */
-    checkSessionKey() {
+    generateToken(query) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.checkSessionApi() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.generateFluidToken() + "?session=" + this.sessionKey.toString();
             var response;
+            let empty = undefined;
             try {
-                response = yield axios_1.default.post(apiUrl, {});
+                response = yield axios_1.default.post(apiUrl, {
+                    data: query
+                });
                 if (response.status === 200) {
                     return response.data;
                 }
                 else {
                     console.error("Error, status: " + response.status);
-                    return "";
+                    return empty;
                 }
             }
             catch (e) {
                 console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return "";
+                return empty;
             }
         });
     }
 }
-exports.SessionApi = SessionApi;
-//# sourceMappingURL=SessionApi.js.map
+exports.FluidApi = FluidApi;
+//# sourceMappingURL=FluidApi.js.map

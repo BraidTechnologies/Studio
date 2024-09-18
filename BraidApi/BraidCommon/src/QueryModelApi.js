@@ -20,6 +20,12 @@ const Api_1 = require("./Api");
  * @param sessionKey_ - The session key for authentication.
  */
 class QueryModelApi extends Api_1.Api {
+    /**
+     * Initializes a new instance of the class with the provided environment and session key.
+     *
+     * @param environment_ The environment settings to be used.
+     * @param sessionKey_ The session key for authentication.
+     */
     constructor(environment_, sessionKey_) {
         super(environment_, sessionKey_);
     }
