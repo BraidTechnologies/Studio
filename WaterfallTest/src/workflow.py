@@ -95,7 +95,7 @@ class PipelineSpec(Freezable):
 
     def __init__(self):
         '''
-        Initialize the Theme object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the PipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
         '''
         self.pages = 1  # default is to pull back one page
         self.clusters = 2

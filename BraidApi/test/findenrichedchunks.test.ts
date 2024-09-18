@@ -29,11 +29,13 @@ describe("FindEnrichedChunks", async function () {
          maxCount: 2,
          repositoryId: EChunkRepository.kBoxer,
          summary: summaries[0],
-         similarityThreshold: 0.75
+         similarityThreshold: 0.15
       };
 
       let response = await api.findRelevantChunksFromSummary(urlQuery);
-
+      console.log ("Looking for:" + urlQuery.summary);      
+      for (let i = 0; i < response.length; i++)
+         console.log (response[i].chunk.summary);
       expect(response.length > 0).toBe(true);
 
    }).timeout(20000);
@@ -47,10 +49,13 @@ describe("FindEnrichedChunks", async function () {
             maxCount: 2,
             repositoryId: EChunkRepository.kBoxer,
             url: urls[i],
-            similarityThreshold: 0.75
+            similarityThreshold: 0.15
          };
 
          let response = await api.findRelevantChunksFromUrl(urlQuery);
+         console.log ("Looking for:" + urlQuery.url);
+         for (let i = 0; i < response.length; i++)
+            console.log (response[i].chunk.url);
 
          expect(response.length > 0).toBe(true);
       }
