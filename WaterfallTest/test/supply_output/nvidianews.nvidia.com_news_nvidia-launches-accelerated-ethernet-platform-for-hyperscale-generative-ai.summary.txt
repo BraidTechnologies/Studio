@@ -1,1 +1,0 @@
-"NVIDIA has launched the Spectrum-X platform, which combines its Spectrum-4 Ethernet switch and BlueField-3 DPU to enhance performance in Ethernet-based AI clouds. The platform is already being adopted by major cloud service providers. The company is expanding its offerings to focus on data center-scale products and the creation of the industrial metaverse."

@@ -1,1 +1,0 @@
-"The Deloitte AI Institute's Generative AI Dossier highlights business use cases for deploying Generative AI. The report outlines 60 use cases across industries such as consumer, energy, financial services, government, healthcare, and technology. Deloitte has launched a Generative AI practice and formed alliances with Google Cloud, AWS, and NVIDIA to develop AI applications."

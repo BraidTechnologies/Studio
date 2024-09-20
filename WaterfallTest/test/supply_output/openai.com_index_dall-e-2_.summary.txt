@@ -1,1 +1,0 @@
-"DALL·E 2 is an AI system that can create realistic images from text descriptions. It improves on DALL·E 1 in terms of caption matching and photorealism. It focuses on safety by limiting violent, hate, or adult images, preventing photorealistic faces, and implementing content policy restrictions to prevent misuse. The goal is to empower creativity and understand AI perception."

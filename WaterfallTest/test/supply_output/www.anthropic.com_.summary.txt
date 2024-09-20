@@ -1,1 +1,0 @@
-"Anthropic is an AI safety and research company based in San Francisco. They have developed Claude 3.5 Sonnet, their most intelligent AI model. They offer an API for building with Claude and aim to create reliable and beneficial AI systems. They have open roles and provide support to their customers."
