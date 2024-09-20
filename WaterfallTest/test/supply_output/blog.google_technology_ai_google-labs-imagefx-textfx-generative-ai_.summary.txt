@@ -1,1 +1,0 @@
-"Google Labs has launched two new AI tools, ImageFX and MusicFX, which allow users to generate unique images and music. The tools have been updated with features to improve usability and user safety, such as safeguards against offensive content and filters to protect privacy. These updates can be explored on the labs.google website."

@@ -47,5 +47,5 @@ __blobstorage__
 __queuestorage__
 __azurite_db*__.json
 
-WaterfallTest/test/supply_results
-WaterfallTest/test/demand_results
+WaterfallTest/test/supply_output
+WaterfallTest/test/demand_output

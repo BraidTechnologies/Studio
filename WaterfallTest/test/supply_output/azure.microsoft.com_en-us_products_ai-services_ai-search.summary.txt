@@ -1,1 +1,0 @@
-"The text is about Azure AI Search, a service provided by Microsoft Azure. It contains information about various features and solutions offered by Azure. The text also mentions customer stories and the availability of Azure AI Search in different countries. It provides details on optimizing costs, support, and resources available for developers."

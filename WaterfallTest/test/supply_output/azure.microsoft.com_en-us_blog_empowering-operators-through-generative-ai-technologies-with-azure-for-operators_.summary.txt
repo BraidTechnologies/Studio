@@ -1,1 +1,0 @@
-"The text highlights the use of generative AI technologies, specifically with Microsoft Azure, to benefit operators. It mentions the development of various tools and features that assist operators in data analysis, network management, and proactive issue prevention. The text also emphasizes partnerships and resources for building AI applications with Azure."

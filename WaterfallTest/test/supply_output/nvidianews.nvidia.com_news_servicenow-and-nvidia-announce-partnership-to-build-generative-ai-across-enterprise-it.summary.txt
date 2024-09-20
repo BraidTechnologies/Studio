@@ -1,1 +1,0 @@
-"ServiceNow and NVIDIA have teamed up to develop generative AI capabilities for enterprise IT, using NVIDIA software and infrastructure. Their partnership aims to improve workflow automation, increase productivity, and simplify processes. They will explore various use cases, including virtual assistants and chatbots, to enhance customer service and employee experiences."

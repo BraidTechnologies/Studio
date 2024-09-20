@@ -1,1 +1,0 @@
-"NVIDIA released the H100 Tensor Core GPU for generative AI training and inference. Cloud providers like Oracle, AWS, and Azure will offer the H100 GPUs, and Meta has deployed them in their Grand Teton AI supercomputer. OpenAI and other companies are early adopters. Pricing and details are available through NVIDIA partners."
