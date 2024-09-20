@@ -1,0 +1,1 @@
+"The text is a message from Bloomberg indicating that they have detected unusual activity from the user's computer network. The user is asked to verify that they are not a robot by clicking a box. It also provides information on why this might have happened and offers support for any inquiries related to the message."

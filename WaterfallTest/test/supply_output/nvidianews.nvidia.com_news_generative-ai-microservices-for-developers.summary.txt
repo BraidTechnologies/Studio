@@ -1,0 +1,1 @@
+"NVIDIA has launched generative AI microservices optimized for their GPUs, allowing developers to create and deploy custom applications. The microservices have been adopted by leading application platform providers and reduce deployment time from weeks to minutes. NVIDIA is also releasing additional microservices to accelerate AI development and customization."

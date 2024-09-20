@@ -1,0 +1,1 @@
+"AWS and NVIDIA are working together to advance generative AI innovation by offering secure infrastructure, software, and services. The collaboration aims to enable faster and more cost-effective real-time inference on large language models and accelerate generative AI capabilities. They are also partnering to advance AI innovation in healthcare and life sciences."

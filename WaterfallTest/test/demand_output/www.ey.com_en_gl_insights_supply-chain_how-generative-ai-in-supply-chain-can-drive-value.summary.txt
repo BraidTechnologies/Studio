@@ -1,0 +1,1 @@
+"Using generative AI in supply chains can improve efficiency, reduce costs, and enhance decision-making. It analyzes data to identify patterns and make predictions, optimizing processes and allowing quick response to market demand. However, there are limitations and risks that need to be mitigated, such as data quality, ethics, and legal considerations."

@@ -1,0 +1,1 @@
+"Mistral AI offers open and portable generative AI for developers and businesses. Their models, Mistral Nemo and Mistral Large 2, can be customized and deployed in various environments. The company focuses on open source generative technologies, portability, value, speed, and customization. They work with a small, creative team that prioritizes scientific standards."

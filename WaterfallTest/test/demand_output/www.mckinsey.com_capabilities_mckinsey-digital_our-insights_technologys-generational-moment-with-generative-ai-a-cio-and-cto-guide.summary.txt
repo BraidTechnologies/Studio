@@ -1,0 +1,1 @@
+"This text discusses how CIOs and CTOs can utilize generative AI to create business value. It mentions identifying valuable use cases, upgrading technology architecture, and developing a data architecture as important steps. It also emphasizes collaboration between different roles and managing risks like ethical concerns and data privacy."

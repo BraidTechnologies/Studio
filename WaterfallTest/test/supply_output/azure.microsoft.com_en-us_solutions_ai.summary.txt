@@ -1,0 +1,1 @@
+"The provided text contains information about Azure AI Platform by Microsoft. It covers topics such as serverless computing, application and data modernization, cloud migration, pricing, partners, resources, learning, support, and various services offered by Azure AI. The text also mentions customer stories and positive assessments by Gartner and Forrester Consulting."
