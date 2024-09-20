@@ -33,6 +33,7 @@ export interface IEnrichedQuery {
    repositoryId : EChunkRepository;
    personaPrompt: string;
    enrichmentDocumentPrompt: string;
+   similarityThreshold: number;
    history: Array<IConversationElement>;
    question: string;
 }

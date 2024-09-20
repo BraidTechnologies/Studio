@@ -36,7 +36,8 @@ describe("QueryModel", async function () {
          personaPrompt: personaPrompt,
          enrichmentDocumentPrompt: enrichmentDocumentPrompt,
          history: new Array<IConversationElement>(),
-         question: question
+         question: question,
+         similarityThreshold: 0.5
       };
 
       let response = await api.queryModelWithEnrichment(query);
@@ -61,7 +62,8 @@ describe("QueryModel", async function () {
                    {role: EConversationRole.kAssistant, content: priorAnswers[0]}, 
                    {role: EConversationRole.kUser, content: priorQuestions[1]},
                    {role: EConversationRole.kAssistant, content: priorAnswers[1]}],
-         question: question
+         question: question,
+         similarityThreshold: 0.5         
       };
 
       let response = await api.queryModelWithEnrichment(query);
