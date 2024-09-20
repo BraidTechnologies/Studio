@@ -1,1 +1,0 @@
-"Google has developed a new AI model that improves virtual fitting room technology by generating more realistic images of clothes on models with different body shapes and sizes. The AI model has been trained using Google's Shopping Graph and is currently available for women's tops from various brands."

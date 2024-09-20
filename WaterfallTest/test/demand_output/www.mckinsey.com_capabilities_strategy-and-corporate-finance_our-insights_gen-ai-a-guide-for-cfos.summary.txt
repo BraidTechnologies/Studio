@@ -1,1 +1,0 @@
-"The article is a guide for CFOs on how to approach generative AI (gen AI) in the finance function. CFOs should prioritize specific use cases, allocate resources, and consider risks. Gen AI can save time and resources, automate tasks, and enhance productivity in finance. CFOs should embrace and enable gen AI initiatives."
