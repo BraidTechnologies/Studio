@@ -1,0 +1,1 @@
+"NVIDIA and HP have partnered to enhance data science and generative AI on workstations. The integration of NVIDIA CUDA-X data processing libraries with HP's AI workstation solutions will accelerate data processing for data scientists using pandas software. This collaboration will provide customers with a faster and more efficient solution for data processing and analysis."

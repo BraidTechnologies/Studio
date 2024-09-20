@@ -1,0 +1,1 @@
+"This text provides an overview of Microsoft Azure's products and solutions, including AI services, virtual machines, containers, and hybrid cloud solutions. It also mentions partnerships and updates, such as the collaboration with ServiceNow and the introduction of the Phi-3 family of small open models to enhance Azure AI capabilities."

@@ -1,0 +1,1 @@
+"This article covers the technical foundations and societal implications of artificial intelligence. It highlights the limitations of the \"bigger-is-better\" approach, the impact on jobs, and AI's role in finance and law. It also addresses AI-related topics such as cybersecurity, biometric authentication, and the desire of tech giants to regulate AI."

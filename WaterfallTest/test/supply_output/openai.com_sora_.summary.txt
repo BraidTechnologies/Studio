@@ -1,0 +1,1 @@
+"Sora is an AI model developed by OpenAI that can generate realistic videos based on text instructions. It aims to simulate the physical world in motion and can create various scenes with multiple characters and accurate backgrounds. Sora is being made available for feedback and development, and safety precautions will be taken before its release."

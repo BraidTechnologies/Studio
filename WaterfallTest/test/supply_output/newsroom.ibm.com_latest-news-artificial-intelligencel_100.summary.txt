@@ -1,0 +1,1 @@
+"IBM has made several announcements and collaborations in the field of AI. These include the introduction of the Mistral AI model, enhancements to data resilience against cyber threats using AI, and the launch of a tool called watsonx.governance to help businesses build trust in generative AI."

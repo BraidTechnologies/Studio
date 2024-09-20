@@ -1,0 +1,1 @@
+"NVIDIA has announced the GH200 Grace Hopper Superchip platform, featuring the world's first HBM3e processor. It supports dual configurations, increased memory capacity, and AI performance. The platform allows for the connection of additional Superchips, enabling the deployment of larger AI models. Availability is expected in Q2 2024."

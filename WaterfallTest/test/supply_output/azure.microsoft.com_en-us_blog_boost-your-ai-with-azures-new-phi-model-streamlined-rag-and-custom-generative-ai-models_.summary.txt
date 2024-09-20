@@ -1,0 +1,1 @@
+"Azure has released updates to improve its AI services. These updates include the Phi model, streamlined RAG pipelines, and custom generative AI models. They have also introduced features like multi-lingual support, multi-frame vision capabilities, and a Python library called Guidance. Azure aims to meet the evolving needs of AI developers."

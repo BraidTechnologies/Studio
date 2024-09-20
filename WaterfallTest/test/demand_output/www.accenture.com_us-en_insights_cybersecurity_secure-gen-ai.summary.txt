@@ -1,0 +1,1 @@
+"Cybercriminals are using gen AI-powered attacks, such as ransomware and phishing, to target organizations. Certain industries are more vulnerable due to advanced technology landscapes. Organizations need to update their security posture and embed security by design throughout their gen AI journey."

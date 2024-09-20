@@ -1,0 +1,1 @@
+"Emu Video and Emu Edit are new advancements in generative AI research. Emu Video generates high-quality videos based on text prompts, while Emu Edit enables precise image editing using text instructions. Both models have shown superior performance and are part of ongoing research in the field."
