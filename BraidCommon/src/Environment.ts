@@ -64,9 +64,12 @@ export class DevelopmentEnvironment implements IEnvironment {
    generateQuestion(): string{
       return "http://localhost:7071/api/GenerateQuestion";       
    }      
-   generateFluidToken(): string {
+   generateFluidTokenApi(): string {
       return "http://localhost:7071/api/GenerateFluidToken";        
-   }   
+   } 
+   fluidApi(): string {
+      return  "http://localhost:7070";
+   }  
 }
 
 /**
@@ -131,9 +134,12 @@ export class StagingEnvironment implements IEnvironment {
    generateQuestion(): string{
       return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
    }     
-   generateFluidToken(): string {
+   generateFluidTokenApi(): string {
       return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
    }    
+   fluidApi(): string {
+      return  "https://eu.fluidrelay.azure.com";
+   }     
 }
 
 /**
@@ -199,7 +205,10 @@ export class ProductionEnvironment implements IEnvironment {
    generateQuestion(): string{
       return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
    }   
-   generateFluidToken(): string {
+   generateFluidTokenApi(): string {
       return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
    }
+   fluidApi(): string {
+      return  "https://eu.fluidrelay.azure.com";
+   }       
 }

@@ -16,13 +16,7 @@ declare var process : any;
  */
 export function getDefaultEnvironment () : IEnvironment  {
 
-   // If we are i Browser, and in localhost, use development
-   if (typeof window !== 'undefined') {
-      if (window.location.hostname === 'localhost') {
-         return new DevelopmentEnvironment();
-      }
-   }
-
+   // Use Development if we are running in Node.js
    if (typeof process !== 'undefined') {
       if (process.env.BRAID_ENVIRONMENT === EEnvironment.kLocal) {
          return new DevelopmentEnvironment();
@@ -30,6 +24,32 @@ export function getDefaultEnvironment () : IEnvironment  {
    }
 
    return new ProductionEnvironment();   
+}
+
+export function getDefaultFluidEnvironment () : IEnvironment  {
+
+   let environment = getDefaultEnvironment();
+
+   // If we are in Browser, and in localhost, use development
+   if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+         environment = getEnvironment (EEnvironment.kLocal);
+      }
+   }
+   return environment;
+}
+
+export function getDefaultLoginEnvironment () : IEnvironment  {
+
+   let environment = getDefaultEnvironment();
+
+   // If we are in Browser, and in localhost, use development
+   if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+         environment = getEnvironment (EEnvironment.kLocal);
+      }
+   }
+   return environment;
 }
 
 /**

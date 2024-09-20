@@ -26,7 +26,7 @@ export class FluidApi extends Api {
     */
    async generateToken (query: IFluidTokenRequest ) : Promise<string | undefined> {
 
-      let apiUrl = this.environment.generateFluidToken() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.generateFluidTokenApi() + "?session=" + this.sessionKey.toString();
       var response: any;
       let empty = undefined;
 
