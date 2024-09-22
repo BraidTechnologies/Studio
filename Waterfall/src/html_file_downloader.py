@@ -43,7 +43,7 @@ class HtmlFileDownloader (PipelineStep):
          Downloads the HTML content from the specified path and saves it to the output location.
 
          Returns:
-             str: The content of the downloaded HTML file.
+             PipelineItem: Enriched with the content of the downloaded HTML file.
         '''
 
         path = pipeline_item.path

@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 
-from src.workflow import PipelineSpec
+from src.workflow import WebPipelineSpec
 
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
@@ -31,7 +31,7 @@ def test_with_search ():
     test_output_location = 'test_output'
 
     searcher = WebSearcher (test_output_location)
-    pipeline = PipelineSpec()
+    pipeline = WebPipelineSpec()
     pipeline.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline.pages = 1
     pipeline_items = searcher.search (pipeline)    

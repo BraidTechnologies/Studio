@@ -89,13 +89,22 @@ class Theme(Freezable):
         return ((self.short_description.lower(), self.long_description.lower()) <
                 (other.short_description.lower(), other.long_description.lower()))
 
+class PipelineStep ():
+    def __init__(self, output_location: str):
+        '''
+        Initialize the PipelineStep with the specified output location.
 
-class PipelineSpec(Freezable):
+        Parameters:
+        output_location (str): The location where the output will be stored.
+        '''
+        self.output_location = output_location
+
+class WebPipelineSpec(Freezable):
     '''The spec for a full run of the Waterfall workflow'''
 
     def __init__(self):
         '''
-        Initialize the PipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the WebPipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
         '''
         self.pages = 1  # default is to pull back one page
         self.clusters = 2
@@ -109,13 +118,15 @@ class PipelineSpec(Freezable):
 
         self._freeze()
 
+class YouTubePipelineSpec(Freezable):
+    '''The spec for a full run of the Waterfall workflow'''
 
-class PipelineStep ():
-    def __init__(self, output_location: str):
+    def __init__(self):
         '''
-        Initialize the PipelineStep with the specified output location.
+        Initialize the YouTunePipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        '''
+        self.playlists = list[str]
 
-        Parameters:
-        output_location (str): The location where the output will be stored.
-        '''
-        self.output_location = output_location
+        self._freeze()
+
+

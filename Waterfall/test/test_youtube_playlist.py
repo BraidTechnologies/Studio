@@ -1,0 +1,56 @@
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+from src.workflow import YouTubePipelineSpec
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.DEBUG)
+
+from src.youtube_searcher import YoutubePlaylistSearcher, playlists
+from src.youtube_transcript_downloader import YouTubeTranscriptDownloader
+
+def test_basic ():
+    test_output_location = 'test_output'
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    assert searcher.output_location == test_output_location 
+
+def test_with_search ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'test_output'
+
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    pipeline = YouTubePipelineSpec()
+    pipeline.playlists = playlists
+    pipeline_items = searcher.search (pipeline)    
+    assert len(pipeline_items) >= 1   
+
+def test_download():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'test_output'
+
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    downloader = YouTubeTranscriptDownloader (test_output_location)
+    pipeline = YouTubePipelineSpec()
+
+    pipeline.playlists = []
+    pipeline.playlists.append (playlists[0])
+    pipeline_items = searcher.search (pipeline)  
+
+    for item in pipeline_items:
+       item = downloader.download (item)
+       assert len(item.text) >= 1 
+
+    assert len(pipeline_items) >= 1   
