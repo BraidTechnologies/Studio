@@ -7,8 +7,8 @@ export enum EChunkRepository {
    kBoxer = "Boxer"
 };
 
-// Default is we only consider >= 85% relevant to present to the user
-export const kDefaultSimilarityThreshold = 0.85;
+// Default is we only consider >= 50% relevant to present to the user (GPT4 seems to generate low scores ...)
+export const kDefaultSimilarityThreshold = 0.5;
 
 /**
  * Represents a Chunk enriched with specific properties.

@@ -23,7 +23,7 @@ let model = getDefaultModel();
  */
 function chunkText(text: string, overlapWords: number): Array<string> {
 
-   let chunks = model.chunkText(text, overlapWords);
+   let chunks = model.chunkText(text, undefined, overlapWords);
 
    return chunks;
 }

@@ -32,7 +32,7 @@ class FluidApi extends Api_1.Api {
     generateToken(query) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.generateFluidToken() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.generateFluidTokenApi() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {

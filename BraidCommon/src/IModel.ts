@@ -20,7 +20,7 @@ export interface IModel {
    deploymentName : string;
    contextWindowSize : number;
    fitsInContext(text: string): boolean;
-   chunkText (text: string, overlapWords: number | undefined): Array<string>;
+   chunkText (text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string>;
    estimateTokens (text: string): number;
 }
 

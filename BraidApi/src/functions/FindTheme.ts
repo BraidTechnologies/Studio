@@ -7,7 +7,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { isSessionValid, sessionFailResponse } from "./Utility";
+import { IFindThemeSpec } from "../../../BraidCommon/src/ThemeApi";
+import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 
 let minimumTextLength = 64;
 
@@ -75,12 +76,15 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
          requestedSession = value;
    }
 
-   let jsonRequest = await request.json();
-
    if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
+      
+      try {
+      let jsonRequest = await request.json();
+                  
+      let themeSpec = (jsonRequest as any)?.data as IFindThemeSpec;                 
 
-      text = (jsonRequest as any)?.data?.text;
-      length = (jsonRequest as any)?.data?.length;
+      text = themeSpec.text;
+      length = themeSpec.length;
 
       if (!text || text.length < minimumTextLength) {
          overallSummary = "Sorry, not enough text to find a theme."
@@ -97,6 +101,11 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
          status: 200, // Ok
          body: overallSummary
       };
+      }
+      catch (e: any) {
+         context.error (e);
+         return defaultErrorResponse();
+      }      
    }
    else {
       return sessionFailResponse();

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GPTMini = void 0;
+// Copyright (c) 2024 Braid Technologies Ltd
+const Errors_1 = require("./Errors");
 const gpt4_tokenizer_1 = require("gpt4-tokenizer");
 const tokenizer = new gpt4_tokenizer_1.default({ type: 'gpt3' });
 /**
@@ -9,7 +11,7 @@ const tokenizer = new gpt4_tokenizer_1.default({ type: 'gpt3' });
  */
 class GPTMini {
     constructor() {
-        this.deploymentName = "braiddefaultmini";
+        this.deploymentName = "BraidLarge";
         this.contextWindowSize = 8192;
         this.contextWindowSizeWithBuffer = (8192 - 256);
     }
@@ -32,8 +34,13 @@ class GPTMini {
      * @param overlapWords The number of overlapping words between consecutive chunks. If undefined, we chunk with no obverlap.
      * @returns An array of strings representing the chunked text.
      */
-    chunkText(text, overlapWords) {
+    chunkText(text, chunkSize, overlapWords) {
+        let effectiveChunkSize = chunkSize
+            ? Math.min(this.contextWindowSizeWithBuffer, chunkSize)
+            : this.contextWindowSizeWithBuffer;
         if (overlapWords) {
+            if (overlapWords > effectiveChunkSize)
+                throw new Errors_1.InvalidParameterError("Overlap window size cannot be bigger than chunk size");
             // If the users requests overlapping chunks, we divide the text into pieces the size of the overlap, then glue them back
             // together until we fill a buffer. 
             let chunked = tokenizer.chunkText(text, Math.floor(overlapWords * 2));
@@ -45,7 +52,7 @@ class GPTMini {
             for (let i = 0; i < chunked.length; i++) {
                 let thisChunkText = chunked[i].text;
                 let thisChunkTokens = tokenizer.estimateTokenCount(thisChunkText);
-                if (workingBufferTokens + thisChunkTokens < this.contextWindowSizeWithBuffer) {
+                if (workingBufferTokens + thisChunkTokens < effectiveChunkSize) {
                     // If we are within buffer size, we just accumulate
                     workingBufferText = workingBufferText + thisChunkText;
                     workingBufferTokens = workingBufferTokens + thisChunkTokens;
@@ -66,7 +73,7 @@ class GPTMini {
             return chunks;
         }
         else {
-            let chunked = tokenizer.chunkText(text, this.contextWindowSizeWithBuffer);
+            let chunked = tokenizer.chunkText(text, effectiveChunkSize);
             let chunks = new Array();
             for (let i = 0; i < chunked.length; i++) {
                 chunks.push(chunked[i].text);

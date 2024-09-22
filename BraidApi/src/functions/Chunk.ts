@@ -6,20 +6,23 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
+import {IChunkSpec} from "../../../BraidCommon/src/ChunkApi"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
 let model = getDefaultModel();
 
 /**
- * Splits the input text into chunks of maximum size defined by the model
+ * Splits the input text into chunks based on the specified chunk size and overlap words.
  * 
  * @param text The text to be chunked.
- * @returns An array of strings, each representing a chunk of the input text.
+ * @param chunkSize The size of each chunk.
+ * @param overlapWords The number of overlapping words between consecutive chunks.
+ * @returns An array of strings representing the text divided into chunks.
  */
-function chunkText(text: string, overlapWords: number | undefined): Array<string> {
+function chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
 
-   let chunks = model.chunkText(text, overlapWords);
+   let chunks = model.chunkText(text, chunkSize, overlapWords);
 
    return chunks;
 }
@@ -36,18 +39,22 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
 
    let text: string | undefined = undefined;
    let overlapWords : number | undefined = undefined;
+   let chunkSize : number | undefined = undefined;   
    let chunks = new Array<string>();
 
    if (isSessionValid(request, context)) {
 
       try {
          let jsonRequest = await request.json();
+                  
+         let spec = (jsonRequest as any)?.data as IChunkSpec;
 
-         text = (jsonRequest as any)?.data?.text;
-         overlapWords = (jsonRequest as any)?.data?.overlapWords;         
+         text = spec.text;
+         chunkSize = spec.chunkSize;         
+         overlapWords = spec.overlapWords;         
 
          if (text)
-            chunks = chunkText(text, overlapWords);
+            chunks = chunkText(text, chunkSize, overlapWords);
 
          return {
             status: 200, // Ok

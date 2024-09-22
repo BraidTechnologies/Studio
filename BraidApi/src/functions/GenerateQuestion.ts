@@ -54,11 +54,11 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
 
 export async function generateQuestion(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let jsonRequest = await request.json();
-
    if (isSessionValid(request, context)) {
 
       try {
+         let jsonRequest = await request.json();
+                  
          let query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
 
          context.log (query);
