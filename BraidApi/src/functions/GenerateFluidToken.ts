@@ -3,18 +3,35 @@
 // 'func azure functionapp publish BraidApi' to publish to Azure
 // 'npm start' to run locally
 
-/*
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { ScopeType } from "@fluidframework/protocol-definitions/lib";
+//import { ScopeType } from "@fluidframework/protocol-definitions/lib";
 import { generateToken } from "@fluidframework/server-services-client";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { IFluidTokenRequest } from "../../../BraidCommon/src/Fluid";
 
-
-// NOTE: retrieve the key from a secure location.
 const key = process.env.ConversationKey;
-const tenantId = process.env.TenantId;
+const tenantId = "b9576484-5c2e-4613-bfdf-039948cdd521";
+
+// WARNING - this is a redefinition of a type from inside the Fluid library. Does not seem to be exported at present, and we need it. 
+//
+export enum ScopeType {
+	/**
+	 * Read access is supported on the Container/Document
+	 */
+	DocRead = "doc:read",
+
+	/**
+	 * Write access is supported on the Container/Document
+	 */
+	DocWrite = "doc:write",
+
+	/**
+	 * User can generate new summaries operations
+	 */
+	SummaryWrite = "summary:write",
+}
 
 export async function generateFluidToken(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
@@ -31,18 +48,22 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
       }    
 
       try {
-         let jsonRequest = await request.json() as IFluidTokenRequest;
+         let jsonRequest = await request.json();
+         let fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
 
          // tenantId, documentId, userId and userName are required parameters
-         const documentId = jsonRequest.documentId;
-         const userId = jsonRequest.userId;
-         const userName = jsonRequest.userName;
+         const documentId = fluidRequest.documentId;
+         const userId = fluidRequest.userId;
+         const userName = fluidRequest.userName;
+         const local = fluidRequest.local;
 
          let user = { name: userName, id: userId };
 
-         // Will generate the token returned by an ITokenProvider implementation to use with the AzureClient.
+         context.log ("Generating token for:" + JSON.stringify(fluidRequest) + " tenantId:" + tenantId);
+
+         // Generate the token returned by an ITokenProvider implementation to use with the AzureClient.
          const token = generateToken(      
-            tenantId,
+            local? "local" : tenantId,
             documentId,
             key,
             [ScopeType.DocRead, ScopeType.DocWrite, ScopeType.SummaryWrite],
@@ -72,4 +93,3 @@ app.http('GenerateFluidToken', {
    authLevel: 'anonymous',
    handler: generateFluidToken
 });
-*/

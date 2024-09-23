@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/**/model.test.ts"
+           "${workspaceFolder}/test/**/*token*.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

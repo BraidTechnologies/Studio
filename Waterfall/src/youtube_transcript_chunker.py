@@ -13,10 +13,8 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 class YouTubeTranscriptChunker ():
-    '''Utility class to chunk a transcript for a YouTube video
-
-     Args:
-         output_location (str): The location to save the text of the chunks.
+    '''
+    Utility class to chunk a transcript for a YouTube video
     '''
 
     def __init__():

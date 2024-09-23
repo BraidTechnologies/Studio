@@ -32,6 +32,7 @@ export interface IEnvironment {
    generateQuestion(): string;   
    generateFluidTokenApi(): string;
    fluidApi(): string;
+   fluidTenantId(): string;
 }
 
 

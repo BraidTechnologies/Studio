@@ -3,7 +3,10 @@
    "version": "0.1.0",
    "description": "",
    "devDependencies": {
+      "@fluidframework/azure-client": "^2.3.0",
+      "@fluidframework/routerlicious-driver": "^2.3.0",
       "axios": "^1.7.3",
+      "fluid-framework": "^2.3.0",
       "gpt4-tokenizer": "^1.3.0",
       "rimraf": "^6.0.1",
       "rimraff": "^0.0.1-security",
@@ -14,5 +17,8 @@
       "build": "tsc -b",
       "watch": "tsc -b -w",
       "clean": "rimraf dist"
+   },
+   "dependencies": {
+      "axios-retry": "^4.5.0"
    }
 }

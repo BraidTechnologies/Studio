@@ -71,6 +71,9 @@ class DevelopmentEnvironment {
     fluidApi() {
         return "http://localhost:7070";
     }
+    fluidTenantId() {
+        return "b9576484-5c2e-4613-bfdf-039948cdd521";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -141,6 +144,9 @@ class StagingEnvironment {
     fluidApi() {
         return "https://eu.fluidrelay.azure.com";
     }
+    fluidTenantId() {
+        return "b9576484-5c2e-4613-bfdf-039948cdd521";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -210,6 +216,9 @@ class ProductionEnvironment {
     }
     fluidApi() {
         return "https://eu.fluidrelay.azure.com";
+    }
+    fluidTenantId() {
+        return "b9576484-5c2e-4613-bfdf-039948cdd521";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FluidApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const axios_retry_1 = require("axios-retry");
 const Api_1 = require("./Api");
 class FluidApi extends Api_1.Api {
     /**
@@ -32,10 +33,19 @@ class FluidApi extends Api_1.Api {
     generateToken(query) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.generateFluidTokenApi() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.generateFluidTokenApi() + "?session=" + this.sessionKey;
             var response;
             let empty = undefined;
             try {
+                // Up to 5 retries - it is a big fail if we cannot get a token for Fluid
+                (0, axios_retry_1.default)(axios_1.default, {
+                    retries: 5,
+                    retryDelay: axios_retry_1.default.exponentialDelay,
+                    retryCondition: (error) => {
+                        var _a;
+                        return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || axios_retry_1.default.isNetworkOrIdempotentRequestError(error);
+                    }
+                });
                 response = yield axios_1.default.post(apiUrl, {
                     data: query
                 });
