@@ -1,4 +1,4 @@
-''' first step of Waterfall pipeline - search web and generate input list of PipelineItems from a Youtube playlist'''
+''' first step of Waterfall pipeline - generate input list of PipelineItems from a Youtube playlist'''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
