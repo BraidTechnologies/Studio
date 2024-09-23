@@ -3,13 +3,19 @@
 # Standard library imports
 import os
 
-azure = True                  
+azure = False    
+gemini = True              
 
 if azure:
    API_TYPE = "Azure" 
    API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  
    API_VERSION = "2024-02-01" #AZURE VERSION WAS "2023-07-01-preview"
    RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" 
+elif gemini:
+    API_TYPE = "Gemini"
+    API_KEY = os.getenv("GEMINI_API_KEY")
+    API_VERSION = "v1"  # Gemini API version
+    RESOURCE_ENDPOINT = "https://api.gemini.google.com/v1"
 else:
    API_TYPE = "open_ai" #AZURE VERSION WAS "Azure"
    API_KEY = os.environ["OPENAI_API_KEY"] 
@@ -20,6 +26,12 @@ else:
 
 class ApiConfiguration:
     def __init__(self) -> None:
+        if azure:
+            self.apiType = "Azure"
+        elif gemini:
+            self.apiType = "Gemini"
+        else:
+            self.apiType = "open_ai"
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
