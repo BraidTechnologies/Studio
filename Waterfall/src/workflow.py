@@ -126,6 +126,8 @@ class YouTubePipelineSpec(Freezable):
         Initialize the YouTunePipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
         '''
         self.playlists = list[str]
+        self.max_words = 1000
+        self.overlap_words = 50
 
         self._freeze()
 

@@ -71,13 +71,14 @@ class WaterfallDataPipeline:
 
     def search_and_cluster(self, spec: WebPipelineSpec) -> list[PipelineItem]:
         '''
-        Searches for HTML content related to a specific query, downloads, summarizes, embeds, and clusters the content.
-
+        Create themes based on the provided PipelineItems and PipelineSpec.
+ 
         Parameters:
-           spec (PipelineSpec): The PipelineSpec object containing search specifications.
+           items (list[PipelineItem]): A list of PipelineItem objects to create themes from.
+           spec (PipelineSpec): The PipelineSpec object containing specifications for theme creation.
 
         Returns:
-           list[PipelineItem]: A list of PipelineItem objects after clustering.
+           list[Theme]: A list of Theme objects created based on the provided PipelineItems and PipelineSpec.
         '''
         searcher = WebSearcher(self.output_location)
 

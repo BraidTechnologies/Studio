@@ -53,10 +53,10 @@ class YoutubePlaylistSearcher:
         Search for videos in the specified playlists and generate a list of PipelineItems.
 
         Parameters:
-        - pipeline (YouTubePipelineSpec): The pipeline specification containing playlists to search.
+            pipeline (YouTubePipelineSpec): The pipeline specification containing playlists to search.
 
         Returns:
-        - list[PipelineItem]: A list of PipelineItem objects representing the videos found in the playlists.
+            list[PipelineItem]: A list of PipelineItem objects representing the videos found in the playlists.
         ''' 
 
         playlistId = playlists[0]

@@ -50,7 +50,7 @@ def test_with_output (test_output_dir):
     enriched_text: PipelineItem = downloader.download (pipeline_item) 
 
     chunker = Chunker (test_output_location)
-    chunks : PipelineItem = chunker.chunk (enriched_text)  
+    chunks : PipelineItem = chunker.chunk (enriched_text, 0)  
 
     assert len(chunks) == 1
 
@@ -76,7 +76,7 @@ def test_long (test_output_dir):
        i = i + 1
 
     enriched_text.text = long_text
-    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text)  
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0)  
 
     assert len(chunks_overlapped) > 1
 
@@ -102,7 +102,7 @@ def test_long_with_overlap (test_output_dir):
        i = i + 1
 
     enriched_text.text = long_text
-    chunks : list[PipelineItem] = chunker.chunk (enriched_text, 0)      
-    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 1024)  
+    chunks : list[PipelineItem] = chunker.chunk (enriched_text, 0, 0)      
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0, 1024)  
 
     assert len(chunks_overlapped) > len (chunks)

@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 
-from src.workflow import WebPipelineSpec
+from src.workflow import YouTubePipelineSpec
 
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
@@ -17,23 +17,21 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.waterfall_pipeline import WebSearcher
-from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+from src.youtube_searcher import playlists
+from src.boxer_pipeline import BoxerDataPipeline
 
-def test_basic ():
-    test_output_location = 'test_output'
-    searcher = WebSearcher (test_output_location)
-    assert searcher.output_location == test_output_location 
-
-def test_with_search ():
+def test_boxer_pipeline():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_output_location = 'test_output'
 
-    searcher = WebSearcher (test_output_location)
-    pipeline = WebPipelineSpec()
-    pipeline.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
-    pipeline.pages = 1
-    pipeline_items = searcher.search (pipeline)    
-    assert len(pipeline_items) >= 1   
+    pipeline = BoxerDataPipeline (test_output_location)
 
+    # make a short playlist from first entry
+    spec = YouTubePipelineSpec()
+    spec.playlists = []
+    spec.playlists.append (playlists[0])
+
+    pipeline_items = pipeline.search (spec)  
+
+    assert len(pipeline_items) >= 1 

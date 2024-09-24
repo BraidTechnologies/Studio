@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 from src.workflow import WebPipelineSpec
-from src.search_pipeline import WaterfallDataPipeline
+from src.waterfall_pipeline import WaterfallDataPipeline
 from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID, AI_DEMAND_STACK_SEARCH_ENGINE_ID
 
 @pytest.fixture

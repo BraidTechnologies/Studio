@@ -75,7 +75,7 @@ class YouTubeTranscriptDownloader (PipelineStep):
         repository = TextRespositoryFacade(self.output_location)
         if repository.exists(path):
             text = repository.load(path)
-            pipeline_item.summary = text
+            pipeline_item.text = text
             return pipeline_item
         
         try:
