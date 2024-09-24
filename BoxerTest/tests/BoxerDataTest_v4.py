@@ -92,51 +92,68 @@ class TestResult:
         self.follow_up: str = ""  # Adding followUp field
         self.follow_up_on_topic: str = ""  # Adding followUpOnTopic field
 
-# Function to call the OpenAI API with retry logic
-@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
-    """
-    Retries the OpenAI chat API call with exponential backoff and retry logic.
+# Function to call the OpenAI API with retry logic     
+'''
+Below comment out function to be updated! 
 
-    :param client: An instance of the AzureOpenAI class.
-    :type client: AzureOpenAI
-    :param messages: A list of dictionaries representing the messages to be sent to the API.
-    :type messages: List[Dict[str, str]]
-    :param config: An instance of the ApiConfiguration class.
-    :type config: ApiConfiguration
-    :param logger: An instance of the logging.Logger class.
-    :type logger: logging.Logger
-    :return: The content of the first choice in the API response.
-    :rtype: str
-    :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
-    :raises OpenAIError: If there is an error with the OpenAI API.
-    :raises APIConnectionError: If there is an error with the API connection.
-    """
-    try:
-        response = client.chat.completions.create(
-            model=config.azureDeploymentName,
-            messages=messages,
-            temperature=0.7,
-            max_tokens=config.maxTokens,
-            top_p=0.0,
-            frequency_penalty=0,
-            presence_penalty=0,
-            timeout=config.openAiRequestTimeout,
-        )
-        content = response.choices[0].message.content
-        finish_reason = response.choices[0].finish_reason
+ref:
 
-        if finish_reason not in {"stop", "length", ""}:
-            logger.warning("Unexpected stop reason: %s", finish_reason)
-            logger.warning("Content: %s", content)
-            logger.warning("Consider increasing max tokens and retrying.")
-            raise RuntimeError("Unexpected finish reason in API response.")
+if config.apiType == "Azure" or config.apiType == "open_ai":
+    response = client.chat.completions.create(
+        model=config.azureDeploymentName,
+        messages=messages,
+        temperature=0.7,
+        ...
+    )
+elif config.apiType == "Gemini":
+    # add Gemini-specific API call here
+    )
 
-        return content
+'''
+# @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+# def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
+#     """
+#     Retries the OpenAI chat API call with exponential backoff and retry logic.
 
-    except (OpenAIError, APIConnectionError) as e:
-        logger.error(f"Error: {e}")
-        raise
+#     :param client: An instance of the AzureOpenAI class.
+#     :type client: AzureOpenAI
+#     :param messages: A list of dictionaries representing the messages to be sent to the API.
+#     :type messages: List[Dict[str, str]]
+#     :param config: An instance of the ApiConfiguration class.
+#     :type config: ApiConfiguration
+#     :param logger: An instance of the logging.Logger class.
+#     :type logger: logging.Logger
+#     :return: The content of the first choice in the API response.
+#     :rtype: str
+#     :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
+#     :raises OpenAIError: If there is an error with the OpenAI API.
+#     :raises APIConnectionError: If there is an error with the API connection.
+#     """
+#     try:
+#         response = client.chat.completions.create(
+#             model=config.azureDeploymentName,
+#             messages=messages,
+#             temperature=0.7,
+#             max_tokens=config.maxTokens,
+#             top_p=0.0,
+#             frequency_penalty=0,
+#             presence_penalty=0,
+#             timeout=config.openAiRequestTimeout,
+#         )
+#         content = response.choices[0].message.content
+#         finish_reason = response.choices[0].finish_reason
+
+#         if finish_reason not in {"stop", "length", ""}:
+#             logger.warning("Unexpected stop reason: %s", finish_reason)
+#             logger.warning("Content: %s", content)
+#             logger.warning("Consider increasing max tokens and retrying.")
+#             raise RuntimeError("Unexpected finish reason in API response.")
+
+#         return content
+
+#     except (OpenAIError, APIConnectionError) as e:
+#         logger.error(f"Error: {e}")
+#         raise
 
 # Function to call the Gemini API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
