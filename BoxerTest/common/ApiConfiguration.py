@@ -26,7 +26,7 @@ class ApiConfiguration:
         self.resourceEndpoint = RESOURCE_ENDPOINT
         self.azureDeploymentName = "braidlms"
         self.azureEmbedDeploymentName="braidlmse"
-        self.modelName="gpt-35-turbo-16k"
+        self.modelName="gpt-4"      
         self.embedModelName="text-embedding-ada-002"
         self.processingThreads = 4
         self.openAiRequestTimeout = 60
