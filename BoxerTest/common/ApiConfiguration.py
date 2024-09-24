@@ -11,7 +11,7 @@ if azure:
    API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  
    API_VERSION = "2024-02-01" #AZURE VERSION WAS "2023-07-01-preview"
    RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" 
-elif gemini:
+elif gemini:    
     API_TYPE = "Gemini"
     API_KEY = os.getenv("GEMINI_API_KEY")
     API_VERSION = "v1"  # Gemini API version
@@ -32,6 +32,7 @@ class ApiConfiguration:
             self.apiType = "Gemini"
         else:
             self.apiType = "open_ai"
+            
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
