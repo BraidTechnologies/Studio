@@ -1,4 +1,12 @@
 # Copyright (c) 2024 Braid Technologies Ltd
+
+'''
+Rough: 
+
+- gemini generating number 
+
+'''
+
 # Standard Library Imports
 import logging
 import os
@@ -40,21 +48,27 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Function to configure the Azure OpenAI API client
-def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
-    """
-    Configures OpenAI for Azure using the provided ApiConfiguration.
+def configure_llm_client(config: ApiConfiguration):
+    if config.apiType == "Azure":
+        return AzureOpenAI(
+            azure_endpoint=config.resourceEndpoint, 
+            api_key=config.apiKey.strip(),
+            api_version=config.apiVersion
+        )
+    elif config.apiType == "Gemini":
+        # Add your Gemini-specific client instantiation here
+        return Gemini(
+            gemini_endpoint=config.resourceEndpoint, 
+            api_key=config.apiKey.strip(),
+            api_version=config.apiVersion
+        )
+    else:
+        # OpenAI fallback
+        return OpenAI(
+            api_key=config.apiKey.strip(),
+            api_version=config.apiVersion
+        )
 
-    Args:
-        config (ApiConfiguration): The ApiConfiguration object containing the necessary settings.
-
-    Returns:
-        AzureOpenAI: An instance of AzureOpenAI configured with the provided settings.
-    """
-    return AzureOpenAI(
-        azure_endpoint=config.resourceEndpoint, 
-        api_key=config.apiKey.strip(),
-        api_version=config.apiVersion
-    )
 
 # Class to hold test results
 class TestResult:
@@ -123,6 +137,11 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
     except (OpenAIError, APIConnectionError) as e:
         logger.error(f"Error: {e}")
         raise
+
+# Function to call the Gemini API with retry logic
+@retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
+def call_gemini_chat(client: Gemini, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
+    pass
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
