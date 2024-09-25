@@ -9,7 +9,7 @@ This repo contains Braid's pattern applications, for use by Braid's clients.
 
 The first pattern is 'Waterfall'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classification system for Braid's clients. It illustrates the following:
 
-- A front end - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Cascade' directory. Cascade is all written in typescript/javascript. (A CAscade is a small Waterfall ...). 
+- A front end - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Cascade' directory. Cascade is all written in typescript/javascript. (Note: A Cascade is a small Waterfall ...). 
 
 - A data analysis back end. This illustrates a date pipleine to download web pages, summarise them, and then uses cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
 
