@@ -9,7 +9,7 @@ import plotly
 import plotly.express as px
 import umap.umap_ as umap
 
-from workflow import PipelineItem, Theme, WebPipelineSpec, get_embeddings_as_float
+from workflow import PipelineItem, Theme, WebSearchPipelineSpec, get_embeddings_as_float
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
@@ -53,7 +53,7 @@ class WaterfallDataPipeline:
         self.output_location = output_location
         return
 
-    def search(self, spec: WebPipelineSpec) -> list[Theme]:
+    def search(self, spec: WebSearchPipelineSpec) -> list[Theme]:
         '''
         Searches for HTML content from a list of links.
 
@@ -61,7 +61,7 @@ class WaterfallDataPipeline:
             list[Theme]: A list of Theme objects 
         '''
 
-        items: list[WebPipelineSpec] = self.search_and_cluster(spec)
+        items: list[WebSearchPipelineSpec] = self.search_and_cluster(spec)
 
         themes: list[Theme] = self.create_themes(items, spec)
 
@@ -69,7 +69,7 @@ class WaterfallDataPipeline:
 
         return themes
 
-    def search_and_cluster(self, spec: WebPipelineSpec) -> list[PipelineItem]:
+    def search_and_cluster(self, spec: WebSearchPipelineSpec) -> list[PipelineItem]:
         '''
         Create themes based on the provided PipelineItems and PipelineSpec.
  
@@ -104,7 +104,7 @@ class WaterfallDataPipeline:
 
         return items
 
-    def create_themes(self, items: list[PipelineItem], spec: WebPipelineSpec) -> list[Theme]:
+    def create_themes(self, items: list[PipelineItem], spec: WebSearchPipelineSpec) -> list[Theme]:
         '''
         Create themes based on the provided PipelineItems and PipelineSpec.
 
@@ -168,7 +168,7 @@ class WaterfallDataPipeline:
 
         return enriched_themes
 
-    def create_report(self, items: list[PipelineItem], themes: list[Theme], spec: WebPipelineSpec) -> list[Theme]:
+    def create_report(self, items: list[PipelineItem], themes: list[Theme], spec: WebSearchPipelineSpec) -> list[Theme]:
         '''
         Generates a report based on the provided PipelineItems, Themes, and PipelineSpec. 
 

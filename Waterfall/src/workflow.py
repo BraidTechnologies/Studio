@@ -31,6 +31,7 @@ class PipelineItem(Freezable):
         self.embedding = None
         self.embedding_as_float = None
         self.cluster = None
+        self.length_minutes = 0
 
         self._freeze()
 
@@ -99,7 +100,7 @@ class PipelineStep ():
         '''
         self.output_location = output_location
 
-class WebPipelineSpec(Freezable):
+class WebSearchPipelineSpec(Freezable):
     '''The spec for a full run of the Waterfall workflow'''
 
     def __init__(self):

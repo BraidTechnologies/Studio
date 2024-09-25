@@ -106,3 +106,40 @@ def test_long_with_overlap (test_output_dir):
     chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0, 1024)  
 
     assert len(chunks_overlapped) > len (chunks)
+
+def test_long_overlap (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+
+    max = 1
+    i = 0
+    long_text = "this is going to be long but also needs to be long enough so we can see overlap errors when degugging and also needs to be more than 20 words"
+    while i < max:
+       long_text = long_text + long_text
+       i = i + 1
+
+    enriched_text.text = long_text  
+    chunk_words = 20
+    overlap_words = 5   
+    chars_per_word = 4
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, chunk_words, overlap_words) 
+
+    chunk_0 = chunks_overlapped[0].text
+    chunk_1 = chunks_overlapped[1].text
+    length = len(chunk_0)
+    last_block = chunk_0[length-(overlap_words * chars_per_word):length]
+
+    start_point = chunk_1.find (last_block)
+    test_depth = (overlap_words * chars_per_word * 4)
+
+    assert  start_point < test_depth

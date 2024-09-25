@@ -12,7 +12,6 @@ from youtube_transcript_downloader import YouTubeTranscriptDownloader
 from youtube_transcript_chunker import YouTubeTranscriptChunker
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
-from summarise_fail_suppressor import SummariseFailSuppressor
 from embedder import Embedder
 
 # Set up logging to display information about the execution of the script

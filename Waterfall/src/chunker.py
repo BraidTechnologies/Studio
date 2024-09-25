@@ -34,7 +34,7 @@ class Chunker (PipelineStep):
         '''
         super(Chunker, self).__init__(output_location)
 
-    def chunk(self, pipeline_item: PipelineItem, max_words: int, overlap_words: int) -> list[PipelineItem]:
+    def chunk(self, pipeline_item: PipelineItem, chunk_size_words: int, overlap_words: int) -> list[PipelineItem]:
         '''
         Chunk a text string into smaller parts and return a list of PipelineItem objects representing each chunk. Uses an external API to perform the chunking process. 
 
@@ -57,7 +57,7 @@ class Chunker (PipelineStep):
         summary_url = f'https://braidapi.azurewebsites.net/api/Chunk?session={
             SESSION_KEY}'
 
-        if max_words == 0:
+        if chunk_size_words == 0:
             input_json = {
                'data': {
                    'text': pipeline_item.text,
@@ -68,7 +68,7 @@ class Chunker (PipelineStep):
             input_json = {
                'data': {
                  'text': pipeline_item.text,
-                 'maxWords' : max_words,
+                 'chunkSize' : chunk_size_words,
                  'overlapWords': overlap_words
                }
             }

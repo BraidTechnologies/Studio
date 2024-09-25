@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.workflow import WebPipelineSpec
+from src.workflow import WebSearchPipelineSpec
 from src.waterfall_pipeline import WaterfallDataPipeline
 from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID, AI_DEMAND_STACK_SEARCH_ENGINE_ID
 
@@ -39,7 +39,7 @@ def test_with_search_supply ():
 
     pipeline = WaterfallDataPipeline (test_output_location)
 
-    pipeline_spec = WebPipelineSpec()
+    pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 10
     pipeline_spec.clusters = 7
@@ -60,7 +60,7 @@ def test_with_search_demand ():
 
     pipeline = WaterfallDataPipeline (test_output_location)
 
-    pipeline_spec = WebPipelineSpec()
+    pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_DEMAND_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 10
     pipeline_spec.clusters = 7

@@ -26,19 +26,19 @@ class YouTubeTranscriptChunker (PipelineStep):
         super(YouTubeTranscriptChunker, self).__init__(output_location)  
         self.chunker = Chunker (output_location)              
 
-    def chunk(self, pipeline_item: PipelineItem, max_words: int, overlap_words: int) -> list[PipelineItem]:
+    def chunk(self, pipeline_item: PipelineItem, chunk_size_words: int, overlap_words: int) -> list[PipelineItem]:
         '''
          Divides the transcript of the specific video into chunks and new PipelineItems.
 
          Parameters:
             pipeline_item: PipelineItem - The item to be chunked.
-            max_words - maximum words per chunk. If 0, use the models context window size. 
+            chunk_size_words - maximum words per chunk. If 0, use the models context window size. 
             overlap_words - how many words to use to overlap chunks. 0 = no overlap.
          Returns:
              list[PipelineItem]: The chunks of the Video transcript.
         '''
         pipeline_items = []
 
-        chunks = self.chunker.chunk (pipeline_item, max_words, overlap_words)
+        chunks = self.chunker.chunk (pipeline_item, chunk_size_words, overlap_words)
 
         return chunks

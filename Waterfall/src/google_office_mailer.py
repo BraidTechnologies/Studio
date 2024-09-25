@@ -1,5 +1,5 @@
 '''Testing use of Google Office'''
-from workflow import WebPipelineSpec
+from workflow import WebSearchPipelineSpec
 import os
 import os.path
 import base64
@@ -17,7 +17,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 
-def send_mail(output_location: str, body: str, attachment: str, spec: WebPipelineSpec):
+def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
     '''Use Gmail API to send the report
     Lists the user's Gmail labels.
     '''
@@ -53,7 +53,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebPipelin
         print(f'An error occurred: {error}')
 
 
-def send_message_with_attachment(service, output_location: str, body: str, attachment: str, spec: WebPipelineSpec):
+def send_message_with_attachment(service, output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
     '''Create and insert a draft email with attachment.
      Print the returned draft's message and id.
     Returns: Draft object, including draft id and message meta data.

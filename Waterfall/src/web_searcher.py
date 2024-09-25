@@ -6,7 +6,7 @@ import logging
 import os
 import requests
 
-from workflow import PipelineItem, WebPipelineSpec
+from workflow import PipelineItem, WebSearchPipelineSpec
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -32,7 +32,7 @@ class WebSearcher:
         self.output_location = output_location
         return
 
-    def search(self, pipeline: WebPipelineSpec) -> list[PipelineItem]:
+    def search(self, pipeline: WebSearchPipelineSpec) -> list[PipelineItem]:
         '''
         Searches for links related to a specific query using the Google Custom Search Engine API.
         Returns a list of URLs extracted from the search results.

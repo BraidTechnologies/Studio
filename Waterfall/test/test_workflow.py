@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.workflow import WebPipelineSpec, PipelineItem, Theme
+from src.workflow import WebSearchPipelineSpec, PipelineItem, Theme
 
 def test_pipeline_item ():
    item = PipelineItem ()
@@ -51,7 +51,7 @@ def test_theme ():
 
 
 def test_pipeline ():
-   pipeline = WebPipelineSpec ()    
+   pipeline = WebSearchPipelineSpec ()    
    items = [pipeline]
 
    theme = Theme ()
@@ -60,7 +60,7 @@ def test_pipeline ():
    theme.example_pipeline_items = items
    themes = [theme]   
      
-   pipeline = WebPipelineSpec ()
+   pipeline = WebSearchPipelineSpec ()
    pipeline.search_key = "1234"
    pipeline.description = "Description"
    pipeline.themes = themes
