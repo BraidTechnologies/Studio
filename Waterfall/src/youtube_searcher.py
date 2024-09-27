@@ -4,13 +4,13 @@
 # Standard Library Imports
 import logging
 import os
-import re
 import datetime
 
 import googleapiclient.discovery
 import googleapiclient.errors
 
 from workflow import PipelineItem, YouTubePipelineSpec
+from boxer_sources import youtube_playlists
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -23,19 +23,6 @@ GOOGLE_DEVELOPER_API_KEY = os.environ['GOOGLE_DEVELOPER_API_KEY']
 GOOGLE_API_SERVICE_NAME = "youtube"
 GOOGLE_API_VERSION = "v3"
 MAX_RESULTS = 100
-
-playlists = [
-# "Stanford CS229: Machine Learning Full Course taught by Andrew Ng | Autumn 2018 - YouTube",
- "PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU",
-# "Stanford CS224N: Natural Language Processing with Deep Learning | Winter 2021 - YouTube",
- "PLoROMvodv4rOSH4v6133s9LFPRHjEmbmJ",
-# "Braid AI Canon",
- "PL9LkXkIUrSoxIlFSKcyB21XFFLCCYfPGv",
-# "Braid - Additional Content",
- "PL9LkXkIUrSozgkPNepSMzidqtAGR0b1F_",
-# "Augmented Language Models (LLM Bootcamp) (youtube.com)",
- "PL1T8fO7ArWleyIqOy37OVXsP4hFXymdOZ"
-]
 
 def parseVideoDurationMins (duration: str) -> int:   
    """Parse the duration of a video in minutes.
@@ -106,8 +93,6 @@ class YoutubePlaylistSearcher:
             list[PipelineItem]: A list of PipelineItem objects representing the videos found in the playlists.
         ''' 
 
-        playlistId = playlists[0]
-
         pipeline_items = []
 
         youtube = googleapiclient.discovery.build(
@@ -150,7 +135,7 @@ class YoutubePlaylistSearcher:
                if next_page_token:
                   playlist_request = youtube.playlistItems().list(
                       part="snippet",
-                      playlistId=playlistId,
+                      playlistId=playlist,
                       maxResults=MAX_RESULTS,
                       pageToken=next_page_token,
                   )

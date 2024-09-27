@@ -120,16 +120,26 @@ class WebSearchPipelineSpec(Freezable):
         self._freeze()
 
 class YouTubePipelineSpec(Freezable):
-    '''The spec for a full run of the Waterfall workflow'''
+    '''The spec for a batch of video playlists to download'''
 
     def __init__(self):
         '''
-        Initialize the YouTunePipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the YouTubePipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
         '''
-        self.playlists = list[str]
-        self.max_words = 1000
-        self.overlap_words = 50
+        self.playlists = []
+        self.max_words = 3500 # This seems to come out at about 15 minutes of video
+        self.overlap_words = 100
 
         self._freeze()
 
 
+class HtmlDirectedPipelineSpec(Freezable):
+    '''The spec for a batch of web pages to download'''
+
+    def __init__(self):
+        '''
+        Initialize the WebDirectedPipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        '''
+        self.urls = list[str]
+
+        self._freeze()

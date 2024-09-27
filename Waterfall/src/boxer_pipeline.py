@@ -6,10 +6,11 @@ import logging
 import os
 import json
 
-from workflow import YouTubePipelineSpec
+from workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem
 from youtube_searcher import YoutubePlaylistSearcher
 from youtube_transcript_downloader import YouTubeTranscriptDownloader
 from youtube_transcript_chunker import YouTubeTranscriptChunker
+from html_link_crawler import HtmlLinkCrawler
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
 from embedder import Embedder
@@ -19,6 +20,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 
 class BoxerDataPipeline:
     '''
@@ -41,27 +43,50 @@ class BoxerDataPipeline:
         self.output_location = output_location
         return
 
-    def search(self, spec: YouTubePipelineSpec) -> None:
+    def search(self,
+               youtube_spec: YouTubePipelineSpec,
+               html_spec: HtmlDirectedPipelineSpec) -> list[PipelineItem]:
         '''
         Searches for HTML & YouTube content from a list of links.
 
         Returns:
             Nothing
         '''
-        searcher = YoutubePlaylistSearcher (self.output_location)
-        downloader = YouTubeTranscriptDownloader (self.output_location)
-        chunker = YouTubeTranscriptChunker (self.output_location)
+        youtube_searcher = YoutubePlaylistSearcher(self.output_location)
+        youtube_downloader = YouTubeTranscriptDownloader(self.output_location)
+        youtube_chunker = YouTubeTranscriptChunker(self.output_location)
 
-        items = searcher.search (spec)
+        html_crawler = HtmlLinkCrawler(self.output_location)
+        html_downloader = HtmlFileDownloader(self.output_location)
+
+        summariser = Summariser(self.output_location)
+        embedder = Embedder(self.output_location)
+
+        youtube_items = youtube_searcher.search(youtube_spec)
 
         all_chunks = []
-        for item in items:
-            item = downloader.download (item)
-            chunks = chunker.chunk (item, spec.max_words, spec.overlap_words)
-            all_chunks.extend (chunks)
-            
 
+        for item in youtube_items:
+            item = youtube_downloader.download(item)
+            chunks = youtube_chunker.chunk(
+                item, youtube_spec.max_words, youtube_spec.overlap_words)
+            all_chunks.extend(chunks)
 
-        return 
+        all_enriched_chunks = []
+        for chunk in all_chunks:
+            print(chunk.path)
+            summarised = summariser.summarise(chunk)
+            embedded = embedder.embed(summarised)
+            all_enriched_chunks.append(embedded)
 
-    
+        for html_url in html_spec.urls:
+            item = PipelineItem()
+            item.path = html_url
+            html_items = html_crawler.crawl(item)
+            for html_item in html_items:
+                downloaded = html_downloader.download (html_item)
+                summarised = summariser.summarise(downloaded)
+                embedded = embedder.embed(summarised)
+                all_enriched_chunks.append(embedded)                
+
+        return all_enriched_chunks

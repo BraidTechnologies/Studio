@@ -17,8 +17,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.youtube_searcher import YoutubePlaylistSearcher, playlists
+from src.youtube_searcher import YoutubePlaylistSearcher
 from src.youtube_transcript_downloader import YouTubeTranscriptDownloader
+from src.boxer_sources import youtube_playlists
 
 def test_basic ():
     test_output_location = 'test_output'
@@ -32,7 +33,7 @@ def test_with_search ():
 
     searcher = YoutubePlaylistSearcher (test_output_location)
     pipeline = YouTubePipelineSpec()
-    pipeline.playlists = playlists
+    pipeline.playlists = youtube_playlists
     pipeline_items = searcher.search (pipeline)    
     assert len(pipeline_items) >= 1   
 
@@ -46,7 +47,7 @@ def test_download():
     pipeline = YouTubePipelineSpec()
 
     pipeline.playlists = []
-    pipeline.playlists.append (playlists[0])
+    pipeline.playlists.append (youtube_playlists[0])
     pipeline_items = searcher.search (pipeline)  
 
     for item in pipeline_items:

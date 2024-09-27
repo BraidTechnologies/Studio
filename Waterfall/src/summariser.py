@@ -38,7 +38,7 @@ class Summariser (PipelineStep):
         '''
         Summarises the text content by either loading an existing summary from the specified path or generating a new summary using an external API. 
         If an existing summary is found, it is returned; otherwise, a new summary is generated and saved at the specified path. 
-        Returns the generated or loaded summary as a string.
+        Returns the generated or loaded summary as an enriched PipelineItem.
         '''
         path = pipeline_item.path
         repository = SummaryRespositoryFacade(self.output_location)

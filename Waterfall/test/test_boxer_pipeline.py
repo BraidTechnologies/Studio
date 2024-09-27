@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 
-from src.workflow import YouTubePipelineSpec
+from src.workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec
 
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
@@ -17,21 +17,47 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-from src.youtube_searcher import playlists
+from src.boxer_sources import youtube_playlists, html_pages
 from src.boxer_pipeline import BoxerDataPipeline
 
-def test_boxer_pipeline():
+def test_youtube_boxer_pipeline():
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
-    test_output_location = 'test_output'
+    test_output_location = 'boxer_output'
 
     pipeline = BoxerDataPipeline (test_output_location)
 
-    # make a short playlist from first entry
-    spec = YouTubePipelineSpec()
-    spec.playlists = []
-    spec.playlists.append (playlists[0])
+    html_spec = HtmlDirectedPipelineSpec()
 
-    pipeline_items = pipeline.search (spec)  
+    # make a short playlist from first entry
+    youtube_spec = YouTubePipelineSpec()
+    youtube_spec.playlists = []
+    youtube_spec.playlists.append (youtube_playlists[0])
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec)  
+
+    assert len(pipeline_items) >= 1 
+
+def test_html_boxer_pipeline():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'boxer_output'
+
+    pipeline = BoxerDataPipeline (test_output_location)
+
+    youtube_spec = YouTubePipelineSpec()
+
+    # make a short playlist from first entry
+    html_spec = HtmlDirectedPipelineSpec()
+    html_spec.urls = []
+    html_spec.urls.append (html_pages[0])
+    html_spec.urls.append (html_pages[1])
+    html_spec.urls.append (html_pages[2])
+    html_spec.urls.append (html_pages[3])
+    html_spec.urls.append (html_pages[4])
+    html_spec.urls.append (html_pages[5])
+    html_spec.urls.append (html_pages[6])            
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec)  
 
     assert len(pipeline_items) >= 1 

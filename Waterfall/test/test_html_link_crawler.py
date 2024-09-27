@@ -75,4 +75,27 @@ def test_with_two_recursions(test_output_dir):
     links = crawler.crawl (pipeline_item)   
     assert len(links) == 3
 
+def test_many_sublinks(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'https://course.fast.ai/'  
+    test_output_location = test_output_dir
 
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
+    assert len(links) > 5
+
+
+def test_mad_page(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/'  
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
+    assert len(links) == 1   

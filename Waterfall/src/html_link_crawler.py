@@ -6,7 +6,7 @@ from workflow import PipelineItem, PipelineStep
 import logging
 from bs4 import BeautifulSoup
 import requests
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -35,22 +35,32 @@ class HtmlLinkCrawler (PipelineStep):
            output_location (str): The location where the output will be stored.
            max_depth (int): The maximum depth for crawling links, default is 10.
         '''
-        super(HtmlLinkCrawler, self).__init__(output_location) # pylint: disable=useless-parent-delegation
+        super(HtmlLinkCrawler, self).__init__(
+            output_location)  # pylint: disable=useless-parent-delegation
         self.max_depth = max_depth
 
     def crawl(self, pipeline_item: PipelineItem) -> list[PipelineItem]:
-        links: list[PipelineItem] = []
-        self.crawl_links_recursively(
-            pipeline_item.path, self.output_location, links, 0)
-        return links
 
-    def crawl_links_recursively(self, path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int):
+        # recurse using strings for URLs as logic is simpler
+        links: list[str] = []
+        self.crawl_links_recursively(
+            pipeline_item.path, links, 0)
+
+        # Then make a pipeline
+        pipleline_items = []
+        for link in links:
+            item = PipelineItem()
+            item.path = link
+            pipleline_items.append(item)
+
+        return pipleline_items
+
+    def crawl_links_recursively(self, path: str, current_items: list[str], current_depth: int):
         '''
         Recursively crawl links on an HTML page to build a full tree for file search within the same site.
 
         Args:
            path (str): The URL path to crawl.
-           output_location (str): The location to store the crawled links.
            pipeline_items (list[PipelineItem]): List of links crawled so far.
            current_depth (int): The current depth of recursion.
 
@@ -58,6 +68,10 @@ class HtmlLinkCrawler (PipelineStep):
            None
         '''
         logger.debug('Crawling: %s', path)
+
+        # Bail if the link is a mailto
+        if path.find('mailto:') != -1:
+            return
 
         # Bail if we hit maximum depth
         current_depth = current_depth + 1
@@ -75,28 +89,52 @@ class HtmlLinkCrawler (PipelineStep):
 
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        pipeline_item = PipelineItem()
-        pipeline_item.path = path
-        pipeline_items.append(pipeline_item)
+        # Add current link to the pipeline
+        current_items.append(path)
 
         sub_links = soup.find_all('a')
         sub_urls = []
         for link in sub_links:
-            url = str(link.get('href'))
-            sub_urls.append(url)
+            href = link.get('href')
+            if href is not None:
+                url = str(href)
+                parsed = urlparse(url, "", False)
+                parsed_domain = parsed.netloc
+                parsed_path = parsed.path
+                joined = urljoin('https://' + parsed_domain, parsed_path)
+                if not parsed_path.startswith('#') and not find_matching_entry(current_items, joined):
+                    sub_urls.append(url)
 
         full = add_prefix(path, sub_urls)
-        deduped = deduplicate(pipeline_items, full)
+        deduped = deduplicate(current_items, full)
         trimmed = remove_exits(path, deduped)
 
+        # Recurse where we have not already crawled it
         for link in trimmed:
-            if link not in pipeline_items:
+            if not find_matching_entry(current_items, link):
                 self.crawl_links_recursively(
-                    link, output_location, pipeline_items, current_depth + 1)
+                    link, current_items, current_depth + 1)
+
+
+def find_matching_entry(array: list[any], target: any):
+    '''
+   Find a matching entry in the given array.
+
+   Parameters:
+   - array (list): The list to search for a matching entry.
+   - target (any): The target element to find in the array.
+
+   Returns:
+   - any: The matching entry if found, otherwise None.
+   '''
+    for entry in array:
+        if entry == target:
+            return entry
+    return None
 
 
 # remove duplicates
-def deduplicate(current_links: list[str], new_links: list[str]) -> list[str]:
+def deduplicate(current_links: list[PipelineItem], new_links: list[str]) -> list[str]:
     '''Remove duplicates from a list of new links by comparing them with the current links list.
 
     Args:
@@ -109,7 +147,7 @@ def deduplicate(current_links: list[str], new_links: list[str]) -> list[str]:
     deduped = []
 
     for item in new_links:
-        if not item in current_links:
+        if (find_matching_entry(current_links, item) == None) and find_matching_entry(deduped, item) == None:
             deduped.append(item)
 
     return deduped
@@ -131,11 +169,19 @@ def remove_exits(source_url: str, links: list[str]) -> list[str]:
 
     trimmed = []
 
+    parsed_target = urlparse(source_url)
+    target_domain = parsed_target.netloc
+    target_path = parsed_target.path
+
     for item in links:
-        match = ((not 'http' in item)
-                 and (not '#' in item))
-        if match:
-            trimmed .append(item)
+        # No fragments as we dont want a part within a page
+        parsed_item = urlparse(item, "", False)
+        item_domain = parsed_item.netloc
+        item_path = parsed_item.path
+        item_joined = urljoin('https://' + item_domain, item_path)
+        if (item_domain == target_domain) and (item_path.startswith(target_path)):
+            if (not (find_matching_entry(trimmed, item_joined))) and (len (item_path.split('#')) == 1):
+                trimmed .append(item)
 
     return trimmed
 
