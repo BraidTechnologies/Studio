@@ -44,6 +44,7 @@ gemini_evaluator = GeminiEvaluator()  #initiating an instance of the GeminiEvalu
 
 # Function to configure the Azure OpenAI API client
 def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
+
     """
     Configures OpenAI for Azure using the provided ApiConfiguration.
 
@@ -62,18 +63,7 @@ def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
 # Class to hold test results
 class TestResult:
     def __init__(self) -> None:
-        """
-        Initializes a new instance of the TestResult class.
-        
-        Sets the initial state of the test result, including the question, enriched question, 
-        hit status, hit relevance, hit summary, follow-up question, and follow-up topic.
-        
-        Args:
-            None
-        
-        Returns:
-            None
-        """
+
         self.question: str = ""
         self.enriched_question_summary: str = ""
         self.hit: bool = False
@@ -85,23 +75,6 @@ class TestResult:
 # Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
-    """
-    Retries the OpenAI chat API call with exponential backoff and retry logic.
-
-    :param client: An instance of the AzureOpenAI class.
-    :type client: AzureOpenAI
-    :param messages: A list of dictionaries representing the messages to be sent to the API.
-    :type messages: List[Dict[str, str]]
-    :param config: An instance of the ApiConfiguration class.
-    :type config: ApiConfiguration
-    :param logger: An instance of the logging.Logger class.
-    :type logger: logging.Logger
-    :return: The content of the first choice in the API response.
-    :rtype: str
-    :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
-    :raises OpenAIError: If there is an error with the OpenAI API.
-    :raises APIConnectionError: If there is an error with the API connection.
-    """
     try:
         response = client.chat.completions.create(
             model=config.azureDeploymentName,
@@ -132,21 +105,6 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
-    """
-    Retrieves the text embedding for a given text using the OpenAI API.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        text (str): The text for which to retrieve the embedding.
-        logger (Logger): The logger instance.
-
-    Returns:
-        np.ndarray: The text embedding as a numpy array.
-
-    Raises:
-        OpenAIError: If an error occurs while retrieving the text embedding.
-    """
     try:
         embedding = get_embedding(text, client, config)
         return np.array(embedding)
@@ -156,21 +114,6 @@ def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str,
 
 # Function to calculate cosine similarity between two vectors
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    """
-    Calculates the cosine similarity between two vectors.
-
-    Args:
-        a (np.ndarray): The first vector.
-        b (np.ndarray): The second vector.
-
-    Returns:
-        float: The cosine similarity between the two vectors.
-
-    Raises:
-        ValueError: If the input vectors are not numpy arrays or convertible to numpy arrays.
-        ValueError: If the input vectors do not have the same shape.
-        ValueError: If either of the input vectors is a zero vector.
-    """
     try:
         a, b = np.array(a), np.array(b)
     except Exception:
@@ -190,21 +133,6 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 # Function to generate enriched questions using OpenAI API
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-    """
-    Generates an enriched question using the OpenAI API.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        question (str): The question to be enriched.
-        logger (logging.Logger): The logger instance.
-
-    Returns:
-        str: The enriched question.
-
-    Raises:
-        BadRequestError: If the API request fails.
-    """
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
@@ -249,19 +177,6 @@ def assess_follow_up_on_topic(client: AzureOpenAI, config: ApiConfiguration, fol
     return response
 
 def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
-    """
-    Processes a list of test questions and evaluates their relevance based on their similarity to pre-processed question chunks.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        questions (List[str]): The list of test questions to be processed.
-        processed_question_chunks (List[Dict[str, Any]]): The list of pre-processed question chunks.
-        logger (logging.Logger): The logger instance.
-
-    Returns:
-        List[TestResult]: A list of test results, each containing the original question, its enriched version, and its relevance to the pre-processed chunks.
-    """
     question_results: List[TestResult] = []
     
     for question in questions:
@@ -311,19 +226,6 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
 
 # Function to read processed chunks from the source directory
 def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
-    """
-    Reads and processes JSON files from a specified source directory.
-
-    Args:
-        source_dir (str): The path to the source directory containing JSON files.
-
-    Returns:
-        List[Dict[str, Any]]: A list of dictionaries containing the processed JSON data.
-
-    Raises:
-        FileNotFoundError: If the source directory or a JSON file is not found.
-        IOError: If an I/O error occurs while reading a JSON file.
-    """
     processed_question_chunks: List[Dict[str, Any]] = []
     try:
         for filename in os.listdir(source_dir):
@@ -343,17 +245,6 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
 
 # Function to save the results and generated questions
 def save_results(test_destination_dir: str, question_results: List[TestResult], test_mode: str) -> None:
-    """
-    Saves the test results to a JSON file in the specified destination directory.
-
-    Args:
-        test_destination_dir (str): The path to the directory where the test results will be saved.
-        question_results (List[TestResult]): A list of TestResult objects containing the test results.
-        test_mode (str): The test mode to be used in the output file name.
-
-    Returns:
-        None
-    """
     output_data = [
         {
             "question": result.question,
@@ -369,7 +260,7 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
     ]
 
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_file = os.path.join(test_destination_dir, f"test_output_v3_{test_mode}_{current_datetime}.json")
+    output_file = os.path.join(test_destination_dir, f"test_output_v4_{test_mode}_{current_datetime}.json")
 
     try:
         with open(output_file, "w", encoding="utf-8") as f:
@@ -381,20 +272,6 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
 
 # Main test-running function
 def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: str, num_questions: int = 100, questions: List[str] = None, persona_strategy: PersonaStrategy = None) -> None:
-    """
-    Runs tests using the provided configuration, test destination directory, source directory, and questions.
-
-    Args:
-        config (ApiConfiguration): The configuration for the API.
-        test_destination_dir (str): The path to the directory where the test results will be saved.
-        source_dir (str): The directory containing the source files.
-        num_questions (int): The number of questions to generate using the persona strategy.
-        questions (List[str]): A list of questions to be processed.
-        persona_strategy (PersonaStrategy): The persona strategy to use for generating questions.
-
-    Returns:
-        None
-    """
     client = configure_openai_for_azure(config)
 
     if not test_destination_dir:
