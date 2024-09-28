@@ -26,7 +26,7 @@ class GeminiEvaluator:
         4: Fully relevant and coherent.
 
         *** Response Format ***
-        Total rating: (Your score here)
+        Return just the score as an integer (1, 2, 3, or 4).
         """
 
     def evaluate(self, original_content: str, summary: str) -> str:
