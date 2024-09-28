@@ -359,6 +359,7 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
             "hitRelevance": result.hit_relevance,
             "follow_up": result.follow_up,  # Add follow_up to the output
             "follow_up_on_topic": result.follow_up_on_topic  # Add follow_up_on_topic to the output
+            "gemini_evaluation": result.gemini_evaluation  # Add Gemini evaluation to the output
         }
         for result in question_results
     ]
