@@ -29,11 +29,13 @@ class GeminiEvaluator:
         Total rating: (Your score here)
         """
 
-    def evaluate(self, summary: str) -> str:
+    def evaluate(self, original_content: str, summary: str) -> str:
         model = genai.GenerativeModel("models/gemini-1.5-pro", system_instruction=self.system_instruction_prompt_eval)
         
-        evaluation_prompt = f"Original Content: {summary}"
+        evaluation_prompt = f"""
+        Original Content: {original_content}
+        Summary: {summary}
+        """
         response = model.generate_content(evaluation_prompt)
         
         return response.text
-
