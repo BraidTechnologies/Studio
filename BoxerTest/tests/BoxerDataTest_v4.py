@@ -80,6 +80,7 @@ class TestResult:
         self.hit_relevance: float = 0.0
         self.follow_up: str = ""  # Adding followUp field
         self.follow_up_on_topic: str = ""  # Adding followUpOnTopic field
+        self.gemini_evaluation: str = ""  # Field to store Gemini LLM evaluation
 
 # Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
