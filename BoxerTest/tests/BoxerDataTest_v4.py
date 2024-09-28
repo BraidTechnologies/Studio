@@ -1,12 +1,4 @@
 # Copyright (c) 2024 Braid Technologies Ltd
-
-'''
-Rough: 
-
-- gemini generating number 
-
-'''
-
 # Standard Library Imports
 import logging
 import os
@@ -22,6 +14,7 @@ import datetime
 # Third-Party Packages
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
 from tenacity import retry, wait_random_exponential, stop_after_attempt, retry_if_not_exception_type
+from GeminiEvaluator import GeminiEvaluator
 
 # Add the project root and scripts directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -48,27 +41,21 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Function to configure the Azure OpenAI API client
-def configure_llm_client(config: ApiConfiguration):
-    if config.apiType == "Azure":
-        return AzureOpenAI(
-            azure_endpoint=config.resourceEndpoint, 
-            api_key=config.apiKey.strip(),
-            api_version=config.apiVersion
-        )
-    elif config.apiType == "Gemini":
-        # Add your Gemini-specific client instantiation here
-        return Gemini(
-            gemini_endpoint=config.resourceEndpoint, 
-            api_key=config.apiKey.strip(),
-            api_version=config.apiVersion
-        )
-    else:
-        # OpenAI fallback
-        return OpenAI(
-            api_key=config.apiKey.strip(),
-            api_version=config.apiVersion
-        )
+def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
+    """
+    Configures OpenAI for Azure using the provided ApiConfiguration.
 
+    Args:
+        config (ApiConfiguration): The ApiConfiguration object containing the necessary settings.
+
+    Returns:
+        AzureOpenAI: An instance of AzureOpenAI configured with the provided settings.
+    """
+    return AzureOpenAI(
+        azure_endpoint=config.resourceEndpoint, 
+        api_key=config.apiKey.strip(),
+        api_version=config.apiVersion
+    )
 
 # Class to hold test results
 class TestResult:
@@ -92,73 +79,53 @@ class TestResult:
         self.follow_up: str = ""  # Adding followUp field
         self.follow_up_on_topic: str = ""  # Adding followUpOnTopic field
 
-# Function to call the OpenAI API with retry logic     
-'''
-Below comment out function to be updated! 
-
-ref:
-
-if config.apiType == "Azure" or config.apiType == "open_ai":
-    response = client.chat.completions.create(
-        model=config.azureDeploymentName,
-        messages=messages,
-        temperature=0.7,
-        ...
-    )
-elif config.apiType == "Gemini":
-    # add Gemini-specific API call here
-    )
-
-'''
-# @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-# def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
-#     """
-#     Retries the OpenAI chat API call with exponential backoff and retry logic.
-
-#     :param client: An instance of the AzureOpenAI class.
-#     :type client: AzureOpenAI
-#     :param messages: A list of dictionaries representing the messages to be sent to the API.
-#     :type messages: List[Dict[str, str]]
-#     :param config: An instance of the ApiConfiguration class.
-#     :type config: ApiConfiguration
-#     :param logger: An instance of the logging.Logger class.
-#     :type logger: logging.Logger
-#     :return: The content of the first choice in the API response.
-#     :rtype: str
-#     :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
-#     :raises OpenAIError: If there is an error with the OpenAI API.
-#     :raises APIConnectionError: If there is an error with the API connection.
-#     """
-#     try:
-#         response = client.chat.completions.create(
-#             model=config.azureDeploymentName,
-#             messages=messages,
-#             temperature=0.7,
-#             max_tokens=config.maxTokens,
-#             top_p=0.0,
-#             frequency_penalty=0,
-#             presence_penalty=0,
-#             timeout=config.openAiRequestTimeout,
-#         )
-#         content = response.choices[0].message.content
-#         finish_reason = response.choices[0].finish_reason
-
-#         if finish_reason not in {"stop", "length", ""}:
-#             logger.warning("Unexpected stop reason: %s", finish_reason)
-#             logger.warning("Content: %s", content)
-#             logger.warning("Consider increasing max tokens and retrying.")
-#             raise RuntimeError("Unexpected finish reason in API response.")
-
-#         return content
-
-#     except (OpenAIError, APIConnectionError) as e:
-#         logger.error(f"Error: {e}")
-#         raise
-
-# Function to call the Gemini API with retry logic
+# Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def call_gemini_chat(client: Gemini, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
-    pass
+def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
+    """
+    Retries the OpenAI chat API call with exponential backoff and retry logic.
+
+    :param client: An instance of the AzureOpenAI class.
+    :type client: AzureOpenAI
+    :param messages: A list of dictionaries representing the messages to be sent to the API.
+    :type messages: List[Dict[str, str]]
+    :param config: An instance of the ApiConfiguration class.
+    :type config: ApiConfiguration
+    :param logger: An instance of the logging.Logger class.
+    :type logger: logging.Logger
+    :return: The content of the first choice in the API response.
+    :rtype: str
+    :raises RuntimeError: If the finish reason in the API response is not 'stop', 'length', or an empty string.
+    :raises OpenAIError: If there is an error with the OpenAI API.
+    :raises APIConnectionError: If there is an error with the API connection.
+    """
+    try:
+        response = client.chat.completions.create(
+            model=config.azureDeploymentName,
+            messages=messages,
+            temperature=0.7,
+            max_tokens=config.maxTokens,
+            top_p=0.0,
+            frequency_penalty=0,
+            presence_penalty=0,
+            timeout=config.openAiRequestTimeout,
+        )
+        content = response.choices[0].message.content
+        finish_reason = response.choices[0].finish_reason
+
+        if finish_reason not in {"stop", "length", ""}:
+            logger.warning("Unexpected stop reason: %s", finish_reason)
+            logger.warning("Content: %s", content)
+            logger.warning("Consider increasing max tokens and retrying.")
+            raise RuntimeError("Unexpected finish reason in API response.")
+
+        return content
+
+    except (OpenAIError, APIConnectionError) as e:
+        logger.error(f"Error: {e}")
+        raise
+
+gemini_evaluator = GeminiEvaluator()   #initialiting 
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
