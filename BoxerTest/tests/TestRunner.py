@@ -15,7 +15,8 @@ sys.path.insert(0, parent_dir)
 
 # Import necessary modules and classes for running the tests
 # from BoxerDataTest_v2 import run_tests, call_openai_chat
-from BoxerDataTest_v3 import run_tests, call_openai_chat
+# from BoxerDataTest_v3 import run_tests, call_openai_chat
+from BoxerDataTest_v4 import run_tests, call_openai_chat
 from common.ApiConfiguration import ApiConfiguration
 from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy
 from openai import AzureOpenAI, OpenAIError, BadRequestError, APIConnectionError
@@ -67,7 +68,7 @@ def TestRunner():
         questions = [
             'How are LLMs different from traditional AI models?',
             'What is a Large Language Model (LLM)?',
-            'What is natural language processing (NLP)?',
+            # 'What is natural language processing (NLP)?',
             # 'What are prompt engineering techniques and how do they work?',
             # 'What is the difference between supervised, unsupervised, and reinforcement learning?',
             # 'How can LLMs be used for chatbots?',
@@ -170,6 +171,8 @@ def TestRunner():
     elif choice == '2':
         # Developer persona-based testing
         strategy = DeveloperPersonaStrategy()
+
+        
         run_tests(config, test_destination_dir, source_dir, persona_strategy=strategy)
     elif choice == '3':
         # Tester persona-based testing
