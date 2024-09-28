@@ -40,6 +40,8 @@ FOLLOW_UP_ON_TOPIC_PROMPT = "You are an AI assistant helping a team of developer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+gemini_evaluator = GeminiEvaluator()  #initiating an instance of the GeminiEvaluator
+
 # Function to configure the Azure OpenAI API client
 def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
     """
@@ -125,7 +127,6 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
         logger.error(f"Error: {e}")
         raise
 
-gemini_evaluator = GeminiEvaluator()   #initialiting 
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
