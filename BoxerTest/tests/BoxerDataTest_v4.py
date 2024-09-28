@@ -297,6 +297,9 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
             question_result.follow_up = generate_follow_up_question(client, config, question_result.hit_summary, logger)  # Generate follow-up question
             question_result.follow_up_on_topic = assess_follow_up_on_topic(client, config, question_result.follow_up, logger)  # Assess if follow-up question is on-topic
 
+        # Use Gemini to evaluate the Azure OpenAI enriched summary
+        question_result.gemini_evaluation = gemini_evaluator.evaluate(question_result.enriched_question_summary)
+
         question_results.append(question_result)
 
     logger.debug("Total tests processed: %s", len(question_results))
