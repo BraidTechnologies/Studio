@@ -3,36 +3,36 @@
 # Standard library imports
 import os
 
-azure = False    
-gemini = True              
+azure = True                  
 
 if azure:
-   API_TYPE = "Azure" 
-   API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  
+   API_TYPE = "Azure" #AZURE VERSION WAS "Azure"
+   # API_KEY = os.environ["AZURE_OPENAI_API_KEY"] #AZURE VERSION WAS os.environ["AZURE_OPENAI_API_KEY"]           #uncomment if code breaks - changes for script to exectable on both Windows and Unix machines.  
+   API_KEY = os.getenv("AZURE_OPENAI_API_KEY")  # Use os.getenv() to safely retrieve environment variables       #comment if code breaks  - changes for script to exectable on both Windows and Unix machines. 
    API_VERSION = "2024-02-01" #AZURE VERSION WAS "2023-07-01-preview"
-   RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" 
-elif gemini:    
-    API_TYPE = "Gemini"
-    API_KEY = os.getenv("GEMINI_API_KEY")
-    API_VERSION = "v1"  # Gemini API version
-    RESOURCE_ENDPOINT = "https://api.gemini.google.com/v1"
+   RESOURCE_ENDPOINT = "https://braidlms.openai.azure.com/" #AZURE VERSION WAS os.environ["AZURE_OPENAI_ENDPOINT"] 
 else:
    API_TYPE = "open_ai" #AZURE VERSION WAS "Azure"
-   API_KEY = os.environ["OPENAI_API_KEY"] 
+   API_KEY = os.environ["OPENAI_API_KEY"] #AZURE VERSION WAS os.environ["AZURE_OPENAI_API_KEY"] 
    API_VERSION = "2020-11-07" #AZURE VERSION WAS "2023-07-01-preview"
-   RESOURCE_ENDPOINT = "https://api.openai.com/v1" 
+   RESOURCE_ENDPOINT = "https://api.openai.com/v1" #AZURE VERSION WAS os.environ["AZURE_OPENAI_ENDPOINT"] 
 
+
+# fetch Gemini API key from environment variables
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_SERVICE_ENDPOINT = "https://generativelanguage.googleapis.com"
+# API_VERSION = "v1"  # Gemini API version
 
 
 class ApiConfiguration:
     def __init__(self) -> None:
-        if azure:
-            self.apiType = "Azure"
-        elif gemini:
-            self.apiType = "Gemini"
-        else:
-            self.apiType = "open_ai"
-            
+        """
+        Initialises an instance of the ApiConfiguration class, setting default values for Azure OpenAI and Gemini API parameters.
+
+        :param None: No parameters are required to create an instance of this class.
+
+        :return: Nothing is returned by this method.
+        """
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
@@ -46,6 +46,10 @@ class ApiConfiguration:
         self.chunkDurationMins = 10     # 10 minute long video clips
         self.maxTokens = 4096           # Upper limit on total tokens in an API call. 10 minutes of video = 600 words = 2400 tokens, plus approx 2x headroom
         self.discardIfBelow = 100       # Dont index if less than 100 tokens in an article
+        self.GeminiApiKey = GEMINI_API_KEY
+        self.GeminiServiceEndpoint = "https://generativelanguage.googleapis.com"
+        self.GeminiApiKey = GEMINI_API_KEY
+        self.GeminiServiceEndpoint = GEMINI_SERVICE_ENDPOINT
 
     apiType: str
     apiKey: str
