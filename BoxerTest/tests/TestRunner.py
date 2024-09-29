@@ -171,17 +171,18 @@ def TestRunner():
     elif choice == '2':
         # Developer persona-based testing
         strategy = DeveloperPersonaStrategy()
-
-        
         run_tests(config, test_destination_dir, source_dir, persona_strategy=strategy)
+
     elif choice == '3':
         # Tester persona-based testing
         strategy = TesterPersonaStrategy()
         run_tests(config, test_destination_dir, source_dir, persona_strategy=strategy)
+
     elif choice == '4':
         # Business analyst persona-based testing
         strategy = BusinessAnalystPersonaStrategy()
         run_tests(config, test_destination_dir, source_dir, persona_strategy=strategy)
+        
     else:
         # Handle invalid input
         print("Invalid choice. Exiting.")
