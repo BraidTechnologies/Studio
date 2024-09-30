@@ -26,3 +26,14 @@ export interface IFluidTokenRequest extends IFluidUser {
    documentId: string;   
 }
 
+/**
+ * Represents a response to a request for a Fluid token.
+ * @interface
+ * @property {string} token - the token 
+ */
+export interface IFluidTokenResponse {
+
+   token: string;   
+}
+
+

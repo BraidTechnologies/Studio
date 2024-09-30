@@ -7,7 +7,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { IFindThemeSpec } from "../../../BraidCommon/src/ThemeApi";
+import { IFindThemeRequest } from "../../../BraidCommon/src/ThemeApi";
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 
 let minimumTextLength = 64;
@@ -81,7 +81,7 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
       try {
       let jsonRequest = await request.json();
                   
-      let themeSpec = (jsonRequest as any)?.data as IFindThemeSpec;                 
+      let themeSpec = (jsonRequest as any)?.data as IFindThemeRequest;                 
 
       text = themeSpec.text;
       length = themeSpec.length;

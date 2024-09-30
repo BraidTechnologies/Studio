@@ -6,7 +6,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
-import {IChunkSpec} from "../../../BraidCommon/src/ChunkApi"
+import { IChunkRequest } from "../../../BraidCommon/src/ChunkApi"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
@@ -47,7 +47,7 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
       try {
          let jsonRequest = await request.json();
                   
-         let spec = (jsonRequest as any)?.data as IChunkSpec;
+         let spec = (jsonRequest as any)?.data as IChunkRequest;
 
          text = spec.text;
          chunkSize = spec.chunkSize;         
