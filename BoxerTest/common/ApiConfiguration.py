@@ -18,9 +18,21 @@ else:
    RESOURCE_ENDPOINT = "https://api.openai.com/v1" #AZURE VERSION WAS os.environ["AZURE_OPENAI_ENDPOINT"] 
 
 
+# fetch Gemini API key from environment variables
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_SERVICE_ENDPOINT = "https://generativelanguage.googleapis.com"
+# API_VERSION = "v1"  # Gemini API version
+
 
 class ApiConfiguration:
     def __init__(self) -> None:
+        """
+        Initialises an instance of the ApiConfiguration class, setting default values for Azure OpenAI and Gemini API parameters.
+
+        :param None: No parameters are required to create an instance of this class.
+
+        :return: Nothing is returned by this method.
+        """
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
@@ -34,6 +46,10 @@ class ApiConfiguration:
         self.chunkDurationMins = 10     # 10 minute long video clips
         self.maxTokens = 4096           # Upper limit on total tokens in an API call. 10 minutes of video = 600 words = 2400 tokens, plus approx 2x headroom
         self.discardIfBelow = 100       # Dont index if less than 100 tokens in an article
+        self.GeminiApiKey = GEMINI_API_KEY
+        self.GeminiServiceEndpoint = "https://generativelanguage.googleapis.com"
+        self.GeminiApiKey = GEMINI_API_KEY
+        self.GeminiServiceEndpoint = GEMINI_SERVICE_ENDPOINT
 
     apiType: str
     apiKey: str
@@ -49,6 +65,3 @@ class ApiConfiguration:
     chunkDurationMins: int
     maxTokens: int
     discardIfBelow: int 
-
-
-

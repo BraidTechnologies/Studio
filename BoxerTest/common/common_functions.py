@@ -34,5 +34,3 @@ def get_embedding(text : str, client : AzureOpenAI, config : ApiConfiguration):
                                    timeout=config.openAiRequestTimeout)
    
    return response.data[0].embedding
-
-

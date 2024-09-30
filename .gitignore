@@ -46,3 +46,5 @@ __pycache__/
 __blobstorage__
 __queuestorage__
 __azurite_db*__.json
+BoxerTest/test output/~$test_output_v2_tester_2024-09-05_11-36-37.xlsx
+BoxerTest/tests/no commit_BoxerDataTest_v3_.py
