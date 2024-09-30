@@ -328,7 +328,7 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
         # Iterate through the processed chunks to find the best hit
         for chunk in processed_question_chunks:
             if chunk and isinstance(chunk, dict):
-                ada_embedding = chunk.get("ada_v2")
+                ada_embedding = chunk.get("embedding")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
                 if similarity > SIMILARITY_THRESHOLD:
