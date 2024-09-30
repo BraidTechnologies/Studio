@@ -182,6 +182,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
         raise ValueError("Input vectors must be numpy arrays or convertible to numpy arrays")
 
     if a.shape != b.shape:
+        logger.error(f"Shape mismatch: a.shape = {a.shape}, b.shape = {b.shape}")
         raise ValueError("Input vectors must have the same shape")
 
     dot_product = np.dot(a, b)
