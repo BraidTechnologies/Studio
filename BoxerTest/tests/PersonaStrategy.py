@@ -30,7 +30,7 @@ BUSINESS_ANALYST_PROMPT = "You are a business analyst interested in how people c
 class PersonaStrategy(ABC):
     @abstractmethod
     def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+        """
     Generates a list of questions based on a persona.
 
     Args:
@@ -41,11 +41,11 @@ class PersonaStrategy(ABC):
 
     Returns:
         List[str]: A list of questions generated based on the persona.
-    """
+        """
         pass  # This is an abstract method to be implemented by subclasses
 
     def _generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+        """
     Generates a list of questions based on a prompt.
 
     Args:
@@ -57,8 +57,7 @@ class PersonaStrategy(ABC):
 
     Returns:
         List[str]: A list of questions generated based on the prompt.
-    """
-
+        """
         messages = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
@@ -70,7 +69,7 @@ class PersonaStrategy(ABC):
 
 class DeveloperPersonaStrategy(PersonaStrategy):
     def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+        """
     Generates a list of questions based on the developer persona.
 
     Args:
@@ -81,12 +80,12 @@ class DeveloperPersonaStrategy(PersonaStrategy):
 
     Returns:
         List[str]: A list of questions generated based on the developer persona.
-    """
+        """
         return self._generate_questions(client, config, DEVELOPER_PROMPT, num_questions, logger)
 
 class TesterPersonaStrategy(PersonaStrategy):
     def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+        """
     Generates a list of questions based on the tester persona.
 
     Args:
@@ -97,12 +96,12 @@ class TesterPersonaStrategy(PersonaStrategy):
 
     Returns:
         List[str]: A list of questions generated based on the tester persona.
-    """
+        """
         return self._generate_questions(client, config, TESTER_PROMPT, num_questions, logger)
 
 class BusinessAnalystPersonaStrategy(PersonaStrategy):
     def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+        """
     Generates a list of questions based on the business analyst persona.
 
     Args:
@@ -113,6 +112,6 @@ class BusinessAnalystPersonaStrategy(PersonaStrategy):
 
     Returns:
         List[str]: A list of questions generated based on the business analyst persona.
-    """
+        """
     
         return self._generate_questions(client, config, BUSINESS_ANALYST_PROMPT, num_questions, logger)
