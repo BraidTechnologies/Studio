@@ -383,16 +383,16 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
                     # Adjust for the new structure with 'id', 'embedding', 'summary', etc.
                     embedding = chunk.get("embedding")
                     summary = chunk.get("summary")
-                    url = chunk.get("url", "")  # Optional field, default to empty string if not present
-                    text = chunk.get("text", "")  # Optional field, default to empty string if not present
+                    #url = chunk.get("url", "")  # Optional field, default to empty string if not present
+                    #text = chunk.get("text", "")  # Optional field, default to empty string if not present
 
                     if embedding and summary:
                         processed_question_chunks.append({
                             "id": chunk.get("id"),
                             "embedding": embedding,
                             "summary": summary,
-                            "url": url,   # Store if you need to use it later
-                            "text": text  # Store if you need to use it later
+                            # "url": url,   # Store if you need to use it later
+                            # "text": text  # Store if you need to use it later
                         })
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
