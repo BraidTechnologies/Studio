@@ -6,7 +6,7 @@
  * @property {string} text - The text content of the chunk.
  * @property {number | undefined} chunkSize - The size of the chunk, if specified.
  */
-export interface IChunkSpec{
+export interface IChunkRequest{
 
    text: string;
    chunkSize: number | undefined;

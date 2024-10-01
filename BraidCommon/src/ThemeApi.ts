@@ -5,7 +5,7 @@
  * Interface for specifying the criteria to find a theme.
  * @interface
  */
-export interface IFindThemeSpec{
+export interface IFindThemeRequest{
 
    text: string;
    length : number;
