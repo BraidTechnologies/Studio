@@ -6,7 +6,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
-import { IChunkRequest } from "../../../BraidCommon/src/ChunkApi"
+import { IChunkRequest, IChunkResponse } from "../../../BraidCommon/src/ChunkApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
@@ -46,9 +46,9 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
 
       try {
          let jsonRequest = await request.json();
-                  
-         let spec = (jsonRequest as any)?.data as IChunkRequest;
+         context.log(jsonRequest);
 
+         let spec = (jsonRequest as any).request as IChunkRequest;
          text = spec.text;
          chunkSize = spec.chunkSize;         
          overlapWords = spec.overlapWords;         
@@ -56,9 +56,14 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
          if (text)
             chunks = chunkText(text, chunkSize, overlapWords);
 
+         let body: IChunkResponse = {
+            chunks: chunks
+         }
+
+         context.log (body)
          return {
             status: 200, // Ok
-            body: JSON.stringify(chunks)
+            body: JSON.stringify(body)
          };
       }
       catch(error: any) {
@@ -68,6 +73,7 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
       }
    }
    else {
+      context.error ("Sessionvalidation failed.");      
       return sessionFailResponse();
    }
 };

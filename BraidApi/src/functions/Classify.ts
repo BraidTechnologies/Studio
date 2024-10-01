@@ -6,7 +6,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import { isSessionValid, sessionFailResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { IClassifyRequest, IClassifyResponse } from "../../../BraidCommon/src/ClassifyApi.Types";
 
 /**
  * Decodes the initial classification string to a human-readable format.
@@ -86,22 +87,43 @@ export async function classify(request: HttpRequest, context: InvocationContext)
    let text: string | undefined = undefined;
    let classifications: Array<string> | undefined = undefined;
 
-   let jsonRequest = await request.json();
-   text = (jsonRequest as any)?.data?.text;
-   classifications = (jsonRequest as any)?.data?.classifications;
+   if (isSessionValid(request, context)) {
+      try {
+         let jsonRequest = await request.json();
+         context.log (jsonRequest);
+         
+         let spec = (jsonRequest as any).request as IClassifyRequest;
+         text = spec.text;
+         classifications = spec.classifications;
 
-   if ((isSessionValid(request, context))
-      && (text && text.length > 0)
-      && (classifications && classifications.length > 0)) {
+         if ((text && text.length > 0)
+         && (classifications && classifications.length > 0)) {
 
-      let summaryClassification = await singleShotClassify(text, classifications);
+            let summaryClassification = await singleShotClassify(text, classifications);
 
-      return {
-         status: 200, // Ok
-         body: summaryClassification
-      };
+            let classificationResponse : IClassifyResponse = {
+               classification: summaryClassification
+            }
+            
+            context.log (classificationResponse);
+
+            return {
+               status: 200, // Ok
+               body: JSON.stringify(classificationResponse)
+            };
+         }
+         else {
+            context.error ("Error classifying text:");
+            return invalidRequestResponse("Text or classifications not provided.");
+         }
+      }
+      catch (e: any) {
+         context.error ("Error classifying text:", e);
+         return defaultErrorResponse();
+      }
    }
    else {
+      context.error ("Sessionvalidation failed.");         
       return sessionFailResponse();
    }
 };

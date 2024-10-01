@@ -1,5 +1,5 @@
 
-import { IChunkRequest } from "./ChunkApi";
+import { IChunkRequest } from "./ChunkApi.Types";
 
 import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from "./EnrichedQuery"; 
 

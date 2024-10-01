@@ -8,7 +8,8 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
-import { isSessionValid, sessionFailResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { ISummariseRequest, ISummariseResponse } from "../../../BraidCommon/src/SummariseApi.Types";
 
 let minimumTextLength = 64;
 let defaultOverlapWords = 50
@@ -122,32 +123,45 @@ export async function recursiveSummarize(text: string, level: number, words: num
 export async function summarize(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let text: string | undefined = undefined;
-   let words: string = "50";
+   let words: number = 50;
    let overallSummary: string | undefined = undefined;
-
-
-   let jsonRequest = await request.json();
 
    if (isSessionValid(request, context)) {
 
-      text = (jsonRequest as any)?.data?.text;
-      words = (jsonRequest as any)?.data?.words;
+      try {
+         let jsonRequest = await request.json();
+         context.log(jsonRequest);
 
-      if (!text || text.length < minimumTextLength) {
-         overallSummary = "Sorry, not enough text to summarise."
+         let summariseSpec = (jsonRequest as any).request as ISummariseRequest;                                        
+
+         text = summariseSpec.text;
+         words = summariseSpec.lengthInWords? summariseSpec.lengthInWords : 50;
+
+         if (text && text.length >= minimumTextLength && words > 0) {
+            let definitelyText: string = text;
+            overallSummary = await recursiveSummarize(definitelyText, 0, words);
+
+            let summariseResponse: ISummariseResponse = {
+               summary: overallSummary
+            }
+
+            return {
+               status: 200, // Ok
+               body: JSON.stringify (summariseResponse)
+            };
+         }
+         else {
+            context.error ("Text is below minimum length or invalid length for summary.");            
+            return invalidRequestResponse ("Text is below minimum length or invalid length for summary.")            
+         }
       }
-      else {
-
-         let definitelyText: string = text;
-         overallSummary = await recursiveSummarize(definitelyText, 0, parseInt(words, 10));
+      catch (e: any) {
+         context.error (e);
+         return defaultErrorResponse();         
       }
-
-      return {
-         status: 200, // Ok
-         body: overallSummary
-      };
    }
    else {
+      context.error ("Session validation failed.");        
       return sessionFailResponse();
    }
 };

@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { IEmbedRequest, IEmbedResponse } from "../../BraidCommon/src/EmbedApi.Types";
 
 declare var process: any;
 
@@ -16,19 +17,21 @@ describe("Embed", async function () {
    async function validEmbedCall (apiUrl: string, text: string) : Promise<Array<number> | undefined> {
 
       let embedding: Array<number> | undefined = undefined;
+      let embeddingRequest: IEmbedRequest = {
+         text: text
+      }
 
       try {
          let response = await axios.post(apiUrl, {
-           data: {
-              text: text
-           },
+           request: embeddingRequest,
            headers: {
               'Content-Type': 'application/json'
            }
          });
 
-         embedding = (response.data as Array<number>);
-         console.log (embedding);
+         let embeddingResponse = (response.data as IEmbedResponse);
+         embedding = embeddingResponse.embedding;
+         console.log (embeddingResponse);
   
       } catch (e: any) {       
 
@@ -87,9 +90,9 @@ describe("Embed", async function () {
 
       let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
 
-      let summary = await validEmbedCall (apiUrl, sampleText);
+      let embedding = await validEmbedCall (apiUrl, sampleText);
 
-      expect (summary && summary?.length > 0).toBe (true) ;     
+      expect (embedding && embedding?.length > 0).toBe (true) ;     
 
    }).timeout(20000); 
 
@@ -100,9 +103,9 @@ describe("Embed", async function () {
 
       let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
 
-      let summary = await validEmbedCall (apiUrl, sampleText);
+      let embedding = await validEmbedCall (apiUrl, sampleText);
 
-      expect (summary && summary?.length > 0).toBe (true) ;     
+      expect (embedding && embedding?.length > 0).toBe (true) ;     
 
    }).timeout(20000); 
 

@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { ISuppressSummariseFailRequest, ISuppressSummariseFailResponse, ESuppressSummariseFail } from "../../BraidCommon/src/SuppressSummariseFailApi.Types";
 
 declare var process: any;
 
@@ -23,27 +24,28 @@ describe("SuppressSummariseFail", async function () {
 
    async function validCall (apiUrl: string, text: string, length: number) : Promise<string | undefined> {
 
-      let summary: string | undefined = undefined;
+      let failCode: string | undefined = undefined;
+      let summariseRequest: ISuppressSummariseFailRequest = {
+         text: text,
+         lengthInWords: 50
+      }
 
       try {
          let response = await axios.post(apiUrl, {
-           data: {
-              text: text,
-              length: length
-           },
+           request: summariseRequest,
            headers: {
               'Content-Type': 'application/json'
            }
          });
 
-         summary = (response.data as string);
+         failCode = (response.data as ISuppressSummariseFailResponse).isValidSummary;
   
       } catch (e: any) {       
 
          console.error (e);           
       }   
       
-      return summary;
+      return failCode;
    }
 
    async function invalidCall (apiUrl: string, text: string) : Promise <Boolean> {
@@ -84,10 +86,10 @@ describe("SuppressSummariseFail", async function () {
   
          let apiUrl = environment.suppressSummariseFail() + "?session=" + process.env.SessionKey.toString();
 
-         let summary = await validCall (apiUrl, sampleText, 10);
+         let failCode = await validCall (apiUrl, sampleText, 10);
 
-         expect (summary && summary?.length > 0).toBe (true) ;  
-         expect (summary).toBe ("No") ;           
+         expect (failCode && failCode?.length > 0).toBe (true) ;  
+         expect (failCode).toBe (ESuppressSummariseFail.kNo) ;           
       }   
 
    }).timeout(20000);
@@ -114,10 +116,10 @@ describe("SuppressSummariseFail", async function () {
   
          let apiUrl = environment.suppressSummariseFail() + "?session=" + process.env.SessionKey.toString();
 
-         let summary = await validCall (apiUrl, sampleText, 10);
+         let failCode = await validCall (apiUrl, sampleText, 10);
 
-         expect (summary && summary?.length > 0).toBe (true) ;  
-         expect (summary).toBe ("No") ;           
+         expect (failCode && failCode?.length > 0).toBe (true) ;  
+         expect (failCode).toBe (ESuppressSummariseFail.kNo) ;           
       }   
 
    }).timeout(20000);

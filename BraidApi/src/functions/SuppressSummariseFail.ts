@@ -7,7 +7,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { isSessionValid, sessionFailResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
+import { ISuppressSummariseFailRequest, ISuppressSummariseFailResponse, ESuppressSummariseFail } from "../../../BraidCommon/src/SuppressSummariseFailApi.Types";
 
 let minimumTextLength = 64;
 
@@ -19,7 +20,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function suppressSummariseFailCall(text: string, length: number): Promise<string> {
+async function suppressSummariseFailCall(text: string, length: number): Promise<ESuppressSummariseFail> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -51,7 +52,7 @@ async function suppressSummariseFailCall(text: string, length: number): Promise<
       }
    );
 
-   return (response.data.choices[0].message.content);
+   return (response.data.choices[0].message.content === ESuppressSummariseFail.kNo ? ESuppressSummariseFail.kNo : ESuppressSummariseFail.kYes);
 }
 
 /**
@@ -65,32 +66,46 @@ export async function suppressSummariseFail(request: HttpRequest, context: Invoc
 
    let text: string | undefined = undefined;
    let length: number | undefined = undefined;
-   let overallSummary: string | undefined = undefined;
+   let overallSummary: ESuppressSummariseFail | undefined = undefined;
    const defaultLength = 15;
-
-   let jsonRequest = await request.json();
 
    if (isSessionValid(request, context)) {
 
-      text = (jsonRequest as any)?.data?.text;
-      length = (jsonRequest as any)?.data?.length;
+      try {
+         let jsonRequest = await request.json();
+         context.log(jsonRequest);
 
-      if (!text || text.length < minimumTextLength) {
-         overallSummary = "No"
+         let summariseSpec = (jsonRequest as any).request as ISuppressSummariseFailRequest;   
+         text = summariseSpec.text;
+         length = summariseSpec.lengthInWords;
+
+         if (!text || text.length < minimumTextLength) {
+            overallSummary = ESuppressSummariseFail.kNo;
+         }
+         else {
+
+            let definitelyText: string = text;
+            let definitelyLength: number = length ? length : defaultLength;
+            overallSummary = await suppressSummariseFailCall(definitelyText, definitelyLength);
+         }
+
+         let summariseResponse : ISuppressSummariseFailResponse = {
+            isValidSummary: overallSummary
+         }
+
+         context.log (summariseResponse);
+         return {
+            status: 200, // Ok
+            body: JSON.stringify (summariseResponse)
+         };
       }
-      else {
-
-         let definitelyText: string = text;
-         let definitelyLength: number = length ? length : defaultLength;
-         overallSummary = await suppressSummariseFailCall(definitelyText, definitelyLength);
+      catch (e: any) {
+         context.error (e);
+         return defaultErrorResponse();          
       }
-
-      return {
-         status: 200, // Ok
-         body: overallSummary
-      };
    }
    else {
+      context.error ("Session validation failed.");          
       return sessionFailResponse();
    }
 };

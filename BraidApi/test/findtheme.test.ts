@@ -15,32 +15,35 @@ let themedText = "Surfing is a surface water sport in which an individual, a sur
 + "\n\n"
 + "The term surfing refers to a person riding a wave using a board, regardless of the stance. There are several types of boards. The Moche of Peru would often surf on reed craft, while the native peoples of the Pacific surfed waves on alaia, paipo, and other such water craft. Ancient cultures often surfed on their belly and knees, while the modern-day definition of surfing most often refers to a surfer riding a wave standing on a surfboard; this is also referred to as stand-up surfing."
 
+import { IFindThemeRequest, IFindThemeResponse } from "../../BraidCommon/src/FindThemeApi.Types";
+
 describe("FindTheme", async function () {
 
    async function validThemeCall (apiUrl: string, text: string, length: number) : Promise<string | undefined> {
 
-      let summary: string | undefined = undefined;
+      let theme: string | undefined = undefined;
+      let findThemeRequest: IFindThemeRequest = {
+         text: text,
+         length: length
+      }
 
       try {
          let response = await axios.post(apiUrl, {
-           data: {
-              text: text,
-              length: length
-           },
+           request: findThemeRequest,
            headers: {
               'Content-Type': 'application/json'
            }
          });
 
-         summary = (response.data as string);
-         console.log (summary);
+         theme = (response.data as IFindThemeResponse).theme;
+         console.log (theme);
   
       } catch (e: any) {       
 
          console.error (e);           
       }   
       
-      return summary;
+      return theme;
    }
 
    async function invalidThemeCall (apiUrl: string, text: string) : Promise <Boolean> {

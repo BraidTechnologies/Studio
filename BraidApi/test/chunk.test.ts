@@ -6,39 +6,41 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
+import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { IChunkRequest, IChunkResponse } from '../../BraidCommon/src/ChunkApi.Types';
 
 declare var process: any;
 
 describe("Chunk", async function () {
 
-   async function validChunkCall (apiUrl: string, text: string) : Promise<Array<string> | undefined> {
+   async function validChunkCall(apiUrl: string, text: string): Promise<IChunkResponse | undefined> {
 
-      let chunks: Array<string> | undefined = undefined;
+      let chunkRequest: IChunkRequest = {
+         text: text
+      };
+      let responseData: IChunkResponse | undefined = undefined;
 
       try {
          let response = await axios.post(apiUrl, {
-           data: {
-              text: text
-           },
-           headers: {
-              'Content-Type': 'application/json'
-           }
+            request: chunkRequest,
+            headers: {
+               'Content-Type': 'application/json'
+            }
          });
 
-         chunks = (response.data as Array<string>);
-  
-      } catch (e: any) {       
+         responseData = (response.data as IChunkResponse);
 
-         console.error (e);           
-      }   
-      
-      return chunks;
+      } catch (e: any) {
+
+         console.error(e);
+      }
+
+      return responseData;
    }
 
-   async function invalidChunkCall (apiUrl: string, text: string) : Promise <Boolean> {
-   
+   async function invalidChunkCall(apiUrl: string, text: string): Promise<Boolean> {
+
       var response: any;
       let caught = false;
 
@@ -46,40 +48,54 @@ describe("Chunk", async function () {
          response = await axios.get(apiUrl, {
          });
 
-      } catch (e: any) {       
+      } catch (e: any) {
          caught = true;
-      }     
+      }
 
       return caught;
-   }   
+   }
 
    it("Needs to fail if session key is incorrect", async function () {
 
-      let sampleText = "OpenAI have release a new large language model aimed at coding." ;      
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
       let environment = getEnvironment(EEnvironment.kLocal);
 
       let apiUrl = environment.chunkApi() + "?session=" + "thiswillfail";
 
-      let caught = await invalidChunkCall (apiUrl, sampleText);
+      let caught = await invalidChunkCall(apiUrl, sampleText);
 
-      expect (caught).toBe (true) ;     
+      expect(caught).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to chunk a short message", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
+
+      let chunkResponse = await validChunkCall(apiUrl, sampleText);
+
+      expect(chunkResponse && chunkResponse?.chunks.length === 1).toBe(true);
 
    }).timeout(20000);
 
    it("Needs to chunk a long message", async function () {
 
-      let sampleText = "OpenAI have release a new large language model aimed at coding." ;   
-      for (let i = 0; i < 15; i++)   
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+      for (let i = 0; i < 15; i++)
          sampleText = sampleText + sampleText;
 
       let environment = getEnvironment(EEnvironment.kLocal);
 
       let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
 
-      let chunks = await validChunkCall (apiUrl, sampleText);
+      let chunkResponse = await validChunkCall(apiUrl, sampleText);
 
-      expect (chunks && chunks?.length > 1).toBe (true) ;     
+      expect(chunkResponse && chunkResponse?.chunks.length > 1).toBe(true);
 
-   }).timeout(20000);           
+   }).timeout(20000);
 
 });

@@ -7,8 +7,10 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { IFindThemeRequest } from "../../../BraidCommon/src/ThemeApi";
-import { sessionFailResponse, defaultErrorResponse } from "./Utility";
+import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility";
+
+import { IFindThemeRequest, IFindThemeResponse } from "../../../BraidCommon/src/FindThemeApi.Types";
+import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 
 let minimumTextLength = 64;
 
@@ -65,42 +67,42 @@ async function findThemeCall(text: string, length: number): Promise<string> {
  */
 export async function findTheme(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let requestedSession: string | undefined = undefined;
    let text: string | undefined = undefined;
    let length: number | undefined = undefined;
-   let overallSummary: string | undefined = undefined;
+   let theme: string | undefined = undefined;
    const defaultLength = 15;
 
-   for (const [key, value] of request.query.entries()) {
-      if (key === 'session')
-         requestedSession = value;
-   }
-
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
+   if (isSessionValid(request, context)) {
       
       try {
-      let jsonRequest = await request.json();
-                  
-      let themeSpec = (jsonRequest as any)?.data as IFindThemeRequest;                 
+         let jsonRequest = await request.json();
+         context.log(jsonRequest);
+         let themeSpec = (jsonRequest as any).request as IFindThemeRequest;                                        
 
-      text = themeSpec.text;
-      length = themeSpec.length;
+         text = themeSpec.text;
+         length = themeSpec.length;
 
-      if (!text || text.length < minimumTextLength) {
-         overallSummary = "Sorry, not enough text to find a theme."
-      }
-      else {
+         if (text && text.length >= minimumTextLength && length > 0) {
 
-         let definitelyText: string = text;
-         let definitelyLength: number = length ? length : defaultLength;
-         overallSummary = await findThemeCall(definitelyText, definitelyLength);
-      }
-      context.log("Passed session key validation:" + requestedSession);
+            let definitelyText: string = text;
+            let definitelyLength: number = length ? length : defaultLength;
+            theme = await findThemeCall(definitelyText, definitelyLength);
 
-      return {
-         status: 200, // Ok
-         body: overallSummary
-      };
+            throwIfUndefined (theme);
+            let themeResponse : IFindThemeResponse = {
+               theme: theme
+            }
+            context.log (themeResponse);
+
+            return {
+               status: 200, // Ok
+               body: JSON.stringify (themeResponse)
+            };      
+         }
+         else {
+            context.error ("Text is below minimum length or invalid length for theme.");            
+            return invalidRequestResponse ("Text is below minimum length or invalid length for theme.")
+         }
       }
       catch (e: any) {
          context.error (e);
@@ -108,6 +110,7 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
       }      
    }
    else {
+      context.error ("Session validation failed.");         
       return sessionFailResponse();
    }
 };

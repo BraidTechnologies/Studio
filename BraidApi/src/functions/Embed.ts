@@ -7,9 +7,10 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { isSessionValid, sessionFailResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
 import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
+import { IEmbedRequest, IEmbedResponse } from "../../../BraidCommon/src/EmbedApi.Types";
 
 let model = getDefaultModel();
 
@@ -59,30 +60,44 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
 
    let text: string | undefined = undefined;
 
-   let jsonRequest = await request.json();
-   context.log(jsonRequest);
-   text = (jsonRequest as any)?.data?.text;
+   if (isSessionValid(request, context)) {
 
-   if ((isSessionValid(request, context))
-      && (text && text.length > 0)) {
+      try {
+         let jsonRequest = await request.json();
+         context.log(jsonRequest);
+         let spec = (jsonRequest as any).request as IEmbedRequest;
+         text = spec.text;
 
-      let definitelyText: string = text;
+         if ((text && text.length > 0)) {
 
-      // If the text is bigger than available context, we have to summarise it
-      if (!model.fitsInContext(definitelyText)) {
-         definitelyText = await recursiveSummarize(definitelyText, 0, model.contextWindowSize)
+            // If the text is bigger than available context, we have to summarise it
+            if (!model.fitsInContext(text)) {
+               text = await recursiveSummarize(text, 0, model.contextWindowSize)
 
-         context.log("Summarised");
+               context.log("Summarised");
+            }
+
+            let embeddingResponse : IEmbedResponse = {
+               embedding: await calculateEmbedding(text)
+            };
+
+            return {
+               status: 200, // Ok
+               body: JSON.stringify(embeddingResponse)
+            };
+         }
+         else {
+            context.error("Error embedding text:");
+            return invalidRequestResponse("Text not provided.");
+         }         
       }
-
-      let embedding = await calculateEmbedding(definitelyText);
-
-      return {
-         status: 200, // Ok
-         body: JSON.stringify(embedding)
-      };
+      catch (e: any) {
+         context.error("Error embedding text:", e);
+         return defaultErrorResponse();
+      }   
    }
    else {
+      context.error ("Sessionvalidation failed.");         
       return sessionFailResponse();
    }
 };

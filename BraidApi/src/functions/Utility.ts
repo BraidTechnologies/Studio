@@ -70,3 +70,11 @@ export function defaultErrorResponse(): HttpResponseInit {
       body: "The server encountered an unpexcted problem."
    };
 }
+
+export function invalidRequestResponse(str: string): HttpResponseInit {
+
+   return {
+      status: 400, // Invalid request
+      body: "Invalid request:" + str
+   };
+}
