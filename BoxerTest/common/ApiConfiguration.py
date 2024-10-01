@@ -39,7 +39,7 @@ class ApiConfiguration:
         self.azureDeploymentName = "braidlms"
         self.azureEmbedDeploymentName="braidlmse"
         self.modelName="gpt-4"      
-        self.embedModelName="text-embedding-ada-002"
+        self.embedModelName="text-embedding-3-large"
         self.processingThreads = 4
         self.openAiRequestTimeout = 60
         self.summaryWordCount = 50      # 50 word summary
