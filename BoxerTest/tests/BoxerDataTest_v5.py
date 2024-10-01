@@ -371,10 +371,6 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
 
     Returns:
         List[Dict[str, Any]]: A list of dictionaries containing the processed JSON data.
-
-    Raises:
-        FileNotFoundError: If the source directory or a JSON file is not found.
-        IOError: If an I/O error occurs while reading a JSON file.
     """
     processed_question_chunks: List[Dict[str, Any]] = []
     try:
@@ -383,11 +379,25 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
                 file_path = os.path.join(source_dir, filename)
                 with open(file_path, "r", encoding="utf-8") as f:
                     chunk = json.load(f)
-                    processed_question_chunks = chunk
+
+                    # Adjust for the new structure with 'id', 'embedding', 'summary', etc.
+                    embedding = chunk.get("embedding")
+                    summary = chunk.get("summary")
+                    url = chunk.get("url", "")  # Optional field, default to empty string if not present
+                    text = chunk.get("text", "")  # Optional field, default to empty string if not present
+
+                    if embedding and summary:
+                        processed_question_chunks.append({
+                            "id": chunk.get("id"),
+                            "embedding": embedding,
+                            "summary": summary,
+                            "url": url,   # Store if you need to use it later
+                            "text": text  # Store if you need to use it later
+                        })
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
         raise
-    
+
     if not processed_question_chunks:
         logger.error("Processed question chunks are None or empty.")
     
