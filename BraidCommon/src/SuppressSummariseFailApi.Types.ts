@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-// Definitions for the data elements of the Embed API
+// Definitions for the data elements of the SuppressSummariseFail API
 
 /**
  * Defines the structure of a summarise request object.
@@ -14,6 +14,7 @@ export enum ESuppressSummariseFail {
    kYes = "Yes",
    kNo = "No"
 }
+
 /**
  * Defines the structure of a summarise response object.
  */

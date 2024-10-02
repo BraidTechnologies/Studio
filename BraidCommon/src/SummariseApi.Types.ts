@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-// Definitions for the data elements of the Embed API
+// Definitions for the data elements of the Summarise API
 
 /**
  * Defines the structure of a summarise request object.
