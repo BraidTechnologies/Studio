@@ -40,26 +40,32 @@ def test_with_output (test_output_dir):
     os.chdir (test_output_dir)
     test_path = 'pass_test.html'
     test_output_location = test_output_dir
-    text = "Here is some text"
+    test = [0.0, 1.0]
 
     repository = EmbeddingRespositoryFacade (test_output_location)  
-    repository.save (test_path, text)
+    repository.save (test_path, test)
     exists = repository.exists (test_path)
-    saved = repository.load (test_path)
+    caught = False
+    try:
+       saved = repository.load (test_path)
+    except:
+        caught = True
 
     assert exists == True
-    assert saved == text
+    assert caught == False
+    assert saved == test
 
 def test_with_no_output (test_output_dir):
 
     os.chdir (test_output_dir)
     test_path = 'fail_test.html'
     test_output_location = test_output_dir
-    text = "Here is some text"
+    test = [0.0, 1.0]
 
     repository = EmbeddingRespositoryFacade (test_output_location)  
-    exists = repository.exists (test_path)
-    saved = repository.load (test_path)
+    try:
+       saved = repository.load (test_path)
+    except:
+        caught = True
 
-    assert exists == False
-    assert saved != text
+    assert caught == True

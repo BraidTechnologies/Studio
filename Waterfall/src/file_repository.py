@@ -48,7 +48,7 @@ class FileRespository:
             json.dump(text, file, indent=4, ensure_ascii=False)
             file.close()
 
-        logger.debug('Summarising: %s', path)
+        logger.debug('Saving: %s', path)
 
         return None
 

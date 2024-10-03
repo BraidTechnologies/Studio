@@ -6,6 +6,7 @@ import os
 import shutil
 import sys
 import logging
+import json
 
 test_root = os.path.dirname(__file__)
 parent= os.path.abspath(os.path.join(test_root, '..'))
@@ -39,8 +40,8 @@ def test_basic (test_output_dir):
 
 def test_with_output (test_output_dir):
     test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'simple_test.html')
     os.chdir (test_root)
-    test_path = 'simple_test.html'
     test_output_location = test_output_dir
     
     pipeline_item = PipelineItem()
@@ -50,7 +51,7 @@ def test_with_output (test_output_dir):
     enriched_text: PipelineItem = downloader.download (pipeline_item) 
 
     chunker = Chunker (test_output_location)
-    chunks : PipelineItem = chunker.chunk (enriched_text, 0)  
+    chunks : PipelineItem = chunker.chunk (enriched_text, 0, 0)  
 
     assert len(chunks) == 1
 
@@ -76,7 +77,7 @@ def test_long (test_output_dir):
        i = i + 1
 
     enriched_text.text = long_text
-    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0)  
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0, 0)  
 
     assert len(chunks_overlapped) > 1
 

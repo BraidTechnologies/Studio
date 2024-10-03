@@ -49,7 +49,7 @@ class EmbeddingFinder:
 
         for embeddding in self.embeddings:
             this_similarity = cosine_similarity(
-                embeddding, enriched_embeddding.embedding_as_float)
+                embeddding, enriched_embeddding.embedding)
             if this_similarity > best_similarity:
                 best_similarity = this_similarity
                 best_match = embeddding

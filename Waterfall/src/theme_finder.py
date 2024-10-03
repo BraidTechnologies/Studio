@@ -5,6 +5,7 @@
 import logging
 import os
 import requests
+import json
 from requests.adapters import HTTPAdapter, Retry
 
 # Set up logging to display information about the execution of the script
@@ -38,13 +39,14 @@ class ThemeFinder:
         summary_url = f'https://braidapi.azurewebsites.net/api/FindTheme?session={
             SESSION_KEY}'
         input_json = {
-            'data': {
+            'request': {
                 'text': text,
                 'length': length
             }
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        theme = response.text
+        response_json = json.loads (response.text)        
+        theme = response_json['theme']
 
         return theme

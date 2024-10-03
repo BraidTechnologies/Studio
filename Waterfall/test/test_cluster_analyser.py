@@ -41,8 +41,7 @@ def test_basic (test_output_dir):
     items: list [PipelineItem] = []
     item: PipelineItem = PipelineItem()
     item.path = test_path
-    item.embedding = "[1.0,2.0]"
-    item.embedding_as_float = Embedder.test_to_float (item.embedding)    
+    item.embedding = [1.0,2.0]   
     items.append (item)
         
     analyser = ClusterAnalyser (test_output_location, 2)

@@ -51,7 +51,7 @@ def test_with_output (test_output_dir):
     test_output_location = test_output_dir
 
     texts = []
-    embeddings_as_float = []
+    embeddings = []
 
     for test_path in test_paths:
        item: PipelineItem = PipelineItem() 
@@ -67,9 +67,9 @@ def test_with_output (test_output_dir):
        embedder = Embedder (test_output_location)
        item = embedder.embed (item)   
 
-       embeddings_as_float.append (item.embedding_as_float)
+       embeddings.append (item.embedding)
 
-    embedding_finder = EmbeddingFinder (embeddings_as_float, test_output_dir) 
+    embedding_finder = EmbeddingFinder (embeddings, test_output_dir) 
     found = embedding_finder.find_nearest (texts[0])
 
     assert len(found) > 0 

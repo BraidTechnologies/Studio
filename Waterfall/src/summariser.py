@@ -6,6 +6,7 @@ import logging
 import os
 import requests
 from requests.adapters import HTTPAdapter, Retry
+import json
 
 from workflow import PipelineItem, PipelineStep
 from summary_repository_facade import SummaryRespositoryFacade
@@ -57,13 +58,14 @@ class Summariser (PipelineStep):
         summary_url = f'https://braidapi.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
-            'data': {
+            'request': {
                 'text': pipeline_item.text
             }
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        summary = response.text
+        response_json = json.loads (response.text)
+        summary = response_json['summary']           
 
         repository.save(path, summary)
         pipeline_item.summary = summary

@@ -9,7 +9,7 @@ import plotly
 import plotly.express as px
 import umap.umap_ as umap
 
-from workflow import PipelineItem, Theme, WebSearchPipelineSpec, get_embeddings_as_float
+from workflow import PipelineItem, Theme, WebSearchPipelineSpec
 from web_searcher import WebSearcher
 from html_file_downloader import HtmlFileDownloader
 from summariser import Summariser
@@ -53,7 +53,7 @@ class WaterfallDataPipeline:
         self.output_location = output_location
         return
 
-    def search(self, spec: WebSearchPipelineSpec) -> list[Theme]:
+    def search(self, spec: WebSearchPipelineSpec, send_final: bool) -> list[Theme]:
         '''
         Searches for HTML content from a list of links.
 
@@ -65,7 +65,7 @@ class WaterfallDataPipeline:
 
         themes: list[Theme] = self.create_themes(items, spec)
 
-        self.create_report(items, themes, spec)
+        self.create_report(items, themes, spec, send_final)
 
         return themes
 
@@ -146,7 +146,9 @@ class WaterfallDataPipeline:
         ordered_themes = sort_array_by_another(themes, accumulated_counts)
 
         logger.debug('Finding nearest embedding')
-        embeddings_as_float = get_embeddings_as_float(items)
+        embeddings_as_float = []
+        for item in items:
+           embeddings_as_float.append (item.embedding)
 
         # Now we are looking for articles that best match the themes
         embedding_finder = EmbeddingFinder(
@@ -160,7 +162,7 @@ class WaterfallDataPipeline:
                 theme.long_description)
             for item in items:
                 # TODO - accumulate top 3 items per theme
-                if item.embedding_as_float == nearest_embedding:
+                if item.embedding == nearest_embedding:
                     nearest_items.append(item)
                     theme.example_pipeline_items = nearest_items
                     enriched_themes.append(theme)
@@ -168,7 +170,7 @@ class WaterfallDataPipeline:
 
         return enriched_themes
 
-    def create_report(self, items: list[PipelineItem], themes: list[Theme], spec: WebSearchPipelineSpec) -> list[Theme]:
+    def create_report(self, items: list[PipelineItem], themes: list[Theme], spec: WebSearchPipelineSpec, send_final: bool) -> list[Theme]:
         '''
         Generates a report based on the provided PipelineItems, Themes, and PipelineSpec. 
 
@@ -176,6 +178,7 @@ class WaterfallDataPipeline:
         - items (list[PipelineItem]): A list of PipelineItem objects to generate the report from.
         - themes (list[Theme]): A list of Theme objects associated with the PipelineItems.
         - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
+        - send_final - set to false to suppress ending the report - used in testing
 
         Returns:
         - list[Theme]: A list of Theme objects representing the report generated.
@@ -183,7 +186,9 @@ class WaterfallDataPipeline:
 
         reducer = umap.UMAP()
         logger.debug('Reducing cluster')
-        embeddings_as_float = get_embeddings_as_float(items)
+        embeddings_as_float = []
+        for item in items:
+           embeddings_as_float.append (item.embedding)
         embeddings_2d = reducer.fit_transform(embeddings_as_float)
 
         logger.debug('Generating chart')
@@ -223,7 +228,8 @@ class WaterfallDataPipeline:
          'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.</p>' + \
          '<p>Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
          'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy</p>'
-        send_mail (self.output_location, summary, spec.output_chart_name, spec)
+        if (send_final):
+           send_mail (self.output_location, summary, spec.output_chart_name, spec)
         
         #output_file = os.path.join(self.output_location, 'summary.txt')
         #with open(output_file, 'w+', encoding='utf-8') as f:

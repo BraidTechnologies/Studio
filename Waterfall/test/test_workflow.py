@@ -21,8 +21,7 @@ def test_pipeline_item ():
    item = PipelineItem ()
    item.path = "https://microsoft.com"
    item.summary = "Summary"
-   item.embedding = "[1.0,2.0,3.0,4.0,5.0,6.0,7.0]"
-   item.embedding_as_float = [1.0,2.0,3.0,4.0,5.0,6.0,7.0]   
+   item.embedding = [1.0,2.0,3.0,4.0,5.0,6.0,7.0]  
 
    caught = False
    try :

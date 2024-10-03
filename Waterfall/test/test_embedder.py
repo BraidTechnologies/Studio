@@ -52,5 +52,4 @@ def test_with_output (test_output_dir):
 
     embedder = Embedder (test_output_location)
     enriched_embedding : PipelineItem = embedder.embed (enriched_text)    
-    assert len(enriched_embedding.embedding) > 0
-    assert len(enriched_embedding.embedding_as_float) > 0    
+    assert len(enriched_embedding.embedding) > 0  

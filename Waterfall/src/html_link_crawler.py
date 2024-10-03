@@ -179,7 +179,7 @@ def remove_exits(source_url: str, links: list[str]) -> list[str]:
         item_domain = parsed_item.netloc
         item_path = parsed_item.path
         item_joined = urljoin('https://' + item_domain, item_path)
-        if (item_domain == target_domain) and (item_path.startswith(target_path)):
+        if (item_domain == target_domain) and (item_domain == '' or item_path.startswith(target_path)):
             if (not (find_matching_entry(trimmed, item_joined))) and (len (item_path.split('#')) == 1):
                 trimmed .append(item)
 

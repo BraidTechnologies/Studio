@@ -5,6 +5,7 @@
 import logging
 import os
 import requests
+import json
 from requests.adapters import HTTPAdapter, Retry
 
 from workflow import PipelineItem, PipelineStep
@@ -42,7 +43,6 @@ class Embedder (PipelineStep):
         if repository.exists(path):
             embedding = repository.load(path)
             pipeline_item.embedding = embedding
-            pipeline_item.embedding_as_float = Embedder.test_to_float(embedding)
             return pipeline_item
 
         logger.debug('Embedding: %s', path)
@@ -55,41 +55,19 @@ class Embedder (PipelineStep):
         embed_url = f'https://braidapi.azurewebsites.net/api/Embed?session={
             SESSION_KEY}'
         json_input = {
-            'data': {
+            'request': {
                 'text': pipeline_item.text
             }
         }
 
         response = session.post(embed_url, json=json_input, headers=headers)
-        embedding = response.text
+        response_json = json.loads (response.text)
+        embedding = response_json['embedding']        
 
         if path is not None:
             repository.save(path, embedding)
 
         pipeline_item.embedding = embedding
-        pipeline_item.embedding_as_float = Embedder.test_to_float(embedding)
 
         return pipeline_item
 
-    @staticmethod
-    def test_to_float(embedding: str) -> list[float]:
-        '''
-        Converts a string representation of numbers to a list of floating-point numbers.
-
-        Parameters:
-           embedding (str): A string containing numbers to be converted.
-
-        Returns:
-           list: A list of floating-point numbers extracted from the input string.
-        '''
-        characters_to_remove = '[]'
-        translation_table = str.maketrans('', '', characters_to_remove)
-
-        numbers = embedding.split(',')
-
-        stripped_number_array = [number.translate(
-            translation_table) for number in numbers]
-
-        number_array = [float(number) for number in stripped_number_array]
-
-        return number_array

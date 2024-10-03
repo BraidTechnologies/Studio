@@ -34,10 +34,12 @@ class ClusterAnalyser (PipelineStep):
         Returns:
            list[PipelineItem]: A list of PipelineItem objects with updated cluster assignments.
         '''
-
-        embeddings = []
-        for item in items:
-            embeddings.append(item.embedding_as_float)
+        
+        x = len (items)
+        y = len (items[0].embedding)
+        embeddings = [[0 for _ in range(x)] for _ in range(y)]
+        for i, item in enumerate (items):
+            embeddings[i] = item.embedding
 
         logger.debug('Making cluster')
         kmeans = KMeans(n_clusters=self.clusters)

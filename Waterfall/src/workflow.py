@@ -29,7 +29,6 @@ class PipelineItem(Freezable):
         self.chunk = 0
         self.summary = None
         self.embedding = None
-        self.embedding_as_float = None
         self.cluster = None
         self.length_minutes = 0
 
@@ -52,12 +51,6 @@ class PipelineItem(Freezable):
         return ((self.path.lower(), self.summary.lower()) <
                 (other.path.lower(), other.summary.lower()))
 
-
-def get_embeddings_as_float(items: list[PipelineItem]) -> list[list[float]]:
-    embeddings_as_float: list[list[float]] = []
-    for item in items:
-        embeddings_as_float.append(item.embedding_as_float)
-    return embeddings_as_float
 
 
 @functools.total_ordering

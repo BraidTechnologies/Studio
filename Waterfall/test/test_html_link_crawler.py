@@ -52,9 +52,9 @@ def test_with_output (test_output_dir):
 
 def test_with_one_recursion(test_output_dir):
     test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'two.html')    
     os.chdir (test_root)
 
-    test_path = 'two.html'
     test_output_location = test_output_dir
 
     crawler = HtmlLinkCrawler (test_output_location, 5)
@@ -65,8 +65,9 @@ def test_with_one_recursion(test_output_dir):
 
 def test_with_two_recursions(test_output_dir):
     test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'three.html')        
     os.chdir (test_root)
-    test_path = 'three.html'  
+
     test_output_location = test_output_dir
 
     crawler = HtmlLinkCrawler (test_output_location, 5)

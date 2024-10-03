@@ -28,7 +28,7 @@ class EmbeddingRespositoryFacade:
     def spec() -> str:
         return "*." + spec
 
-    def list(self) -> list[str]:
+    def list_contents(self) -> list[str]:
         paths = read_file_names(self.output_location,
                                 EmbeddingRespositoryFacade.spec())
 
@@ -41,7 +41,7 @@ class EmbeddingRespositoryFacade:
 
         return file_names
 
-    def save(self, path: str, text: str) -> None:
+    def save(self, path: str, embedding: list[float]) -> None:
         '''
         Save the provided text to a file at the specified path within the output location.
 
@@ -49,9 +49,9 @@ class EmbeddingRespositoryFacade:
            path (str): The path where the file will be saved.
            text (str): The text content to be saved in the file.
         '''
-        return self.file__repository.save(path, self.extension, text)
+        return self.file__repository.save(path, self.extension, str(embedding))
 
-    def load(self, path: str) -> str:
+    def load(self, path: str) -> list[float]:
         '''
         Load content from a file based on the provided path. 
         If the file exists in the output location, its contents are read and returned as a string. 
@@ -64,7 +64,9 @@ class EmbeddingRespositoryFacade:
            str: The contents of the file if it exists, otherwise an empty string.
         '''
 
-        return self.file__repository.load(path, self.extension)
+        loaded = self.file__repository.load(path, self.extension)
+
+        return self.text_to_float (loaded)
 
     def exists(self, path: str) -> bool:
         '''
@@ -77,3 +79,25 @@ class EmbeddingRespositoryFacade:
            bool: True if the file exists, False otherwise.
         '''
         return self.file__repository.exists(path, self.extension)
+    
+    def text_to_float(self, embedding: str) -> list[float]:
+        '''
+        Converts a string representation of numbers to a list of floating-point numbers.
+
+        Parameters:
+           embedding (str): A string containing numbers to be converted.
+
+        Returns:
+           list: A list of floating-point numbers extracted from the input string.
+        '''
+        characters_to_remove = '[]'
+        translation_table = str.maketrans('', '', characters_to_remove)
+
+        numbers = embedding.split(',')
+
+        stripped_number_array = [number.translate(
+            translation_table) for number in numbers]
+
+        number_array = [float(number) for number in stripped_number_array]
+
+        return number_array

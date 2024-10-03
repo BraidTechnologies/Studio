@@ -5,6 +5,7 @@
 import logging
 import os
 import requests
+import json
 from requests.adapters import HTTPAdapter, Retry
 
 from workflow import PipelineItem, PipelineStep
@@ -59,14 +60,14 @@ class Chunker (PipelineStep):
 
         if chunk_size_words == 0:
             input_json = {
-               'data': {
+               'request': {
                    'text': pipeline_item.text,
                    'overlapWords': overlap_words
                }
             }
         else:
             input_json = {
-               'data': {
+               'request': {
                  'text': pipeline_item.text,
                  'chunkSize' : chunk_size_words,
                  'overlapWords': overlap_words
@@ -74,7 +75,8 @@ class Chunker (PipelineStep):
             }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        chunks = Chunker.text_to_array(response.text)
+        response_json = json.loads (response.text)
+        chunks = response_json['chunks']
         pipeline_chunks = []
 
         for i, chunk in enumerate(chunks):
@@ -84,26 +86,8 @@ class Chunker (PipelineStep):
             new_item.chunk = i
             new_item.summary = pipeline_item.summary
             new_item.embedding = pipeline_item.embedding
-            new_item.embedding_as_float = pipeline_item.embedding_as_float
             new_item.cluster = pipeline_item.cluster
             pipeline_chunks.append(new_item)
 
         return pipeline_chunks
 
-    @staticmethod
-    def text_to_array(text) -> list[float]:
-        '''
-        Converts a text string to a list of text elements by removing characters '[', ']' and splitting the text by '"'. Returns the resulting list of text element.
-        '''
-        characters_to_remove = '[]'
-        translation_table = str.maketrans('', '', characters_to_remove)
-
-        elements = text.split('"')
-
-        stripped_array = [element.translate(
-            translation_table) for element in elements]
-
-        text_array = [item for item in stripped_array]
-        filtered_array = [item for item in text_array if item != ',' and item != '']
-
-        return filtered_array
