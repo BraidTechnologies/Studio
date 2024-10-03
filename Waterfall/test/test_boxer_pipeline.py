@@ -28,6 +28,7 @@ def test_youtube_boxer_pipeline():
     pipeline = BoxerDataPipeline (test_output_location)
 
     html_spec = HtmlDirectedPipelineSpec()
+    html_spec.urls = []
 
     # make a short playlist from first entry
     youtube_spec = YouTubePipelineSpec()
@@ -57,6 +58,27 @@ def test_html_boxer_pipeline():
     html_spec.urls.append (html_pages[4])
     html_spec.urls.append (html_pages[5])
     html_spec.urls.append (html_pages[6])            
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec)  
+
+    assert len(pipeline_items) >= 1 
+
+def test_full_boxer_pipeline():
+    
+    # Normally we leave this commented out - only uncomment when you want to do a full production build
+    #assert (True)
+    #return
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'boxer_output'
+
+    pipeline = BoxerDataPipeline (test_output_location)
+
+    youtube_spec = YouTubePipelineSpec() 
+    youtube_spec.playlists = youtube_playlists
+                                       
+    html_spec = HtmlDirectedPipelineSpec()              
+    html_spec.urls = html_pages
 
     pipeline_items = pipeline.search (youtube_spec, html_spec)  
 
