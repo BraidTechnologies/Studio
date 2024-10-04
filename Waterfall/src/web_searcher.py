@@ -21,6 +21,7 @@ GOOGLE_DEVELOPER_API_KEY = os.environ['GOOGLE_DEVELOPER_API_KEY']
 # https://programmablesearchengine.google.com/controlpanel/all
 AI_SUPPLY_STACK_SEARCH_ENGINE_ID = '00d305498d8da42e1'
 AI_DEMAND_STACK_SEARCH_ENGINE_ID = '22fafd262192b4c06'
+AI_TELECOM_SEARCH_ENGINE_ID = '7789e6bd5a1d54069'
 
 class WebSearcher:
     '''

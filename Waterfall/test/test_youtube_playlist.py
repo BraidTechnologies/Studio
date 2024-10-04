@@ -15,7 +15,7 @@ sys.path.extend([parent, src_dir])
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 from src.youtube_searcher import YoutubePlaylistSearcher
 from src.youtube_transcript_downloader import YouTubeTranscriptDownloader

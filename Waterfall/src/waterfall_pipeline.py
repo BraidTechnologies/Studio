@@ -100,14 +100,13 @@ class WaterfallDataPipeline:
 
             downloaded = downloader.download(item)
             if (downloaded):
-                suppression_checked = suppressor.should_suppress(item)
+                summarised = summariser.summarise(downloaded) 
+            if (summarised):                               
+                suppression_checked = suppressor.should_suppress(summarised)
             if (suppression_checked):
-                summarised = summariser.summarise(downloaded)
-            if (summarised):
-                embedded = embedder.embed(summarised)
-
-            if embedded:
-                items.append(item)
+                embedded = embedder.embed(suppression_checked)
+            if (embedded):
+                items.append(embedded)
 
         items = cluster_analyser.analyse(items)
 

@@ -14,11 +14,11 @@ sys.path.extend([parent, src_dir])
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 from src.workflow import WebSearchPipelineSpec
 from src.waterfall_pipeline import WaterfallDataPipeline
-from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID, AI_DEMAND_STACK_SEARCH_ENGINE_ID
+from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID, AI_DEMAND_STACK_SEARCH_ENGINE_ID, AI_TELECOM_SEARCH_ENGINE_ID
 
 @pytest.fixture
 def place_holder_fixture():
@@ -73,4 +73,23 @@ def test_with_search_demand ():
     links = pipeline.search (pipeline_spec, False)    
     assert len(links) >= 1   
 
-   
+@pytest.mark.timeout(9000)
+def test_with_search_telecom ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'telecom_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_TELECOM_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI Telecoms"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'telco_cluster.html'
+    pipeline_spec.output_data_name = "telco_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, True)    
+    assert len(links) >= 1   

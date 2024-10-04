@@ -62,8 +62,6 @@ class BoxerDataPipeline:
         summariser = Summariser(self.output_location)
         embedder = Embedder(self.output_location)
 
-        youtube_items = youtube_searcher.search(youtube_spec)
-
         all_chunks = []
         all_enriched_chunks = []
     
@@ -85,11 +83,14 @@ class BoxerDataPipeline:
                 if (embedded):
                    all_enriched_chunks.append(embedded)  
 
+
+        youtube_items = youtube_searcher.search(youtube_spec)
+
         for item in youtube_items:           
             item = youtube_downloader.download(item)
             chunks = youtube_chunker.chunk(
                 item, youtube_spec.max_words, youtube_spec.overlap_words)
-            all_chunks.append(chunks)
+            all_chunks.extend(chunks)
 
         for chunk in all_chunks:
             print(chunk.path)
@@ -97,5 +98,4 @@ class BoxerDataPipeline:
             embedded = embedder.embed(summarised)
             all_enriched_chunks.append(embedded)
               
-
         return all_enriched_chunks
