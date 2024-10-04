@@ -33,7 +33,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchP
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            credential_path = os.path.join(output_location, 'credentials.json')
+            credential_path = os.path.join('..', 'credential.json')
             flow = InstalledAppFlow.from_client_secrets_file(
                 credential_path, SCOPES
             )
