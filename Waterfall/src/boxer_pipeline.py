@@ -50,7 +50,7 @@ class BoxerDataPipeline:
         Searches for HTML & YouTube content from a list of links.
 
         Returns:
-            Nothing
+            A list with all the donloaded pipline items
         '''
         youtube_searcher = YoutubePlaylistSearcher(self.output_location)
         youtube_downloader = YouTubeTranscriptDownloader(self.output_location)
@@ -65,28 +65,37 @@ class BoxerDataPipeline:
         youtube_items = youtube_searcher.search(youtube_spec)
 
         all_chunks = []
+        all_enriched_chunks = []
+    
+        for html_url in html_spec.urls:
+            item = PipelineItem()
+            item.path = html_url           
+            html_items = html_crawler.crawl(item)
 
-        for item in youtube_items:
+            for html_item in html_items:
+                downloaded = None
+                summarised = None
+                embedded = None
+                  
+                downloaded = html_downloader.download (html_item)
+                if (downloaded):
+                   summarised = summariser.summarise(downloaded)
+                if (summarised):
+                   embedded = embedder.embed(summarised)
+                if (embedded):
+                   all_enriched_chunks.append(embedded)  
+
+        for item in youtube_items:           
             item = youtube_downloader.download(item)
             chunks = youtube_chunker.chunk(
                 item, youtube_spec.max_words, youtube_spec.overlap_words)
-            all_chunks.extend(chunks)
+            all_chunks.append(chunks)
 
-        all_enriched_chunks = []
         for chunk in all_chunks:
             print(chunk.path)
             summarised = summariser.summarise(chunk)
             embedded = embedder.embed(summarised)
             all_enriched_chunks.append(embedded)
-
-        for html_url in html_spec.urls:
-            item = PipelineItem()
-            item.path = html_url
-            html_items = html_crawler.crawl(item)
-            for html_item in html_items:
-                downloaded = html_downloader.download (html_item)
-                summarised = summariser.summarise(downloaded)
-                embedded = embedder.embed(summarised)
-                all_enriched_chunks.append(embedded)                
+              
 
         return all_enriched_chunks

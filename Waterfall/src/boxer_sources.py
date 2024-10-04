@@ -13,7 +13,9 @@ youtube_playlists = [
 ]
 
 html_pages = [
-
+   #"Learn | Pinecone", 
+   "https://www.pinecone.io/learn/", 
+   
    #"Software 2.0. by Andrej Karpathy", 
    "https://karpathy.medium.com/software-2-0-a64152b37c35",
 
@@ -70,9 +72,6 @@ html_pages = [
 
    #"Prompt Engineering Guide | Prompt Engineering Guide (promptingguide.ai)", 
    "https://www.promptingguide.ai/",
-
-   #"Learn | Pinecone", 
-   "https://www.pinecone.io/learn/", 
 
    #"Use Cases | Langchain", 
    "https://python.langchain.com/v0.1/docs/use_cases/",

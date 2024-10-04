@@ -49,5 +49,5 @@ __azurite_db*__.json
 
 Waterfall/test/supply_output
 Waterfall/test/demand_output
-Waterfall/test/telco_output
+Waterfall/test/telecom_output
 Waterfall/test/boxer_output

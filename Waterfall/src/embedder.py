@@ -61,13 +61,17 @@ class Embedder (PipelineStep):
         }
 
         response = session.post(embed_url, json=json_input, headers=headers)
-        response_json = json.loads (response.text)
-        embedding = response_json['embedding']        
 
-        if path is not None:
-            repository.save(path, embedding)
+        if (response.status_code == 200):
+           response_json = json.loads (response.text)
+           embedding = response_json['embedding']        
 
-        pipeline_item.embedding = embedding
+           if path is not None:
+              repository.save(path, embedding)
 
-        return pipeline_item
+           pipeline_item.embedding = embedding
 
+           return pipeline_item
+        else:
+           logger.error (f"Unable to summarise item: {pipeline_item.path}.")
+           return None

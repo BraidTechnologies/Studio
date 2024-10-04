@@ -55,19 +55,27 @@ class Summariser (PipelineStep):
                         status_forcelist=[500, 502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
+        print("Summarising: " + pipeline_item.path)
+
         summary_url = f'https://braidapi.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
             'request': {
-                'text': pipeline_item.text
+                'text': pipeline_item.text,
+                'lengthInWords': 50
             }
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        response_json = json.loads (response.text)
-        summary = response_json['summary']           
 
-        repository.save(path, summary)
-        pipeline_item.summary = summary
+        if (response.status_code == 200):
+            response_json = json.loads(response.text)
+            summary = response_json['summary']
 
-        return pipeline_item
+            repository.save(path, summary)
+            pipeline_item.summary = summary
+
+            return pipeline_item
+        else:
+            logger.error (f"Unable to summarise item: {pipeline_item.path}.")
+            return None

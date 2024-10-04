@@ -75,19 +75,21 @@ class Chunker (PipelineStep):
             }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        response_json = json.loads (response.text)
-        chunks = response_json['chunks']
-        pipeline_chunks = []
+        pipeline_chunks = [] # If there is an error in the API, return an empty list
 
-        for i, chunk in enumerate(chunks):
-            new_item = PipelineItem()
-            new_item.path = pipeline_item.path
-            new_item.text = chunk
-            new_item.chunk = i
-            new_item.summary = pipeline_item.summary
-            new_item.embedding = pipeline_item.embedding
-            new_item.cluster = pipeline_item.cluster
-            pipeline_chunks.append(new_item)
+        if (response.status_code == 200):    
+           response_json = json.loads (response.text)
+           chunks = response_json['chunks']
+
+           for i, chunk in enumerate(chunks):
+               new_item = PipelineItem()
+               new_item.path = pipeline_item.path
+               new_item.text = chunk
+               new_item.chunk = i
+               new_item.summary = pipeline_item.summary
+               new_item.embedding = pipeline_item.embedding
+               new_item.cluster = pipeline_item.cluster
+               pipeline_chunks.append(new_item)
 
         return pipeline_chunks
 

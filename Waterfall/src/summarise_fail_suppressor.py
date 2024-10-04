@@ -62,10 +62,10 @@ class SummariseFailSuppressor (PipelineStep):
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        response_json = json.loads (response.text)
-        keep: bool = (response_json['isValidSummary'] == 'Yes')
+        keep : bool = True # If there is an error in the API, we default to 'keep'
+        if (response.status_code == 200):        
+           response_json = json.loads (response.text)
+           keep = (response_json['isValidSummary'] == 'Yes')
 
         if keep:
-            return pipeline_item
-        else:
-            return None
+           return pipeline_item

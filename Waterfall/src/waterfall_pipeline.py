@@ -72,7 +72,7 @@ class WaterfallDataPipeline:
     def search_and_cluster(self, spec: WebSearchPipelineSpec) -> list[PipelineItem]:
         '''
         Create themes based on the provided PipelineItems and PipelineSpec.
- 
+
         Parameters:
            items (list[PipelineItem]): A list of PipelineItem objects to create themes from.
            spec (PipelineSpec): The PipelineSpec object containing specifications for theme creation.
@@ -88,17 +88,26 @@ class WaterfallDataPipeline:
 
         downloader = HtmlFileDownloader(self.output_location)
         summariser = Summariser(self.output_location)
-        suppressor = SummariseFailSuppressor (self.output_location)
+        suppressor = SummariseFailSuppressor(self.output_location)
         embedder = Embedder(self.output_location)
         cluster_analyser = ClusterAnalyser(self.output_location, spec.clusters)
 
         for item in input_items:
-            item = downloader.download(item)
-            item = summariser.summarise(item)
-            item = suppressor.should_suppress(item)            
-            if item:
-               item = embedder.embed(item)
-               items.append(item)
+            downloaded = None
+            suppression_checked = None            
+            summarised = None
+            embedded = None
+
+            downloaded = downloader.download(item)
+            if (downloaded):
+                suppression_checked = suppressor.should_suppress(item)
+            if (suppression_checked):
+                summarised = summariser.summarise(downloaded)
+            if (summarised):
+                embedded = embedder.embed(summarised)
+
+            if embedded:
+                items.append(item)
 
         items = cluster_analyser.analyse(items)
 
@@ -148,7 +157,7 @@ class WaterfallDataPipeline:
         logger.debug('Finding nearest embedding')
         embeddings_as_float = []
         for item in items:
-           embeddings_as_float.append (item.embedding)
+            embeddings_as_float.append(item.embedding)
 
         # Now we are looking for articles that best match the themes
         embedding_finder = EmbeddingFinder(
@@ -188,7 +197,7 @@ class WaterfallDataPipeline:
         logger.debug('Reducing cluster')
         embeddings_as_float = []
         for item in items:
-           embeddings_as_float.append (item.embedding)
+            embeddings_as_float.append(item.embedding)
         embeddings_2d = reducer.fit_transform(embeddings_as_float)
 
         logger.debug('Generating chart')
@@ -215,7 +224,8 @@ class WaterfallDataPipeline:
         summary = summary + '<p>The top ' + \
             str(spec.clusters_in_summary) + ' clusters are:</p>'
         for i, theme in enumerate(top_themes):
-            summary = summary + '<p>' + str(int(i+1)) + ' .' + theme.short_description + '</p>'
+            summary = summary + '<p>' + \
+                str(int(i+1)) + ' .' + theme.short_description + '</p>'
             summary = summary + '<p>The closest example of this theme is: ' + \
                 theme.example_pipeline_items[0].summary + ', ' + \
                 theme.example_pipeline_items[0].path + '</p>'
@@ -223,17 +233,18 @@ class WaterfallDataPipeline:
                 str(len(theme.member_pipeline_items)) + ' members.</p>'
 
         summary = summary + '<p>This message is for the designated recipient only and may contain privileged, proprietary, or otherwise confidential information.' + \
-         'If you have received it in error, please notify the sender immediately and delete the original. Any other use of the e-mail by you is prohibited.' + \
-         'Where allowed by local law, electronic communications with Braid Technologies Ltd (Braid), including e-mail and instant messaging (including content),' + \
-         'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.</p>' + \
-         '<p>Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
-         'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy</p>'
+            'If you have received it in error, please notify the sender immediately and delete the original. Any other use of the e-mail by you is prohibited.' + \
+            'Where allowed by local law, electronic communications with Braid Technologies Ltd (Braid), including e-mail and instant messaging (including content),' + \
+            'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.</p>' + \
+            '<p>Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
+            'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy</p>'
         if (send_final):
-           send_mail (self.output_location, summary, spec.output_chart_name, spec)
-        
-        #output_file = os.path.join(self.output_location, 'summary.txt')
-        #with open(output_file, 'w+', encoding='utf-8') as f:
-            #f.write(summary)
+            send_mail(self.output_location, summary,
+                      spec.output_chart_name, spec)
+
+        # output_file = os.path.join(self.output_location, 'summary.txt')
+        # with open(output_file, 'w+', encoding='utf-8') as f:
+            # f.write(summary)
 
         logger.debug('Writing output file')
 
