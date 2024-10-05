@@ -182,7 +182,6 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
         raise ValueError("Input vectors must be numpy arrays or convertible to numpy arrays")
 
     if a.shape != b.shape:
-        logger.error(f"Shape mismatch: a.shape = {a.shape}, b.shape = {b.shape}")
         raise ValueError("Input vectors must have the same shape")
 
     dot_product = np.dot(a, b)
@@ -329,7 +328,7 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
         # Iterate through the processed chunks to find the best hit
         for chunk in processed_question_chunks:
             if chunk and isinstance(chunk, dict):
-                ada_embedding = chunk.get("embedding")
+                ada_embedding = chunk.get("ada_v2")
                 similarity = cosine_similarity(ada_embedding, embedding)
 
                 if similarity > SIMILARITY_THRESHOLD:
@@ -371,6 +370,10 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
 
     Returns:
         List[Dict[str, Any]]: A list of dictionaries containing the processed JSON data.
+
+    Raises:
+        FileNotFoundError: If the source directory or a JSON file is not found.
+        IOError: If an I/O error occurs while reading a JSON file.
     """
     processed_question_chunks: List[Dict[str, Any]] = []
     try:
@@ -379,25 +382,12 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
                 file_path = os.path.join(source_dir, filename)
                 with open(file_path, "r", encoding="utf-8") as f:
                     chunk = json.load(f)
-
-                    # Adjust for the new structure with 'id', 'embedding', 'summary', etc.
-                    embedding = chunk.get("embedding")
-                    summary = chunk.get("summary")
-                    #url = chunk.get("url", "")  # Optional field, default to empty string if not present
-                    #text = chunk.get("text", "")  # Optional field, default to empty string if not present
-
-                    if embedding and summary:
-                        processed_question_chunks.append({
-                            "id": chunk.get("id"),
-                            "embedding": embedding,
-                            "summary": summary,
-                            # "url": url,   # Store if you need to use it later
-                            # "text": text  # Store if you need to use it later
-                        })
+                    if isinstance(chunk, list):  # Ensure we handle the list format
+                        processed_question_chunks.extend(chunk)  # Append all chunks to the list
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
         raise
-
+    
     if not processed_question_chunks:
         logger.error("Processed question chunks are None or empty.")
     
@@ -434,7 +424,7 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
     ]
 
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_file = os.path.join(test_destination_dir, f"test_output_v5_{test_mode}_{current_datetime}.json")
+    output_file = os.path.join(test_destination_dir, f"test_output_v4_{test_mode}_{current_datetime}.json")
 
     try:
         with open(output_file, "w", encoding="utf-8") as f:
