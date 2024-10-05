@@ -1,9 +1,10 @@
-'''Testing use of Google Office'''
+'''Use Google Office to send a mail '''
 from workflow import WebSearchPipelineSpec
 import os
 import os.path
 import base64
 import mimetypes
+import logging
 from email.message import EmailMessage
 from email.mime.base import MIMEBase
 
@@ -16,6 +17,11 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.DEBUG)
 
 def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
     '''Use Gmail API to send the report
@@ -50,7 +56,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchP
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
+        logger.error (f'An error occurred: {error}')
 
 
 def send_message_with_attachment(service, output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
@@ -98,9 +104,9 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
             .send(userId='me', body=create_message)
             .execute()
         )
-        print(f'Message Id: {send_message['id']}')
+        logger.error(f'Message Id: {send_message['id']}')
     except HttpError as error:
-        print(f'An error occurred: {error}')
+        logger.error(f'An error occurred: {error}')
         send_message = None
     return send_message
 

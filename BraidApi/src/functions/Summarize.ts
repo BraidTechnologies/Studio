@@ -12,7 +12,6 @@ import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidReque
 import { ISummariseRequest, ISummariseResponse } from "../../../BraidCommon/src/SummariseApi.Types";
 
 let minimumTextLength = 64;
-let defaultOverlapWords = 50
 let model = getDefaultModel();
 
 /**
@@ -48,15 +47,17 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
    });
 
    let wordString = words.toString();
+   let content = "You are an AI asistant that summarises text in "
+      + wordString +
+      " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
+      + wordString + " words.  Translate to English if necessary. "
+   console.log(content)
 
    let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
-            content: "You are an AI asistant that summarises text in "
-               + wordString +
-               " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
-               + wordString + " words.  Translate to English if necessary. "
+            content: content
          },
          {
             role: 'user',
@@ -86,18 +87,22 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
 export async function recursiveSummarize(text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
-   let chunks = chunkText(text, defaultOverlapWords);
+   let chunks = chunkText(text, 0);
    let summaries = new Array<string>();
 
    let recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
-   console.log("Recursive summarise level:" + level.toString());
+   if (chunks.length > 1) {
+      // If the text was > threshold, we break it into chunks.
+      // Here we look over each chunk to generate a summary for each
+      for (var i = 0; i < chunks.length; i++) {
 
-   // If the text was > threshold, we break it into chunks.
-   // Here we look over each chunk to generate a summary for each
-   for (var i = 0; i < chunks.length; i++) {
-
-      let summary = await singleShotSummarize(chunks[i], recursizeSummarySize);
+         let summary = await singleShotSummarize(chunks[i], recursizeSummarySize);
+         summaries.push(summary);
+      }
+   }
+   else {
+      let summary = await singleShotSummarize(chunks[0], words);
       summaries.push(summary);
    }
 
@@ -132,10 +137,10 @@ export async function summarize(request: HttpRequest, context: InvocationContext
          let jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ISummariseRequest;                                        
+         let summariseSpec = (jsonRequest as any).request as ISummariseRequest;
 
          text = summariseSpec.text;
-         words = summariseSpec.lengthInWords? summariseSpec.lengthInWords : 50;
+         words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
 
          if (text && text.length >= minimumTextLength && words > 0) {
             let definitelyText: string = text;
@@ -145,23 +150,25 @@ export async function summarize(request: HttpRequest, context: InvocationContext
                summary: overallSummary
             }
 
+            context.log(summariseResponse);
+
             return {
                status: 200, // Ok
-               body: JSON.stringify (summariseResponse)
+               body: JSON.stringify(summariseResponse)
             };
          }
          else {
-            context.error ("Text is below minimum length or invalid length for summary.");            
-            return invalidRequestResponse ("Text is below minimum length or invalid length for summary.")            
+            context.error("Text is below minimum length or invalid length for summary.");
+            return invalidRequestResponse("Text is below minimum length or invalid length for summary.")
          }
       }
       catch (e: any) {
-         context.error (e);
-         return defaultErrorResponse();         
+         context.error(e);
+         return defaultErrorResponse();
       }
    }
    else {
-      context.error ("Session validation failed.");        
+      context.error("Session validation failed.");
       return sessionFailResponse();
    }
 };

@@ -134,7 +134,7 @@ class WaterfallDataPipeline:
         # Accumulate a set of summaries and counts of summaries according to classification
         for i, item in enumerate(items):
             cluster = items[i].cluster
-            accumulated_summaries[cluster] = accumulated_summaries[cluster] + item.summary
+            accumulated_summaries[cluster] = accumulated_summaries[cluster] + item.summary + "\n "
             accumulated_counts[cluster] = accumulated_counts[cluster] + 1
             accumulated_members[cluster].append(item)
 
@@ -150,24 +150,25 @@ class WaterfallDataPipeline:
             theme.long_description = long_description
             themes.append(theme)
 
-        logger.debug('Ordering themes')
-        ordered_themes = sort_array_by_another(themes, accumulated_counts)
-
-        logger.debug('Finding nearest embedding')
-        embeddings_as_float = []
-        for item in items:
-            embeddings_as_float.append(item.embedding)
-
-        # Now we are looking for articles that best match the themes
-        embedding_finder = EmbeddingFinder(
-            embeddings_as_float, self.output_location)
-        enriched_themes = []
-
         # Ask the embedding finder to find nearest article for each theme
-        for theme in ordered_themes:
+        enriched_themes = []        
+        for i, theme in enumerate (themes):
+            logger.debug('Finding nearest embedding')
+
+            # Accumulate the embeddings that are part of the cluster
+            embeddings_for_theme = []
+            for item in items:
+                if item.cluster == i:
+                   embeddings_for_theme.append(item.embedding)
+
+            # Build embedding finder with the right embeddings, then find the nearest one to the theme that is in the cluster
+            embedding_finder = EmbeddingFinder(
+                embeddings_for_theme, self.output_location)
             nearest_items: list[PipelineItem] = []
             nearest_embedding = embedding_finder.find_nearest(
                 theme.long_description)
+            
+            # Store nearest item
             for item in items:
                 # TODO - accumulate top 3 items per theme
                 if item.embedding == nearest_embedding:
@@ -175,8 +176,11 @@ class WaterfallDataPipeline:
                     theme.example_pipeline_items = nearest_items
                     enriched_themes.append(theme)
                     break
+        
+        logger.debug('Ordering themes')
+        ordered_themes = sort_array_by_another(enriched_themes, accumulated_counts)
 
-        return enriched_themes
+        return ordered_themes
 
     def create_report(self, items: list[PipelineItem], themes: list[Theme], spec: WebSearchPipelineSpec, send_final: bool) -> list[Theme]:
         '''
@@ -221,7 +225,7 @@ class WaterfallDataPipeline:
             spec.description + \
             ' cluster analysis (' + str(len(items)) + ' samples).</p>'
         summary = summary + '<p>The top ' + \
-            str(spec.clusters_in_summary) + ' clusters are:</p>'
+            str(len(top_themes)) + ' clusters are:</p>'
         for i, theme in enumerate(top_themes):
             summary = summary + '<p>' + \
                 str(int(i+1)) + ' .' + theme.short_description + '</p>'

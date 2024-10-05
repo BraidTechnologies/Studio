@@ -43,6 +43,7 @@ class Summariser (PipelineStep):
         '''
         path = pipeline_item.path
         repository = SummaryRespositoryFacade(self.output_location)
+
         if repository.exists(path):
             summary = repository.load(path)
             pipeline_item.summary = summary
@@ -56,7 +57,8 @@ class Summariser (PipelineStep):
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
         print("Summarising: " + pipeline_item.path)
-
+   
+        #summary_url = f'http://localhost:7071/api/Summarize?session={   
         summary_url = f'https://braidapi.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {

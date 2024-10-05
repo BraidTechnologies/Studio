@@ -6,7 +6,7 @@ import logging
 import os
 import json
 
-from workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem
+from workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem, PipelineFileSpec
 from youtube_searcher import YoutubePlaylistSearcher
 from youtube_transcript_downloader import YouTubeTranscriptDownloader
 from youtube_transcript_chunker import YouTubeTranscriptChunker
@@ -45,7 +45,8 @@ class BoxerDataPipeline:
 
     def search(self,
                youtube_spec: YouTubePipelineSpec,
-               html_spec: HtmlDirectedPipelineSpec) -> list[PipelineItem]:
+               html_spec: HtmlDirectedPipelineSpec,
+               file_spec: PipelineFileSpec ) -> list[PipelineItem]:
         '''
         Searches for HTML & YouTube content from a list of links.
 
@@ -66,9 +67,9 @@ class BoxerDataPipeline:
         all_enriched_chunks = []
     
         for html_url in html_spec.urls:
-            item = PipelineItem()
-            item.path = html_url           
-            html_items = html_crawler.crawl(item)
+            chunk = PipelineItem()
+            chunk.path = html_url           
+            html_items = html_crawler.crawl(chunk)
 
             for html_item in html_items:
                 downloaded = None
@@ -86,16 +87,34 @@ class BoxerDataPipeline:
 
         youtube_items = youtube_searcher.search(youtube_spec)
 
-        for item in youtube_items:           
-            item = youtube_downloader.download(item)
+        for chunk in youtube_items:           
+            chunk = youtube_downloader.download(chunk)
             chunks = youtube_chunker.chunk(
-                item, youtube_spec.max_words, youtube_spec.overlap_words)
+                chunk, youtube_spec.max_words, youtube_spec.overlap_words)
             all_chunks.extend(chunks)
 
         for chunk in all_chunks:
-            print(chunk.path)
-            summarised = summariser.summarise(chunk)
-            embedded = embedder.embed(summarised)
-            all_enriched_chunks.append(embedded)
+            summarised = None
+            embedded = None            
+            logger.info ('Processing:' + chunk.path)
+            if (chunk.text):
+               summarised = summariser.summarise(chunk)
+            if (summarised):
+               embedded = embedder.embed(summarised)
+            if (embedded):
+               all_enriched_chunks.append(embedded)
+
+        output_results = []
+        for chunk in all_enriched_chunks:
+            output_item = dict()
+            output_item['summary'] = chunk.summary
+            output_item['embedding'] = chunk.embedding
+            output_item['url'] = chunk.path
+            output_results.append(output_item)
+
+        # save the test results to a json file
+        output_file = os.path.join(self.output_location, file_spec.output_data_name)
+        with open(output_file, 'w+', encoding='utf-8') as f:
+            json.dump(output_results, f)            
               
         return all_enriched_chunks

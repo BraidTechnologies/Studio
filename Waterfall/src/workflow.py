@@ -136,3 +136,14 @@ class HtmlDirectedPipelineSpec(Freezable):
         self.urls = list[str]
 
         self._freeze()
+
+class PipelineFileSpec(Freezable):
+    '''The spec for a full run of the Waterfall workflow'''
+
+    def __init__(self):
+        '''
+        Initialize the PipelineFileSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        '''
+        self.output_data_name = None
+
+        self._freeze()        
