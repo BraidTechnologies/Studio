@@ -9,7 +9,7 @@ import youTubeEmbeddingsFile from '../data/youtube/output/master_enriched.json';
 import markdownEmbeddingsFile from '../data/github/output/master_enriched.json';
 import htmlEmbeddingsFile from '../data/web/output/master_enriched.json';
 import { FullEmbedding, MakeEmbeddingUrlFnFull, 
-   makeYouTubeUrlFromFullEmbedding, makeGithubUrlFromFullEmbedding, makeHtmlUrlfromFullEmbedding} from '../core/EmbeddingFormats';
+makeYouTubeUrlFromFullEmbedding, makeGithubUrlFromFullEmbedding, makeHtmlUrlfromFullEmbedding} from '../core/EmbeddingFormats';
 
 import { Chunk } from '../../Braid/BraidCommon/src/Chunk';   
 
