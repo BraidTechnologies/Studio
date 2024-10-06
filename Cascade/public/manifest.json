@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 
-	"name": "Waterfall",
+	"name": "Cascade",
 	"description": "A simple page-scraping extension that passes the current page text to an LLM to be summarised and classified by topic.",
 	"version": "0.1",
 	"author": "@BraidTechnologiesLtd",

@@ -73,7 +73,7 @@ function startScrape(key) {
         var summarizeQuery = 'https://braidapi.azurewebsites.net/api/summarize?session=49b65194-26e1-4041-ab11-4078229f478a';
         var classifyQuery = 'https://braidapi.azurewebsites.net/api/classify?session=49b65194-26e1-4041-ab11-4078229f478a';
         axios.post(summarizeQuery, {
-            data: {
+            request: {
                 text: allText
             },
             headers: {
@@ -82,11 +82,11 @@ function startScrape(key) {
         }).then(function (summaryRes) {
             haveSummary = true;
             if (summaryRes.status === 200) {
-                chrome.runtime.sendMessage({ type: "Summary", text: summaryRes.data });
+                chrome.runtime.sendMessage({ type: "Summary", text: summaryRes.data.summary });
                 var classifications = ["Business", "Technology", "Politics", "Health", "Sport"];
                 axios.post(classifyQuery, {
-                    data: {
-                        text: summaryRes.data,
+                    request: {
+                        text: summaryRes.data.summary,
                         classifications: classifications
                     },
                     headers: {
@@ -95,7 +95,7 @@ function startScrape(key) {
                 }).then(function (classifyRes) {
                     haveClassification = true;
                     if (classifyRes.status === 200) {
-                        chrome.runtime.sendMessage({ type: "Classification", text: classifyRes.data });
+                        chrome.runtime.sendMessage({ type: "Classification", text: classifyRes.data.classification });
                     }
                     else {
                         chrome.runtime.sendMessage({ type: "Classification", text: "Sorry, could not fetch a classification from the Waterfall server." });

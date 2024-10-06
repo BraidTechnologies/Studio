@@ -113,7 +113,7 @@ export async function classify(request: HttpRequest, context: InvocationContext)
             };
          }
          else {
-            context.error ("Error classifying text:");
+            context.error ("Error classifying text: Text or classifications not provided.");
             return invalidRequestResponse("Text or classifications not provided.");
          }
       }
