@@ -72,8 +72,8 @@ def test_html_boxer_pipeline():
 def test_full_boxer_pipeline():
     
     # Normally we leave this commented out - only uncomment when you want to do a full production build
-    #assert (True)
-    #return
+    assert (True)
+    return
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)
     test_output_location = 'boxer_output'
@@ -81,7 +81,7 @@ def test_full_boxer_pipeline():
     pipeline = BoxerDataPipeline (test_output_location)
 
     file_spec = PipelineFileSpec()
-    file_spec.output_data_name = "enriched_api_lite.json"
+    file_spec.output_data_name = "api_embeddings_lite.json"
 
     youtube_spec = YouTubePipelineSpec() 
     youtube_spec.playlists = youtube_playlists

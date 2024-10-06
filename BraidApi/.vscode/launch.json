@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/**/*chunk*.test.ts"
+           "${workspaceFolder}/test/**/querymodel.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

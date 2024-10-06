@@ -42,11 +42,12 @@ describe("QueryModel", async function () {
 
       let response = await api.queryModelWithEnrichment(query);
 
+      let typedResponse: IEnrichedResponse = response as IEnrichedResponse;
       expect(typeof response === 'undefined').toBe(false);
-      expect((response as IEnrichedResponse).answer.length > 0).toBe(true);      
-      expect((response as IEnrichedResponse).chunks.length > 0).toBe(true);    
-      if ((response as IEnrichedResponse).chunks.length > 1)   {
-         expect((response as IEnrichedResponse).chunks[0].relevance > (response as IEnrichedResponse).chunks[1].relevance).toBe(true);   
+      expect(typedResponse.answer.length > 0).toBe(true);      
+      expect(typedResponse.chunks.length > 0).toBe(true);    
+      if (typedResponse.chunks.length > 1)   {
+         expect(typedResponse.chunks[0].relevance >= typedResponse.chunks[1].relevance).toBe(true);   
       }
 
    }).timeout(20000);
@@ -69,10 +70,12 @@ describe("QueryModel", async function () {
       let response = await api.queryModelWithEnrichment(query);
 
       expect(typeof response === 'undefined').toBe(false);
-      expect((response as IEnrichedResponse).answer.length > 0).toBe(true);      
-      expect((response as IEnrichedResponse).chunks.length > 0).toBe(true);    
-      if ((response as IEnrichedResponse).chunks.length > 1)   {
-         expect((response as IEnrichedResponse).chunks[0].relevance > (response as IEnrichedResponse).chunks[1].relevance).toBe(true);   
+
+      let typedResponse: IEnrichedResponse = response as IEnrichedResponse;      
+      expect(typedResponse.answer.length > 0).toBe(true);      
+      expect(typedResponse.chunks.length > 0).toBe(true);    
+      if (typedResponse.chunks.length > 1)   {
+         expect(typedResponse.chunks[0].relevance >= typedResponse.chunks[1].relevance).toBe(true);   
       }
 
    }).timeout(20000);

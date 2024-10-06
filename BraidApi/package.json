@@ -8,6 +8,7 @@
     "watch": "tsc -b -w",
     "pull_js": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
     "pull_js_map": "copy ..\\BraidCommon\\dist\\src\\*.js.map BraidCommon\\src",
+    "pull_embeddings": "copy ..\\waterfall\\test\\boxer_output\\api_embeddings_lite.json .",    
     "clean": "rimraf dist",
     "prestart": "npm run clean && npm run build && npm run pull_js && npm run pull_js_map",
     "start": "func start --typescript",

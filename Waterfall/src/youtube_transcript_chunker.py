@@ -56,6 +56,9 @@ class YouTubeTranscriptChunker (PipelineStep):
         if number_of_chunks == 1:
             return pipeline_item
 
+        if number_of_chunks == 0:
+           return None
+        
         # linear interpolation by chunk size after correction for overlap
         # this assumes text is evenly spread throughout the video, but this seems ok for lectures / presentations
         original_length = len (pipeline_item.text)

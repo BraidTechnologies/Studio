@@ -12,8 +12,7 @@ import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../BraidCommon/src/EnrichedChunk';
 import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
 
-let urls = ["https://github.com/microsoft/generative-ai-for-beginners/blob/main/01-introduction-to-genai/README.md",
-   "https://www.youtube.com/watch?v=l5mG4z343qg&t=00h00m00s",
+let urls = ["https://www.youtube.com/watch?v=roEKOzxilq4&t=00m",
    "https://karpathy.medium.com/software-2-0-a64152b37c35"];
 
 let summaries = [
