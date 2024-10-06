@@ -3,7 +3,7 @@
 
 	"name": "Cascade",
 	"description": "A simple page-scraping extension that passes the current page text to an LLM to be summarised and classified by topic.",
-	"version": "0.1",
+	"version": "0.2",
 	"author": "@BraidTechnologiesLtd",
 
    "content_scripts": [{
