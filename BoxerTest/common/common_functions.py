@@ -26,11 +26,24 @@ def ensure_directory_exists(directory):
 HTML_DESTINATION_DIR = os.path.join("data", "web")
 ensure_directory_exists(HTML_DESTINATION_DIR)
 
-def get_embedding(text : str, client : AzureOpenAI, config : ApiConfiguration):
+def get_embedding(text: str, client: AzureOpenAI, config: ApiConfiguration, model: str = "text-embedding-3-large"):
+    # Replace newlines with spaces 
+    text = text.replace("\n", " ")
 
+    # Use the provided model parameter if given, otherwise fall back to config's deployment name
+    chosen_model = model if model else config.embedModelName
+
+    # Generate embedding using the chosen model and configuration
+    response = client.embeddings.create(
+        input=[text],
+        model=chosen_model,
+        timeout=config.openAiRequestTimeout
+    )
+    
+    return response.data[0].embedding
+
+
+
+def get_embedding(text, model="text-embedding-3-small"):
    text = text.replace("\n", " ")
-   response = client.embeddings.create(input = [text], 
-                                   model=config.azureEmbedDeploymentName,
-                                   timeout=config.openAiRequestTimeout)
-   
-   return response.data[0].embedding
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
