@@ -47,8 +47,6 @@ class ApiConfiguration:
         self.maxTokens = 4096           # Upper limit on total tokens in an API call. 10 minutes of video = 600 words = 2400 tokens, plus approx 2x headroom
         self.discardIfBelow = 100       # Dont index if less than 100 tokens in an article
         self.GeminiApiKey = GEMINI_API_KEY
-        self.GeminiServiceEndpoint = "https://generativelanguage.googleapis.com"
-        self.GeminiApiKey = GEMINI_API_KEY
         self.GeminiServiceEndpoint = GEMINI_SERVICE_ENDPOINT
 
     apiType: str
@@ -65,3 +63,5 @@ class ApiConfiguration:
     chunkDurationMins: int
     maxTokens: int
     discardIfBelow: int 
+    GeminiApiKey: str
+    GeminiServiceEndpoint: str
