@@ -53,7 +53,7 @@ describe("API Embeddings", function () {
       return !caught;
 
 
-
+      
       expect (result).toBe (true);
    });         
 });
