@@ -37,9 +37,9 @@ class ApiConfiguration:
         self.apiVersion = API_VERSION
         self.resourceEndpoint = RESOURCE_ENDPOINT
         self.azureDeploymentName = "braidlms"
-        self.azureEmbedDeploymentName="braidlmse"
+        self.azureEmbedDeploymentName="braidlmse"      #string value to be validated. 
         self.modelName="gpt-4"      
-        self.embedModelName="text-embedding-3-large"
+        self.embedModelName="text-embedding-3-large"      #GPT-4o model embeddings  ["text-embedding-3-small"]
         self.processingThreads = 4
         self.openAiRequestTimeout = 60
         self.summaryWordCount = 50      # 50 word summary
