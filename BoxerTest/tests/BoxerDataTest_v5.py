@@ -382,8 +382,7 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
                 file_path = os.path.join(source_dir, filename)
                 with open(file_path, "r", encoding="utf-8") as f:
                     chunk = json.load(f)
-                    if isinstance(chunk, list):  # Ensure we handle the list format
-                        processed_question_chunks.extend(chunk)  # Append all chunks to the list
+                    processed_question_chunks = chunk
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
         raise
