@@ -14,9 +14,6 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 # Import necessary modules and classes for running the tests
-# from BoxerDataTest_v2 import run_tests, call_openai_chat
-# from BoxerDataTest_v3 import run_tests, call_openai_chat
-# from BoxerDataTest_v4 import run_tests, call_openai_chat
 from BoxerDataTest_v5 import run_tests, call_openai_chat
 from common.ApiConfiguration import ApiConfiguration
 from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy
