@@ -13,7 +13,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 - Waterfall - a data analysis back end pipeline. This illustrates a date pipline to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
 
-'**BraidApi**' contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. Waterfall, cascade, and Boxer all call Braid Apis for any function requiring server side keys (database or AI model access).
+'**BraidApi**' contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. Waterfall, Cascade, and Boxer all call Braid Apis for any function requiring server side keys (database or AI model access).
 
 '**BraidCommon**' contains utility classes used across both clients & server - especially API definitions and Types used to generate test scripts. Both subsystems are written in Typescript. Both Cascade and Waterfall make calls to the BraidApis.
 
