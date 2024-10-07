@@ -1,0 +1,1 @@
+**BraidCommon** contains typescript compoents that are used by both front end (Browser, Mocha test) and back end (BraidApi) components. It also contains types that define the contract between client and server for APIS, which are used by the 'Salon' component to generate test code. 
