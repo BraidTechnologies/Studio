@@ -43,22 +43,29 @@ logger = logging.getLogger(__name__)
 gemini_evaluator = GeminiEvaluator()  #initiating an instance of the GeminiEvaluator
 
 # Function to configure the Azure OpenAI API client
-def configure_openai_for_azure(config: ApiConfiguration) -> AzureOpenAI:
-
+def configure_openai_for_azure(config: ApiConfiguration, task: str) -> AzureOpenAI:
     """
     Configures OpenAI for Azure using the provided ApiConfiguration.
-
+    
     Args:
         config (ApiConfiguration): The ApiConfiguration object containing the necessary settings.
-
+        task (str): The task for which OpenAI is being configured ("chat" or "embedding").
+        
     Returns:
-        AzureOpenAI: An instance of AzureOpenAI configured with the provided settings.
+        AzureOpenAI: An instance of AzureOpenAI configured with the correct settings.
     """
-    return AzureOpenAI(
-        azure_endpoint=config.resourceEndpoint, 
-        api_key=config.apiKey.strip(),
-        api_version=config.apiVersion
-    )
+    if task == "chat":
+        return AzureOpenAI(
+            azure_endpoint=config.resourceChatCompletionEndpoint,
+            api_key=config.apiKey.strip(),
+            api_version=config.apiVersion
+        )
+    elif task == "embedding":
+        return AzureOpenAI(
+            azure_endpoint=config.resourceEmbeddingEndpoint,
+            api_key=config.apiKey.strip(),
+            api_version=config.apiVersion
+        )
 
 # Class to hold test results
 class TestResult:
@@ -328,8 +335,8 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
         # Iterate through the processed chunks to find the best hit
         for chunk in processed_question_chunks:
             if chunk and isinstance(chunk, dict):
-                ada_embedding = chunk.get("ada_v2")
-                similarity = cosine_similarity(ada_embedding, embedding)
+                gpt4_embedding = chunk.get("embedding")
+                similarity = cosine_similarity(gpt4_embedding, embedding)
 
                 if similarity > SIMILARITY_THRESHOLD:
                     question_result.hit = True
