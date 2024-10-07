@@ -1,0 +1,3 @@
+2024-10-07 16:08:02.485666: Run ID run_gPA2UExYVax4Js13kw46SPC7 saved in assistants\assistant_asst_O5I1Z86aLRCZJf7ltOhVIdSC\run_run_gPA2UExYVax4Js13kw46SPC7.
+2024-10-07 16:08:02.486665: Run completed successfully. Processing messages.
+2024-10-07 16:08:02.831390: ERROR: Failed to ask question: 'charmap' codec can't encode character '\U0001f60a' in position 2289: character maps to <undefined>

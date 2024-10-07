@@ -1,0 +1,1 @@
+User says: [TextContentBlock(text=Text(annotations=[], value='What does the API specification describe?'), type='text')]
