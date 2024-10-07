@@ -1,1 +1,0 @@
-Write a test plan to fully test the API described in the specification, asuming the ISummariseRequest object is passed in to the API, and an ISummariseResponse is passed back in the response

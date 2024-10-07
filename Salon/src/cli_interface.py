@@ -6,26 +6,20 @@ class DataAssistantCLI:
     Command-line interface for interacting with the Data Assistant.
     """
     
-    def __init__(self):
+    def __init__(self, filename: str):
         self.default_name = "Test Helper"
         self.default_instruction = "You are a helpful assistant; you answer questions, generate test plans, and generate Python code based on the API definitions provided."
         self.config_manager = ConfigManager()
+        self.filename = filename
     
     def get_configuration(self):
             """
             Set assistant name and instruction, with defaults.
             """
             if self.config_manager.config_exists():
-                use_existing = input("Configuration exists. Do you want to use the existing configuration? (y/n): ").strip().lower()
-                if use_existing == 'y':
-                    print("Using existing configuration.")
-                    return None
-                else:
-                    self.config_manager.remove_config()
-                    print("Creating new configuration.")
+               self.config_manager.remove_config()
 
             assistant_name = self.default_name
-
             assistant_instruction = self.default_instruction
 
             return assistant_name, assistant_instruction
@@ -35,11 +29,6 @@ class DataAssistantCLI:
         Runs the main loop for user interaction.
         """
         assistant_name, assistant_instruction = self.get_configuration()
-        assistant = DataAssistant("apis/SummariseApi.Types.json", assistant_name, assistant_instruction)
+        assistant = DataAssistant(self.filename, assistant_name, assistant_instruction)
 
-        while True:
-            follow_up = input("Enter your follow-up question (or type 'exit' to stop): ").strip()
-            if follow_up.lower() == 'exit':
-                print("Exiting the follow-up session.")
-                break
-            assistant.follow_up_question(follow_up)
+        assistant.follow_up_question("Write a python program to fully test the provided API using the Pytest framework. Don't ask any more question back to me, do the best you can with the infirmation provided.")

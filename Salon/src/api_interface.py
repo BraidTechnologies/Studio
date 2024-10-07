@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from data_assistant.assistant import DataAssistant
-from data_assistant.config_manager import ConfigManager
+from assistant import DataAssistant
+from config_manager import ConfigManager
 
 app = Flask(__name__)
 

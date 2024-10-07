@@ -1,1 +1,0 @@
-User says: [TextContentBlock(text=Text(annotations=[], value='write a test plan for the API assuming ISummariseRequest is passed as input and ISUmmariseResponse is generated in response'), type='text')]

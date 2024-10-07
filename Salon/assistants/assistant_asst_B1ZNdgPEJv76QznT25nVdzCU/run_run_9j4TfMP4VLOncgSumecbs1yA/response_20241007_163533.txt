@@ -1,1 +1,0 @@
-User says: [TextContentBlock(text=Text(annotations=[], value='write a set of test conditions for the API'), type='text')]
