@@ -1,4 +1,4 @@
-BoxerTest is a framework for evaluation the 'Boxer' application. 
+**BoxerTest** is a framework for evaluation of the 'Boxer' application. 
 
 BoxerTest is all Python, an runs locally. It uses the folloing test approaches:
 - Generation of a list of questions about Generative AI. This is a static list, used to measure basic coverage of the Boxer knowledge base.
