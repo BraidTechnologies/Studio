@@ -35,11 +35,12 @@ class ApiConfiguration:
         """
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
-        self.resourceEndpoint = RESOURCE_ENDPOINT
-        self.azureDeploymentName = "braidlms"
-        self.azureEmbedDeploymentName="braidlmse"      #string value to be validated. 
-        self.modelName="gpt-4"      
-        self.embedModelName="text-embedding-3-large"      #GPT-4o model embeddings  ["text-embedding-3-small"]
+        self.resourceChatCompletionEndpoint = "https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01"  # Chat completions endpoint
+        self.resourceEmbeddingEndpoint = "https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01"  # Embeddings endpoint
+        self.azureDeploymentName = "StudioLarge"
+        self.azureEmbedDeploymentName = "StudioEmbeddingLarge"
+        self.modelName = "gpt-4"
+        self.embedModelName = "text-embedding-3-large"
         self.processingThreads = 4
         self.openAiRequestTimeout = 60
         self.summaryWordCount = 50      # 50 word summary
