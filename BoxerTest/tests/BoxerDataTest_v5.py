@@ -373,7 +373,7 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
     ]
 
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_file = os.path.join(test_destination_dir, f"test_output_v4_{test_mode}_{current_datetime}.json")
+    output_file = os.path.join(test_destination_dir, f"test_output_v5_{test_mode}_{current_datetime}.json")
 
     try:
         with open(output_file, "w", encoding="utf-8") as f:
