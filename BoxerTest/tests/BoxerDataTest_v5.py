@@ -93,12 +93,12 @@ class TestResult:
 
 # Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
+def call_openai_chat(chat_client: AzureOpenAI, messages: List[Dict[str, str]], config: ApiConfiguration, logger: logging.Logger) -> str:
     """
     Retries the OpenAI chat API call with exponential backoff and retry logic.
 
-    :param client: An instance of the AzureOpenAI class.
-    :type client: AzureOpenAI
+    :param chat_client: An instance of the AzureOpenAI class.
+    :type chat_client: AzureOpenAI
     :param messages: A list of dictionaries representing the messages to be sent to the API.
     :type messages: List[Dict[str, str]]
     :param config: An instance of the ApiConfiguration class.
@@ -111,9 +111,8 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
     :raises OpenAIError: If there is an error with the OpenAI API.
     :raises APIConnectionError: If there is an error with the API connection.
     """
-
     try:
-        response = client.chat.completions.create(
+        response = chat_client.chat.completions.create(
             model=config.azureDeploymentName,
             messages=messages,
             temperature=0.7,
@@ -141,25 +140,9 @@ def call_openai_chat(client: AzureOpenAI, messages: List[Dict[str, str]], config
 
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def get_text_embedding(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
-    """
-    Retrieves the text embedding for a given text using the OpenAI API.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        text (str): The text for which to retrieve the embedding.
-        logger (Logger): The logger instance.
-
-    Returns:
-        np.ndarray: The text embedding as a numpy array.
-
-    Raises:
-        OpenAIError: If an error occurs while retrieving the text embedding.
-    """
-
+def get_text_embedding(embedding_client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
     try:
-        embedding = get_embedding(text, client, config)
+        embedding = get_embedding(text, embedding_client, config)
         return np.array(embedding)
     except OpenAIError as e:
         logger.error(f"Error getting text embedding: {e}")
@@ -201,22 +184,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 
 # Function to generate enriched questions using OpenAI API
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
-def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-    """
-    Generates an enriched question using the OpenAI API.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        question (str): The question to be enriched.
-        logger (logging.Logger): The logger instance.
-
-    Returns:
-        str: The enriched question.
-
-    Raises:
-        BadRequestError: If the API request fails.
-    """
+def generate_enriched_question(chat_client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
@@ -224,46 +192,18 @@ def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, qu
     logger.info("Making API request to OpenAI...")
     logger.info("Request payload: %s", messages)
 
-    response = call_openai_chat(client, messages, config, logger)
-    logger.info("API response received: %s", response)
-
-    return response
-
-def generate_enriched_question(client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
-    """
-    Generates an enriched question using the OpenAI API.
-
-    Args:
-        client (AzureOpenAI): The OpenAI client instance.
-        config (ApiConfiguration): The API configuration instance.
-        question (str): The question to be enriched.
-        logger (logging.Logger): The logger instance.
-
-    Returns:
-        str: The enriched question.
-
-    Raises:
-        BadRequestError: If the API request fails.
-    """
-    messages = [
-        {"role": "system", "content": OPENAI_PERSONA_PROMPT},
-        {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
-    ]
-    logger.info("Making API request to OpenAI...")
-    logger.info("Request payload: %s", messages)
-
-    response = call_openai_chat(client, messages, config, logger)
+    response = call_openai_chat(chat_client, messages, config, logger)
     logger.info("API response received: %s", response)
 
     return response
 
 
-def generate_follow_up_question(client: AzureOpenAI, config: ApiConfiguration, text: str, logger: logging.Logger) -> str:
+def generate_follow_up_question(chat_client: AzureOpenAI, config: ApiConfiguration, text: str, logger: logging.Logger) -> str:
     """
     Generates a follow-up question using the OpenAI API.
 
     Args:
-        client (AzureOpenAI): The OpenAI client instance.
+        chat_client (AzureOpenAI): The OpenAI client instance.
         config (ApiConfiguration): The API configuration instance.
         text (str): The text to generate a follow-up question about.
         logger (logging.Logger): The logger instance.
@@ -278,16 +218,16 @@ def generate_follow_up_question(client: AzureOpenAI, config: ApiConfiguration, t
         {"role": "system", "content": FOLLOW_UP_PROMPT},
         {"role": "user", "content": text},
     ]
-    response = call_openai_chat(client, messages, config, logger)
+    response = call_openai_chat(chat_client, messages, config, logger)
     return response
 
 
-def assess_follow_up_on_topic(client: AzureOpenAI, config: ApiConfiguration, follow_up: str, logger: logging.Logger) -> str:
+def assess_follow_up_on_topic(chat_client: AzureOpenAI, config: ApiConfiguration, follow_up: str, logger: logging.Logger) -> str:
     """
     Checks if a follow-up question is about AI using the OpenAI API.
 
     Args:
-        client (AzureOpenAI): The OpenAI client instance.
+        chat_client (AzureOpenAI): The OpenAI client instance.
         config (ApiConfiguration): The API configuration instance.
         follow_up (str): The follow-up question to assess.
         logger (logging.Logger): The logger instance.
@@ -298,36 +238,39 @@ def assess_follow_up_on_topic(client: AzureOpenAI, config: ApiConfiguration, fol
     Raises:
         BadRequestError: If the API request fails.
     """
-   
     messages = [
         {"role": "system", "content": FOLLOW_UP_ON_TOPIC_PROMPT},
         {"role": "user", "content": follow_up},
     ]
-    response = call_openai_chat(client, messages, config, logger)
+    response = call_openai_chat(chat_client, messages, config, logger)
     return response
 
-def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
+def process_questions(chat_client: AzureOpenAI, embedding_client: AzureOpenAI, config: ApiConfiguration, questions: List[str], processed_question_chunks: List[Dict[str, Any]], logger: logging.Logger) -> List[TestResult]:
     """
     Processes a list of test questions and evaluates their relevance based on their similarity to pre-processed question chunks.
 
     Args:
-        client (AzureOpenAI): The OpenAI client instance.
+        chat_client (AzureOpenAI): The OpenAI client instance for generating enriched summaries and follow-up questions.
+        embedding_client (AzureOpenAI): The OpenAI client instance for generating embeddings.
         config (ApiConfiguration): The API configuration instance.
         questions (List[str]): The list of test questions to be processed.
         processed_question_chunks (List[Dict[str, Any]]): The list of pre-processed question chunks.
         logger (logging.Logger): The logger instance.
 
     Returns:
-        List[TestResult]: A list of test results, each containing the original question, its enriched version, and its relevance to the pre-processed chunks.
+        List[TestResult]: A list of test results, each containing the original question, its enriched version, its relevance to the pre-processed chunks, its follow-up question, and whether the follow-up question is on-topic.
+
+    Raises:
+        BadRequestError: If the API request fails.
     """
     question_results: List[TestResult] = []
     
     for question in questions:
         question_result = TestResult()
         question_result.question = question
-        question_result.enriched_question_summary = generate_enriched_question(client, config, question, logger)  # Generate enriched question summary
+        question_result.enriched_question_summary = generate_enriched_question(chat_client, config, question, logger)  # Generate enriched question summary
         
-        embedding = get_text_embedding(client, config, question_result.enriched_question_summary, logger)  # Get embedding for the enriched question
+        embedding = get_text_embedding(embedding_client, config, question_result.enriched_question_summary, logger)  # Get embedding for the enriched question
 
         best_hit_relevance = 0  # To track the highest similarity score
         best_hit_summary = None  # To track the summary corresponding to the highest similarity
@@ -352,8 +295,8 @@ def process_questions(client: AzureOpenAI, config: ApiConfiguration, questions: 
 
         # Now, generate the follow-up question if a best hit summary exists
         if question_result.hit_summary:
-            question_result.follow_up = generate_follow_up_question(client, config, question_result.hit_summary, logger)  # Generate follow-up question
-            question_result.follow_up_on_topic = assess_follow_up_on_topic(client, config, question_result.follow_up, logger)  # Assess if follow-up question is on-topic
+            question_result.follow_up = generate_follow_up_question(chat_client, config, question_result.hit_summary, logger)  # Generate follow-up question
+            question_result.follow_up_on_topic = assess_follow_up_on_topic(chat_client, config, question_result.follow_up, logger)  # Assess if follow-up question is on-topic
 
         
         # Use Gemini to evaluate the Azure OpenAI enriched summary
@@ -456,14 +399,17 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     Returns:
         None
     """
-    client = configure_openai_for_azure(config)
+    # Initialize clients for chat and embeddings
+    chat_client = configure_openai_for_azure(config, "chat")
+    embedding_client = configure_openai_for_azure(config, "embedding")
+
 
     if not test_destination_dir:
         logger.error("Test data folder not provided")
         raise ValueError("Test destination directory not provided")
     
     if persona_strategy:
-        questions = persona_strategy.generate_questions(client, config, NUM_QUESTIONS, logger)
+        questions = persona_strategy.generate_questions(chat_client, config, NUM_QUESTIONS, logger)
 
     if not questions:
         logger.error("Generated questions are None or empty. Exiting the test.")
@@ -472,5 +418,5 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     test_mode = persona_strategy.__class__.__name__.replace('PersonaStrategy', '').lower()
 
     processed_question_chunks = read_processed_chunks(source_dir)
-    question_results = process_questions(client, config, questions, processed_question_chunks, logger)
+    question_results = process_questions(chat_client,embedding_client, config, questions, processed_question_chunks, logger)
     save_results(test_destination_dir, question_results, test_mode)
