@@ -17,7 +17,7 @@ The first pattern is 'Waterfall'. Waterfall is a text analyser / classifier, bui
 
 'BraidCommon' contains utility classes used across both clients & server - especially API definitions and Types used to generate test scripts. Both subsystems are written in Typescript. Both Cascade and Waterfall make calls to the BraidApis.
 
-'Salon' - a place where you doi Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
+'Salon' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
 
 The second pattern, 'Boxer', is in the process of being moved to this repo. Boxer is an AI-enabled learning assistant to help developers build generative AI applications more quickly.  
 
