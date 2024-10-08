@@ -1,4 +1,16 @@
 # Copyright (c) 2024 Braid Technologies Ltd
+
+"""
+This script integrates GPT-4 and Gemini models to handle chat generation and embedding tasks:
+
+- **Chat Generation**:
+  - GPT-4o: Handles generating responses for various personas.
+  - Gemini-1.5pro: Evaluates and judges the quality of GPT-4 outputs.
+
+- **Embeddings**:
+  - GPT-4o: Processes embeddings for similarity comparisons.
+"""
+
 # Standard Library Imports
 import logging
 import os
@@ -141,6 +153,21 @@ def call_openai_chat(chat_client: AzureOpenAI, messages: List[Dict[str, str]], c
 # Function to retrieve text embeddings using OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def get_text_embedding(embedding_client: AzureOpenAI, config: ApiConfiguration, text: str, logger: Logger) -> np.ndarray:
+    """
+    Retrieves the text embedding for a given text using the OpenAI API.
+
+    Args:
+        embedding_client (AzureOpenAI): The OpenAI client instance.
+        config (ApiConfiguration): The API configuration instance.
+        text (str): The text for which to retrieve the embedding.
+        logger (Logger): The logger instance.
+
+    Returns:
+        np.ndarray: The text embedding as a numpy array.
+
+    Raises:
+        OpenAIError: If an error occurs while retrieving the text embedding.
+    """
     try:
         embedding = get_embedding(text, embedding_client, config)
         return np.array(embedding)
@@ -165,7 +192,6 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
         ValueError: If the input vectors do not have the same shape.
         ValueError: If either of the input vectors is a zero vector.
     """
-
     try:
         a, b = np.array(a), np.array(b)
     except Exception:
@@ -185,6 +211,21 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 # Function to generate enriched questions using OpenAI API
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
 def generate_enriched_question(chat_client: AzureOpenAI, config: ApiConfiguration, question: str, logger: logging.Logger) -> str:
+    """
+    Generates an enriched question using the OpenAI API.
+
+    Args:
+        chat_client (AzureOpenAI): The OpenAI client instance.
+        config (ApiConfiguration): The API configuration instance.
+        question (str): The question to be enriched.
+        logger (logging.Logger): The logger instance.
+
+    Returns:
+        str: The enriched question.
+
+    Raises:
+        BadRequestError: If the API request fails.
+    """
     messages = [
         {"role": "system", "content": OPENAI_PERSONA_PROMPT},
         {"role": "user", "content": ENRICHMENT_PROMPT + "Question: " + question},
@@ -258,7 +299,7 @@ def process_questions(chat_client: AzureOpenAI, embedding_client: AzureOpenAI, c
         logger (logging.Logger): The logger instance.
 
     Returns:
-        List[TestResult]: A list of test results, each containing the original question, its enriched version, its relevance to the pre-processed chunks, its follow-up question, and whether the follow-up question is on-topic.
+        List[TestResult]: A list of test results, each containing the original question, its enriched version, its relevance to the pre-processed chunks, the follow-up question, and whether the follow-up question is on-topic.
 
     Raises:
         BadRequestError: If the API request fails.
