@@ -31,4 +31,4 @@ class DataAssistantCLI:
         assistant_name, assistant_instruction = self.get_configuration()
         assistant = DataAssistant(self.filename, assistant_name, assistant_instruction)
 
-        assistant.follow_up_question("Write a python program to fully test the provided API using the Pytest framework. Don't ask any more question back to me, do the best you can with the infirmation provided.")
+        assistant.follow_up_question("Write a Python program to fully test the API defined in the uploaded file using the Pytest framework. Don't ask questions back to me, do the best you can with the information provided. Enclose the Python code in <CODE></CODE> markers.")

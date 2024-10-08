@@ -91,7 +91,8 @@ class BoxerDataPipeline:
             chunk = youtube_downloader.download(chunk)
             chunks = youtube_chunker.chunk(
                 chunk, youtube_spec.max_words, youtube_spec.overlap_words)
-            all_chunks.extend(chunks)
+            if (chunks):
+               all_chunks.extend(chunks)
 
         for chunk in all_chunks:
             summarised = None
