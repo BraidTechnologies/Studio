@@ -1,4 +1,16 @@
 # Copyright (c) 2024 Braid Technologies Ltd
+
+"""
+Question Generation (Persona):
+Continues with `gpt-4o` for persona-based question generation.
+    
+Similarity Embedding:
+Still uses `text-embedding-ada-002` for similarity comparisons.
+    
+Evaluation LLM:
+Introduces `gemini-1.5-pro` as the evaluation LLM to assess the quality of GPT-4o outputs.
+"""
+
 # Standard Library Imports
 import logging
 import os
