@@ -29,27 +29,27 @@ BUSINESS_ANALYST_PROMPT = "You are a business analyst interested in how people c
 
 class PersonaStrategy(ABC):
     @abstractmethod
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+    def generate_questions(self, chat_client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+        """
     Generates a list of questions based on a persona.
 
     Args:
-        client (AzureOpenAI): An instance of the AzureOpenAI class.
+        chat_client (AzureOpenAI): An instance of the AzureOpenAI class.
         config (ApiConfiguration): An instance of the ApiConfiguration class.
         num_questions (int): The number of questions to generate.
         logger (logging.Logger): An instance of the logging.Logger class.
 
     Returns:
         List[str]: A list of questions generated based on the persona.
-    """
+        """
         pass  # This is an abstract method to be implemented by subclasses
 
-    def _generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+    def _generate_questions(self, chat_client: AzureOpenAI, config: ApiConfiguration, prompt: str, num_questions: int, logger: logging.Logger) -> List[str]:
+        """
     Generates a list of questions based on a prompt.
 
     Args:
-        client (AzureOpenAI): An instance of the AzureOpenAI class.
+        chat_client (AzureOpenAI): An instance of the AzureOpenAI class.
         config (ApiConfiguration): An instance of the ApiConfiguration class.
         prompt (str): The prompt to use when generating the questions.
         num_questions (int): The number of questions to generate.
@@ -57,62 +57,60 @@ class PersonaStrategy(ABC):
 
     Returns:
         List[str]: A list of questions generated based on the prompt.
-    """
-
+        """
         messages = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Generate {num_questions} questions about this topic."},
         ]
         logger.info("Generating questions with the following prompt: %s", prompt)
-        response = call_openai_chat(client, messages, config, logger)
+        response = call_openai_chat(chat_client, messages, config, logger)
         questions = response.split('\n')
         return [q for q in questions if q.strip()]
 
 class DeveloperPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+    def generate_questions(self, chat_client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+        """
     Generates a list of questions based on the developer persona.
 
     Args:
-        client (AzureOpenAI): An instance of the AzureOpenAI class.
+        chat_client (AzureOpenAI): An instance of the AzureOpenAI class.
         config (ApiConfiguration): An instance of the ApiConfiguration class.
         num_questions (int): The number of questions to generate.
         logger (logging.Logger): An instance of the logging.Logger class.
 
     Returns:
         List[str]: A list of questions generated based on the developer persona.
-    """
-        return self._generate_questions(client, config, DEVELOPER_PROMPT, num_questions, logger)
+        """
+        return self._generate_questions(chat_client, config, DEVELOPER_PROMPT, num_questions, logger)
 
 class TesterPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+    def generate_questions(self, chat_client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+        """
     Generates a list of questions based on the tester persona.
 
     Args:
-        client (AzureOpenAI): An instance of the AzureOpenAI class.
+        chat_client (AzureOpenAI): An instance of the AzureOpenAI class.
         config (ApiConfiguration): An instance of the ApiConfiguration class.
         num_questions (int): The number of questions to generate.
         logger (logging.Logger): An instance of the logging.Logger class.
 
     Returns:
         List[str]: A list of questions generated based on the tester persona.
-    """
-        return self._generate_questions(client, config, TESTER_PROMPT, num_questions, logger)
+        """
+        return self._generate_questions(chat_client, config, TESTER_PROMPT, num_questions, logger)
 
 class BusinessAnalystPersonaStrategy(PersonaStrategy):
-    def generate_questions(self, client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
-    """
+    def generate_questions(self, chat_client: AzureOpenAI, config: ApiConfiguration, num_questions: int, logger: logging.Logger) -> List[str]:
+        """
     Generates a list of questions based on the business analyst persona.
 
     Args:
-        client (AzureOpenAI): An instance of the AzureOpenAI class.
+        chat_client (AzureOpenAI): An instance of the AzureOpenAI class.
         config (ApiConfiguration): An instance of the ApiConfiguration class.
         num_questions (int): The number of questions to generate.
         logger (logging.Logger): An instance of the logging.Logger class.
 
     Returns:
         List[str]: A list of questions generated based on the business analyst persona.
-    """
-    
-        return self._generate_questions(client, config, BUSINESS_ANALYST_PROMPT, num_questions, logger)
+        """
+        return self._generate_questions(chat_client, config, BUSINESS_ANALYST_PROMPT, num_questions, logger)

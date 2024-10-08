@@ -35,19 +35,18 @@ class ApiConfiguration:
         """
         self.apiKey = API_KEY
         self.apiVersion = API_VERSION
-        self.resourceEndpoint = RESOURCE_ENDPOINT
-        self.azureDeploymentName = "braidlms"
-        self.azureEmbedDeploymentName="braidlmse"
-        self.modelName="gpt-4"      
-        self.embedModelName="text-embedding-ada-002"
+        self.resourceChatCompletionEndpoint = "https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01"  # Chat completions endpoint
+        self.resourceEmbeddingEndpoint = "https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01"  # Embeddings endpoint
+        self.azureDeploymentName = "StudioLarge"
+        self.azureEmbedDeploymentName = "StudioEmbeddingLarge"
+        self.modelName = "gpt-4"
+        self.embedModelName = "text-embedding-3-large"
         self.processingThreads = 4
         self.openAiRequestTimeout = 60
         self.summaryWordCount = 50      # 50 word summary
         self.chunkDurationMins = 10     # 10 minute long video clips
         self.maxTokens = 4096           # Upper limit on total tokens in an API call. 10 minutes of video = 600 words = 2400 tokens, plus approx 2x headroom
         self.discardIfBelow = 100       # Dont index if less than 100 tokens in an article
-        self.GeminiApiKey = GEMINI_API_KEY
-        self.GeminiServiceEndpoint = "https://generativelanguage.googleapis.com"
         self.GeminiApiKey = GEMINI_API_KEY
         self.GeminiServiceEndpoint = GEMINI_SERVICE_ENDPOINT
 
@@ -65,3 +64,5 @@ class ApiConfiguration:
     chunkDurationMins: int
     maxTokens: int
     discardIfBelow: int 
+    GeminiApiKey: str
+    GeminiServiceEndpoint: str
