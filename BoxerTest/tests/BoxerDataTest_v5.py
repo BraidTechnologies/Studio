@@ -39,10 +39,11 @@ from common.common_functions import get_embedding
 from PersonaStrategy import DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy, PersonaStrategy
 
 # Constants
-SIMILARITY_THRESHOLD = 0.8
-MAX_RETRIES = 15
-NUM_QUESTIONS = 100
+SIMILARITY_THRESHOLD = 0.8          # Defines the minimum similarity threshold for a question to be considered a hit
+MAX_RETRIES = 15                    # Maximum number of retries for API calls
+NUM_QUESTIONS = 100                 # Number of questions to be generated per test
 
+# OpenAI prompts used for persona generation, enrichment, and follow-up question generation
 OPENAI_PERSONA_PROMPT =  "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'."
 ENRICHMENT_PROMPT = "You will be provided with a question about building applications that use generative AI technology. Write a 50 word summary of an article that would be a great answer to the question. Consider enriching the question with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n"
 FOLLOW_UP_PROMPT =  "You will be provided with a summary of an article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might ask as a follow up to reading the article."
@@ -52,7 +53,7 @@ FOLLOW_UP_ON_TOPIC_PROMPT = "You are an AI assistant helping a team of developer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-gemini_evaluator = GeminiEvaluator()  #initiating an instance of the GeminiEvaluator
+gemini_evaluator = GeminiEvaluator()  ## Initialize an instance of the GeminiEvaluator for response evaluation
 
 # Function to configure the Azure OpenAI API client
 def configure_openai_for_azure(config: ApiConfiguration, task: str) -> AzureOpenAI:
@@ -95,13 +96,14 @@ class TestResult:
         Returns:
             None
         """
-        self.question: str = ""
-        self.enriched_question_summary: str = ""
-        self.hit: bool = False
-        self.hit_relevance: float = 0.0
-        self.follow_up: str = ""  # Adding followUp field
-        self.follow_up_on_topic: str = ""  # Adding followUpOnTopic field
-        self.gemini_evaluation: str = ""  # Field to store Gemini LLM evaluation
+        self.question: str = ""                             # Original question
+        self.hit_relevance: float = 0.0                     # Relevance score of the hit
+        self.enriched_question_summary: str = ""            # Summary of the enriched question   
+        self.hit: bool = False                              # Whether the question was considered a hit based on similarity
+        self.hit_relevance: float = 0.0                     # Relevance score of the hit
+        self.follow_up: str = ""                            # Adding followUp field
+        self.follow_up_on_topic: str = ""                   # Adding followUpOnTopic field
+        self.gemini_evaluation: str = ""                    # Field to store Gemini LLM evaluation
 
 # Function to call the OpenAI API with retry logic
 @retry(wait=wait_random_exponential(min=5, max=15), stop=stop_after_attempt(MAX_RETRIES), retry=retry_if_not_exception_type(BadRequestError))
@@ -304,51 +306,65 @@ def process_questions(chat_client: AzureOpenAI, embedding_client: AzureOpenAI, c
     Raises:
         BadRequestError: If the API request fails.
     """
+    # Initialize an empty list to store the results of each processed question.
     question_results: List[TestResult] = []
     
+    # Loop through each question in the provided list of questions.
     for question in questions:
+        # Create a new TestResult object for the current question to store its results.
         question_result = TestResult()
-        question_result.question = question
+        question_result.question = question     # Store the original question
+
         question_result.enriched_question_summary = generate_enriched_question(chat_client, config, question, logger)  # Generate enriched question summary
         
+        # Obtain the text embedding for the enriched question using OpenAI's embedding model.
         embedding = get_text_embedding(embedding_client, config, question_result.enriched_question_summary, logger)  # Get embedding for the enriched question
 
-        best_hit_relevance = 0  # To track the highest similarity score
-        best_hit_summary = None  # To track the summary corresponding to the highest similarity
+        # Initialize variables to track the highest similarity score and the corresponding summary.
+        best_hit_relevance = 0      # To track the highest similarity score
+        best_hit_summary = None     # To track the summary corresponding to the highest similarity
 
         # Iterate through the processed chunks to find the best hit
         for chunk in processed_question_chunks:
+            # Ensure the chunk is valid and is a dictionary.
             if chunk and isinstance(chunk, dict):
                 gpt4_embedding = chunk.get("embedding")
                 similarity = cosine_similarity(gpt4_embedding, embedding)
 
+                # If similarity exceeds the defined threshold, mark the question as a hit
                 if similarity > SIMILARITY_THRESHOLD:
                     question_result.hit = True
 
                 # Check if this is the best match so far
                 if similarity > best_hit_relevance:
                     best_hit_relevance = similarity
-                    best_hit_summary = chunk.get("summary")
+                    best_hit_summary = chunk.get("summary") 
 
-        # Set the best hit relevance and summary for the question result
+         # Store the highest relevance score and the associated summary in the result.
         question_result.hit_relevance = best_hit_relevance
         question_result.hit_summary = best_hit_summary
 
-        # Now, generate the follow-up question if a best hit summary exists
+        # If a relevant summary (best hit) exists, generate a follow-up question and assess its topic relevance.
         if question_result.hit_summary:
-            question_result.follow_up = generate_follow_up_question(chat_client, config, question_result.hit_summary, logger)  # Generate follow-up question
-            question_result.follow_up_on_topic = assess_follow_up_on_topic(chat_client, config, question_result.follow_up, logger)  # Assess if follow-up question is on-topic
+            # Generate a follow-up question based on the best hit summary.  
+            question_result.follow_up = generate_follow_up_question(chat_client, config, question_result.hit_summary, logger)
 
+            # Check if the follow-up question is relevant to AI and mark it accordingly.  
+            question_result.follow_up_on_topic = assess_follow_up_on_topic(chat_client, config, question_result.follow_up, logger)  
         
         # Use Gemini to evaluate the Azure OpenAI enriched summary
         question_result.gemini_evaluation = gemini_evaluator.evaluate(
-            question_result.question,  # This is the original question
-            question_result.enriched_question_summary # This is the summary generated by Azure OpenAI
+            question_result.question,                   # This is the original question
+            question_result.enriched_question_summary   # This is the summary generated by Azure OpenAI
             ) 
 
+        # Append the result for the current question to the results list.
         question_results.append(question_result)
 
+    # Log the total number of processed questions for debugging or tracking purposes.
     logger.debug("Total tests processed: %s", len(question_results))
+
+    # Return the list of all test results.
     return question_results
 
 # Function to read processed chunks from the source directory
@@ -366,18 +382,24 @@ def read_processed_chunks(source_dir: str) -> List[Dict[str, Any]]:
         FileNotFoundError: If the source directory or a JSON file is not found.
         IOError: If an I/O error occurs while reading a JSON file.
     """
-    processed_question_chunks: List[Dict[str, Any]] = []
+    processed_question_chunks: List[Dict[str, Any]] = []            # Initialize an empty list to hold the chunks.
     try:
+        # Loop through all files in the specified directory.
         for filename in os.listdir(source_dir):
+            # Check if the file has a '.json' extension.
             if filename.endswith(".json"):
-                file_path = os.path.join(source_dir, filename)
+                file_path = os.path.join(source_dir, filename)      # Get the full path to the file.
+                # Open the file and load its contents as JSON.
                 with open(file_path, "r", encoding="utf-8") as f:
-                    chunk = json.load(f)
-                    processed_question_chunks = chunk
+                    chunk = json.load(f)                        # Load JSON data into the chunk variable.
+                    processed_question_chunks = chunk           # Store the JSON content in the processed chunks list.
+
+    # Handle file not found or I/O errors that occur during file reading.                
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error reading files: {e}")
         raise
     
+    # If no chunks were processed, log a warning.
     if not processed_question_chunks:
         logger.error("Processed question chunks are None or empty.")
     
@@ -401,25 +423,29 @@ def save_results(test_destination_dir: str, question_results: List[TestResult], 
     """
     output_data = [
         {
-            "question": result.question,
-            "enriched_question": result.enriched_question_summary, 
-            "hit": result.hit,
-            "summary": result.hit_summary, 
-            "hitRelevance": result.hit_relevance,
-            "follow_up": result.follow_up,  # Add follow_up to the output
-            "follow_up_on_topic": result.follow_up_on_topic,  # Add follow_up_on_topic to the output
-            "gemini_evaluation": result.gemini_evaluation  # Add Gemini evaluation to the output
+            "question": result.question,                                # Original question.
+            "enriched_question": result.enriched_question_summary,      # Enriched question summary.
+            "hit": result.hit,                                          # Whether it was a hit or not (based on similarity).
+            "summary": result.hit_summary,                              # The best-matching pre-processed summary.
+            "hitRelevance": result.hit_relevance,                       # Relevance score for the best hit.
+            "follow_up": result.follow_up,                              # Follow-up question generated.
+            "follow_up_on_topic": result.follow_up_on_topic,            # Whether the follow-up is on-topic.
+            "gemini_evaluation": result.gemini_evaluation               # Evaluation result from Gemini.
         }
-        for result in question_results
+        for result in question_results                                  # Iterate over each TestResult and serialize it.
     ]
 
+    # Generate a unique filename for the output based on the current timestamp and test mode.
     current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     output_file = os.path.join(test_destination_dir, f"test_output_v5_{test_mode}_{current_datetime}.json")
 
     try:
+        # Write the output data to the specified file as JSON.
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(output_data, f, indent=4)
         logger.info(f"Test results saved to: {output_file}")
+    
+    # Handle any I/O errors that might occur during writing.
     except IOError as e:
         logger.error(f"Error saving results: {e}")
         raise
@@ -440,14 +466,14 @@ def run_tests(config: ApiConfiguration, test_destination_dir: str, source_dir: s
     Returns:
         None
     """
-    # Initialize clients for chat and embeddings
+    # Initialize the OpenAI clients for both chat completions and embeddings.
     chat_client = configure_openai_for_azure(config, "chat")
     embedding_client = configure_openai_for_azure(config, "embedding")
 
-
+    # Ensure that a test destination directory is provided, raise an error if not.
     if not test_destination_dir:
-        logger.error("Test data folder not provided")
-        raise ValueError("Test destination directory not provided")
+        logger.error("Test data folder not provided")                       # Log error message.
+        raise ValueError("Test destination directory not provided")         # Raise exception
     
     if persona_strategy:
         questions = persona_strategy.generate_questions(chat_client, config, NUM_QUESTIONS, logger)
