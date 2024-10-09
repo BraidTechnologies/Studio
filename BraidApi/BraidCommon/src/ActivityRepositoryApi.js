@@ -12,18 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActivityRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
+const Api_1 = require("./Api");
 /**
  * Represents an API for activities.
  *
- * @param {EEnvironment} environemnt_ - The environment to use for saving activities.
+ * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  *
  * @method save - Saves a record to the activity API.
+ * @method remove - removes a record
+ * @method recent - return a list of recent activities
  */
-class ActivityRepostoryApi {
-    constructor(environemnt_, sessionKey_) {
-        this._environment = environemnt_;
-        this._sessionKey = sessionKey_;
+class ActivityRepostoryApi extends Api_1.Api {
+    /**
+     * Initializes a new instance of the class with the provided environment and session key.
+     *
+     * @param environment_ The environment settings to be used.
+     * @param sessionKey_ The session key for authentication.
+     */
+    constructor(environment_, sessionKey_) {
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously saves a record to the activity repository API.
@@ -32,9 +40,9 @@ class ActivityRepostoryApi {
      * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
      */
     save(record) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this._environment.saveActivityApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
@@ -62,9 +70,9 @@ class ActivityRepostoryApi {
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
     remove(recordId) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
@@ -91,9 +99,9 @@ class ActivityRepostoryApi {
      * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
      */
     recent(querySpec) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, querySpec);

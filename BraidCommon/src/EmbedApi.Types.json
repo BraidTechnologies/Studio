@@ -1,0 +1,39 @@
+{
+  "definitions": {
+    "IEmbedRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "IEmbedRequest.text"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "title": "IEmbedRequest",
+      "description": "Interface for the embedding request object."
+    },
+    "IEmbedResponse": {
+      "type": "object",
+      "properties": {
+        "embedding": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "title": "IEmbedResponse.embedding"
+        }
+      },
+      "required": [
+        "embedding"
+      ],
+      "additionalProperties": false,
+      "title": "IEmbedResponse",
+      "description": "Interface for the embedding response object."
+    }
+  },
+  "$id": "EmbedApi.Types.json",
+  "$comment": "Generated from src\\EmbedApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

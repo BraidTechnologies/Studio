@@ -6,30 +6,40 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "pull": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
+    "pull_js": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
+    "pull_js_map": "copy ..\\BraidCommon\\dist\\src\\*.js.map BraidCommon\\src",
+    "pull_embeddings": "copy ..\\waterfall\\test\\boxer_output\\api_embeddings_lite.json .",    
     "clean": "rimraf dist",
-    "prestart": "npm run clean && npm run build",
-    "start": "func start",
+    "prestart": "npm run clean && npm run build && npm run pull_js && npm run pull_js_map",
+    "start": "func start --typescript",
     "test": "mocha --debug-brk --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --require ts-node/register test/*login*.test.ts"
+    "test-mini": "mocha --debug-brk --require ts-node/register test/*summarise*.test.ts",
+    "local-fluid": "npx @fluidframework/azure-local-service@latest"
   },
   "dependencies": {
     "@azure/functions": "^4.5.0",
-    "axios": "^1.7.2",
+    "@fluidframework/protocol-definitions": "^4.0.0",
+    "@fluidframework/server-services-client": "^5.0.0",
     "axios-retry": "^4.4.2",
     "crypto": "^1.0.1",
     "qs": "^6.13.0"
   },
   "devDependencies": {
+    "@fluidframework/azure-client": "^2.2.0",
+    "@fluidframework/azure-local-service": "^2.3.0",
+    "@fluidframework/azure-service-utils": "^2.2.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "22.x",
     "@types/qs": "^6.9.15",
+    "axios": "^1.7.7",
     "azure-functions-core-tools": "^4.x",
     "expect": "^29.7.0",
-    "latest": "^0.2.0",
+    "fluid-framework": "^2.3.0",
+    "gpt4-tokenizer": "^1.3.0",
     "mocha": "^10.7.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "tslib": "^2.7.0",
     "typescript": "^5.5.4"
   }
 }

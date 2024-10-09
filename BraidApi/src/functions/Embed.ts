@@ -1,11 +1,18 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish BraidApi to publish to Azure
+// 'func azure functionapp publish BraidApi' to publish to Azure
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
+import { recursiveSummarize } from "./Summarize";
+import { IEmbedRequest, IEmbedResponse } from "../../../BraidCommon/src/EmbedApi.Types";
+
+let model = getDefaultModel();
 
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
@@ -13,7 +20,7 @@ import axiosRetry from 'axios-retry';
  * @param text The text for which the embedding needs to be calculated.
  * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
  */
-async function CalculateEmbedding (text: string) : Promise <Array<number>> {
+export async function calculateEmbedding(text: string): Promise<Array<number>> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -21,12 +28,13 @@ async function CalculateEmbedding (text: string) : Promise <Array<number>> {
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => {
          return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }      
+      }
    });
 
-   let response = await axios.post('https://braidlms.openai.azure.com/openai/deployments/braidlmse/embeddings?api-version=2024-02-01', {
-         input: text,
-      },
+
+   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+      input: text,
+   },
       {
          headers: {
             'Content-Type': 'application/json',
@@ -35,9 +43,9 @@ async function CalculateEmbedding (text: string) : Promise <Array<number>> {
       }
    );
 
-   let embedding = response.data.data[0].embedding as Array<number>;     
+   let embedding = response.data.data[0].embedding as Array<number>;
 
-   return (embedding);   
+   return (embedding);
 }
 
 
@@ -48,45 +56,54 @@ async function CalculateEmbedding (text: string) : Promise <Array<number>> {
  * @param context - The context object for logging and validation.
  * @returns A Promise that resolves to an HTTP response with the embedding or an authorization error.
  */
-export async function Embed (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function embed(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-    let requestedSession : string | undefined = undefined;     
-    let text : string | undefined = undefined; 
-    let classifications : Array<string> | undefined = undefined;  
+   let text: string | undefined = undefined;
 
-    for (const [key, value] of request.query.entries()) {
-        if (key === 'session')
-            requestedSession = value;                
-    }
+   if (isSessionValid(request, context)) {
 
-    let jsonRequest = await request.json();
-    context.log(jsonRequest);      
-    text = (jsonRequest as any)?.data?.text;   
+      try {
+         let jsonRequest = await request.json();
+         context.log(jsonRequest);
+         let spec = (jsonRequest as any).request as IEmbedRequest;
+         text = spec.text;
 
-    if (((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) 
-      && (text && text.length > 0)) {  
+         if ((text && text.length > 0)) {
 
-       let embedding = await CalculateEmbedding (text);
-       context.log("Passed session key validation:" + requestedSession);     
+            // If the text is bigger than available context, we have to summarise it
+            if (!model.fitsInContext(text)) {
+               text = await recursiveSummarize(text, 0, model.contextWindowSize)
 
-       return {
-          status: 200, // Ok
-          body: JSON.stringify (embedding) 
-       };         
-    }
-    else 
-    {
-        context.log("Failed session key validation:" + requestedSession);  
+               context.log("Summarised");
+            }
 
-        return {
-           status: 401, // Unauthorised
-           body: "Authorization check failed."
-        };             
-    }
+            let embeddingResponse : IEmbedResponse = {
+               embedding: await calculateEmbedding(text)
+            };
+
+            return {
+               status: 200, // Ok
+               body: JSON.stringify(embeddingResponse)
+            };
+         }
+         else {
+            context.error("Error embedding text:");
+            return invalidRequestResponse("Text not provided.");
+         }         
+      }
+      catch (e: any) {
+         context.error("Error embedding text:", e);
+         return defaultErrorResponse();
+      }   
+   }
+   else {
+      context.error ("Sessionvalidation failed.");         
+      return sessionFailResponse();
+   }
 };
 
 app.http('Embed', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: Embed
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: embed
 });

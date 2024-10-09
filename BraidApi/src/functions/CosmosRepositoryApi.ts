@@ -2,7 +2,7 @@
 // Copyright Braid Technologies Ltd, 2024
 
 // 3rd party imports
-var crypto = require("crypto");   
+var crypto = require("crypto");
 
 export const defaultPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
 
@@ -17,26 +17,26 @@ export const defaultPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
  * @param masterKey The master key used for generating the token.
  * @returns The encoded authorization token.
  */
-export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: string, resourceId: string, date: string, masterKey: string) {  
+export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: string, resourceId: string, date: string, masterKey: string) {
 
-    var key = Buffer.from(masterKey, "base64");  
-  
-    var text = (verb || "").toLowerCase() + "\n" +   
-               (resourceType || "").toLowerCase() + "\n" +   
-               (resourceId || "") + "\n" +   
-               date.toLowerCase() + "\n" +   
-               "" + "\n";  
-  
-    var body = Buffer.from(text, "utf8");  
-    var signature = crypto.createHmac("sha256", key).update(body).digest("base64");  
-  
-    var MasterToken = "master";  
-  
-    var TokenVersion = "1.0";  
-  
-    var encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);  
+   var key = Buffer.from(masterKey, "base64");
 
-    return encoded;
+   var text = (verb || "").toLowerCase() + "\n" +
+      (resourceType || "").toLowerCase() + "\n" +
+      (resourceId || "") + "\n" +
+      date.toLowerCase() + "\n" +
+      "" + "\n";
+
+   var body = Buffer.from(text, "utf8");
+   var signature = crypto.createHmac("sha256", key).update(body).digest("base64");
+
+   var MasterToken = "master";
+
+   var TokenVersion = "1.0";
+
+   var encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);
+
+   return encoded;
 }
 
 
@@ -48,11 +48,11 @@ export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: 
  * @param key The master key for authorization.
  * @returns The generated authorization token for the activity.
  */
-export function activityToken(verb: string, time: string, key: string) { 
+export function activityToken(verb: string, time: string, key: string) {
 
    //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey( verb, "docs", "dbs/BraidLms/colls/Activity", time, 
-                                               key);
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Activity", time,
+      key);
 }
 
 /**
@@ -62,9 +62,9 @@ export function activityToken(verb: string, time: string, key: string) {
  * @param key The key used for generating the token.
  * @returns The post activity token.
  */
-export function makePostActivityToken(time: string, key: string) { 
+export function makePostActivityToken(time: string, key: string) {
 
-   return activityToken( "post", time, key);
+   return activityToken("post", time, key);
 }
 
 /**
@@ -75,11 +75,11 @@ export function makePostActivityToken(time: string, key: string) {
  * @param id The ID of the activity to be deleted.
  * @returns The authorization token for the delete operation.
  */
-export function makeDeleteActivityToken(time: string, key: string, id: string) { 
+export function makeDeleteActivityToken(time: string, key: string, id: string) {
 
-   return getAuthorizationTokenUsingMasterKey( "delete", "docs", "dbs/BraidLms/colls/Activity/docs/" + id, 
-                                                time, 
-                                                key);
+   return getAuthorizationTokenUsingMasterKey("delete", "docs", "dbs/Studio/colls/Activity/docs/" + id,
+      time,
+      key);
 }
 
 /**
@@ -89,17 +89,17 @@ export function makeDeleteActivityToken(time: string, key: string, id: string) {
  * @param defaultPartitionKey The default partition key for the activity.
  * @returns An object containing the necessary header for the POST activity.
  */
-export function makePostActivityHeader (key : string, time : string, defaultPartitionKey : string) : object {
-   return {                  
+export function makePostActivityHeader(key: string, time: string, defaultPartitionKey: string): object {
+   return {
       "Authorization": key,
-      "Content-Type": "application/json",    
-      "Accept": "application/json",               
+      "Content-Type": "application/json",
+      "Accept": "application/json",
       "x-ms-date": time,
-      "x-ms-version" : "2018-12-31",
+      "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
-      "x-ms-documentdb-is-upsert" : "True",
-      "x-ms-documentdb-partitionkey" : "[\"" + defaultPartitionKey + "\"]", 
-      "x-ms-consistency-level" : "Eventual"
+      "x-ms-documentdb-is-upsert": "True",
+      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-consistency-level": "Eventual"
    };
 }
 
@@ -111,15 +111,15 @@ export function makePostActivityHeader (key : string, time : string, defaultPart
  * @param defaultPartitionKey - The default partition key.
  * @returns An object containing the header for the delete activity request.
  */
-export function makeDeleteActivityHeader (key : string, time : string, defaultPartitionKey : string) : object {
-   return {                  
+export function makeDeleteActivityHeader(key: string, time: string, defaultPartitionKey: string): object {
+   return {
       "Authorization": key,
-      "Accept": "application/json",               
+      "Accept": "application/json",
       "x-ms-date": time,
-      "x-ms-version" : "2018-12-31",
+      "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
-      "x-ms-documentdb-partitionkey" : "[\"" + defaultPartitionKey + "\"]", 
-      "x-ms-consistency-level" : "Eventual"
+      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-consistency-level": "Eventual"
    };
 }
 
@@ -130,16 +130,16 @@ export function makeDeleteActivityHeader (key : string, time : string, defaultPa
  * @param defaultPartitionKey The default partition key for the query.
  * @returns An object containing the necessary headers for the POST activity query.
  */
-export function makePostActivityQueryHeader (key : string, time : string, defaultPartitionKey : string) : object {
-   return {                  
+export function makePostActivityQueryHeader(key: string, time: string, defaultPartitionKey: string): object {
+   return {
       "Authorization": key,
-      "Content-Type": "application/query+json",    
-      "Accept": "application/json",               
+      "Content-Type": "application/query+json",
+      "Accept": "application/json",
       "x-ms-date": time,
-      "x-ms-version" : "2018-12-31",
+      "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
-      "x-ms-documentdb-partitionkey" : "[\"" + defaultPartitionKey + "\"]", 
-      "x-ms-consistency-level" : "Eventual",
-      "x-ms-documentdb-isquery" : "True"
+      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-consistency-level": "Eventual",
+      "x-ms-documentdb-isquery": "True"
    };
 }

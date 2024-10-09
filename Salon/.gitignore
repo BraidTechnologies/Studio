@@ -1,0 +1,4 @@
+assistants
+src/__pycache__
+test/__pycache__
+assistant_config.json

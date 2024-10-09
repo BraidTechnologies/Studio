@@ -1,0 +1,31 @@
+{
+	"manifest_version": 3,
+
+	"name": "Cascade",
+	"description": "A simple page-scraping extension that passes the current page text to an LLM to be summarised and classified by topic.",
+	"version": "0.2",
+	"author": "@BraidTechnologiesLtd",
+
+   "content_scripts": [{
+      "matches" : ["<all_urls>"],
+      "js" : ["./axios.js", "./jquery-2.1.3.js", "./artoo.chrome.js", "./content.js"],
+      "run_at" : "document_idle"
+   }],
+
+	"permissions": [
+        "scripting", "activeTab", "tabs", "storage"
+   ],
+
+   "icons": {
+      "128": "assets/img/Braid-logo-128x128.png"
+    },
+
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon" : "assets/img/Braid-logo-128x128.png"
+    },
+
+    "host_permissions": [
+      "https://braidapi.azurewebsites.net/*"
+    ]
+}

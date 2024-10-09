@@ -1,0 +1,20 @@
+Name                                Stmts   Miss  Cover
+-------------------------------------------------------
+src\__init__.py                         0      0   100%
+src\cluster_analyser.py                20      0   100%
+src\embedder.py                        43      0   100%
+src\embedder_repository_facade.py      28      9    68%
+src\embedding_finder.py                29      0   100%
+src\file_repository.py                 46      5    89%
+src\html_file_downloader.py            31      0   100%
+src\html_link_crawler.py               64      3    95%
+src\make_local_file_path.py             6      0   100%
+src\search_pipeline.py                121      0   100%
+src\summariser.py                      32      0   100%
+src\summary_repository_facade.py       15      1    93%
+src\text_repository_facade.py          15      1    93%
+src\theme_finder.py                    21      0   100%
+src\web_searcher.py                    30      1    97%
+src\workflow.py                        66      6    91%
+-------------------------------------------------------
+TOTAL                                 567     26    95%

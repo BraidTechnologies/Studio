@@ -12,10 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
-class SessionApi {
-    constructor(environemnt_, sessionKey_) {
-        this._environment = environemnt_;
-        this._sessionKey = sessionKey_;
+const Api_1 = require("./Api");
+class SessionApi extends Api_1.Api {
+    /**
+     * Initializes a new instance of the class with the provided environment and session key.
+     *
+     * @param environment_ The environment settings to be used.
+     * @param sessionKey_ The session key for authentication.
+     */
+    constructor(environment_, sessionKey_) {
+        super(environment_, sessionKey_);
     }
     /**
      * Asynchronously checks the validity of a session key by sending a POST request to the session API endpoint.
@@ -23,9 +29,9 @@ class SessionApi {
      * @returns A Promise that resolves to a boolean value indicating the validity of the session key.
      */
     checkSessionKey() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this._environment.checkSessionApi() + "?session=" + this._sessionKey.toString();
+            let apiUrl = this.environment.checkSessionApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {});

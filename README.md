@@ -1,21 +1,25 @@
-# Braid Technologies Worked Examples
+# Braid Technologies Studio
 - [General Information](#general-information)
 - [Technologies](#technologies)
 - [License](#license)
 
 ## General Information
 
-This repo contains a set of end-end worked example applications, for use by Braid's clients. 
+This repo contains Braid's pattern applications, for use by Braid's clients. 
 
-The current worked example is 'Waterfall'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classification system for Braid's clients. It illustrates the following:
+The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classification system for Braid's clients. It illustrates the following:
 
-- A front end - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Waterfall' directory. Waterfall is all written in typescript/javascript. 
+- **Cascade** (a small waterfall) - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Cascade' directory. Cascade is written in typescript/javascript. 
 
-- A data analysis back end. This illustrates a date pipleine to download web pages, summarise them, and then uses cluster analysis to find the most common topics. This is the 'WaterfallTest' directory. WaterfallTest is written in Python. 
+- Waterfall - a data analysis back end pipeline. This illustrates a date pipline to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
 
-The 'BraidApi' directory contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. 'BraidCommon' contains untility classes used across multiple applications. Both subsystems are written in Typescript. 
+'**BraidApi**' contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. Waterfall, Cascade, and Boxer all call Braid Apis for any function requiring server side keys (database or AI model access).
 
-The second example, 'Boxer', is in the process of being moved to this repo. Boxer is an AI-enabled learning assistant to help developers build generative AI applications more quickly.  
+'**BraidCommon**' contains utility classes used across both clients & server - especially API definitions and Types used to generate test scripts. Both subsystems are written in Typescript. Both Cascade and Waterfall make calls to the BraidApis.
+
+'**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
+
+'**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly, is in the process of being moved to this repo.  
 
 ## Technologies
 

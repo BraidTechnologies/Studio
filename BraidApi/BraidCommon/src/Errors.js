@@ -13,7 +13,7 @@ class InvalidParameterError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = InvalidParameterError.name; // stack traces display correctly now
-        (0, Logging_1.logCoreError)("InvalidParameterError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logCoreError)("InvalidParameterError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.InvalidParameterError = InvalidParameterError;
@@ -29,7 +29,7 @@ class InvalidOperationError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = InvalidOperationError.name; // stack traces display correctly now
-        (0, Logging_1.logCoreError)("InvalidOperationError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logCoreError)("InvalidOperationError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.InvalidOperationError = InvalidOperationError;
@@ -43,7 +43,7 @@ class InvalidStateError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = InvalidStateError.name; // stack traces display correctly now
-        (0, Logging_1.logCoreError)("InvalidStateError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logCoreError)("InvalidStateError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.InvalidStateError = InvalidStateError;
@@ -60,7 +60,7 @@ class ConnectionError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = ConnectionError.name; // stack traces display correctly now
-        (0, Logging_1.logApiError)("ConnectionError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logApiError)("ConnectionError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.ConnectionError = ConnectionError;
@@ -74,7 +74,7 @@ class EnvironmentError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = EnvironmentError.name; // stack traces display correctly now
-        (0, Logging_1.logCoreError)("EnvironmentError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logCoreError)("EnvironmentError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.EnvironmentError = EnvironmentError;
@@ -88,7 +88,7 @@ class AssertionFailedError extends Error {
         // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.name = AssertionFailedError.name; // stack traces display correctly now
-        (0, Logging_1.logCoreError)("AssertionFailedError:" + (message ? message : ""), this.cause ? this.cause : "");
+        (0, Logging_1.logCoreError)("AssertionFailedError:" + (message ? message : ""), JSON.stringify(this));
     }
 }
 exports.AssertionFailedError = AssertionFailedError;

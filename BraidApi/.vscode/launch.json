@@ -1,6 +1,7 @@
 {
    "version": "0.2.0",
-   "configurations": [
+   "configurations": [      
+
       {
          "name": "Attach to Node Functions",
          "type": "node",
@@ -18,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/**/login.test.ts"
+           "${workspaceFolder}/test/**/querymodel.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

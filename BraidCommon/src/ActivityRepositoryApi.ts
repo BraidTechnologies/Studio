@@ -1,24 +1,30 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
 
+import { Api } from './Api';
 import { IStorable, IStoreQuerySpec } from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
 
 /**
  * Represents an API for activities.
  * 
- * @param {EEnvironment} environemnt_ - The environment to use for saving activities.
+ * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  * 
  * @method save - Saves a record to the activity API.
+ * @method remove - removes a record
+ * @method recent - return a list of recent activities
  */
-export class ActivityRepostoryApi {
-   private _environment: IEnvironment;
-   private _sessionKey: string;
+export class ActivityRepostoryApi extends Api {
 
-   public constructor(environemnt_: IEnvironment, sessionKey_: string) {
-      this._environment = environemnt_;
-      this._sessionKey = sessionKey_;
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
    }  
 
    /**
@@ -29,7 +35,7 @@ export class ActivityRepostoryApi {
     */
    async save (record: IStorable) : Promise<boolean> {
 
-      let apiUrl = this._environment.saveActivityApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -60,7 +66,7 @@ export class ActivityRepostoryApi {
     */
    async remove (recordId: string) : Promise<boolean> {
 
-      let apiUrl = this._environment.removeActivityApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -90,7 +96,7 @@ export class ActivityRepostoryApi {
     */
    async recent (querySpec: IStoreQuerySpec) : Promise<Array<IStorable>> {
 
-      let apiUrl = this._environment.getActivitiesApi() + "?session=" + this._sessionKey.toString();
+      let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {

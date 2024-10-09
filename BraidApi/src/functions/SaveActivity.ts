@@ -5,12 +5,13 @@
 
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";   
+import axios from "axios";
 
 // Internal imports
+import { defaultOkResponse, isSessionValid, sessionFailResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
-import {defaultPartitionKey, makePostActivityToken, makePostActivityHeader} from './CosmosRepositoryApi';
+import { defaultPartitionKey, makePostActivityToken, makePostActivityHeader } from './CosmosRepositoryApi';
 
 
 /**
@@ -23,87 +24,70 @@ import {defaultPartitionKey, makePostActivityToken, makePostActivityHeader} from
  * @param context - The context for the current invocation.
  * @returns A promise that resolves to an HTTP response with the status and response body.
  */
-export async function SaveActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function saveActivity(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let requestedSession : string | null = null;     
 
-   for (const [key, value] of request.query.entries()) {
-       if (key === 'session')
-           requestedSession = value;                
-   }
+   if (isSessionValid(request, context)) {
 
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {       
-
-      context.log("Passed session key validation:" + requestedSession);  
-      
-      let jsonRequest: IStorable = await request.json() as IStorable;    
+      let jsonRequest: IStorable = await request.json() as IStorable;
 
       try {
-         await saveActivity (jsonRequest, context);
-         context.log("Saved:" + jsonRequest.toString());           
+         await saveActivityDb(jsonRequest, context);
+         context.log("Saved:" + jsonRequest.toString());
       }
       catch (e: any) {
-         context.log("Failed save:" + e.toString());
+         context.error("Failed save:" + e.toString());
          return {
-            status: 500 , 
+            status: 500,
             body: "Failed save."
-         };                   
+         };
       }
 
-      return {
-         status: 200, // Ok
-         body: requestedSession
-      };         
+      return defaultOkResponse();
    }
-   else 
-   {
-       context.log("Failed session key validation:" + requestedSession);  
-
-       return {
-          status: 401, // Unauthorised
-          body: "Authorization check failed."
-       };             
+   else {
+      return sessionFailResponse();
    }
 };
 
 app.http('SaveActivity', {
-    methods: ['POST'],
-    authLevel: 'anonymous',
-    handler: SaveActivity
+   methods: ['POST'],
+   authLevel: 'anonymous',
+   handler: saveActivity
 });
 
-async function saveActivity (record : IStorable, context: InvocationContext) : Promise<boolean> {
-      
-      let dbkey = process.env.CosmosApiKey;   
+async function saveActivityDb(record: IStorable, context: InvocationContext): Promise<boolean> {
 
-      let done = new Promise<boolean>(function(resolve, reject) {
+   let dbkey = process.env.CosmosApiKey;
+
+   let done = new Promise<boolean>(function (resolve, reject) {
 
       let time = new Date().toUTCString();
-      let stream = JSON.stringify (record); 
+      let stream = JSON.stringify(record);
       let document = JSON.parse(stream);
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makePostActivityToken(time, dbkey as string); 
-      let headers = makePostActivityHeader (key, time, defaultPartitionKey); 
+      let key = makePostActivityToken(time, dbkey as string);
+      let headers = makePostActivityHeader(key, time, defaultPartitionKey);
 
       document.partition = defaultPartitionKey; // Dont need real partitions until 10 GB ... 
 
-      axios.post('https://braidlms.documents.azure.com/dbs/BraidLms/colls/Activity/docs', 
+      axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/',
          document,
          {
-            headers: headers             
+            headers: headers
          })
-         .then((resp : any) => {
+         .then((resp: any) => {
 
             resolve(true);
          })
-         .catch((error: any) => {   
+         .catch((error: any) => {
 
-            context.log ("Error calling database:", error);   
-            reject(false);     
-         });  
-      });
-   
+            context.log("Error calling database:", error);
+            reject(false);
+         });
+   });
+
    return done;
 }
 

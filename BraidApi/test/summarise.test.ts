@@ -1,13 +1,13 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 
-
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
 import {getEnvironment} from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { ISummariseRequest, ISummariseResponse } from "../../BraidCommon/src/SummariseApi.Types";
 
 declare var process: any;
 
@@ -16,18 +16,20 @@ describe("Summarise", async function () {
    async function validSummaryCall (apiUrl: string, text: string) : Promise<string | undefined> {
 
       let summary: string | undefined = undefined;
+      let summariseRequest: ISummariseRequest = {
+         text: text,
+         lengthInWords: 50
+      }
 
       try {
          let response = await axios.post(apiUrl, {
-           data: {
-              text: text
-           },
+           request: summariseRequest,
            headers: {
               'Content-Type': 'application/json'
            }
          });
 
-         summary = (response.data as string);
+         summary = (response.data as ISummariseResponse).summary;
          console.log (summary);
   
       } catch (e: any) {       

@@ -1,0 +1,1 @@
+**Salon** is a technology demonstrator for automated testing. Salon takes an input file in a JSON format that has been generated from an API. It generates Python source code to test the API. In the case of Braid, post-processed code us used in **BraidApiTest** to demonstate how this achieves excellent test coverage for low input effort. 

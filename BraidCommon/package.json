@@ -3,12 +3,24 @@
    "version": "0.1.0",
    "description": "",
    "devDependencies": {
+      "@fluidframework/azure-client": "^2.3.0",
+      "@fluidframework/routerlicious-driver": "^2.3.0",
       "axios": "^1.7.3",
+      "fluid-framework": "^2.3.0",
+      "gpt4-tokenizer": "^1.3.0",
+      "rimraf": "^6.0.1",
+      "rimraff": "^0.0.1-security",
+      "tslib": "^2.7.0",
+      "typeconv": "^2.3.1",
       "typescript": "^5.5.4"
    },
    "scripts": {
       "build": "tsc -b",
       "watch": "tsc -b -w",
-      "clean": "rimraf dist"
+      "clean": "rimraf dist",
+      "make_api_def": "npx typeconv -f ts -t jsc src/*.Types.ts"      
+   },
+   "dependencies": {
+      "axios-retry": "^4.5.0"
    }
 }

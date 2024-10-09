@@ -46,5 +46,11 @@ __pycache__/
 __blobstorage__
 __queuestorage__
 __azurite_db*__.json
-BoxerTest/test output/~$test_output_v2_tester_2024-09-05_11-36-37.xlsx
-BoxerTest/tests/no commit_BoxerDataTest_v3_.py
+feature/ask-llm-gemini
+
+
+Waterfall/test/supply_output
+Waterfall/test/demand_output
+Waterfall/test/telecom_output
+Waterfall/test/boxer_output	
+Waterfall/test/credential.json
