@@ -6,49 +6,21 @@ import { describe, it } from 'mocha';
 
 import { KStubEnvironmentVariables } from "../core/ConfigStrings";
 
-<<<<<<< HEAD
-import { getEnvironment } from '../../Braid/BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../Braid/BraidCommon/src/IEnvironment';
-import { FindEnrichedChunkApi } from '../../Braid/BraidCommon/src/FindEnrichedChunkApi';
-import { EChunkRepository } from '../../Braid/BraidCommon/src/EnrichedChunk';
-=======
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
 import { EChunkRepository } from '../../BraidCommon/src/EnrichedChunk';
->>>>>>> develop
 
 describe("Embedding", async function () {
 
    let api = new FindEnrichedChunkApi(getEnvironment (EEnvironment.kLocal), KStubEnvironmentVariables.SessionKey);
 
-<<<<<<< HEAD
-   it("Needs to find closest match for an existing Markdown document", async function () {
-
-      let query = {
-         repositoryId: EChunkRepository.kBoxer,
-         url: "https://github.com/microsoft/generative-ai-for-beginners/blob/main/01-introduction-to-genai/README.md",
-         maxCount: 1,
-         similarityThreshold : 0.4
-
-      }
-      let response = await api.findRelevantChunksFromUrl (query);
-
-      expect(response.length).toEqual(1);     
-      
-   }).timeout(20000);
-=======
->>>>>>> develop
 
    it("Needs to find closest match for an existing YouTube document", async function () {
 
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-<<<<<<< HEAD
-         url: "https://www.youtube.com/watch?v=l5mG4z343qg&t=00h00m00s",
-=======
          url: "https://www.youtube.com/watch?v=l5mG4z343qg&t=00m",
->>>>>>> develop
          maxCount: 1,
          similarityThreshold : 0.4
 

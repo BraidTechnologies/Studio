@@ -7,17 +7,10 @@ import { describe, it } from 'mocha';
 import { KStubEnvironmentVariables } from '../core/ConfigStrings';
 import { lookLikeSameSource } from '../core/Embedding';
 
-<<<<<<< HEAD
-import { getEnvironment } from '../../Braid/BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../Braid/BraidCommon/src/IEnvironment';
-import { FindEnrichedChunkApi } from '../../Braid/BraidCommon/src/FindEnrichedChunkApi';
-import { EChunkRepository } from '../../Braid/BraidCommon/src/EnrichedChunk';
-=======
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
 import { EChunkRepository } from '../../BraidCommon/src/EnrichedChunk';
->>>>>>> develop
 
 
 
@@ -55,41 +48,6 @@ describe("Chunk URLs", function () {
       expect(lookLikeSameSource (url1, url2)).toEqual(false);        
    });
 
-<<<<<<< HEAD
-   describe("ChunkRepository", function () {
-
-      let api = new FindEnrichedChunkApi(getEnvironment (EEnvironment.kLocal), KStubEnvironmentVariables.SessionKey);
-
-      it("Needs to identify related content given an input URL", async function () {
-   
-         // let message = await repository.lookForRelatedContent (, "test");
-         let query = {
-            repositoryId: EChunkRepository.kBoxer,
-            url: "https://www.youtube.com/watch?v=roEKOzxilq4&t=00h00m00s",
-            maxCount: 1,
-            similarityThreshold : 0.75
-
-         }
-         let response = await api.findRelevantChunksFromUrl (query);
-   
-         expect(response.length).toEqual(1);     
-      });
-   
-      it("Needs to identify starter content", async function () {
-
-         let query = {
-            repositoryId: EChunkRepository.kBoxer,
-            maxCount: 1,
-            similarityThreshold : 0.4,
-            summary: "This article exploure user interface considerations for interacting with LLM based applications."
-
-         }
-         let response = await api.findRelevantChunksFromSummary (query);
-   
-         expect(response.length).toEqual(1);          
-      });
-   
-=======
 });
 
 describe("ChunkRepository", function () {
@@ -122,7 +80,6 @@ describe("ChunkRepository", function () {
       let response = await api.findRelevantChunksFromSummary (query);
 
       expect(response.length).toEqual(1);          
->>>>>>> develop
    });
 
 });

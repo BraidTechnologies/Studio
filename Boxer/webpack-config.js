@@ -60,11 +60,8 @@ module.exports = {
          {
             test: /\.(ttf|woff2?)$/,
             type: 'asset',
-<<<<<<< HEAD
-         },    // Include block below only for production build    
-=======
-         } /*,    // Include block below only for production build    
->>>>>>> develop
+         },                       
+         // Include block below only for production build    
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
@@ -75,11 +72,7 @@ module.exports = {
                     rotateStringArray: true
                 }
             }
-<<<<<<< HEAD
-        }         
-=======
-        }   */       
->>>>>>> develop
+        }        
       ]
    }  
 }
