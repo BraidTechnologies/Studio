@@ -2,8 +2,8 @@
 import { EConfigStrings } from "./ConfigStrings";
 import { SessionKey, ConversationKey } from "./Keys";
 
-import { getDefaultFluidEnvironment } from "../../Braid/BraidCommon/src/IEnvironmentFactory";
-import { EEnvironment } from "../../Braid/BraidCommon/src/IEnvironment";
+import { getDefaultFluidEnvironment } from "../../BraidCommon/src/IEnvironmentFactory";
+import { EEnvironment } from "../../BraidCommon/src/IEnvironment";
 
 var qs = require('qs');
 

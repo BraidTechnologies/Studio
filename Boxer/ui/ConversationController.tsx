@@ -28,11 +28,11 @@ import { LikeUnlikeActivityRecord } from '../core/ActivityRecordLikeUnlike';
 import { getDetaultAdminRepository} from '../core/IAdminRepository';
 import { makeSummaryCall } from '../core/ApiCalls';
 
-import { FindEnrichedChunkApi } from '../../Braid/BraidCommon/src/FindEnrichedChunkApi';
-import { getDefaultEnvironment } from '../../Braid/BraidCommon/src/IEnvironmentFactory';
-import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../Braid/BraidCommon/src/EnrichedChunk';
-import { FluidClientProps } from '../../Braid/BraidCommon/src/FluidTokenProvider';
-import { IFluidTokenRequest } from '../../Braid/BraidCommon/src/Fluid';
+import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
+import { getDefaultEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
+import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../BraidCommon/src/EnrichedChunk';
+import { FluidClientProps } from '../../BraidCommon/src/FluidTokenProvider';
+import { IFluidTokenRequest } from '../../BraidCommon/src/Fluid';
 
 export interface IConversationControllerProps {
 

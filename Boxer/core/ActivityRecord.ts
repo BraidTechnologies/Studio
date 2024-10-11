@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
-import { IStorable } from '../../Braid/BraidCommon/src/IStorable';
+import { IStorable } from '../../BraidCommon/src/IStorable';
 import { InvalidParameterError } from './Errors';
 import { MDynamicStreamable, DynamicStreamableFactory } from "./StreamingFramework";
 import { getDefaultKeyGenerator } from './IKeyGeneratorFactory'; 

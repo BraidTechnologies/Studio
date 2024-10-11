@@ -11,9 +11,9 @@ import { MessageActivityRecord } from "./ActivityRecordMessage";
 import { SessionKey } from "./Keys";
 import { IActivityRepository } from "./IActivityRepository";
 
-import { getDefaultEnvironment } from "../../Braid/BraidCommon/src/IEnvironmentFactory";
-import { ActivityRepostoryApi} from '../../Braid/BraidCommon/src/ActivityRepositoryApi';
-import { IStorable } from "../../Braid/BraidCommon/src/IStorable";
+import { getDefaultEnvironment } from "../../BraidCommon/src/IEnvironmentFactory";
+import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi';
+import { IStorable } from "../../BraidCommon/src/IStorable";
 
 interface IStoreableActivityRecord extends IStorable {
 

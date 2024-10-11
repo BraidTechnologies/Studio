@@ -11,7 +11,7 @@ import htmlEmbeddingsFile from '../data/web/output/master_enriched.json';
 import { FullEmbedding, MakeEmbeddingUrlFnFull, 
    makeYouTubeUrlFromFullEmbedding, makeGithubUrlFromFullEmbedding, makeHtmlUrlfromFullEmbedding} from '../core/EmbeddingFormats';
 
-import { IEnrichedChunk } from '../../Braid/BraidCommon/src/EnrichedChunk';   
+import { IEnrichedChunk } from '../../BraidCommon/src/EnrichedChunk';   
 
 describe("API Embeddings", function () {
  

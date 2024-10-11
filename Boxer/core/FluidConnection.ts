@@ -2,16 +2,16 @@
 import { IFluidContainer, ConnectionState } from "fluid-framework";
 import { AzureClient } from "@fluidframework/azure-client";
 
-import { FluidClientProps } from "../../Braid/BraidCommon/src/FluidTokenProvider";
-import { IFluidTokenRequest } from "../../Braid/BraidCommon/src/Fluid";
+import { FluidClientProps } from "../../BraidCommon/src/FluidTokenProvider";
+import { IFluidTokenRequest } from "../../BraidCommon/src/Fluid";
 import { throwIfUndefined } from "./Asserts";
 import { logApiError } from "./Logging";
 import { ConnectionError, InvalidOperationError, InvalidStateError} from './Errors';
 import { Interest } from './NotificationFramework';
 import { SessionKey, ConversationKey } from "./Keys";
 import { EConfigStrings } from "./ConfigStrings";
-import { getDefaultFluidEnvironment } from "../../Braid/BraidCommon/src/IEnvironmentFactory";
-import { EEnvironment } from "../../Braid/BraidCommon/src/IEnvironment";
+import { getDefaultFluidEnvironment } from "../../BraidCommon/src/IEnvironmentFactory";
+import { EEnvironment } from "../../BraidCommon/src/IEnvironment";
 
 let documentUuid = "b03724b3-4be0-4491-b0fa-43b01ab80d50";
 

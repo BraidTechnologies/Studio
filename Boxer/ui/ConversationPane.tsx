@@ -49,7 +49,7 @@ import { MessagePrompt } from './ConversationMessagePrompt';
 import { Media } from '../core/Media';
 import { SharedEmbedding, findInMap } from '../core/SharedEmbedding';
 
-import { IRelevantEnrichedChunk } from '../../Braid/BraidCommon/src/EnrichedChunk';
+import { IRelevantEnrichedChunk } from '../../BraidCommon/src/EnrichedChunk';
 
 export interface IConversationHeaderProps {
 
