@@ -1,0 +1,88 @@
+{
+   "name": "aibot",
+   "version": "0.0.0",
+   "description": "Engine code for an OpenAI assistant that likes to talk about AI, written using Typescript, Node.js, and the Azure stack. GPT-3 backed with a store of AI Canon documents.",
+   "main": "ui/AppEntry.tsx",
+   "author": {
+      "name": "Jon Verrier"
+   },
+   "sideEffects": false,
+   "scripts": {
+      "build-package": "webpack-cli --config webpack-config.js && copy dist\\aibot.pack.js ..\\braidweb\\public\\assets\\js && copy dist\\aibot.pack.js.map ..\\braidweb\\public\\assets\\js",
+      "build": "tsc --build",
+      "clean": "tsc --build --clean",
+      "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
+      "test-mini": "mocha --debug-brk --exit --require ts-node/register -g Chunk*",
+      "cover": "tsc && nyc mocha --exit --require ts-node/register test/*.test.ts",
+      "local-fluid": "npx @fluidframework/azure-local-service@latest",
+      "embeddings-lite": "mocha --require ts-node/register scripts/make_lite_embeddings.ts && copy data\\embeddings_lite.json ..\\braidweb\\public",
+      "api-embeddings-lite": "mocha --require ts-node/register scripts/make_api_embeddings.ts && copy data\\api_embeddings_lite.json ..\\braid\\braidapi",      
+      "new-conversation": "mocha --require ts-node/register scripts/make_new_container.ts"
+   },
+   "devDependencies": {
+      "@fluentui/react-components": "^9.44.0",
+      "@fluentui/react-icons-font-subsetting-webpack-plugin": "^2.0.239",
+      "@fluidframework/azure-client": "^1.1.1",
+      "@fluidframework/azure-local-service": "^1.1.1",
+      "@fluidframework/build-common": "^2.0.3",
+      "@fluidframework/test-client-utils": "^1.3.7",
+      "@fluidframework/tinylicious-client": "^1.3.7",
+      "@types/expect": "^24.3.0",
+      "@types/express": "^4.17.21",
+      "@types/mocha": "^10.0.6",
+      "@types/node": "^20.10.6",
+      "@types/react": "18.2.46",
+      "@types/react-dom": "18.2.18",
+      "@types/react-router-dom": "^5.3.3",
+      "axios": "^1.6.4",
+      "crypto-browserify": "^3.12.0",
+      "expect": "^29.7.0",
+      "fluid-framework": "^1.3.7",
+      "jsdom": "^23.0.1",
+      "missionlog": "^1.8.8",
+      "mocha": "^10.2.0",
+      "node-polyfill-webpack-plugin": "^3.0.0",
+      "npm-check-updates": "^16.14.12",
+      "nyc": "^15.1.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-router-dom": "^6.21.1",
+      "stream-browserify": "^3.0.0",
+      "tinylicious": "^2.0.2",
+      "ts-loader": "^9.5.1",
+      "ts-mocha": "^10.0.0",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.3.3",
+      "uglify-js": "^3.17.4",
+      "webpack": "^5.89.0",
+      "webpack-cli": "^5.1.4",
+      "webpack-node-externals": "^3.0.0",
+      "webpack-obfuscator": "^3.5.1"
+   },
+   "nyc": {
+      "include": [],
+      "extension": [
+         ".ts"
+      ],
+      "reporter": [
+         "text-summary",
+         "html"
+      ],
+      "sourceMap": true,
+      "instrument": true
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/jonverrier/braideng.git"
+   },
+   "engines": {
+      "node": ">=20.10.0",
+      "npm": ">=10.x"
+   },
+   "dependencies": {
+      "gpt4-tokenizer": "^1.3.0",
+      "openai": "^4.28.0",
+      "qs": "^6.12.0",
+      "realm-web": "^2.0.0"
+   }
+}
