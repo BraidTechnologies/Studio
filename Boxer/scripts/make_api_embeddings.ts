@@ -11,7 +11,7 @@ import htmlEmbeddingsFile from '../data/web/output/master_enriched.json';
 import { FullEmbedding, MakeEmbeddingUrlFnFull, 
    makeYouTubeUrlFromFullEmbedding, makeGithubUrlFromFullEmbedding, makeHtmlUrlfromFullEmbedding} from '../core/EmbeddingFormats';
 
-import { IEnrichedChunk } from '../../Braid/BraidCommon/src/EnrichedChunk';   
+import { IEnrichedChunk } from '../../BraidCommon/src/EnrichedChunk';   
 
 describe("API Embeddings", function () {
  
@@ -20,7 +20,7 @@ describe("API Embeddings", function () {
       for (let i = 0; i < embeddingsFull.length; i++) {
 
          chunks.push ({id: "", embedding: embeddingsFull[i].ada_v2, 
-            url: fn (embeddingsFull[i]), 
+                      url: fn (embeddingsFull[i]), 
                       text: "",  
                       summary: embeddingsFull[i].summary})
       }

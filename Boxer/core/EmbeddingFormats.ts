@@ -16,7 +16,7 @@ export interface FullEmbedding {
 export interface LiteEmbedding {
    url: string;
    summary: string;
-   ada_v2: Array<number>;
+   embedding: Array<number>;
 };
 
 export type MakeEmbeddingUrlFnLite = (a: LiteEmbedding) => string;

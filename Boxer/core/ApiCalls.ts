@@ -6,7 +6,7 @@ import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
 import { EConfigStrings } from "./ConfigStrings";
 import { EConfigNumbers } from "./ConfigStrings";
-import { ISummariseRequest, ISummariseResponse} from "../../Braid/BraidCommon/src/SummariseApi.Types"
+import { ISummariseRequest, ISummariseResponse} from "../../BraidCommon/src/SummariseApi.Types"
 
 
 export async function makeSummaryCall (session: SessionKey, text: string) : Promise<string | undefined> {

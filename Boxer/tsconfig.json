@@ -38,7 +38,7 @@
     },
     "references": [
       {
-        "path": "../Braid/BraidCommon"
+        "path": "../BraidCommon"
       }  
    ]      
 }

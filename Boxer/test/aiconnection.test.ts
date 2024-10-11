@@ -9,7 +9,11 @@ import { KStubEnvironmentVariables} from '../core/ConfigStrings';
 import { AIConnection } from '../core/AIConnection';
 import { makeSummaryCall } from '../core/ApiCalls';
 
+<<<<<<< HEAD
 import { IRelevantEnrichedChunk } from '../../Braid/BraidCommon/src/EnrichedChunk';
+=======
+import { IRelevantEnrichedChunk } from '../../BraidCommon/src/EnrichedChunk';
+>>>>>>> develop
 
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
