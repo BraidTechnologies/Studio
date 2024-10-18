@@ -61,19 +61,6 @@ class OpenAIClient:
                             response_file = os.path.join(run_dir, f"response_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt")
                             with open(response_file, 'w', encoding="utf-8") as file:
                                 file.write(response)
-                        elif content_item.type == 'image_file':
-                            file_id = content_item.image_file.file_id
-                            logger.log(f"Attempting to download image file with ID: {file_id}")
-                            file_data = self.client.files.content(file_id)
-                            file_path = os.path.join(run_dir, f"{file_id}.png")
-                            with open(file_path, "wb") as file:
-                                file.write(file_data.read())
-                            response = f"Assistant says: Saved image file to {file_path}"
-                            logger.log(response)
-                            # Save the response to a file
-                            response_file = os.path.join(run_dir, f"response_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt")
-                            with open(response_file, 'w', encoding="utf-8") as file:
-                                file.write(response)
                         else:
                             response = "Assistant says: Unhandled content type."
                             logger.log(response)                         

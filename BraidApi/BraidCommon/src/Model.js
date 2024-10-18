@@ -1,17 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GPTMini = void 0;
+exports.GPT4 = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const Errors_1 = require("./Errors");
 const gpt4_tokenizer_1 = require("gpt4-tokenizer");
 const tokenizer = new gpt4_tokenizer_1.default({ type: 'gpt3' });
 /**
- * GPTMini class implementing IModel interface.
- * Represents a model with specific deployment settings and window sizes.
+ * GPTM class implementing IModel interface.
+ * Represents a model with specific deployment settings and context window sizes.
  */
-class GPTMini {
+class GPT4 {
     constructor() {
         this.deploymentName = "BraidLarge";
+        this.embeddingDeploymentName = "BraidLargeEmbedding";
         this.contextWindowSize = 8192;
         this.contextWindowSizeWithBuffer = (8192 - 256);
     }
@@ -91,5 +92,5 @@ class GPTMini {
         return tokenizer.estimateTokenCount(text);
     }
 }
-exports.GPTMini = GPTMini;
+exports.GPT4 = GPT4;
 //# sourceMappingURL=Model.js.map

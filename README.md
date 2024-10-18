@@ -19,7 +19,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 '**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
 
-'**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly, is in the process of being moved to this repo.  
+'**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly.  It is a full web front end that passes questions to an LLM, and then enriches them with links to relevant document chunks found in its database of useful material - the A16Z AI Cannon. 
 
 ## Technologies
 

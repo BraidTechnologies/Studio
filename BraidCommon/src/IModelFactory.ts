@@ -2,7 +2,7 @@
 
 // Internal imports
 import {EModel, IModel} from './IModel';
-import {GPTMini} from './Model';
+import {GPT4} from './Model';
 
 /**
  * Returns the default model which is an instance of GPT4oMini.
@@ -10,7 +10,7 @@ import {GPTMini} from './Model';
  */
 export function getDefaultModel () : IModel  {
 
-   return new GPTMini();   
+   return new GPT4();   
 }
 
 /**
@@ -23,7 +23,7 @@ export function getModel (model: EModel) : IModel  {
 
    switch (model) {
       default:
-         return new GPTMini();
+         return new GPT4();
    }
 }
 

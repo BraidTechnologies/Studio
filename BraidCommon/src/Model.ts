@@ -7,17 +7,19 @@ const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
 
 
 /**
- * GPTMini class implementing IModel interface.
- * Represents a model with specific deployment settings and window sizes.
+ * GPTM class implementing IModel interface.
+ * Represents a model with specific deployment settings and context window sizes.
  */
-export class GPTMini implements IModel {
+export class GPT4 implements IModel {
 
    deploymentName: string;
+   embeddingDeploymentName: string;
    contextWindowSize: number;
    contextWindowSizeWithBuffer: number;
 
    public constructor() {
       this.deploymentName = "BraidLarge";
+      this.embeddingDeploymentName = "BraidLargeEmbedding";
       this.contextWindowSize = 8192;
       this.contextWindowSizeWithBuffer = (8192 - 256)
    }

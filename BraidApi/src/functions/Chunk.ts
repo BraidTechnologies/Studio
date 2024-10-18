@@ -28,11 +28,11 @@ function chunkText(text: string, chunkSize: number | undefined, overlapWords: nu
 }
 
 /**
- * Asynchronous function to summarize text based on the requested session key and input text.
+ * Asynchronous function to chunk text based on the requested session key and input text.
  * 
- * @param request - The HTTP request object containing the text to be summarized.
+ * @param request - The HTTP request object containing the text to be chunked.
  * @param context - The context object for the function invocation.
- * @returns A promise that resolves to an HTTP response with the summarized text or an error message.
+ * @returns A promise that resolves to an HTTP response with the chunks or an error message.
  */ 
 
 export async function chunk(request: HttpRequest, context: InvocationContext): Promise < HttpResponseInit > {
@@ -73,7 +73,7 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
       }
    }
    else {
-      context.error ("Sessionvalidation failed.");      
+      context.error ("Session validation failed.");      
       return sessionFailResponse();
    }
 };
