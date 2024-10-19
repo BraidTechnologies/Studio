@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Boxer API Service
+  description: A simple service to retrieve AI learning content
+  version: 1.0.0
+servers:
+  - url: ${{OPENAPI_SERVER_URL}}/api
+    description: The Boxer api server
+paths:
+  /teamsquery:
+    get:
+      operationId: teamsquery
+      summary: Boxer answers questions about generative AI.
+      description: Returns answers to questions about generative AI along with useful links from the Boxer knowledge base. 
+      parameters:
+        - name: question
+          in: query
+          description: A question about generative AI
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: An answer to the question, enriched with a list of relevant articles.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                     type: string
+                     description: An answer to the question.      
+                  enrichments:
+                     type: array
+                     items:
+                        properties:
+                           summary:
+                              type: string
+                              description: A summary of the most relevant article from the Boxer knowledge base.
+                           link:
+                              type: string
+                              format: uri
+                              description: The URL of the most relevant article from the Boxer knowledge base.

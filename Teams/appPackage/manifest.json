@@ -1,0 +1,55 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+    "manifestVersion": "devPreview",
+    "id": "06c1d39d-9ed1-4d82-928e-abba10d40ec9",
+    "version": "1.0.0",
+    "developer": {
+        "name": "Braid Technologies Ltd.",
+        "websiteUrl": "https://www.braidtech.ai",
+        "privacyUrl": "https://www.braidtech.ai/privacy",
+        "termsOfUseUrl": "https://www.braidtech.ai/terms-of-service"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Boxer",
+        "full": "Boxer from Braid Technologies"
+    },
+    "description": {
+        "short": "Boxer answers questions about generative AI.",
+        "full": "Returns answers to questions about generative AI along with useful links from the Boxer knowledge base."
+    },
+    "accentColor": "#FFFFFF",
+    "composeExtensions": [
+        {
+            "composeExtensionType": "apiBased",
+            "apiSpecificationFile": "apiSpecificationFile/teamsquery.yml",
+            "commands": [
+                {
+                    "id": "teamsquery",
+                    "type": "query",
+                    "title": "Ask about generative AI.",
+                    "context": [
+                        "compose",
+                        "commandBox"
+                    ],
+                    "apiResponseRenderingTemplateFile": "responseTemplates/repair.json",
+                    "parameters": [
+                        {
+                            "name": "question",
+                            "title": "Ask a question:",
+                            "description": "Boxer will answer the question and provide useful links from the Boxer knowledge base.",
+                            "inputType": "text"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],    
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ]
+}
