@@ -7,11 +7,11 @@ servers:
   - url: ${{OPENAPI_SERVER_URL}}/api
     description: The Boxer api server
 paths:
-  /teamsquery:
+  /boxer:
     get:
-      operationId: teamsquery
+      operationId: boxer
       summary: Boxer answers questions about generative AI.
-      description: Returns answers to questions about generative AI along with useful links from the Boxer knowledge base. 
+      description: Boxer answers questions about generative AI by providing a direct answer enriched with useful links from the Boxer knowledge base. 
       parameters:
         - name: question
           in: query
@@ -36,8 +36,8 @@ paths:
                         properties:
                            summary:
                               type: string
-                              description: A summary of the most relevant article from the Boxer knowledge base.
+                              description: A summary of a relevant article from the Boxer knowledge base.
                            link:
                               type: string
                               format: uri
-                              description: The URL of the most relevant article from the Boxer knowledge base.
+                              description: The URL of a relevant article from the Boxer knowledge base.

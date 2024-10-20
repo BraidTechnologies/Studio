@@ -1,5 +1,5 @@
 {
-    "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
     "manifestVersion": "devPreview",
     "id": "06c1d39d-9ed1-4d82-928e-abba10d40ec9",
     "version": "1.0.0",
@@ -14,21 +14,21 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "Boxer",
-        "full": "Boxer from Braid Technologies"
+        "short": "Braid Studio",
+        "full": "The Braid Studio from Braid Technologies Ltd."
     },
     "description": {
-        "short": "Boxer answers questions about generative AI.",
-        "full": "Returns answers to questions about generative AI along with useful links from the Boxer knowledge base."
+        "short": "Braid Studio - AI search and enrichment.",
+        "full": "The Studio from Braid Technologies brings AI search and enrichment into your Teams workspace by allowing you to query the Boxer knowledge base and get updates from Waterfall's ongoing scanning of useful internet resources."
     },
     "accentColor": "#FFFFFF",
     "composeExtensions": [
         {
             "composeExtensionType": "apiBased",
-            "apiSpecificationFile": "apiSpecificationFile/teamsquery.yml",
+            "apiSpecificationFile": "apiSpecificationFile/studio-teams.yml",
             "commands": [
                 {
-                    "id": "teamsquery",
+                    "id": "boxer",
                     "type": "query",
                     "title": "Ask about generative AI.",
                     "context": [
@@ -39,8 +39,8 @@
                     "parameters": [
                         {
                             "name": "question",
-                            "title": "Ask a question:",
-                            "description": "Boxer will answer the question and provide useful links from the Boxer knowledge base.",
+                            "title": "Ask about generative AI.",
+                            "description": "Boxer answers questions about generative AI.",
                             "inputType": "text"
                         }
                     ]

@@ -37,9 +37,7 @@ The following files can be customized and demonstrate an example implementation 
 
 | File                                         | Contents                                                            |
 | -------------------------------------------- | ------------------------------------------------------------------- |
-| `src/functions/repair.ts`                    | The main file of a function in Azure Functions.                     |
-| `src/repairsData.json`                       | The data source for the repair API.                                 |
-| `appPackage/apiSpecificationFile/repair.yml` | A file that describes the structure and behavior of the repair API. |
+| `appPackage/apiSpecificationFile/teamsquery.yml` | A file that describes the structure and behavior of the teams query API. |
 | `appPackage/responseTemplates/repair.json`   | A generated Adaptive Card that used to render API response.         |
 
 The following are Teams Toolkit specific project files. You can [visit a complete guide on Github](https://github.com/OfficeDev/TeamsFx/wiki/Teams-Toolkit-Visual-Studio-Code-v5-Guide#overview) to understand how Teams Toolkit works.
