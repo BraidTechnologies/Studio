@@ -19,7 +19,7 @@
     },
     "description": {
         "short": "Braid Studio - AI search and enrichment.",
-        "full": "The Studio from Braid Technologies brings AI search and enrichment into your Teams workspace by allowing you to query the Boxer knowledge base and get updates from Waterfall's ongoing scanning of useful internet resources."
+        "full": "The Braid Studio from Braid Technologies brings AI search and enrichment into your Teams workspace by allowing you to query the Boxer knowledge base and get updates from Waterfall's ongoing scanning of useful internet resources."
     },
     "accentColor": "#FFFFFF",
     "composeExtensions": [
@@ -35,12 +35,12 @@
                         "compose",
                         "commandBox"
                     ],
-                    "apiResponseRenderingTemplateFile": "responseTemplates/repair.json",
+                    "apiResponseRenderingTemplateFile": "responseTemplates/boxer.json",
                     "parameters": [
                         {
                             "name": "question",
                             "title": "Ask about generative AI.",
-                            "description": "Boxer answers questions about generative AI.",
+                            "description": "Ask about generative AI.",
                             "inputType": "text"
                         }
                     ]

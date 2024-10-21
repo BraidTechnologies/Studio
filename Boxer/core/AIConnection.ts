@@ -13,6 +13,7 @@ import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
 import { getDefaultEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { EChunkRepository, IRelevantEnrichedChunk} from '../../BraidCommon/src/EnrichedChunk';
+import { EStandardPrompts } from "../../BraidCommon/src/EnrichedQuery";
 
 import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../BraidCommon/src/EnrichedQuery';
 import { QueryModelApi } from '../../BraidCommon/src/QueryModelApi';
@@ -211,8 +212,8 @@ export class AIConnection {
 
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-         personaPrompt: EConfigStrings.kOpenAiPersonaPrompt,
-         enrichmentDocumentPrompt: EConfigStrings.kEnrichmentPrompt,
+         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
+         enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
          question : question,
          history: history,
          maxCount: 2,
@@ -225,8 +226,8 @@ export class AIConnection {
    static buildQueryForQuestionPrompt (summary: string): IGenerateQuestionQuery {
 
       let query = {
-         personaPrompt: EConfigStrings.kOpenAiPersonaPrompt,
-         questionGenerationPrompt: EConfigStrings.kGenerateAQuestionPrompt,
+         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
+         questionGenerationPrompt: EStandardPrompts.kGenerateAQuestionPrompt,
          summary: summary
       } 
 

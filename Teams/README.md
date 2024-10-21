@@ -31,14 +31,14 @@ This app template allows Teams to interact directly with third-party data, apps,
 | `appPackage` | Templates for the Teams application manifest, the API specification and response template for API responses |
 | `env`        | Environment files                                                                                           |
 | `infra`      | Templates for provisioning Azure resources                                                                  |
-| `src`        | The source code for the repair API                                                                          |
+| `src`        | The source code for the repair API. TODO DELETE                                                             |
 
 The following files can be customized and demonstrate an example implementation to get you started.
 
 | File                                         | Contents                                                            |
 | -------------------------------------------- | ------------------------------------------------------------------- |
-| `appPackage/apiSpecificationFile/teamsquery.yml` | A file that describes the structure and behavior of the teams query API. |
-| `appPackage/responseTemplates/repair.json`   | A generated Adaptive Card that used to render API response.         |
+| `appPackage/apiSpecificationFile/studio-teams.yml` | A file that describes the structure and behavior of the teams query API. |
+| `appPackage/responseTemplates/boxer.json`   | A generated Adaptive Card that used to render API response.         |
 
 The following are Teams Toolkit specific project files. You can [visit a complete guide on Github](https://github.com/OfficeDev/TeamsFx/wiki/Teams-Toolkit-Visual-Studio-Code-v5-Guide#overview) to understand how Teams Toolkit works.
 
@@ -50,3 +50,12 @@ The following are Teams Toolkit specific project files. You can [visit a complet
 ## Addition information and references
 
 - [Extend Teams platform with APIs](https://aka.ms/teamsfx-api-plugin)
+
+## Deployment
+Provision the app (every time you change the manifest):
+teamsapp provision --env dev
+
+Preview the app (Load into Teams for development):
+teamsapp preview --env dev
+
+

@@ -4,10 +4,10 @@ info:
   description: A simple service to retrieve AI learning content
   version: 1.0.0
 servers:
-  - url: ${{OPENAPI_SERVER_URL}}/api
-    description: The Boxer api server
+  - url: https://braidapi.azurewebsites.net
+    description: The Braid api server
 paths:
-  /boxer:
+  /api/studioforteams-boxer:
     get:
       operationId: boxer
       summary: Boxer answers questions about generative AI.
@@ -25,19 +25,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  answer:
-                     type: string
-                     description: An answer to the question.      
-                  enrichments:
-                     type: array
-                     items:
-                        properties:
-                           summary:
-                              type: string
-                              description: A summary of a relevant article from the Boxer knowledge base.
-                           link:
-                              type: string
-                              format: uri
-                              description: The URL of a relevant article from the Boxer knowledge base.
+                 type: array
+                 items:
+                  required:  # List the required properties here
+                    - summary                 
+                  properties:
+                     summary:
+                       type: string
+                       description: A summary of a relevant article from the Boxer knowledge base.
+                     url:
+                       type: string
+                       format: uri
+                       description: The URL of a relevant article from the Boxer knowledge base.

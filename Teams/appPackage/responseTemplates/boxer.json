@@ -1,0 +1,50 @@
+{
+  "version": "devPreview",
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.ResponseRenderingTemplate.schema.json",
+  "jsonPath": "",
+  "responseLayout": "list",
+  "responseCardTemplate": {
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.5",
+    "body": [        
+      {      
+        "type": "Container",
+        "items": [
+          {
+            "type": "ColumnSet",
+            "columns": [
+              {
+                "type": "Column",
+                "width": "stretch",
+                "items": [
+                  {
+                    "type": "TextBlock",
+                    "text": "Summary: ${if(summary, summary, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                     "type": "TextBlock",
+                     "text": "URL: ${if(url, url, 'N/A')}",
+                     "wrap": true
+                  }               
+                ]
+              }
+            ]
+          }
+        ]
+      }      
+    ],
+    "actions": [
+       {
+           "type": "Action.OpenUrl",
+           "title": "Open ...",
+           "url": "${url}",
+           "$when": "${url != null}"
+       }
+   ]
+  },
+  "previewCardTemplate": {
+    "title": "${if(summary, summary, 'Sorry, Boxer is not able to provide a summary.')}"
+  }
+}
