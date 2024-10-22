@@ -1,0 +1,46 @@
+{
+  "definitions": {
+    "IStudioBoxerRequest": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "title": "IStudioBoxerRequest.question"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "additionalProperties": false,
+      "title": "IStudioBoxerRequest",
+      "description": "Interface for the StudioBoxer request object."
+    },
+    "IStudioBoxerResponseEnrichment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.id"
+        },
+        "url": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.url"
+        },
+        "summary": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.summary"
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "title": "IStudioBoxerResponseEnrichment",
+      "description": "Interface for the IStudioBoxerResponseEnrichment response object."
+    }
+  },
+  "$id": "StudioApi.Types.json",
+  "$comment": "Generated from src\\StudioApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

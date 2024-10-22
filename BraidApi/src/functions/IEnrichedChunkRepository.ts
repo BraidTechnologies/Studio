@@ -4,7 +4,7 @@
 import {IRelevantEnrichedChunk, IChunkQueryRelevantToSummarySpec, IEnrichedChunkSummary, IChunkQueryRelevantToUrlSpec} from '../../../BraidCommon/src/EnrichedChunk';
 
 export const kDefaultSearchChunkCount: number = 2;
-export const kDefaultMinimumCosineSimilarity = 0.825;
+export const kDefaultMinimumCosineSimilarity = 0.5;
 
 export interface IEnrichedChunkRepository  {
 

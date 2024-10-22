@@ -1,0 +1,55 @@
+{
+   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+    "manifestVersion": "devPreview",
+    "id": "06c1d39d-9ed1-4d82-928e-abba10d40ec9",
+    "version": "1.0.0",
+    "developer": {
+        "name": "Braid Technologies Ltd.",
+        "websiteUrl": "https://www.braidtech.ai",
+        "privacyUrl": "https://www.braidtech.ai/privacy",
+        "termsOfUseUrl": "https://www.braidtech.ai/terms-of-service"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Braid Studio",
+        "full": "The Braid Studio from Braid Technologies Ltd."
+    },
+    "description": {
+        "short": "Braid Studio - AI search and enrichment.",
+        "full": "The Braid Studio from Braid Technologies brings AI search and enrichment into your Teams workspace by allowing you to query the Boxer knowledge base and get updates from Waterfall's ongoing scanning of useful internet resources."
+    },
+    "accentColor": "#FFFFFF",
+    "composeExtensions": [
+        {
+            "composeExtensionType": "apiBased",
+            "apiSpecificationFile": "apiSpecificationFile/studio-teams.yml",
+            "commands": [
+                {
+                    "id": "boxer",
+                    "type": "query",
+                    "title": "Ask about generative AI.",
+                    "context": [
+                        "compose",
+                        "commandBox"
+                    ],
+                    "apiResponseRenderingTemplateFile": "responseTemplates/boxer.json",
+                    "parameters": [
+                        {
+                            "name": "question",
+                            "title": "Ask about generative AI.",
+                            "description": "Ask about generative AI.",
+                            "inputType": "text"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],    
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ]
+}

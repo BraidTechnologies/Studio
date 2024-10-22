@@ -15,7 +15,7 @@ import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
 
 let model = getDefaultModel();
-let minimumEnrichmentTokens = 50; // we use 50 word summaries. ifwe get half this, the key is too short for a meaningful search. 
+let minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
 
 /**
  * Asynchronously sends an enriched query to a model for processing and returns an enriched response.
@@ -23,7 +23,7 @@ let minimumEnrichmentTokens = 50; // we use 50 word summaries. ifwe get half thi
  * @param query - The enriched query object containing details for the model to process.
  * @returns A promise that resolves to an enriched response object with the model's answer and relevant enriched chunks.
  */
-async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
+export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {

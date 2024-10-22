@@ -55,14 +55,14 @@
     "IEnumerateReposotoriesResponse": {
       "type": "object",
       "properties": {
-        "respositoryIds": {
+        "repositoryIds": {
           "type": "array",
           "items": {},
-          "title": "IEnumerateReposotoriesResponse.respositoryIds"
+          "title": "IEnumerateReposotoriesResponse.repositoryIds"
         }
       },
       "required": [
-        "respositoryIds"
+        "repositoryIds"
       ],
       "additionalProperties": false,
       "title": "IEnumerateReposotoriesResponse",
