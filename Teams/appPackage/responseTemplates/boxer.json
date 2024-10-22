@@ -25,7 +25,8 @@
                   },
                   {
                      "type": "TextBlock",
-                     "text": "URL: ${if(url, url, 'N/A')}",
+                     "text": "Link: ${if(url, '['+url+']('+url+')', 'N/A')}",
+                     "size": "Medium",
                      "wrap": true
                   },
                   {
@@ -37,6 +38,17 @@
                      "wrap": true
                   }                                   
                 ]
+              },
+              {
+               "type": "Column",
+               "width": "auto",
+               "items": [
+                 {
+                   "type": "Image",
+                   "url": "${if(icon,icon,'')}",
+                   "isVisible": "${if(icon & (icon.length>0), true, false)}"
+                 }
+               ]               
               }
             ]
           }

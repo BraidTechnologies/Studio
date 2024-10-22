@@ -12,6 +12,11 @@ import { askModel } from "./QueryModelWithEnrichment";
 import { EChunkRepository } from "../../../BraidCommon/src/EnrichedChunk";
 import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
 
+function makeIconPath (url: string) : string {
+   // https://dev.to/derlin/get-favicons-from-any-website-using-a-hidden-google-api-3p1e
+   var urlParts = new URL(url);
+   return 'https://www.google.com/s2/favicons?domain=' + urlParts.hostname + '&sz=32';
+}
 
 /**
  * Handles a boxer query request by processing the provided question and generating a response with enrichments.
@@ -49,7 +54,8 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          let answer: IStudioBoxerResponseEnrichment = { 
             id: "0",
             url: undefined,
-            summary: passedResponse.answer
+            summary: passedResponse.answer,
+            icon: undefined
          };
          enrichments.push(answer);      
 
@@ -57,7 +63,8 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             let enrichment: IStudioBoxerResponseEnrichment = { 
                id: i.toString(),
                url:  passedResponse.chunks[i].chunk.url,
-               summary: passedResponse.chunks[i].chunk.summary
+               summary: passedResponse.chunks[i].chunk.summary,
+               icon: makeIconPath (passedResponse.chunks[i].chunk.url)
             };
             enrichments.push(enrichment);
          }

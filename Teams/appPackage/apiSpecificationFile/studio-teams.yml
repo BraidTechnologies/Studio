@@ -37,3 +37,7 @@ paths:
                        type: string
                        format: uri
                        description: The URL of a relevant article from the Boxer knowledge base.
+                     icon:
+                       type: string
+                       format: uri
+                       description: The URL to an icon associated with the URL.                       
