@@ -5,10 +5,9 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { getDefaultModel } from "../../../BraidCommon/src/IModelFactory";
 import { IStudioBoxerRequest, IStudioBoxerResponseEnrichment} from "../../../BraidCommon/src/StudioApi.Types";
 import { IEnrichedQuery, EStandardPrompts } from "../../../BraidCommon/src/EnrichedQuery";
-import { defaultErrorResponse } from "./Utility";
+import { defaultErrorResponse, invalidRequestResponse } from "./Utility";
 import { askModel } from "./QueryModelWithEnrichment";
 import { EChunkRepository } from "../../../BraidCommon/src/EnrichedChunk";
 import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
@@ -25,51 +24,56 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
 
    try {
 
-      const question = request.query.get('question') || (await request.text()) || 'What is an LLM?';  
-      context.log(question);
+      const question = request.query.get('question') || (await request.text());  
 
-      // Translate from the simple MSTeams API to the one we use in Boxer app allowing more enrichments
-      let passOnSpec: IEnrichedQuery = {
+      if (question) {
+         context.log(question);
 
-         repositoryId : EChunkRepository.kBoxer,
-         similarityThreshold: kDefaultMinimumCosineSimilarity,
-         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-         enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
-         question: question,
-         history: []
+         // Translate from the simple MSTeams API to the one we use in Boxer app allowing more enrichments
+         let passOnSpec: IEnrichedQuery = {
 
-      }
+            repositoryId : EChunkRepository.kBoxer,
+            similarityThreshold: kDefaultMinimumCosineSimilarity,
+            personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
+            enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
+            question: question,
+            history: []
+         }
 
-      // Call common function - common the Boxer back end and to Teams API
-      let passedResponse = await askModel (passOnSpec);
-      context.log (passedResponse);
+         // Call common function - common the Boxer back end and to Teams API
+         let passedResponse = await askModel (passOnSpec);
       
-      // Translate back from the enriched Boxer app format to simpler MSTeams API 
-      let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
+         // Translate back from the enriched Boxer app format to simpler MSTeams API 
+         let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
 
-      let answer: IStudioBoxerResponseEnrichment = { 
-         id: "0",
-         url: undefined,
-         summary: passedResponse.answer
-      };
-      enrichments.push(answer);      
-
-      for (let i = 0; i < passedResponse.chunks.length; i++) {
-         let enrichment: IStudioBoxerResponseEnrichment = { 
-            id: i.toString(),
-            url:  passedResponse.chunks[i].chunk.url,
-            summary: passedResponse.chunks[i].chunk.summary
+         let answer: IStudioBoxerResponseEnrichment = { 
+            id: "0",
+            url: undefined,
+            summary: passedResponse.answer
          };
-         enrichments.push(enrichment);
+         enrichments.push(answer);      
+
+         for (let i = 0; i < passedResponse.chunks.length; i++) {
+            let enrichment: IStudioBoxerResponseEnrichment = { 
+               id: i.toString(),
+               url:  passedResponse.chunks[i].chunk.url,
+               summary: passedResponse.chunks[i].chunk.summary
+            };
+            enrichments.push(enrichment);
+         }
+
+         let body: Array<IStudioBoxerResponseEnrichment> = enrichments;
+
+         context.log (body)
+         return {
+            status: 200, // Ok
+            body: JSON.stringify(body)
+         };
       }
-
-      let body: Array<IStudioBoxerResponseEnrichment> = enrichments;
-
-      context.log (body)
-      return {
-         status: 200, // Ok
-         body: JSON.stringify(body)
-      };
+      else {
+         context.error ("No 'question' parameter found.");   
+         return invalidRequestResponse ("No 'question' parameter found.");           
+      }
    }
    catch(error: any) {
 

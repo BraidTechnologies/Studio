@@ -27,7 +27,15 @@
                      "type": "TextBlock",
                      "text": "URL: ${if(url, url, 'N/A')}",
                      "wrap": true
-                  }               
+                  },
+                  {
+                     "type": "TextBlock",
+                     "text": "AI can make mistakes. Consider checking important information.",
+                     "size": "Small",
+                     "weight": "Lighter",
+                     "color": "Warning",                     
+                     "wrap": true
+                  }                                   
                 ]
               }
             ]
@@ -45,6 +53,6 @@
    ]
   },
   "previewCardTemplate": {
-    "title": "${if(summary, summary, 'Sorry, Boxer is not able to provide a summary.')}"
+    "title": "${if(summary, summary, 'Sorry, Boxer was not able to provide a summary.')}"
   }
 }

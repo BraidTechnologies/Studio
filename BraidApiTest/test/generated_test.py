@@ -380,7 +380,7 @@ STUDIO_FOR_TEAMS_BOXER_API_SCHEMA = {
     }
 }
 
-# Test function for the 'EnumeratRepositories' API response.
+# Test function for the 'StudioBoxer' API .
 def test_studio_boxer ():
     # Load the response schema
     response_schema = STUDIO_FOR_TEAMS_BOXER_API_SCHEMA['definitions']['IStudioBoxerResponse']
@@ -395,6 +395,13 @@ def test_studio_boxer ():
     # Validate the response against the schema
     validate_enumerate_respositories_response(response_schema, response_json)
     test_IStudioBoxerResponse_structure (response_json)
+
+
+def test_invalid_studio_request():
+    # Test how the API handles invalid request data
+    invalid_data = {"wrong_field": "Some value"}
+    response = requests.post(studio_boxer_url, params=invalid_data)
+    assert response.status_code == 400  # Assuming a bad request returns status code 400
 
 if __name__ == "__main__":
     pytest.main()

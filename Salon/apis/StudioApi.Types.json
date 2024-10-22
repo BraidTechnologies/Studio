@@ -18,6 +18,10 @@
     "IStudioBoxerResponseEnrichment": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.id"
+        },
         "url": {
           "type": "string",
           "title": "IStudioBoxerResponseEnrichment.url"
@@ -28,35 +32,13 @@
         }
       },
       "required": [
+        "id",
         "url",
         "summary"
       ],
       "additionalProperties": false,
       "title": "IStudioBoxerResponseEnrichment",
       "description": "Interface for the IStudioBoxerResponseEnrichment response object."
-    },
-    "IStudioBoxerResponse": {
-      "type": "object",
-      "properties": {
-        "answer": {
-          "type": "string",
-          "title": "IStudioBoxerResponse.answer"
-        },
-        "enrichments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/IStudioBoxerResponseEnrichment"
-          },
-          "title": "IStudioBoxerResponse.enrichments"
-        }
-      },
-      "required": [
-        "answer",
-        "enrichments"
-      ],
-      "additionalProperties": false,
-      "title": "IStudioBoxerResponse",
-      "description": "Interface for the StudioBoxer response object."
     }
   },
   "$id": "StudioApi.Types.json",
