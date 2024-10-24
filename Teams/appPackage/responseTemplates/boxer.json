@@ -25,7 +25,8 @@
                   },
                   {
                      "type": "TextBlock",
-                     "text": "URL: ${if(url, url, 'N/A')}",
+                     "text": "Link: ${if(url, '['+url+']('+url+')', 'N/A')}",
+                     "size": "Medium",
                      "wrap": true
                   },
                   {

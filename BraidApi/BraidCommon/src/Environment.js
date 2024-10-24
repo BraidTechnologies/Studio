@@ -85,61 +85,61 @@ class StagingEnvironment {
         this.name = IEnvironment_1.EEnvironment.kStaging;
     }
     checkSessionApi() {
-        return "https://braidapi.azurewebsites.net/api/CheckSession";
+        return "https://braid-api.azurewebsites.net/api/CheckSession";
     }
     summariseApi() {
-        return "https://braidapi.azurewebsites.net/api/Summarize";
+        return "https://braid-api.azurewebsites.net/api/Summarize";
     }
     findThemeApi() {
-        return "https://braidapi.azurewebsites.net/api/FindTheme";
+        return "https://braid-api.azurewebsites.net/api/FindTheme";
     }
     classifyApi() {
-        return "https://braidapi.azurewebsites.net/api/Classify";
+        return "https://braid-api.azurewebsites.net/api/Classify";
     }
     chunkApi() {
-        return "https://braidapi.azurewebsites.net/api/Chunk";
+        return "https://braid-api.azurewebsites.net/api/Chunk";
     }
     embedApi() {
-        return "https://braidapi.azurewebsites.net/api/Embed";
+        return "https://braid-api.azurewebsites.net/api/Embed";
     }
     suppressSummariseFail() {
-        return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
+        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
     }
     saveActivityApi() {
-        return "https://braidapi.azurewebsites.net/api/SaveActivity";
+        return "https://braid-api.azurewebsites.net/api/SaveActivity";
     }
     removeActivityApi() {
-        return "https://braidapi.azurewebsites.net/api/RemoveActivity";
+        return "https://braid-api.azurewebsites.net/api/RemoveActivity";
     }
     getActivitiesApi() {
-        return "https://braidapi.azurewebsites.net/api/GetActivities";
+        return "https://braid-api.azurewebsites.net/api/GetActivities";
     }
     loginWithLinkedInApi() {
-        return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn";
+        return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn";
     }
     authFromLinkedInApi() {
-        return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn";
+        return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
         return "https://braidapps.io/aibot.html";
     }
     findRelevantEnrichedChunksFromUrl() {
-        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+        return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
     }
     findRelevantEnrichedChunksFromSummary() {
-        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
+        return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
     }
     findEnrichedChunkFromUrl() {
-        return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";
+        return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";
     }
     queryModelWithEnrichment() {
-        return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
+        return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";
     }
     generateQuestion() {
-        return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
+        return "https://braid-api.azurewebsites.net/api/GenerateQuestion";
     }
     generateFluidTokenApi() {
-        return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";
+        return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";
     }
     fluidApi() {
         return "https://eu.fluidrelay.azure.com";
@@ -158,61 +158,61 @@ class ProductionEnvironment {
         this.name = IEnvironment_1.EEnvironment.kProduction;
     }
     checkSessionApi() {
-        return "https://braidapi.azurewebsites.net/api/CheckSession";
+        return "https://braid-api.azurewebsites.net/api/CheckSession";
     }
     summariseApi() {
-        return "https://braidapi.azurewebsites.net/api/Summarize";
+        return "https://braid-api.azurewebsites.net/api/Summarize";
     }
     findThemeApi() {
-        return "https://braidapi.azurewebsites.net/api/FindTheme";
+        return "https://braid-api.azurewebsites.net/api/FindTheme";
     }
     classifyApi() {
-        return "https://braidapi.azurewebsites.net/api/Classify";
+        return "https://braid-api.azurewebsites.net/api/Classify";
     }
     chunkApi() {
-        return "https://braidapi.azurewebsites.net/api/Chunk";
+        return "https://braid-api.azurewebsites.net/api/Chunk";
     }
     embedApi() {
-        return "https://braidapi.azurewebsites.net/api/Embed";
+        return "https://braid-api.azurewebsites.net/api/Embed";
     }
     suppressSummariseFail() {
-        return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
+        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
     }
     saveActivityApi() {
-        return "https://braidapi.azurewebsites.net/api/SaveActivity";
+        return "https://braid-api.azurewebsites.net/api/SaveActivity";
     }
     removeActivityApi() {
-        return "https://braidapi.azurewebsites.net/api/RemoveActivity";
+        return "https://braid-api.azurewebsites.net/api/RemoveActivity";
     }
     getActivitiesApi() {
-        return "https://braidapi.azurewebsites.net/api/GetActivities";
+        return "https://braid-api.azurewebsites.net/api/GetActivities";
     }
     loginWithLinkedInApi() {
-        return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn";
+        return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn";
     }
     authFromLinkedInApi() {
-        return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn";
+        return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
         return "https://braidapps.io/aibot.html";
     }
     findRelevantEnrichedChunksFromUrl() {
-        return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+        return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
     }
     findRelevantEnrichedChunksFromSummary() {
-        return "https:/braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
+        return "https:/braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
     }
     findEnrichedChunkFromUrl() {
-        return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";
+        return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";
     }
     queryModelWithEnrichment() {
-        return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";
+        return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";
     }
     generateQuestion() {
-        return "https://braidapi.azurewebsites.net/api/GenerateQuestion";
+        return "https://braid-api.azurewebsites.net/api/GenerateQuestion";
     }
     generateFluidTokenApi() {
-        return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";
+        return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";
     }
     fluidApi() {
         return "https://eu.fluidrelay.azure.com";

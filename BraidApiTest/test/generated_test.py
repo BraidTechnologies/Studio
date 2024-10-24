@@ -357,6 +357,9 @@ def test_IStudioBoxerResponseEnrichment_structure(enrichment_data):
 
     if 'url' in enrichment_data:
        assert isinstance(enrichment_data['url'], str)
+    if 'icon' in enrichment_data:
+       assert isinstance(enrichment_data['icon'], str)       
+       print (enrichment_data['icon'])
 
 @pytest.mark.skip(reason="Helper function, not a test")
 def test_IStudioBoxerResponse_structure(response_data):

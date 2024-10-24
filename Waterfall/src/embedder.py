@@ -52,7 +52,7 @@ class Embedder (PipelineStep):
                         status_forcelist=[500, 502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
-        embed_url = f'https://braidapi.azurewebsites.net/api/Embed?session={
+        embed_url = f'https://braid-api.azurewebsites.net/api/Embed?session={
             SESSION_KEY}'
         json_input = {
             'request': {

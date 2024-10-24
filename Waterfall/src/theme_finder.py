@@ -36,7 +36,7 @@ class ThemeFinder:
                         status_forcelist=[502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
-        summary_url = f'https://braidapi.azurewebsites.net/api/FindTheme?session={
+        summary_url = f'https://braid-api.azurewebsites.net/api/FindTheme?session={
             SESSION_KEY}'
         input_json = {
             'request': {

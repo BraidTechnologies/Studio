@@ -22,19 +22,24 @@
           "type": "string",
           "title": "IStudioBoxerResponseEnrichment.id"
         },
+        "summary": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.summary"
+        },
         "url": {
           "type": "string",
           "title": "IStudioBoxerResponseEnrichment.url"
         },
-        "summary": {
+        "icon": {
           "type": "string",
-          "title": "IStudioBoxerResponseEnrichment.summary"
+          "title": "IStudioBoxerResponseEnrichment.icon"
         }
       },
       "required": [
         "id",
+        "summary",
         "url",
-        "summary"
+        "icon"
       ],
       "additionalProperties": false,
       "title": "IStudioBoxerResponseEnrichment",
