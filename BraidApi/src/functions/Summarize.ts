@@ -46,7 +46,7 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
       }
    });
 
-   let wordString = words.toString();
+   let wordString = Math.floor (words).toString();
    let content = "You are an AI asistant that summarises text in "
       + wordString +
       " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "

@@ -43,11 +43,11 @@ function attemptSummary (key) {
          // This test allows us to run this page by opening it in broswer, which helps debugging.         
          if (chrome?.tabs) {
 
-            // Broadcast a message to all tabs with they key - query the active tab does not seem to alays work
+            // Broadcast a message to all tabs with they key - query the active tab does not seem to always work
             chrome.tabs.query({}, tabs => {
 
                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {                  
-                  result = chrome.tabs.sendMessage(tabs[0].id, {type: "Key", text: checkSessionRes.data});
+                  result = chrome.tabs.sendMessage(tabs[0].id, {type: "Key", text: mostRecent});
 
                   result
                   .then (() => {})
