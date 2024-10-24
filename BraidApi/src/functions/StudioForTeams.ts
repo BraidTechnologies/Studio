@@ -53,9 +53,9 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
 
          let answer: IStudioBoxerResponseEnrichment = { 
             id: "0",
-            url: undefined,
-            summary: passedResponse.answer,
-            icon: undefined
+            url: "",
+            summary: passedResponse.answer//,
+            //icon: ""
          };
          enrichments.push(answer);      
 
@@ -63,8 +63,8 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             let enrichment: IStudioBoxerResponseEnrichment = { 
                id: i.toString(),
                url:  passedResponse.chunks[i].chunk.url,
-               summary: passedResponse.chunks[i].chunk.summary,
-               icon: makeIconPath (passedResponse.chunks[i].chunk.url)
+               summary: passedResponse.chunks[i].chunk.summary//,
+               //icon: makeIconPath (passedResponse.chunks[i].chunk.url)
             };
             enrichments.push(enrichment);
          }

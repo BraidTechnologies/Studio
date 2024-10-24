@@ -84,61 +84,61 @@ export class StagingEnvironment implements IEnvironment {
    name: string = EEnvironment.kStaging;
 
    checkSessionApi () : string {
-      return "https://braidapi.azurewebsites.net/api/CheckSession";
+      return "https://braid-api.azurewebsites.net/api/CheckSession";
    }
    summariseApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Summarize"; 
+      return "https://braid-api.azurewebsites.net/api/Summarize"; 
    }
    findThemeApi(): string {
-      return "https://braidapi.azurewebsites.net/api/FindTheme";
+      return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
    classifyApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Classify"; 
+      return "https://braid-api.azurewebsites.net/api/Classify"; 
    }
    chunkApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Chunk"; 
+      return "https://braid-api.azurewebsites.net/api/Chunk"; 
    }
    embedApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Embed"; 
+      return "https://braid-api.azurewebsites.net/api/Embed"; 
    }   
    suppressSummariseFail(): string {
-      return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
+      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
    }   
    saveActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/SaveActivity";
+      return "https://braid-api.azurewebsites.net/api/SaveActivity";
    }  
    removeActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/RemoveActivity";
+      return "https://braid-api.azurewebsites.net/api/RemoveActivity";
    }   
    getActivitiesApi(): string {
-      return "https://braidapi.azurewebsites.net/api/GetActivities";      
+      return "https://braid-api.azurewebsites.net/api/GetActivities";      
    }  
    loginWithLinkedInApi(): string {
-      return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn"; 
+      return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn"; 
    }
    authFromLinkedInApi(): string {
-      return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+      return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
    }
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }   
    findRelevantEnrichedChunksFromUrl (): string {
-      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
    }
    findRelevantEnrichedChunksFromSummary(): string{
-      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
    }   
    findEnrichedChunkFromUrl(): string {
-      return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+      return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
    }   
    queryModelWithEnrichment(): string {
-      return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
+      return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";        
    }   
    generateQuestion(): string{
-      return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
+      return "https://braid-api.azurewebsites.net/api/GenerateQuestion";       
    }     
    generateFluidTokenApi(): string {
-      return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
+      return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";        
    }    
    fluidApi(): string {
       return  "https://eu.fluidrelay.azure.com";
@@ -157,62 +157,62 @@ export class ProductionEnvironment implements IEnvironment {
    name: string = EEnvironment.kProduction;
    
    checkSessionApi () : string {
-      return "https://braidapi.azurewebsites.net/api/CheckSession";
+      return "https://braid-api.azurewebsites.net/api/CheckSession";
    }
    summariseApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Summarize"; 
+      return "https://braid-api.azurewebsites.net/api/Summarize"; 
 
    }
    findThemeApi(): string {
-      return "https://braidapi.azurewebsites.net/api/FindTheme";
+      return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
    classifyApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Classify"; 
+      return "https://braid-api.azurewebsites.net/api/Classify"; 
    }
    chunkApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Chunk"; 
+      return "https://braid-api.azurewebsites.net/api/Chunk"; 
    }   
    embedApi () : string {
-      return "https://braidapi.azurewebsites.net/api/Embed"; 
+      return "https://braid-api.azurewebsites.net/api/Embed"; 
    }    
    suppressSummariseFail(): string {
-      return "https://braidapi.azurewebsites.net/api/SuppressSummariseFail";
+      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
    }      
    saveActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/SaveActivity"
+      return "https://braid-api.azurewebsites.net/api/SaveActivity"
    }    
    removeActivityApi(): string {
-      return "https://braidapi.azurewebsites.net/api/RemoveActivity"
+      return "https://braid-api.azurewebsites.net/api/RemoveActivity"
    }    
    getActivitiesApi(): string {
-      return "https://braidapi.azurewebsites.net/api/GetActivities"      
+      return "https://braid-api.azurewebsites.net/api/GetActivities"      
    }       
    loginWithLinkedInApi(): string {
-      return "https://braidapi.azurewebsites.net/api/LoginWithLinkedIn"; 
+      return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn"; 
    }
    authFromLinkedInApi(): string {
-      return "https://braidapi.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+      return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
    }    
    boxerHome(): string {
       return "https://braidapps.io/aibot.html";
    }  
    findRelevantEnrichedChunksFromUrl (): string {
-      return "https://braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
    }
    findRelevantEnrichedChunksFromSummary(): string {
-      return "https:/braidapi.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";   
+      return "https:/braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";   
    }
    findEnrichedChunkFromUrl(): string {
-      return "https://braidapi.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+      return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
    }    
    queryModelWithEnrichment(): string {
-      return "https://braidapi.azurewebsites.net/api/QueryModelWithEnrichment";        
+      return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";        
    } 
    generateQuestion(): string{
-      return "https://braidapi.azurewebsites.net/api/GenerateQuestion";       
+      return "https://braid-api.azurewebsites.net/api/GenerateQuestion";       
    }   
    generateFluidTokenApi(): string {
-      return "https://braidapi.azurewebsites.net/api/GenerateFluidToken";        
+      return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";        
    }
    fluidApi(): string {
       return  "https://eu.fluidrelay.azure.com";

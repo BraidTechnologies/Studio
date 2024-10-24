@@ -30,7 +30,7 @@ function attemptSummary (key) {
       return;
    }
 
-   var sessionQuery = 'https://braidapi.azurewebsites.net/api/checksession?session=' + mostRecent;
+   var sessionQuery = 'https://braid-api.azurewebsites.net/api/checksession?session=' + mostRecent;
 
    axios.post(sessionQuery, {
       headers: {

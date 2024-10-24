@@ -59,7 +59,7 @@ class Summariser (PipelineStep):
         print("Summarising: " + pipeline_item.path)
    
         #summary_url = f'http://localhost:7071/api/Summarize?session={   
-        summary_url = f'https://braidapi.azurewebsites.net/api/Summarize?session={
+        summary_url = f'https://braid-api.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
             'request': {

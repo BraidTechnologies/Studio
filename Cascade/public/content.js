@@ -70,8 +70,8 @@ function startScrape(key) {
             window.removeEventListener("unhandledrejection", suppressUnhandledPromiseRejection);
             allText = "";
         }
-        var summarizeQuery = 'https://braidapi.azurewebsites.net/api/summarize?session=49b65194-26e1-4041-ab11-4078229f478a';
-        var classifyQuery = 'https://braidapi.azurewebsites.net/api/classify?session=49b65194-26e1-4041-ab11-4078229f478a';
+        var summarizeQuery = 'https://braid-api.azurewebsites.net/api/summarize?session=49b65194-26e1-4041-ab11-4078229f478a';
+        var classifyQuery = 'https://braid-api.azurewebsites.net/api/classify?session=49b65194-26e1-4041-ab11-4078229f478a';
         axios.post(summarizeQuery, {
             request: {
                 text: allText

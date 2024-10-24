@@ -38,17 +38,6 @@
                      "wrap": true
                   }                                   
                 ]
-              },
-              {
-               "type": "Column",
-               "width": "auto",
-               "items": [
-                 {
-                   "type": "Image",
-                   "url": "${if(icon,icon,'')}",
-                   "isVisible": "${if(icon & (icon.length>0), true, false)}"
-                 }
-               ]               
               }
             ]
           }

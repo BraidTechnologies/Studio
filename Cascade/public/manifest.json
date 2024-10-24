@@ -26,6 +26,6 @@
     },
 
     "host_permissions": [
-      "https://braidapi.azurewebsites.net/*"
+      "https://braid-api.azurewebsites.net/*"
     ]
 }

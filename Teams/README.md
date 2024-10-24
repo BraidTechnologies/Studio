@@ -31,7 +31,6 @@ This app template allows Teams to interact directly with third-party data, apps,
 | `appPackage` | Templates for the Teams application manifest, the API specification and response template for API responses |
 | `env`        | Environment files                                                                                           |
 | `infra`      | Templates for provisioning Azure resources                                                                  |
-| `src`        | The source code for the repair API. TODO DELETE                                                             |
 
 The following files can be customized and demonstrate an example implementation to get you started.
 

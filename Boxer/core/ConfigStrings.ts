@@ -10,8 +10,8 @@ export enum EConfigStrings {
 
    kHomeRelativeUrl= "/aibot.html",   
 
-   kCheckSessionUrl = "https://braidapi.azurewebsites.net/api/CheckSession",       
-   kSummariseUrl = "https://braidapi.azurewebsites.net/api/Summarize",     
+   kCheckSessionUrl = "https://braid-api.azurewebsites.net/api/CheckSession",       
+   kSummariseUrl = "https://braid-api.azurewebsites.net/api/Summarize",     
    kCheckSessionLocalUrl = "http://localhost:7071/api/CheckSession",        
    kSummariseLocalUrl = "http://localhost:7071/api/Summarize",        
    

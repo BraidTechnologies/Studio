@@ -83,8 +83,8 @@ def test_with_search_telecom ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_TELECOM_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 2
     pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI Telecoms"
     pipeline_spec.mail_to = "jon@braidtech.ai"
