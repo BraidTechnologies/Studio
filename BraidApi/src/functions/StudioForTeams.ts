@@ -52,7 +52,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
 
          let answer: IStudioBoxerResponseEnrichment = { 
-            id: "0",
+            id: "1",
             url: "",
             summary: passedResponse.answer//,
             //icon: ""
@@ -61,7 +61,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
 
          for (let i = 0; i < passedResponse.chunks.length; i++) {
             let enrichment: IStudioBoxerResponseEnrichment = { 
-               id: i.toString(),
+               id: (i+1).toString(),
                url:  passedResponse.chunks[i].chunk.url,
                summary: passedResponse.chunks[i].chunk.summary//,
                //icon: makeIconPath (passedResponse.chunks[i].chunk.url)
@@ -69,13 +69,14 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             enrichments.push(enrichment);
          }
 
-         let body: Array<IStudioBoxerResponseEnrichment> = enrichments;
-
-         context.log (body)
-         return {
-            status: 200, // Ok
-            body: JSON.stringify(body)
+         const res: HttpResponseInit = {
+            status: 200,
+            jsonBody: enrichments
          };
+
+         context.log (res.jsonBody);
+
+         return res;
       }
       else {
          context.error ("No 'question' parameter found.");   

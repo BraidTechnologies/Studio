@@ -33,6 +33,7 @@ export interface IEnvironment {
    generateFluidTokenApi(): string;
    fluidApi(): string;
    fluidTenantId(): string;
+   studioForTeamsBoxer() : string;
 }
 
 

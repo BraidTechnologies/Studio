@@ -1,10 +1,7 @@
 "use strict";
 // Copyright (c) 2024 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logCoreError = logCoreError;
-exports.logDbError = logDbError;
-exports.logApiError = logApiError;
-exports.logApiInfo = logApiInfo;
+exports.logApiInfo = exports.logApiError = exports.logDbError = exports.logCoreError = void 0;
 /**
  * Logs a core error with the provided description and details.
  *
@@ -15,6 +12,7 @@ exports.logApiInfo = logApiInfo;
 function logCoreError(description, details) {
     console.error("Core error:" + description + "Details:" + details.toString());
 }
+exports.logCoreError = logCoreError;
 /**
  * Logs a database error with the provided description and details.
  *
@@ -25,6 +23,7 @@ function logCoreError(description, details) {
 function logDbError(description, details) {
     console.error("Database error:" + description + "Details:" + details.toString());
 }
+exports.logDbError = logDbError;
 /**
  * Logs an API error with the provided description and details.
  *
@@ -35,6 +34,7 @@ function logDbError(description, details) {
 function logApiError(description, details) {
     console.error("Api error:" + description + "Details:" + details.toString());
 }
+exports.logApiError = logApiError;
 /**
  * Logs API information.
  *
@@ -45,4 +45,5 @@ function logApiError(description, details) {
 function logApiInfo(description, details) {
     console.log("Api Info:" + description + "Details:" + details.toString());
 }
+exports.logApiInfo = logApiInfo;
 //# sourceMappingURL=Logging.js.map

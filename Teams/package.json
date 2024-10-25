@@ -1,22 +1,26 @@
 {
-    "name": "boxer",
-    "version": "1.0.0",
+    "name": "studioforteamsboxer",
+    "version": "0.1.0",
     "scripts": {
         "dev:teamsfx": "env-cmd --silent -f .localConfigs npm run dev",
         "dev": "func start --typescript --language-worker=\"--inspect=9229\" --port \"7071\" --cors \"*\"",
         "build": "tsc",
         "watch:teamsfx": "tsc --watch",
         "watch": "tsc -w",
-        "prestart": "npm run build",
+        "prestart": "npm run build && npm run pull_js && npm run pull_js_map",
         "start": "npx func start",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "pull_js": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
+        "pull_js_map": "copy ..\\BraidCommon\\dist\\src\\*.js.map BraidCommon\\src"       
     },
     "dependencies": {
-        "@azure/functions": "^4.3.0"
+        "@azure/functions": "^4.3.0",
+        "axios": "^1.7.7",
+        "axios-retry": "^4.5.0"
     },
     "devDependencies": {
-        "env-cmd": "^10.1.0",
         "@types/node": "^20.8.10",
+        "env-cmd": "^10.1.0",
         "typescript": "^5.2.2"
     },
     "main": "dist/src/functions/*.js"

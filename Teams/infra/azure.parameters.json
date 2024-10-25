@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceBaseName": {
-      "value": "braid-api"
+      "value": "bsft${{RESOURCE_SUFFIX}}"
     },
     "functionAppSKU": {
       "value": "Y1"

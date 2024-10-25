@@ -323,7 +323,7 @@ ENUMERATE_REPOSITORIES_API_SCHEMA = {
 }
 
 # Test helper function to validate a response against a schema definition
-def validate_enumerate_respositories_response(schema_definition, response_data):
+def validate_response_vs_schema(schema_definition, response_data):
     try:
         jsonschema.validate(instance=response_data, schema=schema_definition)
     except jsonschema.exceptions.ValidationError as ve:
@@ -341,12 +341,14 @@ def test_enumerate_repositories():
     response_json = response.json()
 
     # Validate the response against the schema
-    validate_enumerate_respositories_response(response_schema, response_json)
+    validate_response_vs_schema(response_schema, response_json)
 
 
 @pytest.mark.skip(reason="Helper function, not a test")
 def test_IStudioBoxerResponseEnrichment_structure(enrichment_data):
 
+    print (str(enrichment_data))
+    
     # Check for required fields
     assert 'id' in enrichment_data    
     assert 'summary' in enrichment_data
@@ -396,7 +398,7 @@ def test_studio_boxer ():
     response_json = response.json()
 
     # Validate the response against the schema
-    validate_enumerate_respositories_response(response_schema, response_json)
+    validate_response_vs_schema(response_schema, response_json)
     test_IStudioBoxerResponse_structure (response_json)
 
 

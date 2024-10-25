@@ -1,10 +1,7 @@
 "use strict";
 // Copyright (c) 2024 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefaultEnvironment = getDefaultEnvironment;
-exports.getDefaultFluidEnvironment = getDefaultFluidEnvironment;
-exports.getDefaultLoginEnvironment = getDefaultLoginEnvironment;
-exports.getEnvironment = getEnvironment;
+exports.getEnvironment = exports.getDefaultLoginEnvironment = exports.getDefaultFluidEnvironment = exports.getDefaultEnvironment = void 0;
 // Internal imports
 const IEnvironment_1 = require("./IEnvironment");
 const Environment_1 = require("./Environment");
@@ -24,6 +21,7 @@ function getDefaultEnvironment() {
     }
     return new Environment_1.ProductionEnvironment();
 }
+exports.getDefaultEnvironment = getDefaultEnvironment;
 function getDefaultFluidEnvironment() {
     let environment = getDefaultEnvironment();
     // If we are in Browser, and in localhost, use development
@@ -34,6 +32,7 @@ function getDefaultFluidEnvironment() {
     }
     return environment;
 }
+exports.getDefaultFluidEnvironment = getDefaultFluidEnvironment;
 function getDefaultLoginEnvironment() {
     let environment = getDefaultEnvironment();
     // If we are in Browser, and in localhost, use development
@@ -44,6 +43,7 @@ function getDefaultLoginEnvironment() {
     }
     return environment;
 }
+exports.getDefaultLoginEnvironment = getDefaultLoginEnvironment;
 /**
  * Returns an instance of IEnvironment based on the provided EEnvironment type.
  *
@@ -61,4 +61,5 @@ function getEnvironment(environmentString) {
             return new Environment_1.ProductionEnvironment();
     }
 }
+exports.getEnvironment = getEnvironment;
 //# sourceMappingURL=IEnvironmentFactory.js.map

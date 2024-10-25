@@ -57,4 +57,5 @@ teamsapp provision --env dev
 Preview the app (Load into Teams for development):
 teamsapp preview --env dev
 
-
+Deploy Function App
+func azure functionapp publish bsft533657

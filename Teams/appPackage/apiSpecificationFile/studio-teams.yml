@@ -4,7 +4,7 @@ info:
   description: A simple service to retrieve AI learning content
   version: 1.0.0
 servers:
-  - url: https://braid-api.azurewebsites.net
+  - url: ${{OPENAPI_SERVER_URL}}
     description: The Braid api server
 paths:
   /api/studioforteams-boxer:
@@ -26,9 +26,7 @@ paths:
             application/json:
               schema:
                  type: array
-                 items:
-                  required:  # List the required properties here
-                    - summary              
+                 items:           
                   properties:                 
                      summary:
                        type: string
