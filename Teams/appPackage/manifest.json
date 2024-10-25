@@ -25,7 +25,10 @@
     "composeExtensions": [
         {
             "composeExtensionType": "apiBased",
-            "apiSpecificationFile": "apiSpecificationFile/studio-teams.yml",
+            "authorization": {
+               "authType": "none"
+            },
+            "apiSpecificationFile": "apiSpecificationFile/studio-teams.yml",           
             "commands": [
                 {
                     "id": "boxer",
@@ -47,7 +50,7 @@
                 }
             ]
         }
-    ],    
+    ],       
     "permissions": [
         "identity",
         "messageTeamMembers"

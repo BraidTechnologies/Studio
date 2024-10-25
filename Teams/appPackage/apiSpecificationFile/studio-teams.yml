@@ -35,5 +35,4 @@ paths:
                        description: A summary of a relevant article from the Boxer knowledge base.
                      url:
                        type: string
-                       format: uri
                        description: The URL of a relevant article from the Boxer knowledge base.                       

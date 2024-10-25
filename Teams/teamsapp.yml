@@ -11,7 +11,7 @@ provision:
   - uses: teamsApp/create
     with:
       # Teams app name
-      name: Boxer${{APP_NAME_SUFFIX}}
+      name: Boxer
     # Write the information of created resources into environment file for
     # the specified environment variable(s).
     writeToEnvironmentFile:
