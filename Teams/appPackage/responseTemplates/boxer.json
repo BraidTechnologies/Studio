@@ -1,7 +1,7 @@
 {
   "version": "devPreview",
   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.ResponseRenderingTemplate.schema.json",
-  "jsonPath": "",
+  "jsonPath": "results",
   "responseLayout": "list",
   "responseCardTemplate": {
     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

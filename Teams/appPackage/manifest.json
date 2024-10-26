@@ -1,8 +1,8 @@
 {
-   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json", 
     "manifestVersion": "devPreview",
     "id": "06c1d39d-9ed1-4d82-928e-abba10d40ec9",
-    "version": "1.0.0",
+    "version": "1.0.0", 
     "developer": {
         "name": "Braid Technologies Ltd.",
         "websiteUrl": "https://www.braidtech.ai",

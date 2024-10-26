@@ -37,6 +37,7 @@ export async function boxer(request: HttpRequest,context: InvocationContext): Pr
 
          let environment = getDefaultEnvironment();
 
+         /*
          const postResult = await axios.post(environment.studioForTeamsBoxer(), null,
             {
                params: { question: question }
@@ -45,15 +46,20 @@ export async function boxer(request: HttpRequest,context: InvocationContext): Pr
 
          context.log ("Teams, headers:");    
          context.log (postResult.headers);          
-
-         context.log ("Teams, body:");    
-         context.log (postResult.data);
-
+         */
          const res: HttpResponseInit = {
             status: 200,
-            jsonBody: JSON.stringify(postResult.data)
+            jsonBody: {
+               results: [],
+             }
          };   
          
+         res.jsonBody.results = [JSON.stringify({ id: "1",
+            summary: "Hello !",
+           url: ""
+         })];
+
+         context.log ("Teams, body:");          
          context.log (res.jsonBody);          
          
          return res;
@@ -77,7 +83,7 @@ export async function boxer(request: HttpRequest,context: InvocationContext): Pr
 }
 
 app.http("studioforteams-boxer", {
-  methods: ["GET", "POST"],
+  methods: ["GET"],
   authLevel: "anonymous",
   handler: boxer,
 });

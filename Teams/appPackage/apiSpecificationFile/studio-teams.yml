@@ -27,7 +27,10 @@ paths:
               schema:
                  type: array
                  items:           
-                  properties:                 
+                  properties:    
+                     id:
+                       type: string
+                       description: The unique identifier of the item                               
                      summary:
                        type: string
                        description: A summary of a relevant article from the Boxer knowledge base.
