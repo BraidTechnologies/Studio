@@ -38,7 +38,7 @@
                     "apiResponseRenderingTemplateFile": "responseTemplates/boxer.json",
                     "parameters": [
                         {
-                            "name": "assignedTo",
+                            "name": "question",
                             "title": "Assigned To",
                             "description": "Filter repairs by who they're assigned to",
                             "inputType": "text"

@@ -5,8 +5,6 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import repairRecords from "../repairsData.json";
-
 /**
  * This function handles the HTTP request and returns the boxer information.
  *
@@ -28,24 +26,24 @@ export async function boxer(
     },
   };
 
-  // Get the assignedTo query parameter.
-  const assignedTo = req.query.get("assignedTo");
+  // Get the question query parameter.
+  const question = req.query.get("question");
 
-  // If the assignedTo query parameter is not provided, return the response.
-  if (!assignedTo) {
-    return res;
-  }
+  let item = 
+  {
+   id: "3",
+   title: "Tire service",
+   description: "Rotate and replace tires, moving them from one position to another on the vehicle to ensure even wear and removing worn tires and installing new ones.",
+   assignedTo: "Karin Blair",
+   date: "2023-05-24",
+   image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"
+ };
 
-  // Filter the boxer information by the assignedTo query parameter.
-  const repairs = repairRecords.filter((item) => {
-    const fullName = item.assignedTo.toLowerCase();
-    const query = assignedTo.trim().toLowerCase();
-    const [firstName, lastName] = fullName.split(" ");
-    return fullName === query || firstName === query || lastName === query;
-  });
+ let items  = new Array();
+ items.push (item);
 
   // Return filtered boxer records, or an empty array if no records were found.
-  res.jsonBody.results = repairs ?? [];
+  res.jsonBody.results = items;
   return res;
 }
 

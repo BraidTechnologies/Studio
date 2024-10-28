@@ -13,7 +13,7 @@ paths:
       summary: Returns a repair
       description: Returns a repair with its details and image
       parameters:
-        - name: assignedTo
+        - name: question
           in: query
           description: Filter repairs by who they're assigned to
           schema:
