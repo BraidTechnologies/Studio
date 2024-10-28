@@ -34,9 +34,8 @@ export async function boxer(
    id: "3",
    title: "Tire service",
    description: "Rotate and replace tires, moving them from one position to another on the vehicle to ensure even wear and removing worn tires and installing new ones.",
-   assignedTo: "Karin Blair",
-   date: "2023-05-24",
-   image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"
+   image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1",
+   url: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"   
  };
 
  let items  = new Array();
