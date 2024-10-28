@@ -4,6 +4,8 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import axios from "axios";
+import axiosRetry from 'axios-retry';
 
 /**
  * This function handles the HTTP request and returns the boxer information.
@@ -13,41 +15,60 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
  * @returns {Promise<Response>} - A promise that resolves with the HTTP response containing the boxer information.
  */
 export async function boxer(
-  req: HttpRequest,
-  context: InvocationContext
+   req: HttpRequest,
+   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  context.log("HTTP trigger function processed a request.");
 
-  // Initialize response.
-  const res: HttpResponseInit = {
-    status: 200,
-    jsonBody: {
-      results: [],
-    },
-  };
+   // Get the question query parameter.
+   const question = req.query.get("question") || (await req.text());;
 
-  // Get the question query parameter.
-  const question = req.query.get("question");
+   if (question) {
 
-  let item = 
-  {
-   id: "3",
-   title: "Tire service",
-   description: "Rotate and replace tires, moving them from one position to another on the vehicle to ensure even wear and removing worn tires and installing new ones.",
-   image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1",
-   url: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"   
- };
+      context.log(question);
 
- let items  = new Array();
- items.push (item);
+      // Up to 5 retries if we hit rate limit
+      axiosRetry(axios, {
+         retries: 5,
+         retryDelay: axiosRetry.exponentialDelay,
+         retryCondition: (error) => {
+            return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
+         }
+      });
 
-  // Return filtered boxer records, or an empty array if no records were found.
-  res.jsonBody.results = items;
-  return res;
+      // Initialize response.
+      const res: HttpResponseInit = {
+         status: 200,
+         jsonBody: {
+            results: [],
+         },
+      };
+      let item =
+      {
+         id: "3",
+         title: "Tire service",
+         description: "Rotate and replace tires, moving them from one position to another on the vehicle to ensure even wear and removing worn tires and installing new ones.",
+         image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1",
+         url: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"
+      };
+
+      let items = new Array();
+      items.push(item);
+
+      // Return filtered boxer records, or an empty array if no records were found.
+      res.jsonBody.results = items;
+      return res;
+   }
+   else {
+      context.error("Invalid request, no qustion found in paremeters.");
+      return {
+         status: 400, // Internal error
+         body: "Invalid request, no qustion found in paremeters."
+      };
+   }
 }
 
 app.http("boxer", {
-  methods: ["GET"],
-  authLevel: "anonymous",
-  handler: boxer,
+   methods: ["GET"],
+   authLevel: "anonymous",
+   handler: boxer,
 });
