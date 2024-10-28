@@ -25,7 +25,7 @@
                   },
                   {
                     "type": "TextBlock",
-                    "text": "summary: ${if(summary, summary, 'N/A')}",
+                    "text": "Description: ${if(description, description, 'N/A')}",
                     "wrap": true
                   },
                   {
@@ -40,8 +40,8 @@
                 "width": "auto",
                 "items": [
                   {
-                    "type": "imageUrl",
-                    "url": "${if(imageUrl, imageUrl, '')}",
+                    "type": "Image",
+                    "url": "${if(image, image, '')}",
                     "size": "Medium"
                   }
                 ]
@@ -67,9 +67,9 @@
   },
   "previewCardTemplate": {
     "title": "${if(title, title, 'N/A')}",
-    "subtitle": "${if(summary, summary, 'N/A')}",
+    "subtitle": "${if(description, description, 'N/A')}",
     "image": {
-      "url": "${if(imageUrl, imageUrl, '')}",
+      "url": "${if(image, image, '')}",
       "alt": "${if(title, title, 'N/A')}"
     }
   }

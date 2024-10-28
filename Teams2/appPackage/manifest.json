@@ -17,7 +17,7 @@
         "short": "bsft${{APP_NAME_SUFFIX}}",
         "full": "Full name for bsft"
     },
-    "summary": {
+    "description": {
         "short": "Track and monitor car repair records for stress-free maintenance management.",
         "full": "The ultimate solution for hassle-free car maintenance management makes tracking and monitoring your car repair records a breeze."
     },
@@ -25,22 +25,22 @@
     "composeExtensions": [
         {
             "composeExtensionType": "apiBased",
-            "apiSpecificationFile": "apiSpecificationFile/boxer.yml",
+            "apiSpecificationFile": "apiSpecificationFile/repair.yml",
             "commands": [
                 {
-                    "id": "boxer",
+                    "id": "repair",
                     "type": "query",
                     "title": "Search for repairs info",
                     "context": [
                         "compose",
                         "commandBox"
                     ],
-                    "apiResponseRenderingTemplateFile": "responseTemplates/boxer.json",
+                    "apiResponseRenderingTemplateFile": "responseTemplates/repair.json",
                     "parameters": [
                         {
                             "name": "assignedTo",
                             "title": "Assigned To",
-                            "summary": "Filter repairs by who they're assigned to",
+                            "description": "Filter repairs by who they're assigned to",
                             "inputType": "text"
                         }
                     ]

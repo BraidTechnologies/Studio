@@ -14,7 +14,7 @@ import repairRecords from "../repairsData.json";
  * @param {InvocationContext} context - The Azure Functions context object.
  * @returns {Promise<Response>} - A promise that resolves with the HTTP response containing the repair information.
  */
-export async function boxer(
+export async function repair(
   req: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
@@ -31,23 +31,26 @@ export async function boxer(
   // Get the assignedTo query parameter.
   const assignedTo = req.query.get("assignedTo");
 
-  let item = { 
-   id: "1",
-   title: "Oil change",
-   summary: "Need to drain the old engine oil and replace it with fresh oil to keep the engine lubricated and running smoothly.",
-   assignedTo: "Karin Blair",
-   date: "2023-05-23",
-   imageUrl: "https://www.howmuchisit.org/wp-content/uploads/2011/01/oil-change.jpg"
-  };
-  let items = new Array();
-  items.push (item);
+  // If the assignedTo query parameter is not provided, return the response.
+  if (!assignedTo) {
+    return res;
+  }
 
-  res.jsonBody.results = items;
+  // Filter the repair information by the assignedTo query parameter.
+  const repairs = repairRecords.filter((item) => {
+    const fullName = item.assignedTo.toLowerCase();
+    const query = assignedTo.trim().toLowerCase();
+    const [firstName, lastName] = fullName.split(" ");
+    return fullName === query || firstName === query || lastName === query;
+  });
+
+  // Return filtered repair records, or an empty array if no records were found.
+  res.jsonBody.results = repairs ?? [];
   return res;
 }
 
-app.http("boxer", {
+app.http("repair", {
   methods: ["GET"],
   authLevel: "anonymous",
-  handler: boxer,
+  handler: repair,
 });
