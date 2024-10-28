@@ -5,11 +5,11 @@ info:
   version: 1.0.0
 servers:
   - url: ${{OPENAPI_SERVER_URL}}/api
-    description: The repair api server
+    description: The boxer api server
 paths:
-  /repair:
+  /boxer:
     get:
-      operationId: repair
+      operationId: boxer
       summary: Returns a repair
       description: Returns a repair with its details and image
       parameters:

@@ -8,13 +8,13 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import repairRecords from "../repairsData.json";
 
 /**
- * This function handles the HTTP request and returns the repair information.
+ * This function handles the HTTP request and returns the boxer information.
  *
  * @param {HttpRequest} req - The HTTP request.
  * @param {InvocationContext} context - The Azure Functions context object.
- * @returns {Promise<Response>} - A promise that resolves with the HTTP response containing the repair information.
+ * @returns {Promise<Response>} - A promise that resolves with the HTTP response containing the boxer information.
  */
-export async function repair(
+export async function boxer(
   req: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
@@ -36,7 +36,7 @@ export async function repair(
     return res;
   }
 
-  // Filter the repair information by the assignedTo query parameter.
+  // Filter the boxer information by the assignedTo query parameter.
   const repairs = repairRecords.filter((item) => {
     const fullName = item.assignedTo.toLowerCase();
     const query = assignedTo.trim().toLowerCase();
@@ -44,13 +44,13 @@ export async function repair(
     return fullName === query || firstName === query || lastName === query;
   });
 
-  // Return filtered repair records, or an empty array if no records were found.
+  // Return filtered boxer records, or an empty array if no records were found.
   res.jsonBody.results = repairs ?? [];
   return res;
 }
 
-app.http("repair", {
+app.http("boxer", {
   methods: ["GET"],
   authLevel: "anonymous",
-  handler: repair,
+  handler: boxer,
 });

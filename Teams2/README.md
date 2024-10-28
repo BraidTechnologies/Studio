@@ -31,16 +31,16 @@ This app template allows Teams to interact directly with third-party data, apps,
 | `appPackage` | Templates for the Teams application manifest, the API specification and response template for API responses |
 | `env`        | Environment files                                                                                           |
 | `infra`      | Templates for provisioning Azure resources                                                                  |
-| `src`        | The source code for the repair API                                                                          |
+| `src`        | The source code for the boxer API                                                                          |
 
 The following files can be customized and demonstrate an example implementation to get you started.
 
 | File                                         | Contents                                                            |
 | -------------------------------------------- | ------------------------------------------------------------------- |
-| `src/functions/repair.ts`                    | The main file of a function in Azure Functions.                     |
-| `src/repairsData.json`                       | The data source for the repair API.                                 |
-| `appPackage/apiSpecificationFile/repair.yml` | A file that describes the structure and behavior of the repair API. |
-| `appPackage/responseTemplates/repair.json`   | A generated Adaptive Card that used to render API response.         |
+| `src/functions/boxer.ts`                    | The main file of a function in Azure Functions.                     |
+| `src/repairsData.json`                       | The data source for the boxer API.                                 |
+| `appPackage/apiSpecificationFile/boxer.yml` | A file that describes the structure and behavior of the boxer API. |
+| `appPackage/responseTemplates/boxer.json`   | A generated Adaptive Card that used to render API response.         |
 
 The following are Teams Toolkit specific project files. You can [visit a complete guide on Github](https://github.com/OfficeDev/TeamsFx/wiki/Teams-Toolkit-Visual-Studio-Code-v5-Guide#overview) to understand how Teams Toolkit works.
 

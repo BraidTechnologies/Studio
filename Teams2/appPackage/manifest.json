@@ -25,17 +25,17 @@
     "composeExtensions": [
         {
             "composeExtensionType": "apiBased",
-            "apiSpecificationFile": "apiSpecificationFile/repair.yml",
+            "apiSpecificationFile": "apiSpecificationFile/boxer.yml",
             "commands": [
                 {
-                    "id": "repair",
+                    "id": "boxer",
                     "type": "query",
                     "title": "Search for repairs info",
                     "context": [
                         "compose",
                         "commandBox"
                     ],
-                    "apiResponseRenderingTemplateFile": "responseTemplates/repair.json",
+                    "apiResponseRenderingTemplateFile": "responseTemplates/boxer.json",
                     "parameters": [
                         {
                             "name": "assignedTo",
