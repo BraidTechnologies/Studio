@@ -56,17 +56,17 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             id: "1",
             url: "",
             summary: passedResponse.answer,
-            title: undefined,            
-            iconUrl: ""
+            title: question,            
+            iconUrl: makeIconPath ("https://www.braidtech.ai")
          };
          enrichments.push(answer);      
 
          for (let i = 0; i < passedResponse.chunks.length; i++) {
             let enrichment: IStudioBoxerResponseEnrichment = { 
-               id: (i+1).toString(),
+               id: (i+2).toString(),
                url:  passedResponse.chunks[i].chunk.url,
                summary: passedResponse.chunks[i].chunk.summary,
-               title: undefined,
+               title: question +  " - Link#" + (i+1).toString(),
                iconUrl: makeIconPath (passedResponse.chunks[i].chunk.url)
             };
             enrichments.push(enrichment);
