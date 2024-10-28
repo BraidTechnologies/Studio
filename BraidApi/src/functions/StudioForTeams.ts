@@ -39,6 +39,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
 
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,
+            maxCount: 4,
             personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
             enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
             question: question,
@@ -54,8 +55,9 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          let answer: IStudioBoxerResponseEnrichment = { 
             id: "1",
             url: "",
-            summary: passedResponse.answer//,
-            //icon: ""
+            summary: passedResponse.answer,
+            title: undefined,            
+            iconUrl: ""
          };
          enrichments.push(answer);      
 
@@ -63,8 +65,9 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             let enrichment: IStudioBoxerResponseEnrichment = { 
                id: (i+1).toString(),
                url:  passedResponse.chunks[i].chunk.url,
-               summary: passedResponse.chunks[i].chunk.summary//,
-               //icon: makeIconPath (passedResponse.chunks[i].chunk.url)
+               summary: passedResponse.chunks[i].chunk.summary,
+               title: undefined,
+               iconUrl: makeIconPath (passedResponse.chunks[i].chunk.url)
             };
             enrichments.push(enrichment);
          }

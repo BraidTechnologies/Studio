@@ -27,13 +27,12 @@ paths:
               schema:
                  type: array
                  items:           
-                  properties:    
-                     id:
-                       type: string
-                       description: The unique identifier of the item                               
+                  properties:                                  
                      summary:
                        type: string
                        description: A summary of a relevant article from the Boxer knowledge base.
                      url:
                        type: string
                        description: The URL of a relevant article from the Boxer knowledge base.                       
+
+                       

@@ -84,7 +84,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       let spec = {
          repositoryId: query.repositoryId,
          summary: imagined,
-         maxCount: 2,
+         maxCount: query.maxCount,
          similarityThreshold: query.similarityThreshold
       }
 

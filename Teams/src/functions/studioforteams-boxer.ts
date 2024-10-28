@@ -8,6 +8,7 @@ import axios from "axios";
 import axiosRetry from 'axios-retry';
 
 import { getDefaultEnvironment } from "../../../BraidCommon/src/IEnvironmentFactory";
+import { IStudioBoxerRequest, IStudioBoxerResponseEnrichment} from "../../../BraidCommon/src/StudioApi.Types";
 
 /**
  * This function handles the HTTP request and returns the repair information.
@@ -46,23 +47,29 @@ export async function boxer(request: HttpRequest,context: InvocationContext): Pr
 
          context.log ("Teams, headers:");    
          context.log (postResult.headers);          
-         */
-         const res: HttpResponseInit = {
-            status: 200,
-            jsonBody: {
-               results: [],
-             }
-         };   
+         */  
          
-         res.jsonBody.results = [JSON.stringify({ id: "1",
+         // TODO
+         // The Teams client can parse this if we stringify the first array entry. But does not read the 'summary' field. 
+         // 
+         let item: IStudioBoxerResponseEnrichment = { 
+            id: "1",
             summary: "Hello !",
-           url: ""
-         })];
+            url: ""
+         };
 
-         context.log ("Teams, body:");          
-         context.log (res.jsonBody);          
-         
-         return res;
+         let items = new Array<any> ();
+         let stringified = JSON.stringify(item);
+         //(stringified as any).summary = "Added Hello!";         
+         items.push (stringified);
+       
+         context.log (items);
+       
+         return {
+            headers: {'Content-Type' : 'application/json'},
+            status: 200,
+            body: JSON.stringify(items)
+         };
       }
       else {
          context.error ("Invalid request, no qustion found in paremeters.");
@@ -83,7 +90,7 @@ export async function boxer(request: HttpRequest,context: InvocationContext): Pr
 }
 
 app.http("studioforteams-boxer", {
-  methods: ["GET"],
+  methods: ["GET", "POST"],
   authLevel: "anonymous",
   handler: boxer,
 });

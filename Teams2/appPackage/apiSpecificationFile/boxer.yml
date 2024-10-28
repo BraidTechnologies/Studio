@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: Repair Service
+  summary: A simple service to manage repairs
+  version: 1.0.0
+servers:
+  - url: ${{OPENAPI_SERVER_URL}}/api
+    summary: The repair api server
+paths:
+  /boxer:
+    get:
+      operationId: boxer
+      summary: Returns a repair
+      summary: Returns a repair with its details and imageUrl
+      parameters:
+        - name: assignedTo
+          in: query
+          summary: Filter repairs by who they're assigned to
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          summary: A list of repairs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: string
+                      summary: The unique identifier of the repair
+                    title:
+                      type: string
+                      summary: The short summary of the repair
+                    summary:
+                      type: string
+                      summary: The detailed summary of the repair
+                    assignedTo:
+                      type: string
+                      summary: The user who is responsible for the repair
+                    date:
+                      type: string
+                      format: date-time
+                      summary: The date and time when the repair is scheduled or completed
+                    imageUrl:
+                      type: string
+                      format: uri
+                      summary: The URL of the imageUrl of the item to be repaired or the repair process

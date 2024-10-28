@@ -16,7 +16,8 @@ export interface IStudioBoxerResponseEnrichment {
 
    id: string,
    summary: string;    
+   title: string | undefined;
    url: string | undefined;  
-   //icon: string | undefined;
+   iconUrl: string | undefined;
 }
 
