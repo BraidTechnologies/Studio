@@ -1,14 +1,14 @@
 {
   "version": "devPreview",
   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.ResponseRenderingTemplate.schema.json",
-  "jsonPath": "",
+  "jsonPath": "results",
   "responseLayout": "list",
   "responseCardTemplate": {
     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
     "type": "AdaptiveCard",
     "version": "1.5",
-    "body": [        
-      {      
+    "body": [
+      {
         "type": "Container",
         "items": [
           {
@@ -20,7 +20,12 @@
                 "items": [
                   {
                     "type": "TextBlock",
-                    "text": "Summary: ${if(summary, summary, 'N/A')}",
+                    "text": "${if(title, title, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "${if(description, description, 'N/A')}",
                     "wrap": true
                   },
                   {
@@ -36,25 +41,32 @@
                      "weight": "Lighter",
                      "color": "Warning",                     
                      "wrap": true
-                  }                                   
+                  }                       
+                ]
+              },
+              {
+                "type": "Column",
+                "width": "auto",
+                "items": [
+                  {
+                    "type": "Image",
+                    "url": "${if(image, image, '')}",
+                    "size": "Medium"
+                  }
                 ]
               }
             ]
           }
         ]
-      }      
-    ],
-    "actions": [
-       {
-           "type": "Action.OpenUrl",
-           "title": "Open ...",
-           "url": "${url}",
-           "$when": "${url != null}"
-       }
-   ]
+      }
+    ]
   },
   "previewCardTemplate": {
-    "text": "${if(summary, summary, 'Sorry, Boxer was not able to provide a summary.')}",
-    "title": "${if(summary,'Yes','No')}"
+    "title": "${if(title, title, 'N/A')}",
+    "subtitle": "${if(description, description, 'N/A')}",
+    "image": {
+      "url": "${if(image, image, '')}",
+      "alt": "${if(title, title, 'N/A')}"
+    }
   }
 }

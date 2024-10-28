@@ -18,7 +18,7 @@ provision:
   - uses: script
     with:
       run:
-        echo "::set-teamsfx-env FUNC_NAME=repair";
+        echo "::set-teamsfx-env FUNC_NAME=boxer";
         echo "::set-teamsfx-env FUNC_ENDPOINT=http://localhost:7071";
 
   # Validate using manifest schema

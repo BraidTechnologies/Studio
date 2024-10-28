@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: The Braid Studio
+  description: APIs to bring AI into Enterprise work environments
+  version: 1.0.0
+servers:
+  - url: ${{OPENAPI_SERVER_URL}}/api
+    description: The Braid api server
+paths:
+  /boxer:
+    get:
+      operationId: boxer
+      summary: Returns answers to questions about AI. 
+      description: Returns an answer to the question plus a set of links to related documents. 
+      parameters:
+        - name: question
+          in: query
+          description: A question about AI
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: An answer to the question plus a set of links to related documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: string
+                      description: The unique identifier of the item (unused, placeholder)
+                    title:
+                      type: string
+                      description: A title for the link
+                    description:
+                      type: string
+                      description: The detailed of the link
+                    url:
+                      type: string
+                      format: uri
+                      description: A link to the related document
+                    image:
+                      type: string
+                      format: uri
+                      description: The URL of the image to use to represent the link

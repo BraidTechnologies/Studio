@@ -57,7 +57,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             url: "",
             summary: passedResponse.answer,
             title: question,            
-            iconUrl: makeIconPath ("https://www.braidtech.ai")
+            iconUrl: makeIconPath ("https://braidapps.io")
          };
          enrichments.push(answer);      
 

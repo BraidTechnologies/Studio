@@ -1,17 +1,15 @@
 {
-    "name": "studioforteamsboxer",
-    "version": "0.1.0",
+    "name": "bsft",
+    "version": "1.0.0",
     "scripts": {
         "dev:teamsfx": "env-cmd --silent -f .localConfigs npm run dev",
         "dev": "func start --typescript --language-worker=\"--inspect=9229\" --port \"7071\" --cors \"*\"",
         "build": "tsc",
         "watch:teamsfx": "tsc --watch",
         "watch": "tsc -w",
-        "prestart": "npm run build && npm run pull_js && npm run pull_js_map",
+        "prestart": "npm run build",
         "start": "npx func start",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "pull_js": "copy ..\\BraidCommon\\dist\\src\\*.js BraidCommon\\src",
-        "pull_js_map": "copy ..\\BraidCommon\\dist\\src\\*.js.map BraidCommon\\src"       
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
         "@azure/functions": "^4.3.0",
@@ -21,7 +19,7 @@
     "devDependencies": {
         "@types/node": "^20.8.10",
         "env-cmd": "^10.1.0",
-        "typescript": "^5.2.2"
+        "typescript": "^5.6.3"
     },
     "main": "dist/src/functions/*.js"
 }

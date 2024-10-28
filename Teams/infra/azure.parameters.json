@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceBaseName": {
-      "value": "bsft${{RESOURCE_SUFFIX}}"
+      "value": "sme${{RESOURCE_SUFFIX}}"
     },
     "functionAppSKU": {
       "value": "Y1"
