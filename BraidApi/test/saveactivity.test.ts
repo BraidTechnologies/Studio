@@ -23,11 +23,14 @@ function randomKey () : string {
 describe("SaveActivity", async function () {
 
    let record = {
-      storeId: randomKey(),
-      storeTimestamp: new Date(),
-      storeContextId: "madeupId",
-      storeUserId: "madeeupId",
-      storeClassName: "madeUpClass",
+      id: randomKey(),
+      applicationId: "Test",
+      schemaVersion: 1,
+      created: new Date(),
+      amended: new Date(),      
+      contextId: "madeupId",
+      userId: "madeeupId",
+      className: "madeUpClass",
       test: "Some test data"
    }
 
@@ -36,7 +39,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -49,7 +52,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -62,7 +65,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
       let ok = await api.save (myRecord); 
 
@@ -75,7 +78,7 @@ describe("SaveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
       let ok = await api.save (myRecord);    
 

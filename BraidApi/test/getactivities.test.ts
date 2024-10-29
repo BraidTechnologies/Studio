@@ -23,26 +23,29 @@ function randomKey () : string {
 describe("GetActivities", async function () {
 
    let record = {
-      storeId: randomKey(),
-      storeTimestamp: new Date(),
-      storeContextId: "madeupId",
-      storeUserId: "madeeupId",
-      storeClassName: "madeUpClass",
+      id: randomKey(),
+      applicationId: "Test",
+      schemaVersion: 1,
+      created: new Date(),
+      amended: new Date(),      
+      contextId: "madeupId",
+      userId: "madeeupId",
+      className: "madeUpClass",
       test: "Some test data"
    }
 
-   let spec = { limit: 1, storeClassName: "madeUpClass"}
+   let spec = { limit: 1, className: "madeUpClass"}
 
    it("Needs to pull a single record with valid key in local environment", async function () {
       
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
       let ok = await api.save (myRecord); 
       let stored = await api.recent (spec);
-      api.remove (myRecord.storeId);
+      api.remove (myRecord.id);
 
       expect (stored.length).toBe (1) ;         
 
@@ -53,18 +56,18 @@ describe("GetActivities", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
       let ok = await api.save (myRecord); 
 
       let myRecord2 = { ...record };
-      myRecord2.storeId = randomKey();      
+      myRecord2.id = randomKey();      
       ok = await api.save (myRecord2); 
 
       let mySpec = { ...spec};
       mySpec.limit = 2;
       let stored = await api.recent (mySpec);
-      api.remove (myRecord.storeId);
-      api.remove (myRecord2.storeId);      
+      api.remove (myRecord.id);
+      api.remove (myRecord2.id);      
 
       expect (stored.length).toBe (2) ;         
 

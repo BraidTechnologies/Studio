@@ -37,7 +37,7 @@ describe("ActivityRecord", function () {
 
       var activityEmpty = new ActivityRecord();
 
-      expect(activityEmpty.email).toEqual("");     
+      expect(activityEmpty.userId).toEqual("");     
    });
 
    it("Needs to allow undefined ID", function () {
@@ -45,17 +45,6 @@ describe("ActivityRecord", function () {
       var caught: boolean = false;
       try {
          var activityErr: ActivityRecord = new ActivityRecord(undefined, myConversationId, myId, myHappenedAt);
-      } catch (e) {
-         caught = true;
-      }
-      expect(caught).toEqual(false);
-   });
-
-   it("Needs to allow undefined conversation ID", function () {
-
-      var caught: boolean = false;
-      try {
-         var activityErr: ActivityRecord = new ActivityRecord(myId, undefined, myId, myHappenedAt);
       } catch (e) {
          caught = true;
       }
@@ -98,7 +87,7 @@ describe("ActivityRecord", function () {
 
    it("Needs to compare for equality and inequality", function () {
 
-      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt);
+      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created);
 
       expect(activity1.equals(activity1)).toEqual(true);
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -107,15 +96,15 @@ describe("ActivityRecord", function () {
    
    it("Needs to detect inequality on date", function () {
 
-      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.conversationId, activity1.email, new Date());
+      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.contextId, activity1.userId, new Date());
 
       expect(activity1.equals(activityNew)).toEqual(false);
    });
 
    it("Needs to correctly store attributes", function () {
          
-      expect(activity1.email === myEmail).toEqual(true);
-      expect(activity1.happenedAt.getTime() === myHappenedAt.getTime()).toEqual(true);
+      expect(activity1.userId === myEmail).toEqual(true);
+      expect(activity1.created.getTime() === myHappenedAt.getTime()).toEqual(true);
    });
 
    it("Needs to copy construct", function () {
@@ -127,11 +116,11 @@ describe("ActivityRecord", function () {
 
    it("Needs to correctly change attributes", function () {
 
-      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt);
+      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created);
 
       activityNew.id = someoneElsesId;
-      activityNew.email = someoneElsesEmail;
-      activityNew.happenedAt = ActivityRecord.makeDateUTC (someoneElsesHappenedAt);
+      activityNew.userId = someoneElsesEmail;
+      activityNew.created = ActivityRecord.makeDateUTC (someoneElsesHappenedAt);
 
       expect(activity2.equals (activityNew)).toEqual(true);
    });
@@ -152,7 +141,7 @@ describe("ActivityRecord", function () {
 
       var caught: boolean = false;
       try {
-         activity1.email = undefined as unknown as string;
+         activity1.userId = undefined as unknown as string;
       } catch (e) {
          caught = true;
       }
@@ -164,7 +153,7 @@ describe("ActivityRecord", function () {
 
       var stream: string = activity1.streamOut();
 
-      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt);
+      var activityNew: ActivityRecord = new ActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created);
       activityNew.streamIn(stream);
 
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -218,7 +207,7 @@ describe("UrlActivityRecord", function () {
 
    it("Needs to compare for equality and inequality", function () {
 
-      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url);
+      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url);
 
       expect(activity1.equals(activity1)).toEqual(true);
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -240,11 +229,11 @@ describe("UrlActivityRecord", function () {
 
    it("Needs to correctly change attributes", function () {
 
-      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url);
+      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url);
 
       activityNew.id = someoneElsesId;
-      activityNew.email = someoneElsesEmail;
-      activityNew.happenedAt = someoneElsesHappenedAt;
+      activityNew.userId = someoneElsesEmail;
+      activityNew.created = someoneElsesHappenedAt;
       activityNew.url = someoneElsesUrl;      
 
       expect(activity2.equals (activityNew)).toEqual(true);
@@ -266,7 +255,7 @@ describe("UrlActivityRecord", function () {
 
       var stream: string = activity1.streamOut();
 
-      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url);
+      var activityNew: UrlActivityRecord = new UrlActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url);
       activityNew.streamIn(stream);
 
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -317,7 +306,7 @@ describe("LikeDislikeActivityRecord", function () {
 
    it("Needs to compare for equality and inequality", function () {
 
-      let activityNew = new LikeUnlikeActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url, true);
+      let activityNew = new LikeUnlikeActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url, true);
 
       expect(activity1.equals(activity1)).toEqual(true);
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -340,11 +329,11 @@ describe("LikeDislikeActivityRecord", function () {
 
    it("Needs to correctly change attributes", function () {
 
-      let activityNew = new LikeUnlikeActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url, true);
+      let activityNew = new LikeUnlikeActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url, true);
 
       activityNew.id = someoneElsesId;
-      activityNew.email = someoneElsesEmail;
-      activityNew.happenedAt = someoneElsesHappenedAt;
+      activityNew.userId = someoneElsesEmail;
+      activityNew.created = someoneElsesHappenedAt;
       activityNew.url = someoneElsesUrl;      
       activityNew.like = true;
 
@@ -367,7 +356,7 @@ describe("LikeDislikeActivityRecord", function () {
 
       var stream: string = activity1.streamOut();
 
-      let activityNew = new LikeUnlikeActivityRecord (activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.url, activity1.like);
+      let activityNew = new LikeUnlikeActivityRecord (activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.url, activity1.like);
       activityNew.streamIn(stream);
 
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -420,7 +409,7 @@ describe("MessageActivityRecord", function () {
 
    it("Needs to compare for equality and inequality", function () {
 
-      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.message);
+      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.message);
 
       expect(activity1.equals(activity1)).toEqual(true);
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -442,11 +431,11 @@ describe("MessageActivityRecord", function () {
 
    it("Needs to correctly change attributes", function () {
 
-      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.message);
+      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.message);
 
       activityNew.id = someoneElsesId;
-      activityNew.email = someoneElsesEmail;
-      activityNew.happenedAt = someoneElsesHappenedAt;
+      activityNew.userId = someoneElsesEmail;
+      activityNew.created = someoneElsesHappenedAt;
       activityNew.message = someoneElsesMessage;      
 
       expect(activity2.equals (activityNew)).toEqual(true);
@@ -468,7 +457,7 @@ describe("MessageActivityRecord", function () {
 
       var stream: string = activity1.streamOut();
 
-      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.conversationId, activity1.email, activity1.happenedAt, activity1.message);
+      var activityNew: MessageActivityRecord = new MessageActivityRecord(activity1.id, activity1.contextId, activity1.userId, activity1.created, activity1.message);
       activityNew.streamIn(stream);
 
       expect(activity1.equals(activityNew)).toEqual(true);
@@ -537,9 +526,14 @@ describe("ActivityRepository", function () {
 
    it("Needs to load a record", async function () {
 
+      var activity = new LikeUnlikeActivityRecord (keyGenerator.generateKey(), "madeupconversationKey", 
+                                 "jonathanverrier@hotmail.com", new Date(), 
+                                 "https://test.cosmos", true);
+
+      let saved = await repository.save (activity);      
       let loaded = await repository.loadRecentUrlActivity (3);
 
-      expect(true).toEqual(true);     
+      expect(loaded.length > 0).toEqual(true);     
    });  
 
    it("Needs to remove a Message record", async function () {

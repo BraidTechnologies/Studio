@@ -67,7 +67,7 @@ app.http('GetActivities', {
 /**
  * Asynchronously loads recent activities based on the provided query specifications.
  * 
- * @param querySpec - The query specifications including the limit and storeClassName.
+ * @param querySpec - The query specifications including the limit and className.
  * @param context - The invocation context for logging and tracing.
  * @returns A promise that resolves to an array of storable objects representing the loaded activities.
  */
@@ -81,15 +81,15 @@ async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makePostActivityToken(time, dbkey);
       let headers = makePostActivityQueryHeader(key, time, defaultPartitionKey);
-      let query = "SELECT * FROM Activity a WHERE a.data.storeClassName = @storeClassName ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+      let query = "SELECT * FROM Activity a WHERE a.data.className = @className ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs',
          {
             "query": query,
             "parameters": [
                {
-                  "name": "@storeClassName",
-                  "value": querySpec.storeClassName
+                  "name": "@className",
+                  "value": querySpec.className
                }
             ]
          },

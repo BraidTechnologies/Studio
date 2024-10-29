@@ -4,23 +4,24 @@ import { IStorable } from '../../BraidCommon/src/IStorable';
 import { InvalidParameterError } from './Errors';
 import { MDynamicStreamable, DynamicStreamableFactory } from "./StreamingFramework";
 import { getDefaultKeyGenerator } from './IKeyGeneratorFactory'; 
+import { EStorableApplicationIds } from '../../BraidCommon/src/IStorable';
 
 const activityRecordClassName = "ActivityRecord";
 const keyGenerator = getDefaultKeyGenerator();
 
 // ActivityRecord - conversation ID, email of a person and a datestamp. Will have many derived classes according to different activity types. 
 export class ActivityRecord extends MDynamicStreamable implements IStorable {
-   private _id: string | undefined;
-   private _conversationId: string | undefined;
-   private _email: string;
-   private _happenedAt: Date;
+   private _id: string;
+   private _contextId: string | undefined;
+   private _userId: string  | undefined;
+   private _created: Date;
 
    // Variables we need to implement IStoreable
-   storeId: string = "";
-   storeClassName: string = "";
-   storeTimestamp: Date = new Date();
-   storeContextId: string = "";
-   storeUserId: string = "";
+
+   className: string = "";
+   applicationId: string = EStorableApplicationIds.kBoxer;
+   amended = this.created;
+   schemaVersion = 1;
 
 
    /**
@@ -30,12 +31,12 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
 
    /**
     * Create a ActivityRecord object
-    * @param id_ - id to use to generate uniqueness 
+    * @param id_ - id to use to generate uniqueness . Can be undefined if it has not yet been saved. 
     * @param email_ - plain text email.
     * @param conversationId_ - ID of the conversation in which the event occurred
     * @param happenedAt_ - timestamp for last interaction seen by the framework
     */
-   public constructor(id_: string | undefined, conversationId_: string | undefined, email_: string, happenedAt_: Date);
+   public constructor(id_: string | undefined, conversationId_: string, email_: string, happenedAt_: Date);
 
    /**
     * Create a ActivityRecord object
@@ -50,9 +51,9 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
 
       if (arr.length === 0) {
          this._id = keyGenerator.generateKey(); // A new ActivityRecord has a key
-         this._conversationId = undefined;
-         this._email = "";     // But not a name 
-         this._happenedAt = ActivityRecord.makeDateUTC (new Date());
+         this._contextId = undefined;
+         this._userId = "";     // But not a name 
+         this._created = ActivityRecord.makeDateUTC (new Date());
 
          this.copyStorableAttributes();       
          return;
@@ -65,9 +66,9 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
 
       if (arr.length === 1) {
          localId = arr[0]._id;
-         localConversationId = arr[0]._conversationId;
-         localEmail = arr[0]._email;
-         localHappenedAt = new Date(arr[0]._happenedAt);
+         localConversationId = arr[0]._contextId;
+         localEmail = arr[0]._userId;
+         localHappenedAt = new Date(arr[0]._created);
       }
       else { 
          localId = arr[0];
@@ -87,20 +88,16 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
       }
 
       this._id = localId;
-      this._conversationId = localConversationId;
-      this._email = localEmail;
-      this._happenedAt = ActivityRecord.makeDateUTC (localHappenedAt);    
+      this._contextId = localConversationId;
+      this._userId = localEmail;
+      this._created = ActivityRecord.makeDateUTC (localHappenedAt);    
 
       this.copyStorableAttributes();      
    }
 
    copyStorableAttributes (): void {
 
-      this.storeId = this._id as string;
-      this.storeClassName = this.dynamicClassName();
-      this.storeTimestamp = this._happenedAt;
-      this.storeContextId = this._conversationId as string;
-      this.storeUserId = this._email;
+      this.className = this.dynamicClassName();
    }
 
    /**
@@ -118,8 +115,8 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
    static _dynamicStreamableFactory: DynamicStreamableFactory = new DynamicStreamableFactory(activityRecordClassName, ActivityRecord.createDynamicInstance);
    streamOut(): string {
 
-      return JSON.stringify({ id: this._id, conversationId: this._conversationId, email: this._email, 
-         happenedAt: this._happenedAt.toUTCString() });   // US UTC as Cosmos DB does not really understand dates. 
+      return JSON.stringify({ id: this._id, conversationId: this._contextId, email: this._userId, 
+         happenedAt: this._created.toUTCString() });   // US UTC as Cosmos DB does not really understand dates. 
    }
 
    streamIn(stream: string): void {
@@ -135,14 +132,14 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
    get id(): string | undefined {
       return this._id;
    }
-   get conversationId(): string | undefined {
-      return this._conversationId;
+   get contextId(): string {
+      return this._contextId as string; // Cannot be undefined as we have guards on creation
    }   
-   get email(): string {
-      return this._email;
+   get userId(): string {
+      return this._userId as string;
    }
-   get happenedAt(): Date {
-      return this._happenedAt;
+   get created(): Date {
+      return this._created as Date;
    }
 
    /**
@@ -154,31 +151,28 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
          throw new InvalidParameterError("Id:" + id_ + '.');
       }         
       this._id = id_;
-      this.storeId = id_;
    }
 
-   set conversationId(conversationId_: string) {
+   set contextId(conversationId_: string | undefined) {
          
       if (!ActivityRecord.isValidConversationId(conversationId_)) {
          throw new InvalidParameterError("conversationId:" + conversationId_ + '.');
       }        
-      this._conversationId = conversationId_;
-      this.storeContextId = conversationId_;
+      this._contextId = conversationId_;
    }
 
-   set email (email_: string) {
+   set userId (email_: string) {
       if (!ActivityRecord.isValidEmail(email_)) {
          throw new InvalidParameterError("Email:" + email_ + '.');
       }
 
-      this._email = email_;
-      this.storeUserId = email_;
+      this._userId = email_;
    }
 
-   set happenedAt(happenedAt_: Date) {
+   set created(happenedAt_: Date) {
 
-      this._happenedAt = ActivityRecord.makeDateUTC (happenedAt_);
-      this.storeTimestamp = this._happenedAt;
+      this._created = ActivityRecord.makeDateUTC (happenedAt_);
+      this.amended = this._created;
    }
 
    /**
@@ -188,9 +182,9 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
     */
    equals(rhs: ActivityRecord): boolean {
       return ((((typeof this._id === "undefined") && (typeof rhs._id === "undefined")) || (this._id === rhs._id)) &&
-         (((typeof this._conversationId === "undefined") && (typeof rhs._conversationId === "undefined")) || (this._conversationId === rhs._conversationId)) &&      
-         (this._email === rhs._email) &&
-         (this.areSameDate (this._happenedAt, rhs._happenedAt)));
+         (((typeof this._contextId === "undefined") && (typeof rhs._contextId === "undefined")) || (this._contextId === rhs._contextId)) &&      
+         (this._userId === rhs._userId) &&
+         (this.areSameDate (this._created, rhs._created)));
    }
 
    areSameDate (lhs: Date, rhs : Date) : boolean {
@@ -211,9 +205,9 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
    assign(rhs: ActivityRecord): ActivityRecord {
       
       this._id = rhs._id;
-      this._conversationId = rhs._conversationId;
-      this._email = rhs._email;
-      this._happenedAt = new Date (rhs._happenedAt);
+      this._contextId = rhs._contextId;
+      this._userId = rhs._userId;
+      this._created = new Date (rhs._created);
 
       this.copyStorableAttributes ();
 
@@ -238,7 +232,7 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
     * test for valid id 
     * @param id - the string to test
     */
-   static isValidConversationId(conversationId_: string): boolean {
+   static isValidConversationId(conversationId_: string | undefined): boolean {
       if (!conversationId_) // undefined keys are allowed if user object has not been originated from or saved anywhere persistent
          return true;
 
@@ -252,7 +246,7 @@ export class ActivityRecord extends MDynamicStreamable implements IStorable {
     * test for valid email 
     * @param email - the string to test
     */
-   static isValidEmail(email: string): boolean {
+   static isValidEmail(email: string | undefined): boolean {
 
       if (email == undefined)
          return false;

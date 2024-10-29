@@ -30,7 +30,7 @@ export async function removeActivity(request: HttpRequest, context: InvocationCo
       let jsonRequest: IStorable = await request.json() as IStorable;
 
       try {
-         await removeActivityDb(jsonRequest.storeId, context);
+         await removeActivityDb(jsonRequest.id, context);
          context.log("Removed:" + jsonRequest.toString());
       }
       catch (e: any) {
@@ -61,8 +61,11 @@ app.http('RemoveActivity', {
  * @param context - The invocation context for logging purposes.
  * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
  */
-async function removeActivityDb(messageId: string, context: InvocationContext): Promise<boolean> {
+async function removeActivityDb(messageId: string | undefined, context: InvocationContext): Promise<boolean> {
 
+   if (!messageId)
+      return false;
+   
    let dbkey = process.env.CosmosApiKey;
 
    let done = new Promise<boolean>(function (resolve, reject) {

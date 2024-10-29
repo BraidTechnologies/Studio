@@ -1,8 +1,7 @@
 "use strict";
 // Copyright (c) 2024 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefaultModel = getDefaultModel;
-exports.getModel = getModel;
+exports.getModel = exports.getDefaultModel = void 0;
 const Model_1 = require("./Model");
 /**
  * Returns the default model which is an instance of GPT4oMini.
@@ -11,6 +10,7 @@ const Model_1 = require("./Model");
 function getDefaultModel() {
     return new Model_1.GPT4();
 }
+exports.getDefaultModel = getDefaultModel;
 /**
  * Returns an instance of IModel based on the provided EModel type.
  *
@@ -23,4 +23,5 @@ function getModel(model) {
             return new Model_1.GPT4();
     }
 }
+exports.getModel = getModel;
 //# sourceMappingURL=IModelFactory.js.map

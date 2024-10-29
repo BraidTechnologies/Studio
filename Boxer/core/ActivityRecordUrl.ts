@@ -78,7 +78,7 @@ export class UrlActivityRecord extends ActivityRecord {
    static _dynamicStreamableFactory: DynamicStreamableFactory = new DynamicStreamableFactory(urlActivityRecordClassName, UrlActivityRecord.createDynamicInstance);
    streamOut(): string {
 
-      return JSON.stringify({ id: this.id, conversationId: this.conversationId, email: this.email, happenedAt: this.happenedAt, url: this._url});
+      return JSON.stringify({ id: this.id, conversationId: this.contextId, email: this.userId, happenedAt: this.created, url: this._url});
    }
 
    streamIn(stream: string): void {

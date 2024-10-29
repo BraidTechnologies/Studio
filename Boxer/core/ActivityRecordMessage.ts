@@ -78,7 +78,7 @@ export class MessageActivityRecord extends ActivityRecord {
    static _dynamicStreamableFactory: DynamicStreamableFactory = new DynamicStreamableFactory(messageRecordClassName, MessageActivityRecord.createDynamicInstance);
    streamOut(): string {
 
-      return JSON.stringify({ id: this.id, conversationId: this.conversationId, email: this.email, happenedAt: this.happenedAt, message: this._message});
+      return JSON.stringify({ id: this.id, conversationId: this.contextId, email: this.userId, happenedAt: this.created, message: this._message});
    }
 
    streamIn(stream: string): void {

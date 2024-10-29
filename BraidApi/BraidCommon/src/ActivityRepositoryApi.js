@@ -40,13 +40,13 @@ class ActivityRepostoryApi extends Api_1.Api {
      * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
      */
     save(record) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    id: record.storeId,
+                    id: record.id,
                     data: record
                 });
                 if (response.status === 200) {
@@ -70,13 +70,13 @@ class ActivityRepostoryApi extends Api_1.Api {
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
     remove(recordId) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    storeId: recordId
+                    id: recordId
                 });
                 if (response.status === 200) {
                     return true;
@@ -95,12 +95,12 @@ class ActivityRepostoryApi extends Api_1.Api {
     /**
      * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
      *
-     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+     * @param querySpec - The query specifications including the limit and className to filter the records.
      * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
      */
     recent(querySpec) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {

@@ -17,10 +17,6 @@ import { IStorable } from "../../BraidCommon/src/IStorable";
 
 interface IStoreableActivityRecord extends IStorable {
 
-   _id: string;
-   _conversationId : string;
-   _email : string;
-   _happenedAt : Date;
    _url : string
 }
 
@@ -59,23 +55,25 @@ export class ActivityRepositoryCosmos implements IActivityRepository {
 
    createFromDb (record: IStoreableActivityRecord) : ActivityRecord {
 
-      switch (record.storeClassName) {
+      let innerFromDb: any = record;
+
+      switch (record.className) {
          case UrlActivityRecord.className():
-            return new UrlActivityRecord(record._id,
-               record._conversationId,
-               record._email, 
-               record._happenedAt, 
+            return new UrlActivityRecord(innerFromDb.id,
+               innerFromDb._contextId,
+               innerFromDb._userId, 
+               innerFromDb._happenedAt, 
                record._url);
 
          case MessageActivityRecord.className():
-            return new MessageActivityRecord(record._id,
-               record._conversationId,
-               record._email, 
-               record._happenedAt, 
+            return new MessageActivityRecord(innerFromDb._id,
+               innerFromDb._contextId,
+               innerFromDb._userId as string, 
+               innerFromDb._created, 
                record._url);   
                
          default:
-            throw new InvalidParameterError(record.storeClassName);
+            throw new InvalidParameterError(record.className);
       }
    }
 
@@ -86,7 +84,7 @@ export class ActivityRepositoryCosmos implements IActivityRepository {
       let api = new ActivityRepostoryApi (environment, this._sessionKey);
 
       // we downcast from IStorable to IStoreableActivityRecord bcs we know it is one
-      let storedRecords : Array <IStoreableActivityRecord> = await api.recent ({ limit: limit, storeClassName: className}) as Array <IStoreableActivityRecord>; 
+      let storedRecords : Array <IStoreableActivityRecord> = await api.recent ({ limit: limit, className: className}) as Array <IStoreableActivityRecord>; 
 
       let records = new Array<ActivityRecord> ();
       for (let i = 0; i < storedRecords.length; i++) {

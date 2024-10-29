@@ -40,7 +40,7 @@ export class ActivityRepostoryApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            id: record.storeId,
+            id: record.id,
             data: record
          });
 
@@ -71,7 +71,7 @@ export class ActivityRepostoryApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            storeId: recordId
+            id: recordId
          });
 
          if (response.status === 200) {

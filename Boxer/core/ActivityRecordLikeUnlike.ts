@@ -75,7 +75,7 @@ export class LikeUnlikeActivityRecord extends UrlActivityRecord {
    static _dynamicStreamableFactory: DynamicStreamableFactory = new DynamicStreamableFactory(likeUnlikeActivityRecordClassName, LikeUnlikeActivityRecord.createDynamicInstance);
    streamOut(): string {
 
-      return JSON.stringify({ id: this.id, conversationId: this.conversationId, email: this.email, happenedAt: this.happenedAt, url: this.url, like: this._like});
+      return JSON.stringify({ id: this.id, conversationId: this.contextId, email: this.userId, happenedAt: this.created, url: this.url, like: this._like});
    }
 
    streamIn(stream: string): void {

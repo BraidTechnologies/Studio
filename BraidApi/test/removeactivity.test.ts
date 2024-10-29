@@ -23,12 +23,15 @@ function randomKey () : string {
 describe("RemoveActivity", async function () {
 
    let record = {
-      storeId: randomKey(),
-      storeTimestamp: new Date(),
-      storeContextId: "madeupId",
-      storeUserId: "madeeupId",
-      storeClassName: "madeUpClass",
-      test: "Some test data"      
+      id: randomKey(),
+      applicationId: "Test",
+      schemaVersion: 1,
+      created: new Date(),
+      amended: new Date(),      
+      contextId: "madeupId",
+      userId: "madeeupId",
+      className: "madeUpClass",
+      test: "Some test data"
    }
       
    it("Needs to succeed with valid key in local environment", async function () {
@@ -36,11 +39,11 @@ describe("RemoveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
-      let notremoved = await api.remove (myRecord.storeId);     
+      let notremoved = await api.remove (myRecord.id);     
       let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord.storeId);       
+      let removed = await api.remove (myRecord.id);       
 
       expect (notremoved).toBe (false) ;       
       expect (stored).toBe (true) ;         
@@ -53,11 +56,11 @@ describe("RemoveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
-      let notremoved = await api.remove (myRecord.storeId);     
+      let notremoved = await api.remove (myRecord.id);     
       let stored = await api.save (myRecord); 
-      let removed = await api.remove (myRecord.storeId);       
+      let removed = await api.remove (myRecord.id);       
 
       expect (notremoved).toBe (false) ;       
       expect (stored).toBe (true) ;         
@@ -70,9 +73,9 @@ describe("RemoveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
-      let ok = await api.remove (myRecord.storeId); 
+      let ok = await api.remove (myRecord.id); 
 
       expect (ok).toBe (false) ;        
 
@@ -83,9 +86,9 @@ describe("RemoveActivity", async function () {
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
       let myRecord = { ...record };
-      myRecord.storeId = randomKey();
+      myRecord.id = randomKey();
 
-      let ok = await api.remove (myRecord.storeId)  
+      let ok = await api.remove (myRecord.id)  
 
       expect (ok).toBe (false) ;              
 
