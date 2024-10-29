@@ -1,10 +1,10 @@
 {
-   "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+    "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
     "manifestVersion": "devPreview",
-    "id": "06c1d39d-9ed1-4d82-928e-abba10d40ec9",
+    "id": "${{TEAMS_APP_ID}}",
     "version": "1.0.0",
     "developer": {
-        "name": "Braid Technologies Ltd.",
+        "name": "Braid technologies Ltd.",
         "websiteUrl": "https://www.braidtech.ai",
         "privacyUrl": "https://www.braidtech.ai/privacy",
         "termsOfUseUrl": "https://www.braidtech.ai/terms-of-service"
@@ -14,23 +14,23 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "Braid Studio",
-        "full": "The Braid Studio from Braid Technologies Ltd."
+        "short": "The Braid Studio",
+        "full": "The Braid Studio brings AI into Enterprise work environments (${{APP_NAME_SUFFIX}})"
     },
     "description": {
-        "short": "Braid Studio - AI search and enrichment.",
-        "full": "The Braid Studio from Braid Technologies brings AI search and enrichment into your Teams workspace by allowing you to query the Boxer knowledge base and get updates from Waterfall's ongoing scanning of useful internet resources."
+        "short": "The Braid Studio brings AI into Enterprise work environments.",
+        "full": "The Braid Studio brings AI into your work environment, heping your team to deliver AI projects faster."
     },
     "accentColor": "#FFFFFF",
     "composeExtensions": [
         {
             "composeExtensionType": "apiBased",
-            "apiSpecificationFile": "apiSpecificationFile/studio-teams.yml",
+            "apiSpecificationFile": "apiSpecificationFile/boxer.yml",
             "commands": [
                 {
                     "id": "boxer",
                     "type": "query",
-                    "title": "Ask about generative AI.",
+                    "title": "Ask about AI",
                     "context": [
                         "compose",
                         "commandBox"
@@ -39,8 +39,8 @@
                     "parameters": [
                         {
                             "name": "question",
-                            "title": "Ask about generative AI.",
-                            "description": "Ask about generative AI.",
+                            "title": "Ask about AI",
+                            "description": "Ask a questions about AI",
                             "inputType": "text"
                         }
                     ]

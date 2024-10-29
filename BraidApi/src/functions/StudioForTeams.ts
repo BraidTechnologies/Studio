@@ -39,6 +39,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
 
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,
+            maxCount: 4,
             personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
             enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
             question: question,
@@ -52,30 +53,33 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
 
          let answer: IStudioBoxerResponseEnrichment = { 
-            id: "0",
+            id: "1",
             url: "",
-            summary: passedResponse.answer//,
-            //icon: ""
+            summary: passedResponse.answer,
+            title: question,            
+            iconUrl: makeIconPath ("https://braidapps.io")
          };
          enrichments.push(answer);      
 
          for (let i = 0; i < passedResponse.chunks.length; i++) {
             let enrichment: IStudioBoxerResponseEnrichment = { 
-               id: i.toString(),
+               id: (i+2).toString(),
                url:  passedResponse.chunks[i].chunk.url,
-               summary: passedResponse.chunks[i].chunk.summary//,
-               //icon: makeIconPath (passedResponse.chunks[i].chunk.url)
+               summary: passedResponse.chunks[i].chunk.summary,
+               title: question +  " - Link#" + (i+1).toString(),
+               iconUrl: makeIconPath (passedResponse.chunks[i].chunk.url)
             };
             enrichments.push(enrichment);
          }
 
-         let body: Array<IStudioBoxerResponseEnrichment> = enrichments;
-
-         context.log (body)
-         return {
-            status: 200, // Ok
-            body: JSON.stringify(body)
+         const res: HttpResponseInit = {
+            status: 200,
+            jsonBody: enrichments
          };
+
+         context.log (res.jsonBody);
+
+         return res;
       }
       else {
          context.error ("No 'question' parameter found.");   

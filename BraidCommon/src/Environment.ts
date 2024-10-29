@@ -73,6 +73,9 @@ export class DevelopmentEnvironment implements IEnvironment {
    fluidTenantId(): string {
       return "b9576484-5c2e-4613-bfdf-039948cdd521";
    }     
+   studioForTeamsBoxer(): string {
+      return "http://localhost:7071/api/StudioForTeams-Boxer";
+   }   
 }
 
 /**
@@ -145,7 +148,10 @@ export class StagingEnvironment implements IEnvironment {
    }
    fluidTenantId(): string {
       return "b9576484-5c2e-4613-bfdf-039948cdd521";
-   }     
+   }    
+   studioForTeamsBoxer(): string {
+      return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
+   }
 }
 
 /**
@@ -219,5 +225,8 @@ export class ProductionEnvironment implements IEnvironment {
    }
    fluidTenantId(): string {
       return "b9576484-5c2e-4613-bfdf-039948cdd521";
-   }     
+   }  
+   studioForTeamsBoxer(): string {
+      return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
+   }      
 }

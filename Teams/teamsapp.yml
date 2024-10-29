@@ -11,7 +11,7 @@ provision:
   - uses: teamsApp/create
     with:
       # Teams app name
-      name: Boxer${{APP_NAME_SUFFIX}}
+      name: bsft${{APP_NAME_SUFFIX}}
     # Write the information of created resources into environment file for
     # the specified environment variable(s).
     writeToEnvironmentFile:
@@ -144,4 +144,4 @@ publish:
     # the specified environment variable(s).
     writeToEnvironmentFile:
       publishedAppId: TEAMS_APP_PUBLISHED_APP_ID
-projectId: 7bd6f584-6bc1-457e-ba37-218e0ec2b30a
+projectId: c64e8ace-e99d-444b-bd99-6373ca681243

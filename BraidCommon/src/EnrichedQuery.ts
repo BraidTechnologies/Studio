@@ -48,6 +48,7 @@ export interface IEnrichedQuery {
    personaPrompt: string;
    enrichmentDocumentPrompt: string;
    similarityThreshold: number;
+   maxCount: number;
    history: Array<IConversationElement>;
    question: string;
 }
