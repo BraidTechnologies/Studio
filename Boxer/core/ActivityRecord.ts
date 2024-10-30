@@ -11,6 +11,10 @@ const keyGenerator = getDefaultKeyGenerator();
 
 // ActivityRecord - conversation ID, email of a person and a datestamp. Will have many derived classes according to different activity types. 
 export class ActivityRecord extends MDynamicStreamable implements IStorable {
+
+   // TODO - this is a bit hacky.
+   // The resurrection code in the repository has to know the inner working of the CosmoDB format to create a new object. 
+   // This is a consequence of overriding some vairables from IStorable by IStoreableActivityRecord, which it does to add validation. 
    private _id: string;
    private _contextId: string | undefined;
    private _userId: string  | undefined;

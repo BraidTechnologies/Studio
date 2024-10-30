@@ -11,7 +11,7 @@ import axios from "axios";
 import { isSessionValid, sessionFailResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable, IStoreQuerySpec } from "../../../BraidCommon/src/IStorable";
-import { defaultPartitionKey, makePostActivityToken, makePostActivityQueryHeader } from './CosmosRepositoryApi';
+import { activityPartitionKey, makePostActivityToken, makePostQueryHeader } from './CosmosRepositoryApi';
 
 /**
  * Asynchronous function to handle retrieving activities based on the provided request and context.
@@ -80,7 +80,7 @@ async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext
       let time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makePostActivityToken(time, dbkey);
-      let headers = makePostActivityQueryHeader(key, time, defaultPartitionKey);
+      let headers = makePostQueryHeader(key, time, activityPartitionKey);
       let query = "SELECT * FROM Activity a WHERE a.data.className = @className ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs',

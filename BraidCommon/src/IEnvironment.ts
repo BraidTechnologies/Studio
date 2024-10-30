@@ -34,6 +34,9 @@ export interface IEnvironment {
    fluidApi(): string;
    fluidTenantId(): string;
    studioForTeamsBoxer() : string;
+   saveStoredChunkApi() : string;
+   removeStoredChunkApi(): string;
+   getStoredChunkApi(): string;
 }
 
 

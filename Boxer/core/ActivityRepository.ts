@@ -55,6 +55,9 @@ export class ActivityRepositoryCosmos implements IActivityRepository {
 
    createFromDb (record: IStoreableActivityRecord) : ActivityRecord {
 
+      // TODO - this is a bit hacky.
+      // This code has to know the inner working of the CosmoDB format to create a new object. 
+      // This is a consequence of overriding some vairables from IStorable by IStoreableActivityRecord, which it does to add validation.
       let innerFromDb: any = record;
 
       switch (record.className) {

@@ -37,11 +37,20 @@ export interface IStorable {
 }
 
 /**
- * Defines the structure of a query specification for storing records.
+ * Defines the structure of a query specification for searching for multiple records.
  * Includes the limit of records to return and the class name of the records to be stored / retrieved.
  */
 export interface IStoreQuerySpec {
 
    limit : number;          // limit of records to return
    className: string;       // what sort of records to return
+}
+
+/**
+ * Defines the structure of a query specification for searchig for a single record.
+ * Includes the id (primary key) of the record. 
+ */
+export interface IStorableQuerySpec {
+
+   id : string | undefined;  // id of the object that is stored - primary key.  
 }

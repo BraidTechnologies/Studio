@@ -1,45 +1,116 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-// Definitions for the data elements of the ChunkRepository API
+import axios from 'axios';
 
-import { IStorable} from "./IStorable";
-
-/**
- * Represents an interface for storing embeddings with a model ID and an array of numbers representing the embedding.
- */
-export interface IStoredEmbedding {
-
-   modelId: string;
-   embedding: Array<number>;
-};
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IStoredChunkQuerySpec, IStoredChunk } from './ChunkRepositoryApiTypes';
 
 /**
- * Defines the structure of a stored text rendering object.
- */
-export interface IStoredTextRendering {
-
-   modelId: string;
-   text: string;
-};
-
-/**
- * Interface representing a chunk of data.
+ * Represents an API for the Chunk repository
  * 
- * Core data for a chunk:
- * - chunkFunctionalKey: Application level key
- * - parentChunkId: Primary key to parent document
- * - originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)
- * - storedEmbedding: Embedding of the original text
- * - storedSummary: Summary of the original text - generated with application-specific prompt 
- * - storedTitle: A generated of the original text - generated with application-specific prompt
+ * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
+ * @param {string} sessionKey_ - The session key for authentication.
  * 
+ * @method save - Saves a record to the activity API.
+ * @method remove - removes a record
+ * @method recent - return a list of recent activities
  */
-export interface IStoredChunk extends IStorable {
+export class ChunkRepostoryApi extends Api {
 
-   chunkFunctionalKey: string;              // Application level key
-   parentChunkId: string | undefined;       // primary key to parent document
-   originalText: string | undefined;        // original text - if undefined, it has been thrown way (as maybe it can be reconstructed)
-   storedEmbedding: IStoredEmbedding | undefined;   // Embedding of the original text
-   storedSummary: IStoredTextRendering | undefined; // Summary of the original text - generated with application specific prompt
-   storedTitle: IStoredTextRendering | undefined;   // Title for the original text - generated with application specific prompt   
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+   /**
+    * Asynchronously saves a record to the chunk repository API.
+    * 
+    * @param record - The record to be saved, must implement the IStoredChunk interface.
+    * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
+    */
+   async save (record: IStoredChunk) : Promise<boolean> {
+
+      let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, record);
+
+         if (response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return false;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return false;       
+      }          
+   }
+
+   /**
+    * Asynchronously removes a record from the chunk repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+    */
+   async remove (querySpec: IStoredChunkQuerySpec) : Promise<boolean> {
+
+      let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, querySpec);
+
+         if (response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return false;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return false;       
+      }          
+   }
+
+   /**
+    * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specification 
+    * @returns A Promise that resolves to an IStorable object representing the records, or undefined 
+    */
+   async load (querySpec: IStoredChunkQuerySpec) : Promise<IStoredChunk | undefined> {
+
+      let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, querySpec);
+
+         if (response.status === 200) {
+
+            let responseRecord = response.data;
+
+            return responseRecord;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return undefined; 
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return undefined;       
+      }          
+   }   
 }
-

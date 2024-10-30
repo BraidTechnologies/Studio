@@ -11,7 +11,7 @@ import axios from "axios";
 import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
-import { defaultPartitionKey, makeDeleteActivityToken, makeDeleteActivityHeader } from './CosmosRepositoryApi';
+import { activityPartitionKey, makeDeleteActivityToken, makeDeleteHeader } from './CosmosRepositoryApi';
 
 /**
  * Asynchronous function to handle the removal of an activity based on the provided request and context.
@@ -73,7 +73,7 @@ async function removeActivityDb(messageId: string | undefined, context: Invocati
       let time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makeDeleteActivityToken(time, dbkey, messageId);
-      let headers = makeDeleteActivityHeader(key, time, defaultPartitionKey);
+      let headers = makeDeleteHeader(key, time, activityPartitionKey);
       let deletePath = 'https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/' + messageId;
 
       axios.delete(deletePath,

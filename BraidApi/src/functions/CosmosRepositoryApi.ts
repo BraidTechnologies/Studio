@@ -4,7 +4,8 @@
 // 3rd party imports
 var crypto = require("crypto");
 
-export const defaultPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
+export const activityPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
+export const chunkPartitionKey = "c02af798a60b48129c5e223e645a9b72";
 
 
 /**
@@ -51,8 +52,21 @@ export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: 
 export function activityToken(verb: string, time: string, key: string) {
 
    //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Activity", time,
-      key);
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Activity", time, key);
+}
+
+/**
+ * Generates an chunk token for authorization using the provided verb, time, and key.
+ * 
+ * @param verb The HTTP verb for the request.
+ * @param time The timestamp for the request.
+ * @param key The master key for authorization.
+ * @returns The generated authorization token for the activity.
+ */
+export function chunkToken(verb: string, time: string, key: string) {
+
+   //throwIfUndefined(key);
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Chunk", time, key);
 }
 
 /**
@@ -83,13 +97,25 @@ export function makeDeleteActivityToken(time: string, key: string, id: string) {
 }
 
 /**
- * Creates a header object for a POST activity with the specified key, time, and default partition key.
- * @param key The authorization key for the activity.
- * @param time The timestamp for the activity.
- * @param defaultPartitionKey The default partition key for the activity.
- * @returns An object containing the necessary header for the POST activity.
+ * Generates a post activity token using the provided time and key.
+ * 
+ * @param time The timestamp for the token generation.
+ * @param key The key used for generating the token.
+ * @returns The post activity token.
  */
-export function makePostActivityHeader(key: string, time: string, defaultPartitionKey: string): object {
+export function makePostChunkToken(time: string, key: string) {
+
+   return chunkToken("post", time, key);
+}
+
+/**
+ * Creates a header object for a POST to a table with the specified key, time, and partition key.
+ * @param key The authorization key for the table.
+ * @param time The timestamp for the operation.
+ * @param partitionKey The default partition key for the table.
+ * @returns An object containing the necessary header for the POST.
+ */
+export function makePostHeader(key: string, time: string, partitionKey: string): object {
    return {
       "Authorization": key,
       "Content-Type": "application/json",
@@ -98,7 +124,7 @@ export function makePostActivityHeader(key: string, time: string, defaultPartiti
       "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
       "x-ms-documentdb-is-upsert": "True",
-      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-documentdb-partitionkey": "[\"" + partitionKey + "\"]",
       "x-ms-consistency-level": "Eventual"
    };
 }
@@ -108,17 +134,17 @@ export function makePostActivityHeader(key: string, time: string, defaultPartiti
  * 
  * @param key - The authorization key.
  * @param time - The timestamp.
- * @param defaultPartitionKey - The default partition key.
+ * @param partitionKey - The default partition key.
  * @returns An object containing the header for the delete activity request.
  */
-export function makeDeleteActivityHeader(key: string, time: string, defaultPartitionKey: string): object {
+export function makeDeleteHeader(key: string, time: string, partitionKey: string): object {
    return {
       "Authorization": key,
       "Accept": "application/json",
       "x-ms-date": time,
       "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
-      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-documentdb-partitionkey": "[\"" + partitionKey + "\"]",
       "x-ms-consistency-level": "Eventual"
    };
 }
@@ -127,10 +153,10 @@ export function makeDeleteActivityHeader(key: string, time: string, defaultParti
  * Creates a header object for a POST activity query with the specified key, time, and default partition key.
  * @param key The authorization key for the query.
  * @param time The timestamp for the query.
- * @param defaultPartitionKey The default partition key for the query.
+ * @param partitionKey The default partition key for the query.
  * @returns An object containing the necessary headers for the POST activity query.
  */
-export function makePostActivityQueryHeader(key: string, time: string, defaultPartitionKey: string): object {
+export function makePostQueryHeader(key: string, time: string, partitionKey: string): object {
    return {
       "Authorization": key,
       "Content-Type": "application/query+json",
@@ -138,7 +164,7 @@ export function makePostActivityQueryHeader(key: string, time: string, defaultPa
       "x-ms-date": time,
       "x-ms-version": "2018-12-31",
       "Cache-Control": "no-cache",
-      "x-ms-documentdb-partitionkey": "[\"" + defaultPartitionKey + "\"]",
+      "x-ms-documentdb-partitionkey": "[\"" + partitionKey + "\"]",
       "x-ms-consistency-level": "Eventual",
       "x-ms-documentdb-isquery": "True"
    };

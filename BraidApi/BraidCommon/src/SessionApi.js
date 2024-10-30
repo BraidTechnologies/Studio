@@ -29,8 +29,8 @@ class SessionApi extends Api_1.Api {
      * @returns A Promise that resolves to a boolean value indicating the validity of the session key.
      */
     checkSessionKey() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             let apiUrl = this.environment.checkSessionApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
