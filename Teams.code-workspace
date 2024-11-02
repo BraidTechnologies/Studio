@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "Teams"
+		},
+		{
+			"path": "."
+		}
+	],
+   "settings": {
+      "debug.onTaskErrors": "abort",
+      "azureFunctions.stopFuncTaskPostDebug": false,
+      "azureFunctions.showProjectWarning": false
+   }
+}

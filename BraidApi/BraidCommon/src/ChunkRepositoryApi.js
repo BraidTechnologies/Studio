@@ -9,21 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActivityRepostoryApi = void 0;
+exports.ChunkRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
 const Api_1 = require("./Api");
 /**
- * Represents an API for activities.
+ * Represents an API for the Chunk repository
  *
- * @param {EEnvironment} environment_ - The environment to use for saving activities.
+ * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
  * @param {string} sessionKey_ - The session key for authentication.
  *
  * @method save - Saves a record to the activity API.
  * @method remove - removes a record
  * @method recent - return a list of recent activities
  */
-class ActivityRepostoryApi extends Api_1.Api {
+class ChunkRepostoryApi extends Api_1.Api {
     /**
      * Initializes a new instance of the class with the provided environment and session key.
      *
@@ -34,15 +34,15 @@ class ActivityRepostoryApi extends Api_1.Api {
         super(environment_, sessionKey_);
     }
     /**
-     * Asynchronously saves a record to the activity repository API.
+     * Asynchronously saves a record to the chunk repository API.
      *
-     * @param record - The record to be saved, must implement the IStorable interface.
+     * @param record - The record to be saved, must implement the IStoredChunk interface.
      * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
      */
     save(record) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, record);
@@ -61,21 +61,18 @@ class ActivityRepostoryApi extends Api_1.Api {
         });
     }
     /**
-     * Asynchronously removes a record from the activity repository API.
+     * Asynchronously removes a record from the chunk repository API.
      *
      * @param recordId - The ID of the record to be removed.
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
-    remove(recordId) {
+    remove(querySpec) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let storable = {
-                id: recordId
-            };
-            let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, storable);
+                response = yield axios_1.default.post(apiUrl, querySpec);
                 if (response.status === 200) {
                     return true;
                 }
@@ -91,37 +88,33 @@ class ActivityRepostoryApi extends Api_1.Api {
         });
     }
     /**
-     * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+     * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
      *
-     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
-     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+     * @param querySpec - The query specification
+     * @returns A Promise that resolves to an IStorable object representing the records, or undefined
      */
-    recent(querySpec) {
+    load(querySpec) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
                 response = yield axios_1.default.post(apiUrl, querySpec);
                 if (response.status === 200) {
-                    let responseRecords = response.data;
-                    let storedRecords = new Array();
-                    for (let i = 0; i < responseRecords.length; i++) {
-                        storedRecords.push(responseRecords[i]);
-                    }
-                    return storedRecords;
+                    let responseRecord = response.data;
+                    return responseRecord;
                 }
                 else {
                     console.error("Error, status: " + response.status);
-                    return new Array();
+                    return undefined;
                 }
             }
             catch (e) {
                 console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return new Array();
+                return undefined;
             }
         });
     }
 }
-exports.ActivityRepostoryApi = ActivityRepostoryApi;
-//# sourceMappingURL=ActivityRepositoryApi.js.map
+exports.ChunkRepostoryApi = ChunkRepostoryApi;
+//# sourceMappingURL=ChunkRepositoryApi.js.map

@@ -2,20 +2,20 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IStorable, IStoreQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
+import { IStoredChunkQuerySpec, IStoredChunk } from './ChunkRepositoryApiTypes';
 
 /**
- * Represents an API for activities.
+ * Represents an API for the Chunk repository
  * 
- * @param {EEnvironment} environment_ - The environment to use for saving activities.
+ * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
  * @param {string} sessionKey_ - The session key for authentication.
  * 
  * @method save - Saves a record to the activity API.
  * @method remove - removes a record
  * @method recent - return a list of recent activities
  */
-export class ActivityRepostoryApi extends Api {
+export class ChunkRepostoryApi extends Api {
 
    /**
     * Initializes a new instance of the class with the provided environment and session key.
@@ -28,14 +28,14 @@ export class ActivityRepostoryApi extends Api {
    }  
 
    /**
-    * Asynchronously saves a record to the activity repository API.
+    * Asynchronously saves a record to the chunk repository API.
     * 
-    * @param record - The record to be saved, must implement the IStorable interface.
+    * @param record - The record to be saved, must implement the IStoredChunk interface.
     * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
     */
-   async save (record: IStorable) : Promise<boolean> {
+   async save (record: IStoredChunk) : Promise<boolean> {
 
-      let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -56,21 +56,18 @@ export class ActivityRepostoryApi extends Api {
    }
 
    /**
-    * Asynchronously removes a record from the activity repository API.
+    * Asynchronously removes a record from the chunk repository API.
     * 
     * @param recordId - The ID of the record to be removed.
     * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
     */
-   async remove (recordId: string) : Promise<boolean> {
+   async remove (querySpec: IStoredChunkQuerySpec) : Promise<boolean> {
 
-      let storable: IStorableQuerySpec = {
-         id: recordId
-      }
-      let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
-         response = await axios.post(apiUrl, storable);
+         response = await axios.post(apiUrl, querySpec);
 
          if (response.status === 200) {
             return true;
@@ -87,14 +84,14 @@ export class ActivityRepostoryApi extends Api {
    }
 
    /**
-    * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+    * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
     * 
-    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
-    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    * @param querySpec - The query specification 
+    * @returns A Promise that resolves to an IStorable object representing the records, or undefined 
     */
-   async recent (querySpec: IStorablesQuerySpec) : Promise<Array<IStorable>> {
+   async load (querySpec: IStoredChunkQuerySpec) : Promise<IStoredChunk | undefined> {
 
-      let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -102,23 +99,18 @@ export class ActivityRepostoryApi extends Api {
 
          if (response.status === 200) {
 
-            let responseRecords = response.data;
-            let storedRecords = new Array<IStorable>()
+            let responseRecord = response.data;
 
-            for (let i = 0; i < responseRecords.length; i++) {
-               storedRecords.push (responseRecords[i]);
-            }
-
-            return storedRecords;
+            return responseRecord;
          }
          else {
             console.error ("Error, status: " + response.status);               
-            return new Array<IStorable>();
+            return undefined; 
          }
       } catch (e: any) {       
 
          console.error ("Error: " + e?.response?.data);   
-         return new Array<IStorable>();       
+         return undefined;       
       }          
    }   
 }

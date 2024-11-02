@@ -4,25 +4,12 @@
 import axios from "axios";
 
 // Internal imports
-import { InvalidParameterError } from "./Errors";
-import { ActivityRecord } from './ActivityRecord';
-import { UrlActivityRecord } from "./ActivityRecordUrl";
-import { MessageActivityRecord } from "./ActivityRecordMessage";
+import { IStoredActivity, IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, urlActivityRecordClassName, urlLikeActivityRecordClassName, messageActivityRecordClassName } from './ActivityRecord';
 import { SessionKey } from "./Keys";
 import { IActivityRepository } from "./IActivityRepository";
 
 import { getDefaultEnvironment } from "../../BraidCommon/src/IEnvironmentFactory";
 import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi';
-import { IStorable } from "../../BraidCommon/src/IStorable";
-
-interface IStoreableActivityRecord extends IStorable {
-
-   _id: string;
-   _conversationId : string;
-   _email : string;
-   _happenedAt : Date;
-   _url : string
-}
 
 
 // ActivityRepositoryCosmos 
@@ -40,7 +27,7 @@ export class ActivityRepositoryCosmos implements IActivityRepository {
    }
 
 
-   async save (record : ActivityRecord) : Promise<boolean> {
+   async save (record : IStoredActivity) : Promise<boolean> {
       
       let environment = getDefaultEnvironment ()  
       
@@ -49,53 +36,30 @@ export class ActivityRepositoryCosmos implements IActivityRepository {
       return api.save (record);      
    }
 
-   async loadRecentUrlActivity (count : number) : Promise<Array<ActivityRecord>> {
-      return this.loadRecent (count, UrlActivityRecord.className());
+   async loadRecentUrlActivity (count : number) : Promise<Array<IStoredActivity>> {
+      
+      let clicks = await this.loadRecent (count, urlActivityRecordClassName);
+      let likes = await this.loadRecent (count, urlLikeActivityRecordClassName);    
+      
+      let all = clicks.concat (likes);
+
+      return all;
    }
 
-   async loadRecentMessages (count : number) : Promise<Array<ActivityRecord>> {
-      return this.loadRecent (count, MessageActivityRecord.className());
+   async loadRecentMessages (count : number) : Promise<Array<IStoredActivity>> {
+      return this.loadRecent (count, messageActivityRecordClassName);
    }
 
-   createFromDb (record: IStoreableActivityRecord) : ActivityRecord {
-
-      switch (record.storeClassName) {
-         case UrlActivityRecord.className():
-            return new UrlActivityRecord(record._id,
-               record._conversationId,
-               record._email, 
-               record._happenedAt, 
-               record._url);
-
-         case MessageActivityRecord.className():
-            return new MessageActivityRecord(record._id,
-               record._conversationId,
-               record._email, 
-               record._happenedAt, 
-               record._url);   
-               
-         default:
-            throw new InvalidParameterError(record.storeClassName);
-      }
-   }
-
-   async loadRecent (limit : number, className: string) : Promise<Array<ActivityRecord>> {
+   async loadRecent (limit : number, className: string) : Promise<Array<IStoredActivity>> {
       
       let environment = getDefaultEnvironment ()  
       
       let api = new ActivityRepostoryApi (environment, this._sessionKey);
 
-      // we downcast from IStorable to IStoreableActivityRecord bcs we know it is one
-      let storedRecords : Array <IStoreableActivityRecord> = await api.recent ({ limit: limit, storeClassName: className}) as Array <IStoreableActivityRecord>; 
-
-      let records = new Array<ActivityRecord> ();
-      for (let i = 0; i < storedRecords.length; i++) {
-
-         let obj = this.createFromDb (storedRecords[i]);
-         records.push (obj);
-      }
+      // we downcast IStoredActivity bcs we know it is one
+      let storedRecords : Array <IStoredActivity> = await api.recent ({ limit: limit, className: className}) as Array <IStoredActivity>; 
    
-      return records;
+      return storedRecords;
    }
 
    async removeMessageRecord (recordId: string) : Promise<boolean> {

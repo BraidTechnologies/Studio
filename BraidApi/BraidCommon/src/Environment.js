@@ -77,6 +77,15 @@ class DevelopmentEnvironment {
     studioForTeamsBoxer() {
         return "http://localhost:7071/api/StudioForTeams-Boxer";
     }
+    saveStoredChunkApi() {
+        return "http://localhost:7071/api/SaveStoredChunk";
+    }
+    removeStoredChunkApi() {
+        return "http://localhost:7071/api/RemoveStoredChunk";
+    }
+    getStoredChunkApi() {
+        return "http://localhost:7071/api/GetStoredChunk";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -153,6 +162,15 @@ class StagingEnvironment {
     studioForTeamsBoxer() {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
     }
+    saveStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+    }
+    removeStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+    }
+    getStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -228,6 +246,15 @@ class ProductionEnvironment {
     }
     studioForTeamsBoxer() {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
+    }
+    saveStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+    }
+    removeStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+    }
+    getStoredChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

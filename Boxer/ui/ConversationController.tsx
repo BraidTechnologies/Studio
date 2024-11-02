@@ -21,18 +21,18 @@ import { AIConnection } from '../core/AIConnection';
 import { EUIStrings, initialQuestions } from './UIStrings';
 import { EConfigNumbers, EConfigStrings } from '../core/ConfigStrings';
 import { getRecordRepository } from '../core/IActivityRepositoryFactory';
-import { UrlActivityRecord } from '../core/ActivityRecordUrl';
-import { MessageActivityRecord } from '../core/ActivityRecordMessage';
+import { IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, 
+         urlActivityRecordClassName, urlLikeActivityRecordClassName, messageActivityRecordClassName,
+         urlActivityRecordSchemaNumber, urlLikeActivityRecordSchemaNumber, messageActivityRecordSchemaNumber } from '../core/ActivityRecord';
+
 import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';
-import { LikeUnlikeActivityRecord } from '../core/ActivityRecordLikeUnlike';
 import { getDetaultAdminRepository} from '../core/IAdminRepository';
 import { makeSummaryCall } from '../core/ApiCalls';
 
 import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
 import { getDefaultEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../BraidCommon/src/EnrichedChunk';
-import { FluidClientProps } from '../../BraidCommon/src/FluidTokenProvider';
-import { IFluidTokenRequest } from '../../BraidCommon/src/Fluid';
+import { EStorableApplicationIds } from '../../BraidCommon/src/IStorable';
 
 export interface IConversationControllerProps {
 
@@ -312,9 +312,19 @@ export const ConversationControllerRow = (props: IConversationControllerProps) =
 
       let repository = getRecordRepository(props.sessionKey);
       let email = props.localPersona.email;
-      let record = new LikeUnlikeActivityRecord (keyGenerator.generateKey(), 
-         props.conversationKey.toString(),
-         email, new Date(), url_, false);
+
+      let record : IStoredLikeUrlActivity= {
+         id : keyGenerator.generateKey(),
+         applicationId: EStorableApplicationIds.kBoxer,
+         contextId: props.conversationKey.toString(),
+         userId: email,
+         created: new Date(),
+         amended: new Date(),  
+         className: urlLikeActivityRecordClassName,
+         schemaVersion: urlLikeActivityRecordSchemaNumber, 
+         url: url_,
+         like: false  
+      };
       repository.save (record);                                                            
    }
 
@@ -324,9 +334,19 @@ export const ConversationControllerRow = (props: IConversationControllerProps) =
 
       let repository = getRecordRepository(props.sessionKey);
       let email = props.localPersona.email;
-      let record = new LikeUnlikeActivityRecord (keyGenerator.generateKey(), 
-         props.conversationKey.toString(),
-         email, new Date(), url_, true);
+
+      let record : IStoredLikeUrlActivity= {
+         id : keyGenerator.generateKey(), 
+         applicationId: EStorableApplicationIds.kBoxer,
+         contextId: props.conversationKey.toString(),
+         userId: email,
+         created: new Date(),
+         amended: new Date(),  
+         className: urlLikeActivityRecordClassName,
+         schemaVersion: urlLikeActivityRecordSchemaNumber, 
+         url: url_,
+         like: true  
+      };
       repository.save (record); 
 
       onPostiveUseOfUrl (url_);                                                            
@@ -338,9 +358,17 @@ export const ConversationControllerRow = (props: IConversationControllerProps) =
 
       let repository = getRecordRepository(props.sessionKey);
       let email = props.localPersona.email;
-      let record = new UrlActivityRecord (keyGenerator.generateKey(), 
-         props.conversationKey.toString(),
-         email, new Date(), url_);
+      let record : IStoredUrlActivity = {
+         id : keyGenerator.generateKey(), 
+         applicationId: EStorableApplicationIds.kBoxer,
+         contextId: props.conversationKey.toString(),
+         userId: email,
+         created: new Date(),
+         amended: new Date(),  
+         className: urlActivityRecordClassName,
+         schemaVersion: urlActivityRecordSchemaNumber, 
+         url: url_ 
+      };
       repository.save (record); 
 
       onPostiveUseOfUrl (url_);                                                            
@@ -496,12 +524,20 @@ export const ConversationControllerRow = (props: IConversationControllerProps) =
       fluidMessagesConnection.participantCaucus().amend (storedPerson.id, storedPerson);    
       
       // Save it to the DB - async 
-
       let repository = getRecordRepository(props.sessionKey);
       let email = props.localPersona.email;
-      let record = new MessageActivityRecord (message.id, // Put the ID of the message on the activity, so we can delete it later
-         props.conversationKey.toString(),
-         email, new Date(), messageText_);
+
+      let record : IStoredMessageActivity = {
+         id : message.id, 
+         applicationId: EStorableApplicationIds.kBoxer,
+         contextId: props.conversationKey.toString(),
+         userId: email,
+         created: new Date(),
+         amended: new Date(),  
+         className: messageActivityRecordClassName,
+         schemaVersion: messageActivityRecordSchemaNumber, 
+         message: messageText_
+      };
       repository.save (record);       
 
       // Save state and force a refresh

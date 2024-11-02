@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "BraidApi"
+		},
+		{
+			"path": "."
+		}
+	],
+   "settings": {
+      "debug.internalConsoleOptions": "neverOpen"
+   }
+}

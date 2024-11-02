@@ -7,8 +7,7 @@ import { describe, it } from 'mocha';
 
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi'
-
+import { ChunkRepostoryApi} from '../../BraidCommon/src/ChunkRepositoryApi'
 
 declare var process: any;
 
@@ -20,7 +19,7 @@ function randomKey () : string {
    return randomInt (0, 1000000000).toString();
 }
 
-describe("SaveActivity", async function () {
+describe("SaveChunk", async function () {
 
    let record = {
       id: randomKey(),
@@ -31,15 +30,24 @@ describe("SaveActivity", async function () {
       contextId: "madeupId",
       userId: "madeeupId",
       className: "madeUpClass",
-      test: "Some test data"
+      chunkFunctionalKey: "1234",
+      parentChunkId: undefined,
+      originalText: undefined,
+      storedEmbedding : undefined,
+      storedSummary: undefined,
+      storedTitle: undefined, 
+      relatedChunks: undefined      
    }
 
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+      let env = getEnvironment (EEnvironment.kLocal);
+      console.log (env.saveStoredChunkApi);
+      let api = new ChunkRepostoryApi (env, process.env.SessionKey.toString());
 
       let myRecord = { ...record };
       myRecord.id = randomKey();
+      myRecord.chunkFunctionalKey = myRecord.id;      
 
       let ok = await api.save (myRecord); 
 
@@ -47,25 +55,14 @@ describe("SaveActivity", async function () {
 
    }).timeout(20000);
 
-   it("Needs to succeed with valid key in production environment", async function () {
-      
-      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
-
-      let myRecord = { ...record };
-      myRecord.id = randomKey();
-
-      let ok = await api.save (myRecord); 
-
-      expect (ok).toBe (true) ;   
-
-   }).timeout(20000);
-
    it("Needs to fail with invalid key.", async function () {
 
-      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
+      let env = getEnvironment (EEnvironment.kLocal);      
+      let api = new ChunkRepostoryApi (env, "thiswillfail");
 
       let myRecord = { ...record };
       myRecord.id = randomKey();
+      myRecord.chunkFunctionalKey = myRecord.id;
 
       let ok = await api.save (myRecord); 
 
@@ -73,17 +70,5 @@ describe("SaveActivity", async function () {
 
    }).timeout(20000);
 
-   it("Needs to fail with invalid key in production environment.", async function () {
-
-      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
-
-      let myRecord = { ...record };
-      myRecord.id = randomKey();
-
-      let ok = await api.save (myRecord);    
-
-      expect (ok).toBe (false) ;              
-
-      }).timeout(20000);
 
 });

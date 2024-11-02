@@ -11,7 +11,8 @@ import axios from "axios";
 import { isSessionValid, sessionFailResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable, IStoreQuerySpec } from "../../../BraidCommon/src/IStorable";
-import { defaultPartitionKey, makePostActivityToken, makePostActivityQueryHeader } from './CosmosRepositoryApi';
+import { makeStorablePostToken, makePostQueryHeader } from './CosmosRepositoryApi';
+import {AzureLogger, activityStorableAttributes, saveStorable} from './CosmosStorableApi';
 
 /**
  * Asynchronous function to handle retrieving activities based on the provided request and context.
@@ -22,16 +23,7 @@ import { defaultPartitionKey, makePostActivityToken, makePostActivityQueryHeader
  */
 export async function getActivities(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let requestedSession: string | null = null;
-
-   for (const [key, value] of request.query.entries()) {
-      if (key === 'session')
-         requestedSession = value;
-   }
-
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
-
-      context.log("Passed session key validation:" + requestedSession);
+   if (isSessionValid(request, context)) {
 
       let jsonRequest: IStoreQuerySpec = await request.json() as IStoreQuerySpec;
       let loaded: Array<IStorable> | undefined = undefined;
@@ -67,7 +59,7 @@ app.http('GetActivities', {
 /**
  * Asynchronously loads recent activities based on the provided query specifications.
  * 
- * @param querySpec - The query specifications including the limit and storeClassName.
+ * @param querySpec - The query specifications including the limit and className.
  * @param context - The invocation context for logging and tracing.
  * @returns A promise that resolves to an array of storable objects representing the loaded activities.
  */
@@ -78,18 +70,20 @@ async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext
    let done = new Promise<Array<IStorable>>(function (resolve, reject) {
 
       let time = new Date().toUTCString();
-      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makePostActivityToken(time, dbkey);
-      let headers = makePostActivityQueryHeader(key, time, defaultPartitionKey);
-      let query = "SELECT * FROM Activity a WHERE a.data.storeClassName = @storeClassName ORDER BY a.data.timestamp DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
+      let key = makeStorablePostToken(time, activityStorableAttributes.collectionPath, dbkey);
+      let headers = makePostQueryHeader(key, time, activityStorableAttributes.partitionKey);
+
+      let query = "SELECT * FROM Activity a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs',
          {
             "query": query,
             "parameters": [
                {
-                  "name": "@storeClassName",
-                  "value": querySpec.storeClassName
+                  "name": "@className",
+                  "value": querySpec.className
                }
             ]
          },
@@ -104,7 +98,7 @@ async function loadRecent(querySpec: IStoreQuerySpec, context: InvocationContext
             for (let i = 0; i < responseRecords.length; i++) {
                storedRecords.push(responseRecords[i].data);
             }
-
+            context.log ("Loaded activities:", storedRecords);
             resolve(storedRecords);
          })
          .catch((error: any) => {
