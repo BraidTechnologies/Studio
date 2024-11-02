@@ -13,7 +13,7 @@ const chunkPartitionKey: string = "c02af798a60b48129c5e223e645a9b72";
 const chunkCollectionPath = "dbs/Studio/colls/Chunk";
 const activityCollectionPath = "dbs/Studio/colls/Activity";
 
-import { makeStorablePostToken, makePostHeader } from './CosmosRepositoryApi';
+import { makeStorablePostToken, makeStorableDeleteToken, makePostHeader, makeDeleteHeader } from './CosmosRepositoryApi';
 
 export interface ICosmosStorableParams {
    partitionKey: string;
@@ -64,7 +64,14 @@ export class AzureLogger implements ILoggingContext {
    }
 }
 
-
+/**
+ * Saves a storable record to a Cosmos database.
+ * 
+ * @param record The storable record to be saved.
+ * @param params The parameters required for saving the record, including partition key and collection path.
+ * @param context The logging context for capturing log messages during the save operation.
+ * @returns A Promise that resolves to a boolean indicating the success of the save operation.
+ */
 export async function saveStorable(record: IStorable, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
    let dbkey = process.env.CosmosApiKey;
@@ -88,11 +95,54 @@ export async function saveStorable(record: IStorable, params: ICosmosStorablePar
          })
          .then((resp: any) => {
 
+            context.log("Saved storable:", params.collectionPath + ':' + document.toString());
             resolve(true);
          })
          .catch((error: any) => {
 
             context.log("Error calling database:", error);
+            reject(false);
+         });
+   });
+
+   return done;
+}
+
+/**
+ * Asynchronously removes an activity from the database.
+ * 
+ * @param id - The unique identifier of the activity to be removed.
+ * @param params - the ICosmosStorableParams for the collection
+ * @param context - The invocation context for logging purposes.
+ * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
+ */
+export async function removeStorable(id: string | undefined, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
+
+   if (!id)
+      return false;
+   
+   let dbkey = process.env.CosmosApiKey;
+
+   let done = new Promise<boolean>(function (resolve, reject) {
+
+      let time = new Date().toUTCString();
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
+      let key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
+      let headers = makeDeleteHeader(key, time, activityStorableAttributes.partitionKey);
+        
+      let deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
+
+      axios.delete(deletePath,
+         {
+            headers: headers
+         })
+         .then((resp: any) => {
+
+            context.log("Removed storable:", params.collectionPath + ':' + id);
+            resolve(true);
+         })
+         .catch((error: any) => {
+            context.error ("Error calling database:", error);
             reject(false);
          });
    });

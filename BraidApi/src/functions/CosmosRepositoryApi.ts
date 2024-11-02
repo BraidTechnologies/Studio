@@ -42,14 +42,14 @@ export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: 
  * 
  * @param verb The HTTP verb for the request.
  * @param time The timestamp for the request.
- * @param collectionPath - path to the collection in Cosmos 
+ * @param path - path for which we need a token 
  * @param key The master key for authorization.
  * @returns The generated authorization token for the activity.
  */
-export function storableToken(verb: string, time: string, collectionPath: string, key: string) {
+export function storableToken(verb: string, time: string, path: string, key: string) {
 
    //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey(verb, "docs", collectionPath, time, key);
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", path, time, key);
 }
 
 /**
@@ -61,11 +61,9 @@ export function storableToken(verb: string, time: string, collectionPath: string
  * @param id The ID of the activity to be deleted.
  * @returns The authorization token for the delete operation.
  */
-export function makeActivityDeleteToken(time: string, collectionPath: string, key: string, id: string) {
+export function makeStorableDeleteToken(time: string, collectionPath: string, key: string, id: string) {
 
-   return getAuthorizationTokenUsingMasterKey("delete", "docs", "dbs/Studio/colls/Activity/docs/" + id,
-      time,
-      key);
+   return storableToken ("delete", time, collectionPath + "/docs/" + id, key);
 }
 
 /**

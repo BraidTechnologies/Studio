@@ -9,10 +9,8 @@ import axios from "axios";
 
 // Internal imports
 import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
-import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorableQuerySpec } from "../../../BraidCommon/src/IStorable";
-import { makeActivityDeleteToken, makeDeleteHeader} from './CosmosRepositoryApi';
-import {AzureLogger, activityStorableAttributes, saveStorable, ILoggingContext, ICosmosStorableParams} from './CosmosStorableApi';
+import {AzureLogger, activityStorableAttributes, removeStorable} from './CosmosStorableApi';
 
 /**
  * Asynchronous function to handle the removal of an activity based on the provided request and context.
@@ -33,7 +31,7 @@ export async function removeActivity(request: HttpRequest, context: InvocationCo
       try {
          let logger = new AzureLogger(context);
 
-         await removeActivityDb(jsonRequest.id, activityStorableAttributes, logger);
+         await removeStorable (jsonRequest.id, activityStorableAttributes, logger);
          context.log("Removed:" + jsonRequest.toString());
       }
       catch (e: any) {
@@ -57,44 +55,5 @@ app.http('RemoveActivity', {
    handler: removeActivity
 });
 
-/**
- * Asynchronously removes an activity from the database.
- * 
- * @param messageId - The unique identifier of the activity to be removed.
- * @param context - The invocation context for logging purposes.
- * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
- */
-async function removeActivityDb(messageId: string | undefined, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
-   if (!messageId)
-      return false;
-   
-   let dbkey = process.env.CosmosApiKey;
-
-   let done = new Promise<boolean>(function (resolve, reject) {
-
-      let time = new Date().toUTCString();
-      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeActivityDeleteToken(time, params.collectionPath, dbkey, messageId);
-      let headers = makeDeleteHeader(key, time, activityStorableAttributes.partitionKey);
-      
-      let deletePath = 'https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/' + messageId;
-
-      axios.delete(deletePath,
-         {
-            headers: headers
-         })
-         .then((resp: any) => {
-
-            context.log("removed activity:", messageId);
-            resolve(true);
-         })
-         .catch((error: any) => {
-            context.error ("Error calling database:", error);
-            reject(false);
-         });
-   });
-
-   return done;
-}
 
