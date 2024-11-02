@@ -47,7 +47,7 @@ export interface IStoreQuerySpec {
 }
 
 /**
- * Defines the structure of a query specification for searchig for a single record.
+ * Defines the structure of a query specification for searching for a single record.
  * Includes the id (primary key) of the record. 
  */
 export interface IStorableQuerySpec {

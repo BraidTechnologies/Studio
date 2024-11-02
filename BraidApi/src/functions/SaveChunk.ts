@@ -5,13 +5,11 @@
 
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";
 
 // Internal imports
 import { defaultOkResponse, isSessionValid, sessionFailResponse } from "./Utility";
-import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
-import { IStoredChunk } from '../../../BraidCommon/src/ChunkRepositoryApiTypes'
-import { chunkPartitionKey, makePostChunkToken, makePostHeader } from './CosmosRepositoryApi';
+import { IStoredChunk } from '../../../BraidCommon/src/ChunkRepositoryApiTypes';
+import {AzureLogger, chunkStorableAttributes, saveStorable} from './CosmosStorableApi';
 
 
 /**
@@ -32,7 +30,9 @@ export async function saveChunk(request: HttpRequest, context: InvocationContext
       let jsonRequest: IStoredChunk = await request.json() as IStoredChunk;
 
       try {
-         await saveChunkDb(jsonRequest, context);
+         let azureLogger = new AzureLogger (context);
+
+         await saveStorable(jsonRequest, chunkStorableAttributes, azureLogger);
          context.log("Saved:" + jsonRequest.toString());
          return defaultOkResponse();         
       }
@@ -55,38 +55,4 @@ app.http('SaveStoredChunk', {
    handler: saveChunk
 });
 
-async function saveChunkDb(record: IStoredChunk, context: InvocationContext): Promise<boolean> {
-
-   let dbkey = process.env.CosmosApiKey;
-
-   let done = new Promise<boolean>(function (resolve, reject) {
-
-      let time = new Date().toUTCString();
-      let stream = JSON.stringify(record);
-      let document = JSON.parse(stream);
-
-      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makePostChunkToken(time, dbkey as string);
-      let headers = makePostHeader(key, time, chunkPartitionKey);
-
-      document.partition = chunkPartitionKey; // Dont need real partitions until 10 GB ... 
-
-      axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Chunk/docs/',
-         document,
-         {
-            headers: headers
-         })
-         .then((resp: any) => {
-
-            resolve(true);
-         })
-         .catch((error: any) => {
-
-            context.log("Error calling database:", error);
-            reject(false);
-         });
-   });
-
-   return done;
-}
 

@@ -11,8 +11,8 @@ import axios from "axios";
 import { defaultOkResponse, isSessionValid, sessionFailResponse } from "./Utility";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable } from "../../../BraidCommon/src/IStorable";
-import { activityPartitionKey, makePostActivityToken, makePostHeader } from './CosmosRepositoryApi';
-
+import { makeStorablePostToken, makePostHeader} from './CosmosRepositoryApi';
+import {AzureLogger, activityStorableAttributes, saveStorable, ILoggingContext, ICosmosStorableParams} from './CosmosStorableApi';
 
 /**
  * Saves an activity record based on the provided request and context.
@@ -32,7 +32,8 @@ export async function saveActivity(request: HttpRequest, context: InvocationCont
       let jsonRequest: IStorable = await request.json() as IStorable;
 
       try {
-         await saveActivityDb(jsonRequest, context);
+         let logger = new AzureLogger(context);
+         await saveActivityDb(jsonRequest, activityStorableAttributes, logger);
          context.log("Saved:" + jsonRequest.toString());
       }
       catch (e: any) {
@@ -56,7 +57,7 @@ app.http('SaveActivity', {
    handler: saveActivity
 });
 
-async function saveActivityDb(record: IStorable, context: InvocationContext): Promise<boolean> {
+async function saveActivityDb(record: IStorable, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
    let dbkey = process.env.CosmosApiKey;
 
@@ -67,10 +68,10 @@ async function saveActivityDb(record: IStorable, context: InvocationContext): Pr
       let document = JSON.parse(stream);
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makePostActivityToken(time, dbkey as string);
-      let headers = makePostHeader(key, time, activityPartitionKey);
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey as string);
+      let headers = makePostHeader(key, time, params.partitionKey);
 
-      document.partition = activityPartitionKey; // Dont need real partitions until 10 GB ... 
+      document.partition = params.partitionKey; // Dont need real partitions until 10 GB ... 
 
       axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs/',
          document,
@@ -79,6 +80,7 @@ async function saveActivityDb(record: IStorable, context: InvocationContext): Pr
          })
          .then((resp: any) => {
 
+            context.log("Saved activity:", JSON.stringify(document));
             resolve(true);
          })
          .catch((error: any) => {

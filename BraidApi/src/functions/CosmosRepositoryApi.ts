@@ -4,10 +4,6 @@
 // 3rd party imports
 var crypto = require("crypto");
 
-export const activityPartitionKey = "6ea3299d987b4b33a1c0b079a833206f";
-export const chunkPartitionKey = "c02af798a60b48129c5e223e645a9b72";
-
-
 /**
  * Generates an authorization token using the provided master key for the given verb, resource type, resource ID, and date.
  * 
@@ -46,50 +42,26 @@ export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: 
  * 
  * @param verb The HTTP verb for the request.
  * @param time The timestamp for the request.
+ * @param collectionPath - path to the collection in Cosmos 
  * @param key The master key for authorization.
  * @returns The generated authorization token for the activity.
  */
-export function activityToken(verb: string, time: string, key: string) {
+export function storableToken(verb: string, time: string, collectionPath: string, key: string) {
 
    //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Activity", time, key);
-}
-
-/**
- * Generates an chunk token for authorization using the provided verb, time, and key.
- * 
- * @param verb The HTTP verb for the request.
- * @param time The timestamp for the request.
- * @param key The master key for authorization.
- * @returns The generated authorization token for the activity.
- */
-export function chunkToken(verb: string, time: string, key: string) {
-
-   //throwIfUndefined(key);
-   return getAuthorizationTokenUsingMasterKey(verb, "docs", "dbs/Studio/colls/Chunk", time, key);
-}
-
-/**
- * Generates a post activity token using the provided time and key.
- * 
- * @param time The timestamp for the token generation.
- * @param key The key used for generating the token.
- * @returns The post activity token.
- */
-export function makePostActivityToken(time: string, key: string) {
-
-   return activityToken("post", time, key);
+   return getAuthorizationTokenUsingMasterKey(verb, "docs", collectionPath, time, key);
 }
 
 /**
  * Generates an authorization token for deleting an activity using the master key.
  * 
  * @param time The current time in lowercase.
+ * @param collectionPath - path to the collection in Cosmos * 
  * @param key The master key used for authorization.
  * @param id The ID of the activity to be deleted.
  * @returns The authorization token for the delete operation.
  */
-export function makeDeleteActivityToken(time: string, key: string, id: string) {
+export function makeActivityDeleteToken(time: string, collectionPath: string, key: string, id: string) {
 
    return getAuthorizationTokenUsingMasterKey("delete", "docs", "dbs/Studio/colls/Activity/docs/" + id,
       time,
@@ -100,12 +72,13 @@ export function makeDeleteActivityToken(time: string, key: string, id: string) {
  * Generates a post activity token using the provided time and key.
  * 
  * @param time The timestamp for the token generation.
+ * @param collectionPath - path to the collection in Cosmos
  * @param key The key used for generating the token.
  * @returns The post activity token.
  */
-export function makePostChunkToken(time: string, key: string) {
+export function makeStorablePostToken(time: string, collectionPath: string, key: string) {
 
-   return chunkToken("post", time, key);
+   return storableToken("post", time, collectionPath, key);
 }
 
 /**

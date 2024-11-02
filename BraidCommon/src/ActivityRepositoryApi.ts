@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IStorable, IStoreQuerySpec } from "./IStorable";
+import { IStorable, IStoreQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
 
 /**
@@ -39,10 +39,7 @@ export class ActivityRepostoryApi extends Api {
       var response: any;
 
       try {
-         response = await axios.post(apiUrl, {
-            id: record.id,
-            data: record
-         });
+         response = await axios.post(apiUrl, record);
 
          if (response.status === 200) {
             return true;
@@ -66,13 +63,14 @@ export class ActivityRepostoryApi extends Api {
     */
    async remove (recordId: string) : Promise<boolean> {
 
+      let storable: IStorableQuerySpec = {
+         id: recordId
+      }
       let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
-         response = await axios.post(apiUrl, {
-            id: recordId
-         });
+         response = await axios.post(apiUrl, storable);
 
          if (response.status === 200) {
             return true;
@@ -94,7 +92,7 @@ export class ActivityRepostoryApi extends Api {
     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
     */
-   async recent (querySpec: IStoreQuerySpec) : Promise<Array<IStorable>> {
+   async recent (querySpec: IStorablesQuerySpec) : Promise<Array<IStorable>> {
 
       let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
       var response: any;

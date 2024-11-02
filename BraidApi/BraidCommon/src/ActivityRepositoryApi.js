@@ -45,10 +45,7 @@ class ActivityRepostoryApi extends Api_1.Api {
             let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, {
-                    id: record.id,
-                    data: record
-                });
+                response = yield axios_1.default.post(apiUrl, record);
                 if (response.status === 200) {
                     return true;
                 }
@@ -72,12 +69,13 @@ class ActivityRepostoryApi extends Api_1.Api {
     remove(recordId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
+            let storable = {
+                id: recordId
+            };
             let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, {
-                    id: recordId
-                });
+                response = yield axios_1.default.post(apiUrl, storable);
                 if (response.status === 200) {
                     return true;
                 }

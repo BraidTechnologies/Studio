@@ -14,7 +14,7 @@
     "prestart": "npm run clean && npm run build && npm run pull_js && npm run pull_js_map",
     "start": "func start --typescript",
     "test": "mocha --debug-brk --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --require ts-node/register test/*chunk*.test.ts",
+    "test-mini": "mocha --debug-brk --require ts-node/register test/*activity*.test.ts",
     "local-fluid": "npx @fluidframework/azure-local-service@latest"
   },
   "dependencies": {
