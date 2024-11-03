@@ -4,6 +4,17 @@ import axios from 'axios';
 import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
 
 /**
+ * Represents a wrapper for interacting with a repository of storable objects.
+ * Provides methods to save, remove, and load storable records.
+ */
+export interface IStorableRepostoryApiWrapper {
+   
+   save (record: IStorable) : Promise<boolean>;  
+   remove (recordId: string) : Promise<boolean>;
+   load (recordId: string) : Promise<IStorable | undefined>;
+};
+
+/**
  * Represents an API for Storables.
  * 
  * @param {EEnvironment} environment_ - The environment to use for saving Storables.

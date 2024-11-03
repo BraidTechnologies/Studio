@@ -19,8 +19,9 @@ const StorableRepositoryApi_1 = require("./StorableRepositoryApi");
  * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  *
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Activity API.
  * @method remove - removes a record
+ * @method load - load an Activity given the key
  * @method recent - return a list of recent activities
  */
 class ActivityRepostoryApi extends Api_1.Api {

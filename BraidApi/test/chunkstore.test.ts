@@ -8,20 +8,14 @@ import { describe, it } from 'mocha';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { ChunkRepostoryApi} from '../../BraidCommon/src/ChunkRepositoryApi'
+import { failSave, randomKey, saveLoadRemove } from './storable';
+import { IStoredChunk } from '../../BraidCommon/src/ChunkRepositoryApiTypes';
 
 declare var process: any;
 
-function randomInt(min : number, max: number) : number {
-   return Math.floor(Math.random() * (max - min)) + min;
-}
+describe("StorableChunk", async function () {
 
-function randomKey () : string {
-   return randomInt (0, 1000000000).toString();
-}
-
-describe("SaveChunk", async function () {
-
-   let record = {
+   let record : IStoredChunk = {
       id: randomKey(),
       applicationId: "Test",
       schemaVersion: 1,
@@ -39,36 +33,31 @@ describe("SaveChunk", async function () {
       relatedChunks: undefined      
    }
 
+   let env = getEnvironment (EEnvironment.kLocal);
+   let api = new ChunkRepostoryApi (env, process.env.SessionKey.toString());
+
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let env = getEnvironment (EEnvironment.kLocal);
-      console.log (env.saveStoredChunkApi);
-      let api = new ChunkRepostoryApi (env, process.env.SessionKey.toString());
-
-      let myRecord = { ...record };
+       let myRecord = { ...record };
       myRecord.id = randomKey();
-      myRecord.chunkFunctionalKey = myRecord.id;      
+      myRecord.chunkFunctionalKey = myRecord.id;     
 
-      let ok = await api.save (myRecord); 
+      let ok = await saveLoadRemove (api, myRecord); 
 
       expect (ok).toBe (true) ;         
 
    }).timeout(20000);
 
-   it("Needs to fail with invalid key.", async function () {
-
-      let env = getEnvironment (EEnvironment.kLocal);      
-      let api = new ChunkRepostoryApi (env, "thiswillfail");
-
+   it("Needs to fail with invalid key", async function () {
+      
+      let apiFail = new ChunkRepostoryApi (env, "thiswillfail");      
       let myRecord = { ...record };
-      myRecord.id = randomKey();
-      myRecord.chunkFunctionalKey = myRecord.id;
+      myRecord.id = randomKey();   
 
-      let ok = await api.save (myRecord); 
+      let ok = await failSave (apiFail, myRecord); 
 
-      expect (ok).toBe (false) ;        
+      expect (ok).toBe (true) ;         
 
-   }).timeout(20000);
-
+  }).timeout(20000);      
 
 });

@@ -1,7 +1,5 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish BraidApi' to publish to Azure 
-// 'npm start' to run locally
 
 // 3rd party imports
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";

@@ -1,9 +1,9 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
 import { Api } from './Api';
-import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
+import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
-import { StorableRepostoryApi } from './StorableRepositoryApi';
+import { StorableRepostoryApi, IStorableRepostoryApiWrapper } from './StorableRepositoryApi';
 
 /**
  * Represents an API for activities.
@@ -11,11 +11,12 @@ import { StorableRepostoryApi } from './StorableRepositoryApi';
  * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  * 
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Activity API.
  * @method remove - removes a record
+ * @method load - load an Activity given the key 
  * @method recent - return a list of recent activities
  */
-export class ActivityRepostoryApi extends Api {
+export class ActivityRepostoryApi extends Api implements IStorableRepostoryApiWrapper {
 
    private storableApi: StorableRepostoryApi;
    /**
@@ -73,7 +74,7 @@ export class ActivityRepostoryApi extends Api {
     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
     */
-   async recent (querySpec: IStorablesQuerySpec) : Promise<Array<IStorable>> {
+   async recent (querySpec: IStorableMultiQuerySpec) : Promise<Array<IStorable>> {
 
       let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
 

@@ -1,6 +1,6 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish BraidApi' to publish to Azure 
+// 'func azure functionapp publish Braid-Api' to publish to Azure 
 // 'npm start' to run locally
 
 // 3rd party imports
@@ -17,12 +17,12 @@ app.http('GetChunk', {
 });
 
 /**
- * Saves an activity record based on the provided request and context.
+ * Saves an Chunk record based on the provided request and context.
  * Validates the session key from the request query parameters against predefined session keys.
  * If the session key is valid, logs the validation status, processes the JSON request, and saves the activity.
  * Returns an HTTP response with a status code and the session key or an error message.
  *
- * @param request - The HTTP request containing the activity data.
+ * @param request - The HTTP request containing the Chunk data.
  * @param context - The context for the current invocation.
  * @returns A promise that resolves to an HTTP response with the status and response body.
  */
@@ -76,6 +76,12 @@ app.http('GetChunks', {
    handler: getRecentChunks
 });
 
+/**
+ * Asynchronously retrieves recent chunks based on the provided HTTP request and invocation context.
+ * @param request - The HTTP request object containing the necessary data.
+ * @param context - The invocation context for the function execution.
+ * @returns A promise that resolves to an HttpResponseInit object representing the response.
+ */
 export async function getRecentChunks(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    return getRecentStorablesApi (request, chunkStorableAttributes, context);

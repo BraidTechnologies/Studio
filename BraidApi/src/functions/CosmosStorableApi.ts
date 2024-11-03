@@ -9,18 +9,22 @@ import axios from "axios";
 import { throwIfUndefined } from "../../../BraidCommon/src/Asserts";
 import { IStorable, IStorableMultiQuerySpec } from "../../../BraidCommon/src/IStorable";
 
-const activityPartitionKey: string = "6ea3299d987b4b33a1c0b079a833206f";
-const chunkPartitionKey: string = "c02af798a60b48129c5e223e645a9b72";
 
+const chunkPartitionKey: string = "c02af798a60b48129c5e223e645a9b72";
 const chunkCollectionPath = "dbs/Studio/colls/Chunk";
+const chunkCollectionName = "Chunk";
+
+const activityPartitionKey: string = "6ea3299d987b4b33a1c0b079a833206f";
 const activityCollectionPath = "dbs/Studio/colls/Activity";
+const activityCollectionName = "Activity";
 
 import { makeStorablePostToken, makeStorableDeleteToken, 
    makePostQueryHeader, makePostHeader, makeDeleteHeader } from './CosmosRepositoryApi';
 
 export interface ICosmosStorableParams {
    partitionKey: string;
-   collectionPath: string;   
+   collectionPath: string;  
+   collectionName: string; 
 }
 
 export interface ILoggingContext {
@@ -32,12 +36,14 @@ export interface ILoggingContext {
 
 export let chunkStorableAttributes : ICosmosStorableParams = {
    partitionKey: chunkPartitionKey,
-   collectionPath: chunkCollectionPath
+   collectionPath: chunkCollectionPath,
+   collectionName: chunkCollectionName
 }
 
 export let activityStorableAttributes : ICosmosStorableParams = {
    partitionKey: activityPartitionKey,
-   collectionPath: activityCollectionPath
+   collectionPath: activityCollectionPath,
+   collectionName: activityCollectionName
 }
 
 export class AzureLogger implements ILoggingContext {
@@ -87,12 +93,12 @@ export async function loadStorable(id: string | undefined, params: ICosmosStorab
       let time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, activityStorableAttributes.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, activityStorableAttributes.partitionKey);
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      let headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM Activity a WHERE a.id = @id";
+      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.id = @id";
 
-      axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs',
+      axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
             "query": query,
             "parameters": [
@@ -187,7 +193,7 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
       let time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
       let key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
-      let headers = makeDeleteHeader(key, time, activityStorableAttributes.partitionKey);
+      let headers = makeDeleteHeader(key, time, params.partitionKey);
         
       let deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
 
@@ -228,12 +234,12 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
       let time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, activityStorableAttributes.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, activityStorableAttributes.partitionKey);
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      let headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM Activity a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
-      axios.post('https://braidstudio.documents.azure.com:443/dbs/Studio/colls/Activity/docs',
+      axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
             "query": query,
             "parameters": [
