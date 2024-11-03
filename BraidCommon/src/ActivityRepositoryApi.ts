@@ -1,9 +1,9 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import axios from 'axios';
 
 import { Api } from './Api';
-import { IStorable, IStoreQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
+import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
 import { IEnvironment } from "./IEnvironment";
+import { StorableRepostoryApi, IStorableRepostoryApiWrapper } from './StorableRepositoryApi';
 
 /**
  * Represents an API for activities.
@@ -11,12 +11,14 @@ import { IEnvironment } from "./IEnvironment";
  * @param {EEnvironment} environment_ - The environment to use for saving activities.
  * @param {string} sessionKey_ - The session key for authentication.
  * 
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Activity API.
  * @method remove - removes a record
+ * @method load - load an Activity given the key 
  * @method recent - return a list of recent activities
  */
-export class ActivityRepostoryApi extends Api {
+export class ActivityRepostoryApi extends Api implements IStorableRepostoryApiWrapper {
 
+   private storableApi: StorableRepostoryApi;
    /**
     * Initializes a new instance of the class with the provided environment and session key.
     * 
@@ -25,7 +27,21 @@ export class ActivityRepostoryApi extends Api {
     */
    public constructor(environment_: IEnvironment, sessionKey_: string) {
       super (environment_, sessionKey_);
+
+      this.storableApi = new StorableRepostoryApi();
    }  
+
+   /**
+    * Asynchronously loads a record from the activity repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async load (recordId: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.getActivityApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.load (recordId, apiUrl);  
+   }
 
    /**
     * Asynchronously saves a record to the activity repository API.
@@ -36,23 +52,8 @@ export class ActivityRepostoryApi extends Api {
    async save (record: IStorable) : Promise<boolean> {
 
       let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
-
-      try {
-         response = await axios.post(apiUrl, record);
-
-         if (response.status === 200) {
-            return true;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return false;
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return false;       
-      }          
+      
+      return this.storableApi.save (record, apiUrl);
    }
 
    /**
@@ -63,27 +64,8 @@ export class ActivityRepostoryApi extends Api {
     */
    async remove (recordId: string) : Promise<boolean> {
 
-      let storable: IStorableQuerySpec = {
-         id: recordId
-      }
       let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
-
-      try {
-         response = await axios.post(apiUrl, storable);
-
-         if (response.status === 200) {
-            return true;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return false;
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return false;       
-      }          
+      return this.storableApi.remove (recordId, apiUrl);  
    }
 
    /**
@@ -92,33 +74,10 @@ export class ActivityRepostoryApi extends Api {
     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
     */
-   async recent (querySpec: IStorablesQuerySpec) : Promise<Array<IStorable>> {
+   async recent (querySpec: IStorableMultiQuerySpec) : Promise<Array<IStorable>> {
 
       let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
 
-      try {
-         response = await axios.post(apiUrl, querySpec);
-
-         if (response.status === 200) {
-
-            let responseRecords = response.data;
-            let storedRecords = new Array<IStorable>()
-
-            for (let i = 0; i < responseRecords.length; i++) {
-               storedRecords.push (responseRecords[i]);
-            }
-
-            return storedRecords;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return new Array<IStorable>();
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return new Array<IStorable>();       
-      }          
-   }   
+      return this.storableApi.recent (querySpec, apiUrl);  
+   }
 }

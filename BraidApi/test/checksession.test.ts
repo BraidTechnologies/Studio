@@ -9,7 +9,7 @@ declare var process: any;
 
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { SessionApi } from "../../BraidCommon/src/SessionApi"
+import { SessionApi } from "../../BraidCommon/src/SessionApi";
 
 describe("CheckSession", async function () {
 

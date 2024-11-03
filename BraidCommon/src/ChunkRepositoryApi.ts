@@ -3,7 +3,8 @@ import axios from 'axios';
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
-import { IStoredChunkQuerySpec, IStoredChunk } from './ChunkRepositoryApiTypes';
+import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
+import { StorableRepostoryApi, IStorableRepostoryApiWrapper} from './StorableRepositoryApi';
 
 /**
  * Represents an API for the Chunk repository
@@ -11,11 +12,13 @@ import { IStoredChunkQuerySpec, IStoredChunk } from './ChunkRepositoryApiTypes';
  * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
  * @param {string} sessionKey_ - The session key for authentication.
  * 
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Chunk API.
  * @method remove - removes a record
- * @method recent - return a list of recent activities
+ * @method load - load an Chunk given the key 
  */
-export class ChunkRepostoryApi extends Api {
+export class ChunkRepostoryApi extends Api implements IStorableRepostoryApiWrapper {
+   
+   private storableApi: StorableRepostoryApi;
 
    /**
     * Initializes a new instance of the class with the provided environment and session key.
@@ -25,7 +28,21 @@ export class ChunkRepostoryApi extends Api {
     */
    public constructor(environment_: IEnvironment, sessionKey_: string) {
       super (environment_, sessionKey_);
+
+      this.storableApi = new StorableRepostoryApi();      
    }  
+
+   /**
+    * Asynchronously loads a record from the Chunk repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+    async load (recordId: string) : Promise<IStorable | undefined> {
+
+         let apiUrl = this.environment.getChunkApi() + "?session=" + this.sessionKey.toString();
+         return this.storableApi.load (recordId, apiUrl);  
+      }
 
    /**
     * Asynchronously saves a record to the chunk repository API.
@@ -33,84 +50,21 @@ export class ChunkRepostoryApi extends Api {
     * @param record - The record to be saved, must implement the IStoredChunk interface.
     * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
     */
-   async save (record: IStoredChunk) : Promise<boolean> {
+   async save (record: IStorable) : Promise<boolean> {
 
-      let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
-
-      try {
-         response = await axios.post(apiUrl, record);
-
-         if (response.status === 200) {
-            return true;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return false;
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return false;       
-      }          
-   }
+      let apiUrl = this.environment.saveChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.save (record, apiUrl);             
+   }  
 
    /**
-    * Asynchronously removes a record from the chunk repository API.
+    * Asynchronously removes a record from the Chunk repository API.
     * 
     * @param recordId - The ID of the record to be removed.
     * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
     */
-   async remove (querySpec: IStoredChunkQuerySpec) : Promise<boolean> {
+   async remove (recordId: string) : Promise<boolean> {
 
-      let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
-
-      try {
-         response = await axios.post(apiUrl, querySpec);
-
-         if (response.status === 200) {
-            return true;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return false;
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return false;       
-      }          
+      let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.remove (recordId, apiUrl);  
    }
-
-   /**
-    * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
-    * 
-    * @param querySpec - The query specification 
-    * @returns A Promise that resolves to an IStorable object representing the records, or undefined 
-    */
-   async load (querySpec: IStoredChunkQuerySpec) : Promise<IStoredChunk | undefined> {
-
-      let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
-      var response: any;
-
-      try {
-         response = await axios.post(apiUrl, querySpec);
-
-         if (response.status === 200) {
-
-            let responseRecord = response.data;
-
-            return responseRecord;
-         }
-         else {
-            console.error ("Error, status: " + response.status);               
-            return undefined; 
-         }
-      } catch (e: any) {       
-
-         console.error ("Error: " + e?.response?.data);   
-         return undefined;       
-      }          
-   }   
 }

@@ -10,18 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChunkRepostoryApi = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
-const axios_1 = require("axios");
 const Api_1 = require("./Api");
+const StorableRepositoryApi_1 = require("./StorableRepositoryApi");
 /**
  * Represents an API for the Chunk repository
  *
  * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
  * @param {string} sessionKey_ - The session key for authentication.
  *
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Chunk API.
  * @method remove - removes a record
- * @method recent - return a list of recent activities
+ * @method load - load an Chunk given the key
  */
 class ChunkRepostoryApi extends Api_1.Api {
     /**
@@ -32,6 +31,19 @@ class ChunkRepostoryApi extends Api_1.Api {
      */
     constructor(environment_, sessionKey_) {
         super(environment_, sessionKey_);
+        this.storableApi = new StorableRepositoryApi_1.StorableRepostoryApi();
+    }
+    /**
+     * Asynchronously loads a record from the Chunk repository API.
+     *
+     * @param recordId - The ID of the record to be removed.
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+     */
+    load(recordId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiUrl = this.environment.getChunkApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.load(recordId, apiUrl);
+        });
     }
     /**
      * Asynchronously saves a record to the chunk repository API.
@@ -41,78 +53,20 @@ class ChunkRepostoryApi extends Api_1.Api {
      */
     save(record) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, record);
-                if (response.status === 200) {
-                    return true;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return false;
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
-            }
+            let apiUrl = this.environment.saveChunkApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.save(record, apiUrl);
         });
     }
     /**
-     * Asynchronously removes a record from the chunk repository API.
+     * Asynchronously removes a record from the Chunk repository API.
      *
      * @param recordId - The ID of the record to be removed.
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
-    remove(querySpec) {
+    remove(recordId) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, querySpec);
-                if (response.status === 200) {
-                    return true;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return false;
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
-            }
-        });
-    }
-    /**
-     * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
-     *
-     * @param querySpec - The query specification
-     * @returns A Promise that resolves to an IStorable object representing the records, or undefined
-     */
-    load(querySpec) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, querySpec);
-                if (response.status === 200) {
-                    let responseRecord = response.data;
-                    return responseRecord;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return undefined;
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return undefined;
-            }
+            let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.remove(recordId, apiUrl);
         });
     }
 }

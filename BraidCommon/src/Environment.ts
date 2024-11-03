@@ -39,7 +39,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    }   
    getActivitiesApi(): string {
       return "http://localhost:7071/api/GetActivities"      
-   }
+   }   
+   getActivityApi(): string {
+      return "http://localhost:7071/api/GetActivity"      
+   }   
    loginWithLinkedInApi(): string {
       return "http://localhost:7071/api/LoginWithLinkedIn"; 
    }
@@ -76,14 +79,14 @@ export class DevelopmentEnvironment implements IEnvironment {
    studioForTeamsBoxer(): string {
       return "http://localhost:7071/api/StudioForTeams-Boxer";
    }   
-   saveStoredChunkApi() : string {
-      return "http://localhost:7071/api/SaveStoredChunk";
+   saveChunkApi() : string {
+      return "http://localhost:7071/api/SaveChunk";
    }   
-   removeStoredChunkApi(): string{
-      return "http://localhost:7071/api/RemoveStoredChunk";
+   removeChunkApi(): string{
+      return "http://localhost:7071/api/RemoveChunk";
    }   
-   getStoredChunkApi(): string{
-      return "http://localhost:7071/api/GetStoredChunk";
+   getChunkApi(): string{
+      return "http://localhost:7071/api/GetChunk";
    }      
 }
 
@@ -122,6 +125,9 @@ export class StagingEnvironment implements IEnvironment {
    removeActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/RemoveActivity";
    }   
+   getActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivity"      
+   }     
    getActivitiesApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivities";      
    }  
@@ -161,13 +167,13 @@ export class StagingEnvironment implements IEnvironment {
    studioForTeamsBoxer(): string {
       return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
    }
-   saveStoredChunkApi() : string{
+   saveChunkApi() : string{
       return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
    }   
-   removeStoredChunkApi(): string{
+   removeChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
    }   
-   getStoredChunkApi(): string{
+   getChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/GetStoredChunk";   
    }
 }
@@ -208,6 +214,9 @@ export class ProductionEnvironment implements IEnvironment {
    removeActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/RemoveActivity"
    }    
+   getActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivity"      
+   }     
    getActivitiesApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivities"      
    }       
@@ -247,13 +256,13 @@ export class ProductionEnvironment implements IEnvironment {
    studioForTeamsBoxer(): string {
       return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
    }      
-   saveStoredChunkApi() : string{
+   saveChunkApi() : string{
       return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
    }   
-   removeStoredChunkApi(): string{
+   removeChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
    }   
-   getStoredChunkApi(): string{
+   getChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/GetStoredChunk";   
    }   
 }
