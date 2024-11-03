@@ -1,0 +1,82 @@
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+// 'func azure functionapp publish BraidApi' to publish to Azure 
+// 'npm start' to run locally
+
+// 3rd party imports
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+
+// Internal imports
+import { chunkStorableAttributes } from './CosmosStorableApi';
+import { removeStorableApi, saveStorableApi, getStorableApi, getRecentStorablesApi } from "./AzureStorableApi";
+
+app.http('GetChunk', {
+   methods: ['POST'],
+   authLevel: 'anonymous',
+   handler: getChunk
+});
+
+/**
+ * Saves an activity record based on the provided request and context.
+ * Validates the session key from the request query parameters against predefined session keys.
+ * If the session key is valid, logs the validation status, processes the JSON request, and saves the activity.
+ * Returns an HTTP response with a status code and the session key or an error message.
+ *
+ * @param request - The HTTP request containing the activity data.
+ * @param context - The context for the current invocation.
+ * @returns A promise that resolves to an HTTP response with the status and response body.
+ */
+export async function getChunk(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+   
+   return getStorableApi (request, chunkStorableAttributes, context);
+};
+
+app.http('SaveChunk', {
+   methods: ['POST'],
+   authLevel: 'anonymous',
+   handler: saveChunk
+});
+
+/**
+ * Saves a chunk record based on the provided request and context.
+ * Validates the session key from the request query parameters against predefined session keys.
+ * If the session key is valid, logs the validation status, processes the JSON request, and saves the chunk.
+ * Returns an HTTP response with a status code and the session key or an error message.
+ *
+ * @param request - The HTTP request containing the chunk data.
+ * @param context - The context for the current invocation.
+ * @returns A promise that resolves to an HTTP response with the status and response body.
+ */
+export async function saveChunk(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+
+   return saveStorableApi (request, chunkStorableAttributes, context);
+};
+
+app.http('RemoveChunk', {
+   methods: ['POST'],
+   authLevel: 'anonymous',
+   handler: removeChunk
+});
+
+/**
+ * Asynchronously removes a chunk using the provided HTTP request and invocation context.
+ * 
+ * @param request - The HTTP request containing information about the chunk to be removed.
+ * @param context - The invocation context for logging and error handling.
+ * @returns A promise that resolves to an HttpResponseInit object representing the result of the removal operation.
+ */
+export async function removeChunk(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+
+   return removeStorableApi (request, chunkStorableAttributes, context);
+}
+
+app.http('GetChunks', {
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: getRecentChunks
+});
+
+export async function getRecentChunks(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+
+   return getRecentStorablesApi (request, chunkStorableAttributes, context);
+}

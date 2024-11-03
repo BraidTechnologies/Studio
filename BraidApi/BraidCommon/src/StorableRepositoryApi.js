@@ -9,43 +9,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChunkRepostoryApi = void 0;
+exports.StorableRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = require("axios");
-const Api_1 = require("./Api");
 /**
- * Represents an API for the Chunk repository
+ * Represents an API for Storables.
  *
- * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
+ * @param {EEnvironment} environment_ - The environment to use for saving Storables.
  * @param {string} sessionKey_ - The session key for authentication.
  *
- * @method save - Saves a record to the activity API.
+ * @method save - Saves a record to the Storables API.
  * @method remove - removes a record
- * @method recent - return a list of recent activities
+ * @method recent - return a list of recent Storables
  */
-class ChunkRepostoryApi extends Api_1.Api {
+class StorableRepostoryApi {
     /**
-     * Initializes a new instance of the class with the provided environment and session key.
-     *
-     * @param environment_ The environment settings to be used.
-     * @param sessionKey_ The session key for authentication.
+     * Initializes a new instance of the class
      */
-    constructor(environment_, sessionKey_) {
-        super(environment_, sessionKey_);
+    constructor() {
     }
     /**
-     * Asynchronously saves a record to the chunk repository API.
+     * Asynchronously saves a record to the Storables repository API.
      *
-     * @param record - The record to be saved, must implement the IStoredChunk interface.
+     * @param record - The record to be saved, must implement the IStorable interface.
+     * @param url - fully factored URL to the API to call
      * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
      */
-    save(record) {
+    save(record, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.saveChunkApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, record);
+                response = yield axios_1.default.post(url, record);
                 if (response.status === 200) {
                     return true;
                 }
@@ -61,18 +56,21 @@ class ChunkRepostoryApi extends Api_1.Api {
         });
     }
     /**
-     * Asynchronously removes a record from the chunk repository API.
+     * Asynchronously removes a record from the Storables repository API.
      *
      * @param recordId - The ID of the record to be removed.
+     * @param url - fully factored URL to the API to call
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
-    remove(querySpec) {
+    remove(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
+            let storable = {
+                id: recordId
+            };
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, querySpec);
+                response = yield axios_1.default.post(url, storable);
                 if (response.status === 200) {
                     return true;
                 }
@@ -88,21 +86,23 @@ class ChunkRepostoryApi extends Api_1.Api {
         });
     }
     /**
-     * Asynchronously retrieves a record from the chunk repository API based on the provided query specifications.
+     * Asynchronously loads a record from the Storable repository API.
      *
-     * @param querySpec - The query specification
-     * @returns A Promise that resolves to an IStorable object representing the records, or undefined
+     * @param recordId - The ID of the record to be removed.
+     * @param url - fully factored URL to the API to call
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
      */
-    load(querySpec) {
+    load(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.getChunkApi() + "?session=" + this.sessionKey.toString();
+            let storable = {
+                id: recordId
+            };
             var response;
             try {
-                response = yield axios_1.default.post(apiUrl, querySpec);
+                response = yield axios_1.default.post(url, storable);
                 if (response.status === 200) {
-                    let responseRecord = response.data;
-                    return responseRecord;
+                    return response.data;
                 }
                 else {
                     console.error("Error, status: " + response.status);
@@ -115,6 +115,38 @@ class ChunkRepostoryApi extends Api_1.Api {
             }
         });
     }
+    /**
+     * Asynchronously retrieves recent records from the Storables repository API based on the provided query specifications.
+     *
+     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+     * @param url - fully factored URL to the API to call
+     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+     */
+    recent(querySpec, url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            var response;
+            try {
+                response = yield axios_1.default.post(url, querySpec);
+                if (response.status === 200) {
+                    let responseRecords = response.data;
+                    let storedRecords = new Array();
+                    for (let i = 0; i < responseRecords.length; i++) {
+                        storedRecords.push(responseRecords[i]);
+                    }
+                    return storedRecords;
+                }
+                else {
+                    console.error("Error, status: " + response.status);
+                    return new Array();
+                }
+            }
+            catch (e) {
+                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
+                return new Array();
+            }
+        });
+    }
 }
-exports.ChunkRepostoryApi = ChunkRepostoryApi;
-//# sourceMappingURL=ChunkRepositoryApi.js.map
+exports.StorableRepostoryApi = StorableRepostoryApi;
+//# sourceMappingURL=StorableRepositoryApi.js.map

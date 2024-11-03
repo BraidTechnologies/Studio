@@ -34,7 +34,7 @@ describe("GetActivities", async function () {
       test: "Some test data"
    }
 
-   let spec = { limit: 1, className: "madeUpClass"}
+   let multiSpec = { limit: 1, className: "madeUpClass"}
 
    it("Needs to pull a single record with valid key in local environment", async function () {
       
@@ -44,12 +44,26 @@ describe("GetActivities", async function () {
       myRecord.id = randomKey();
 
       let ok = await api.save (myRecord); 
-      let stored = await api.recent (spec);
+      let stored = await api.recent (multiSpec);
       api.remove (myRecord.id);
 
       expect (stored.length).toBe (1) ;         
 
    }).timeout(20000);
+
+   it("Needs to pull a single record with valid key in local environment", async function () {
+      
+      let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+      let ok = await api.save (myRecord);      
+      let loaded = await api.load (myRecord.id);
+      api.remove (myRecord.id);      
+
+      expect (loaded && loaded?.id).toEqual (myRecord.id) ;         
+
+   }).timeout(20000);   
 
    it("Needs to pull a multiple record with valid key in local environment", async function () {
       
@@ -63,7 +77,7 @@ describe("GetActivities", async function () {
       myRecord2.id = randomKey();      
       ok = await api.save (myRecord2); 
 
-      let mySpec = { ...spec};
+      let mySpec = { ...multiSpec};
       mySpec.limit = 2;
       let stored = await api.recent (mySpec);
       api.remove (myRecord.id);
@@ -77,7 +91,7 @@ describe("GetActivities", async function () {
 
       let api = new ActivityRepostoryApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
 
-      let stored = await api.recent (spec);
+      let stored = await api.recent (multiSpec);
 
       expect (stored.length === 0).toBe (true) ;        
 

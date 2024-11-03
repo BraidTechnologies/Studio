@@ -21,6 +21,7 @@ export interface IEnvironment {
    suppressSummariseFail(): string;
    saveActivityApi(): string;
    removeActivityApi(): string;
+   getActivityApi(): string;   
    getActivitiesApi(): string;
    boxerHome(): string;
    loginWithLinkedInApi(): string;
@@ -34,9 +35,9 @@ export interface IEnvironment {
    fluidApi(): string;
    fluidTenantId(): string;
    studioForTeamsBoxer() : string;
-   saveStoredChunkApi() : string;
-   removeStoredChunkApi(): string;
-   getStoredChunkApi(): string;
+   saveChunkApi() : string;
+   removeChunkApi(): string;
+   getChunkApi(): string;
 }
 
 

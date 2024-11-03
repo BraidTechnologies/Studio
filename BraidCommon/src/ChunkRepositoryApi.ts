@@ -35,7 +35,7 @@ export class ChunkRepostoryApi extends Api {
     */
    async save (record: IStoredChunk) : Promise<boolean> {
 
-      let apiUrl = this.environment.saveStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.saveChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -63,7 +63,7 @@ export class ChunkRepostoryApi extends Api {
     */
    async remove (querySpec: IStoredChunkQuerySpec) : Promise<boolean> {
 
-      let apiUrl = this.environment.removeStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {
@@ -91,7 +91,7 @@ export class ChunkRepostoryApi extends Api {
     */
    async load (querySpec: IStoredChunkQuerySpec) : Promise<IStoredChunk | undefined> {
 
-      let apiUrl = this.environment.getStoredChunkApi() + "?session=" + this.sessionKey.toString();
+      let apiUrl = this.environment.getChunkApi() + "?session=" + this.sessionKey.toString();
       var response: any;
 
       try {

@@ -1,4 +1,5 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,9 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActivityRepostoryApi = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
-const axios_1 = require("axios");
 const Api_1 = require("./Api");
+const StorableRepositoryApi_1 = require("./StorableRepositoryApi");
 /**
  * Represents an API for activities.
  *
@@ -32,6 +32,19 @@ class ActivityRepostoryApi extends Api_1.Api {
      */
     constructor(environment_, sessionKey_) {
         super(environment_, sessionKey_);
+        this.storableApi = new StorableRepositoryApi_1.StorableRepostoryApi();
+    }
+    /**
+     * Asynchronously loads a record from the activity repository API.
+     *
+     * @param recordId - The ID of the record to be removed.
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+     */
+    load(recordId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiUrl = this.environment.getActivityApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.load(recordId, apiUrl);
+        });
     }
     /**
      * Asynchronously saves a record to the activity repository API.
@@ -41,23 +54,8 @@ class ActivityRepostoryApi extends Api_1.Api {
      */
     save(record) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, record);
-                if (response.status === 200) {
-                    return true;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return false;
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
-            }
+            return this.storableApi.save(record, apiUrl);
         });
     }
     /**
@@ -68,26 +66,8 @@ class ActivityRepostoryApi extends Api_1.Api {
      */
     remove(recordId) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            let storable = {
-                id: recordId
-            };
             let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, storable);
-                if (response.status === 200) {
-                    return true;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return false;
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return false;
-            }
+            return this.storableApi.remove(recordId, apiUrl);
         });
     }
     /**
@@ -98,28 +78,8 @@ class ActivityRepostoryApi extends Api_1.Api {
      */
     recent(querySpec) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
-            var response;
-            try {
-                response = yield axios_1.default.post(apiUrl, querySpec);
-                if (response.status === 200) {
-                    let responseRecords = response.data;
-                    let storedRecords = new Array();
-                    for (let i = 0; i < responseRecords.length; i++) {
-                        storedRecords.push(responseRecords[i]);
-                    }
-                    return storedRecords;
-                }
-                else {
-                    console.error("Error, status: " + response.status);
-                    return new Array();
-                }
-            }
-            catch (e) {
-                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
-                return new Array();
-            }
+            return this.storableApi.recent(querySpec, apiUrl);
         });
     }
 }
