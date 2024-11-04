@@ -5,11 +5,11 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
+import { failSave, randomKey, saveLoadRemove } from './storable';
 import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
 import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
 import { ChunkRepostoryApi} from '../../BraidCommon/src/ChunkRepositoryApi'
-import { failSave, randomKey, saveLoadRemove } from './storable';
-import { IStoredChunk } from '../../BraidCommon/src/ChunkRepositoryApiTypes';
+import { IStoredChunk } from '../../BraidCommon/src/ChunkRepositoryApi.Types';
 
 declare var process: any;
 

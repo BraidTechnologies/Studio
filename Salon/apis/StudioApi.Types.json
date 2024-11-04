@@ -22,19 +22,29 @@
           "type": "string",
           "title": "IStudioBoxerResponseEnrichment.id"
         },
+        "summary": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.summary"
+        },
+        "title": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.title"
+        },
         "url": {
           "type": "string",
           "title": "IStudioBoxerResponseEnrichment.url"
         },
-        "summary": {
+        "iconUrl": {
           "type": "string",
-          "title": "IStudioBoxerResponseEnrichment.summary"
+          "title": "IStudioBoxerResponseEnrichment.iconUrl"
         }
       },
       "required": [
         "id",
+        "summary",
+        "title",
         "url",
-        "summary"
+        "iconUrl"
       ],
       "additionalProperties": false,
       "title": "IStudioBoxerResponseEnrichment",

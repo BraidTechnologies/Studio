@@ -14,8 +14,8 @@
     "clean_js" : "rimraf BraidCommon",
     "prestart": "npm run clean && npm run clean_js && npm run compile && npm run pull_js && npm run pull_js_map",
     "start": "func start --typescript",
-    "test": "mocha --debug-brk --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --require ts-node/register test/*chunkstore*.test.ts",
+    "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
+    "test-mini": "mocha --debug-brk --exit --require ts-node/register test/*chunkstore*.test.ts",
     "local-fluid": "npx @fluidframework/azure-local-service@latest"
   },
   "dependencies": {
