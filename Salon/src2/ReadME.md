@@ -1,5 +1,3 @@
-# README.md
-
 ## Features
 
 - **Supports JSON and YAML API Specifications**: Accepts input in both JSON and YAML formats, adapting the output accordingly.
