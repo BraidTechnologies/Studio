@@ -85,7 +85,8 @@ class FileRespository:
 
     def exists(self, path: str, extension: str) -> bool:
         '''
-        Checks if a file with the specified path and extension exists in the output location of the FileRepository.
+        Checks if a file with the specified path and extension exists in the output location 
+        of the FileRepository.
 
         Parameters:
            path (str): An Http path.

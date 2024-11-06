@@ -9,8 +9,17 @@ from file_repository import FileRespository
 
 spec = "embed.txt"
 
-
 def read_file_names(path: str, file_spec: str):
+    """
+    Retrieve a list of file names matching a specified pattern within a given directory.
+
+    Args:
+     path (str): The directory path to search within.
+     file_spec (str): The pattern to match file names against.
+
+    Returns:
+     list: A list of file names that match the specified pattern.
+    """
     return list(glob(os.path.join(path, file_spec)))
 
 
@@ -20,15 +29,40 @@ class EmbeddingRespositoryFacade:
     '''
 
     def __init__(self, output_location: str):
+        """
+        Initializes an instance of EmbeddingRespositoryFacade.
+
+        Args:
+            output_location (str): The directory path where files will be stored.
+
+        Attributes:
+            file__repository (FileRespository): An instance to manage file operations.
+            output_location (str): The directory path for storing files.
+            extension (str): The file extension pattern for stored files.
+        """
         self.file__repository = FileRespository(output_location)
         self.output_location = output_location
         self.extension = spec
 
     @staticmethod
     def spec() -> str:
+        """
+        Returns the file extension pattern used for storing files.
+
+        Returns:
+        str: The file extension pattern prefixed with '*.'.
+        """
         return "*." + spec
 
     def list_contents(self) -> list[str]:
+        """
+        Lists the contents of the output location by retrieving file names
+        with the specified extension pattern, stripping double extensions,
+        and returning the base file names.
+
+        Returns:
+            list[str]: A list of base file names without extensions.
+        """
         paths = read_file_names(self.output_location,
                                 EmbeddingRespositoryFacade.spec())
 
@@ -66,7 +100,7 @@ class EmbeddingRespositoryFacade:
 
         loaded = self.file__repository.load(path, self.extension)
 
-        return self.text_to_float (loaded)
+        return self.text_to_float(loaded)
 
     def exists(self, path: str) -> bool:
         '''
@@ -79,7 +113,7 @@ class EmbeddingRespositoryFacade:
            bool: True if the file exists, False otherwise.
         '''
         return self.file__repository.exists(path, self.extension)
-    
+
     def text_to_float(self, embedding: str) -> list[float]:
         '''
         Converts a string representation of numbers to a list of floating-point numbers.

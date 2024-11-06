@@ -5,7 +5,7 @@
 import logging
 from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled, VideoUnavailable
-#from youtube_transcript_api.formatters import WebVTTFormatter
+# from youtube_transcript_api.formatters import WebVTTFormatter
 
 from workflow import PipelineStep, PipelineItem
 from text_repository_facade import TextRespositoryFacade
@@ -26,7 +26,6 @@ def clean_text(text: str) -> str:
     text = text.replace("[inaudible]", "")  # [inaudible]
 
     return text
-
 
 
 def parse_video_id(value: str) -> str:
@@ -51,6 +50,7 @@ def parse_video_id(value: str) -> str:
     # fail?
     return None
 
+
 class YouTubeTranscriptDownloader (PipelineStep):
     '''Utility class to download the transcript for a YouTube video
 
@@ -62,7 +62,8 @@ class YouTubeTranscriptDownloader (PipelineStep):
         '''
         Initializes the YouTubeTranscriptDownloader object with the provided output location.
         '''
-        super(YouTubeTranscriptDownloader, self).__init__(output_location) # pylint: disable=useless-parent-delegation
+        super(YouTubeTranscriptDownloader, self).__init__(
+            output_location)  # pylint: disable=useless-parent-delegation
 
     def download(self, pipeline_item: PipelineItem) -> PipelineItem:
         '''
@@ -77,16 +78,16 @@ class YouTubeTranscriptDownloader (PipelineStep):
             text = repository.load(path)
             pipeline_item.text = text
             return pipeline_item
-        
+
         try:
             full_text = ""
             video_id = parse_video_id(pipeline_item.path)
             if not video_id:
-               raise Exception ("Unable to parse video id")
+                raise Exception("Unable to parse video id")
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             # Remove \n from the text
             for item in transcript:
-               full_text = full_text + clean_text (item["text"]) 
+                full_text = full_text + clean_text(item["text"])
 
         except NoTranscriptFound:
             logger.error("No transcript found for video: %s", path)

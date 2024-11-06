@@ -57,8 +57,8 @@ class Summariser (PipelineStep):
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
         print("Summarising: " + pipeline_item.path)
-   
-        #summary_url = f'http://localhost:7071/api/Summarize?session={   
+
+        # summary_url = f'http://localhost:7071/api/Summarize?session={
         summary_url = f'https://braid-api.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
@@ -79,5 +79,5 @@ class Summariser (PipelineStep):
 
             return pipeline_item
         else:
-            logger.error (f"Unable to summarise item: {pipeline_item.path}.")
+            logger.error(f"Unable to summarise item: {pipeline_item.path}.")
             return None

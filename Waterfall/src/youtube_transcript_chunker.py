@@ -15,15 +15,17 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
-def make_start_time_offset (minutes: int) -> str: 
-    
-    hours = math.floor (minutes / 60)
+
+def make_start_time_offset(minutes: int) -> str:
+
+    hours = math.floor(minutes / 60)
     minutes_left = minutes - (hours * 60)
 
-    time_marker = datetime.time (int (hours), int (minutes_left))
+    time_marker = datetime.time(int(hours), int(minutes_left))
     if hours > 0:
-       return '&t=' + time_marker.strftime("%Hh%Mm")
+        return '&t=' + time_marker.strftime("%Hh%Mm")
     return '&t=' + time_marker.strftime("%Mm")
+
 
 class YouTubeTranscriptChunker (PipelineStep):
     '''
@@ -34,9 +36,9 @@ class YouTubeTranscriptChunker (PipelineStep):
         '''
         Initializes the YouTubeTranscriptChunker object.
         '''
-        # pylint: disable-next=useless-parent-delegation 
-        super(YouTubeTranscriptChunker, self).__init__(output_location)  
-        self.chunker = Chunker (output_location)              
+        # pylint: disable-next=useless-parent-delegation
+        super(YouTubeTranscriptChunker, self).__init__(output_location)
+        self.chunker = Chunker(output_location)
 
     def chunk(self, pipeline_item: PipelineItem, chunk_size_words: int, overlap_words: int) -> list[PipelineItem]:
         '''
@@ -49,7 +51,8 @@ class YouTubeTranscriptChunker (PipelineStep):
          Returns:
              list[PipelineItem]: The chunks of the Video transcript.
         '''
-        chunks = self.chunker.chunk (pipeline_item, chunk_size_words, overlap_words)
+        chunks = self.chunker.chunk(
+            pipeline_item, chunk_size_words, overlap_words)
 
         # special case if we only have one chunk
         number_of_chunks = len(chunks)
@@ -57,11 +60,11 @@ class YouTubeTranscriptChunker (PipelineStep):
             return pipeline_item
 
         if number_of_chunks == 0:
-           return None
-        
+            return None
+
         # linear interpolation by chunk size after correction for overlap
         # this assumes text is evenly spread throughout the video, but this seems ok for lectures / presentations
-        original_length = len (pipeline_item.text)
+        original_length = len(pipeline_item.text)
         chunked_length = 0
         for chunk in chunks:
             chunked_length = chunked_length + len(chunk.text)
@@ -69,14 +72,16 @@ class YouTubeTranscriptChunker (PipelineStep):
         overlap_length = (chunked_length - original_length) / number_of_chunks
 
         start_minutes = 0
-        number_of_overlaps = 1 # irat chunk has only one overlap. So does last but we dont use that for the start point calulation
+        # irat chunk has only one overlap. So does last but we dont use that for the start point calulation
+        number_of_overlaps = 1
 
         for chunk in chunks:
             base_url = chunk.path
-            time_marker = make_start_time_offset (start_minutes)
+            time_marker = make_start_time_offset(start_minutes)
             chunk.path = base_url + time_marker
-            chunk_minutes = ((len(chunk.text) - (number_of_overlaps * overlap_length)) * pipeline_item.length_minutes / original_length)
-            number_of_overlaps = 2            
+            chunk_minutes = ((len(chunk.text) - (number_of_overlaps * overlap_length))
+                             * pipeline_item.length_minutes / original_length)
+            number_of_overlaps = 2
             start_minutes = start_minutes + chunk_minutes
 
         return chunks

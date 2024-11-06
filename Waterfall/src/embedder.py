@@ -33,7 +33,8 @@ class Embedder (PipelineStep):
         '''
         Initializes the Embedder object with the provided output location.
         '''
-        # pylint: disable-next=useless-parent-delegation TODO - investigate how superclass argument passing works
+        # TODO - investigate how superclass argument passing works
+        # pylint: disable-next=useless-parent-delegation 
         super(Embedder, self).__init__(output_location)
 
     def embed(self, pipeline_item: PipelineItem) -> PipelineItem:
@@ -63,15 +64,15 @@ class Embedder (PipelineStep):
         response = session.post(embed_url, json=json_input, headers=headers)
 
         if (response.status_code == 200):
-           response_json = json.loads (response.text)
-           embedding = response_json['embedding']        
+            response_json = json.loads(response.text)
+            embedding = response_json['embedding']
 
-           if path is not None:
-              repository.save(path, embedding)
+            if path is not None:
+                repository.save(path, embedding)
 
-           pipeline_item.embedding = embedding
+            pipeline_item.embedding = embedding
 
-           return pipeline_item
+            return pipeline_item
         else:
-           logger.error (f"Unable to summarise item: {pipeline_item.path}.")
-           return None
+            logger.error(f"Unable to summarise item: {pipeline_item.path}.")
+            return None

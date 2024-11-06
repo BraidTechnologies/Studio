@@ -4,12 +4,11 @@
 # Standard Library Imports
 import logging
 import os
-import requests
 import json
+import requests
 from requests.adapters import HTTPAdapter, Retry
 
 from workflow import PipelineItem, PipelineStep
-from summary_repository_facade import SummaryRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -29,6 +28,7 @@ headers = {
 class Chunker (PipelineStep):
     '''PipelineStep to chunk a text string'''
 
+    # pylint: disable-next=useless-parent-delegation 
     def __init__(self, output_location: str):
         '''
         Initializes the Chunker object with the provided output location.
@@ -60,36 +60,35 @@ class Chunker (PipelineStep):
 
         if chunk_size_words == 0:
             input_json = {
-               'request': {
-                   'text': pipeline_item.text,
-                   'overlapWords': overlap_words
-               }
+                'request': {
+                    'text': pipeline_item.text,
+                    'overlapWords': overlap_words
+                }
             }
         else:
             input_json = {
-               'request': {
-                 'text': pipeline_item.text,
-                 'chunkSize' : chunk_size_words,
-                 'overlapWords': overlap_words
-               }
+                'request': {
+                    'text': pipeline_item.text,
+                    'chunkSize': chunk_size_words,
+                    'overlapWords': overlap_words
+                }
             }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        pipeline_chunks = [] # If there is an error in the API, return an empty list
+        pipeline_chunks = []  # If there is an error in the API, return an empty list
 
-        if (response.status_code == 200):    
-           response_json = json.loads (response.text)
-           chunks = response_json['chunks']
+        if (response.status_code == 200):
+            response_json = json.loads(response.text)
+            chunks = response_json['chunks']
 
-           for i, chunk in enumerate(chunks):
-               new_item = PipelineItem()
-               new_item.path = pipeline_item.path
-               new_item.text = chunk
-               new_item.chunk = i
-               new_item.summary = pipeline_item.summary
-               new_item.embedding = pipeline_item.embedding
-               new_item.cluster = pipeline_item.cluster
-               pipeline_chunks.append(new_item)
+            for i, chunk in enumerate(chunks):
+                new_item = PipelineItem()
+                new_item.path = pipeline_item.path
+                new_item.text = chunk
+                new_item.chunk = i
+                new_item.summary = pipeline_item.summary
+                new_item.embedding = pipeline_item.embedding
+                new_item.cluster = pipeline_item.cluster
+                pipeline_chunks.append(new_item)
 
         return pipeline_chunks
-
