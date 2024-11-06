@@ -1,10 +1,10 @@
 '''Use Google Office to send a mail '''
-from workflow import WebSearchPipelineSpec
 import os
 import os.path
 import base64
 import mimetypes
 import logging
+
 from email.message import EmailMessage
 from email.mime.base import MIMEBase
 
@@ -14,6 +14,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+from workflow import WebSearchPipelineSpec
+
+
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
@@ -22,6 +26,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
+
 
 def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
     '''Use Gmail API to send the report
@@ -56,7 +61,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchP
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        logger.error (f'An error occurred: {error}')
+        logger.error(f'An error occurred: {error}')
 
 
 def send_message_with_attachment(service, output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
@@ -73,8 +78,8 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
         # create gmail api client
         message = EmailMessage()
 
-        #Body in HTML format
-        message.add_header('Content-Type','text/html')
+        # Body in HTML format
+        message.add_header('Content-Type', 'text/html')
         message.set_payload(body)
 
         # headers
@@ -83,7 +88,7 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
         message['Subject'] = spec.description
 
         # attachment
-        attachment_path = os.path.join(output_location, attachment)        
+        attachment_path = os.path.join(output_location, attachment)
 
         # guessing the MIME type
         type_subtype, _ = mimetypes.guess_type(attachment_path)

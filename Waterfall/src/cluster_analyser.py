@@ -5,7 +5,7 @@
 import logging
 from sklearn.cluster import KMeans
 
-from workflow import PipelineItem, PipelineStep
+from src.workflow import PipelineItem, PipelineStep
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

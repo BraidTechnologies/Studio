@@ -11,12 +11,12 @@ import { throwIfUndefined } from './Asserts';
 import { AssertionFailedError } from "./Errors";
 import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
-import { getDefaultEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { EChunkRepository, IRelevantEnrichedChunk} from '../../BraidCommon/src/EnrichedChunk';
-import { EStandardPrompts } from "../../BraidCommon/src/EnrichedQuery";
+import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EChunkRepository, IRelevantEnrichedChunk} from '../../CommonTs/src/EnrichedChunk';
+import { EStandardPrompts } from "../../CommonTs/src/EnrichedQuery";
 
-import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../BraidCommon/src/EnrichedQuery';
-import { QueryModelApi } from '../../BraidCommon/src/QueryModelApi';
+import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
 
 // We allow for the equivalent of 10 minutes of chat. 10 mins * 60 words = 600 words = 2400 tokens. 
 const kMaxTokens : number= 4096;

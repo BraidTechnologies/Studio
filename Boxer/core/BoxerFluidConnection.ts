@@ -2,7 +2,7 @@
 
 import { SharedMap } from "fluid-framework";import { Persona } from './Persona';
 
-import { FluidClientProps } from "../../BraidCommon/src/FluidTokenProvider";
+import { FluidClientProps } from "../../CommonTs/src/FluidTokenProvider";
 
 import { Message } from './Message';
 import { SharedEmbedding } from "./SharedEmbedding";

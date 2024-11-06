@@ -154,7 +154,8 @@ def deduplicate(current_links: list[PipelineItem], new_links: list[str]) -> list
 
 
 # remove links that point outside the main site being searched
-# pylint: disable-next=unused-argument we keep the argument bcs might need it for more sophisticate checking of URLs leaving the current page
+# We keep the argument bcs might need it for more sophisticate checking of URLs leaving the current page
+# pylint: disable-next=unused-argument 
 def remove_exits(source_url: str, links: list[str]) -> list[str]:
     # we also remove links starting with #as they are just the same page
     '''Remove links that point outside the main site being searched.

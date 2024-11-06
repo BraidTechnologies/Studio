@@ -4,12 +4,13 @@
 # Standard Library Imports
 import logging
 import os
+import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
-import json
 
-from workflow import PipelineItem, PipelineStep
-from summary_repository_facade import SummaryRespositoryFacade
+
+from src.workflow import PipelineItem, PipelineStep
+from src.summary_repository_facade import SummaryRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -29,10 +30,12 @@ headers = {
 class Summariser (PipelineStep):
     '''PipelineStep to create a summary for a text string'''
 
+    # pylint: disable-next=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the Summariser object with the provided output location.
         '''
+        # pylint: disable-next=useless-parent-delegation         
         super(Summariser, self).__init__(output_location)
 
     def summarise(self, pipeline_item: PipelineItem) -> PipelineItem:
@@ -57,8 +60,8 @@ class Summariser (PipelineStep):
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
         print("Summarising: " + pipeline_item.path)
-   
-        #summary_url = f'http://localhost:7071/api/Summarize?session={   
+
+        # summary_url = f'http://localhost:7071/api/Summarize?session={
         summary_url = f'https://braid-api.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
@@ -79,5 +82,5 @@ class Summariser (PipelineStep):
 
             return pipeline_item
         else:
-            logger.error (f"Unable to summarise item: {pipeline_item.path}.")
+            logger.error("Unable to summarise item: %s", pipeline_item.path)
             return None

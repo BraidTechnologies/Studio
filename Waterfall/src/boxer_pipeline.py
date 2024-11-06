@@ -46,7 +46,7 @@ class BoxerDataPipeline:
     def search(self,
                youtube_spec: YouTubePipelineSpec,
                html_spec: HtmlDirectedPipelineSpec,
-               file_spec: PipelineFileSpec ) -> list[PipelineItem]:
+               file_spec: PipelineFileSpec) -> list[PipelineItem]:
         '''
         Searches for HTML & YouTube content from a list of links.
 
@@ -65,45 +65,44 @@ class BoxerDataPipeline:
 
         all_chunks = []
         all_enriched_chunks = []
-    
+
         for html_url in html_spec.urls:
             chunk = PipelineItem()
-            chunk.path = html_url           
+            chunk.path = html_url
             html_items = html_crawler.crawl(chunk)
 
             for html_item in html_items:
                 downloaded = None
                 summarised = None
                 embedded = None
-                  
-                downloaded = html_downloader.download (html_item)
-                if (downloaded):
-                   summarised = summariser.summarise(downloaded)
-                if (summarised):
-                   embedded = embedder.embed(summarised)
-                if (embedded):
-                   all_enriched_chunks.append(embedded)  
 
+                downloaded = html_downloader.download(html_item)
+                if downloaded:
+                    summarised = summariser.summarise(downloaded)
+                if summarised:
+                    embedded = embedder.embed(summarised)
+                if embedded:
+                    all_enriched_chunks.append(embedded)
 
         youtube_items = youtube_searcher.search(youtube_spec)
 
-        for chunk in youtube_items:           
+        for chunk in youtube_items:
             chunk = youtube_downloader.download(chunk)
             chunks = youtube_chunker.chunk(
                 chunk, youtube_spec.max_words, youtube_spec.overlap_words)
             if (chunks):
-               all_chunks.extend(chunks)
+                all_chunks.extend(chunks)
 
         for chunk in all_chunks:
             summarised = None
-            embedded = None            
-            logger.info ('Processing:' + chunk.path)
-            if (chunk.text):
-               summarised = summariser.summarise(chunk)
-            if (summarised):
-               embedded = embedder.embed(summarised)
-            if (embedded):
-               all_enriched_chunks.append(embedded)
+            embedded = None
+            logger.info('Processing:' + chunk.path)
+            if chunk.text:
+                summarised = summariser.summarise(chunk)
+            if summarised:
+                embedded = embedder.embed(summarised)
+            if embedded:
+                all_enriched_chunks.append(embedded)
 
         output_results = []
         for chunk in all_enriched_chunks:
@@ -114,8 +113,9 @@ class BoxerDataPipeline:
             output_results.append(output_item)
 
         # save the test results to a json file
-        output_file = os.path.join(self.output_location, file_spec.output_data_name)
+        output_file = os.path.join(
+            self.output_location, file_spec.output_data_name)
         with open(output_file, 'w+', encoding='utf-8') as f:
-            json.dump(output_results, f)            
-              
+            json.dump(output_results, f)
+
         return all_enriched_chunks

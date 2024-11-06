@@ -3,7 +3,7 @@
 import { IStoredActivity, makeDateUTC, IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, 
    urlActivityRecordClassName, urlLikeActivityRecordClassName, messageActivityRecordClassName,
    urlActivityRecordSchemaNumber, urlLikeActivityRecordSchemaNumber, messageActivityRecordSchemaNumber } from '../core/ActivityRecord';
-import { EStorableApplicationIds } from '../../BraidCommon/src/IStorable';
+import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
 import { SessionKey } from '../core/Keys';
 import { getRecordRepository } from '../core/IActivityRepositoryFactory';
 import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';

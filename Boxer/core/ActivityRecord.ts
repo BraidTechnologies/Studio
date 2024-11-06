@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
-import { IStorable } from '../../BraidCommon/src/IStorable';
+import { IStorable } from '../../CommonTs/src/IStorable';
 
 export const activityRecordClassName = "IStoredActivity";
 export const activityRecordSchemaNumber = 1;

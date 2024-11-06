@@ -6,10 +6,10 @@ import { describe, it } from 'mocha';
 
 import { KStubEnvironmentVariables } from "../core/ConfigStrings";
 
-import { getEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
-import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
-import { EChunkRepository } from '../../BraidCommon/src/EnrichedChunk';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
+import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
 
 describe("Embedding", async function () {
 

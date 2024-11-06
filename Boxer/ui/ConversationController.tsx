@@ -29,10 +29,10 @@ import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';
 import { getDetaultAdminRepository} from '../core/IAdminRepository';
 import { makeSummaryCall } from '../core/ApiCalls';
 
-import { FindEnrichedChunkApi } from '../../BraidCommon/src/FindEnrichedChunkApi';
-import { getDefaultEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../BraidCommon/src/EnrichedChunk';
-import { EStorableApplicationIds } from '../../BraidCommon/src/IStorable';
+import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
+import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../CommonTs/src/EnrichedChunk';
+import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
 
 export interface IConversationControllerProps {
 
