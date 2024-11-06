@@ -9,7 +9,7 @@ import {
    FluentProvider, teamsDarkTheme, makeStyles
 } from '@fluentui/react-components';
 
-import { getDefaultLoginEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
+import { getDefaultLoginEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 
 // Local
 import { Persona } from '../core/Persona';

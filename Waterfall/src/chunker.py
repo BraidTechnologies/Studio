@@ -8,7 +8,7 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from workflow import PipelineItem, PipelineStep
+from src.workflow import PipelineItem, PipelineStep
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

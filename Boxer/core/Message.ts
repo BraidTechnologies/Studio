@@ -8,7 +8,7 @@ import { IKeyGenerator } from './IKeyGenerator';
 import { getDefaultKeyGenerator } from './IKeyGeneratorFactory';
 import { MDynamicStreamable, DynamicStreamableFactory } from "./StreamingFramework";
 import { areSameDate, areSameDeepArray } from './Utilities';
-import { IRelevantEnrichedChunk } from '../../BraidCommon/src/EnrichedChunk';
+import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedChunk';
 
 const keyGenerator: IKeyGenerator = getDefaultKeyGenerator();
 const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });

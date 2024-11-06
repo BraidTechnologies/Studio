@@ -17,8 +17,8 @@ import {
    Key24Regular
 } from '@fluentui/react-icons';
 
-import { getDefaultFluidEnvironment } from '../../BraidCommon/src/IEnvironmentFactory';
-import { EEnvironment } from '../../BraidCommon/src/IEnvironment';
+import { getDefaultFluidEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 
 import { Persona } from '../core/Persona';
 import { SessionKey, ConversationKey } from '../core/Keys';

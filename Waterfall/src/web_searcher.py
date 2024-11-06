@@ -6,7 +6,7 @@ import logging
 import os
 import requests
 
-from workflow import PipelineItem, WebSearchPipelineSpec
+from src.workflow import PipelineItem, WebSearchPipelineSpec
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

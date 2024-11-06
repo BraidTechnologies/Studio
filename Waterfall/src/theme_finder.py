@@ -4,8 +4,8 @@
 # Standard Library Imports
 import logging
 import os
-import requests
 import json
+import requests
 from requests.adapters import HTTPAdapter, Retry
 
 # Set up logging to display information about the execution of the script
@@ -46,11 +46,11 @@ class ThemeFinder:
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        if (response.status_code == 200):        
-           response_json = json.loads (response.text)        
-           theme = response_json['theme']
+        if (response.status_code == 200):
+            response_json = json.loads(response.text)
+            theme = response_json['theme']
 
-           return theme
+            return theme
         else:
-            logger.error (f"Unable to find theme for: {text}.")
+            logger.error("Unable to find theme for: %s", text)
             return None

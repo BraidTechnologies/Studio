@@ -8,8 +8,8 @@ import { IStoredActivity, IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMes
 import { SessionKey } from "./Keys";
 import { IActivityRepository } from "./IActivityRepository";
 
-import { getDefaultEnvironment } from "../../BraidCommon/src/IEnvironmentFactory";
-import { ActivityRepostoryApi} from '../../BraidCommon/src/ActivityRepositoryApi';
+import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
+import { ActivityRepostoryApi} from '../../CommonTs/src/ActivityRepositoryApi';
 
 
 // ActivityRepositoryCosmos 

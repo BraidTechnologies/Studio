@@ -6,7 +6,7 @@ import logging
 import os
 import json
 
-from make_local_file_path import make_local_file_path
+from src.make_local_file_path import make_local_file_path
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -16,6 +16,15 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 def strip_quotes(input_string):
+    """
+ Remove all single and double quotes from the input string.
+
+ Args:
+     input_string (str): The string from which quotes will be removed.
+
+ Returns:
+     str: The input string with all single and double quotes removed.
+    """
     return input_string.replace('\"', '').replace("'", '')
 
 

@@ -4,12 +4,12 @@
 # Standard Library Imports
 import logging
 import os
-import requests
 import json
+import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from workflow import PipelineItem, PipelineStep
-from embedder_repository_facade import EmbeddingRespositoryFacade
+from src.workflow import PipelineItem, PipelineStep
+from src.embedder_repository_facade import EmbeddingRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -29,12 +29,12 @@ headers = {
 class Embedder (PipelineStep):
     '''PipelineStep to create the embedding for a text string'''
 
+    # pylint: disable-next=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the Embedder object with the provided output location.
         '''
-        # TODO - investigate how superclass argument passing works
-        # pylint: disable-next=useless-parent-delegation 
+        # pylint: disable-next=useless-parent-delegation
         super(Embedder, self).__init__(output_location)
 
     def embed(self, pipeline_item: PipelineItem) -> PipelineItem:
@@ -74,5 +74,5 @@ class Embedder (PipelineStep):
 
             return pipeline_item
         else:
-            logger.error(f"Unable to summarise item: {pipeline_item.path}.")
+            logger.error("Unable to summarise item: %s", pipeline_item.path)
             return None
