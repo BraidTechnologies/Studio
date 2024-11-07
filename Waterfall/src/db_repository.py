@@ -33,10 +33,10 @@ class DbRespository:
         
         self.context_id = context_id
 
-        session = requests.Session()
+        self.session = requests.Session()
         retries = Retry(total=5, backoff_factor=1,
                         status_forcelist=[500, 502, 503, 504])
-        session.mount('https://', HTTPAdapter(max_retries=retries))
+        self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
         models_url = f'https://braid-api.azurewebsites.net/api/EnumerateModels?session={
             SESSION_KEY}'
@@ -44,7 +44,7 @@ class DbRespository:
             'request': ""
         }
 
-        response = session.post(models_url, json=json_input, headers=headers)
+        response = self.session.post(models_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
             data = response.json()
@@ -62,7 +62,22 @@ class DbRespository:
            functional_key (str): functionalKey to use for the record
            item (PipelineItem): The content to be saved.
         '''
+               
+        logger.debug('Loading: %s', functional_key)
 
+        chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
+            SESSION_KEY}'
+        json_input = {
+            'request': ""
+        }
+
+        response = self.session.post(chunk_url, json=json_input, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            if len(data) >= 1:         
+               return True
+        
         return None
 
     def load(self, functional_key: str, context_ID: str) -> PipelineItem:
@@ -93,18 +108,13 @@ class DbRespository:
         functional_key = make_local_file_path(path)        
         logger.debug('Loading: %s', functional_key)
 
-        session = requests.Session()
-        retries = Retry(total=5, backoff_factor=1,
-                        status_forcelist=[500, 502, 503, 504])
-        session.mount('https://', HTTPAdapter(max_retries=retries))
-
         chunk_url = f'https://braid-api.azurewebsites.net/api/GetChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': ""
         }
 
-        response = session.post(chunk_url, json=json_input, headers=headers)
+        response = self.session.post(chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
             data = response.json()
