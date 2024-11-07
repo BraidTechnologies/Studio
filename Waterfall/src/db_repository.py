@@ -47,8 +47,12 @@ class DbRespository:
         response = session.post(models_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            self.default_model = response.text.defaultId
-            self.default_embedding_model = response.text.defaultEmbeddingId
+            data = response.json()
+            self.default_model = data["defaultId"]
+            self.default_embedding_model = data["defaultEmbeddingId"]
+
+        else:
+            raise RuntimeError ("Error returned from API:" + response.text)
 
     def save(self, functional_key: str, item: PipelineItem) -> None:
         '''
@@ -103,6 +107,8 @@ class DbRespository:
         response = session.post(chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            return True
+            data = response.json()
+            if len(data) >= 1:         
+               return True
         
         return False

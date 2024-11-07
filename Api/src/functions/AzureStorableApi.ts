@@ -5,7 +5,7 @@
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultOkResponse, notFoundResponse } from "./Utility";
 import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "../../../CommonTs/src/IStorable";
 import {AzureLogger, loadStorable, saveStorable, removeStorable, loadRecentStorables, ICosmosStorableParams} from './CosmosStorableApi';
 
@@ -36,10 +36,14 @@ export async function getStorableApi(request: HttpRequest,
          else
             context.log("Loaded nothing.");
          
-         return {
-            status: 200,
-            body: JSON.stringify(result)
-         };
+         if (result)
+            return {
+               status: 200,
+               body: JSON.stringify(result)
+            };
+         else {
+            return notFoundResponse ();
+         }
       }
       catch (e: any) {
          context.error ("Failed load:" + e.toString());

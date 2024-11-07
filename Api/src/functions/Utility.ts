@@ -78,3 +78,11 @@ export function invalidRequestResponse(str: string): HttpResponseInit {
       body: "Invalid request:" + str
    };
 }
+
+export function notFoundResponse(): HttpResponseInit {
+
+   return {
+      status: 404, // Not Found
+      body: ""
+   };
+}
