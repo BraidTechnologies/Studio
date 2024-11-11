@@ -6,8 +6,8 @@ import os
 import logging
 import datetime
 import uuid
+import json
 import requests
-import jsonpickle
 from requests.adapters import HTTPAdapter, Retry
 
 from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableOperationResult
@@ -91,22 +91,20 @@ class DbRepository:
         chunk.storedSummary = None
         chunk.storedTitle = None
         chunk.relatedChunks = None
-
-        chunk_as_json = jsonpickle.encode(chunk)
-        
+       
         #chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
         chunk_url = f'http://localhost:7071/api/SaveChunk?session={            
             SESSION_KEY}'
         json_input = {
-            'request': chunk
+            'request': chunk.__dict__
         }
 
         response = self.session.post(
             chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            data: IStorableOperationResult = response.json()
-            if data.ok:
+            response_json = json.loads(response.text)
+            if response_json['ok']:
                return True
 
         return None

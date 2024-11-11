@@ -84,6 +84,14 @@ export async function saveStorableApi (request: HttpRequest,
 
          let logger = new AzureLogger(context);
          await saveStorable(spec, params, logger);
+
+         let result: IStorableOperationResult = {
+            ok: true
+         }
+         return {
+            status: 200,
+            body: JSON.stringify(result)
+         };         
       }
       catch (e: any) {
          context.error("Failed save:" + e.toString());
@@ -92,7 +100,6 @@ export async function saveStorableApi (request: HttpRequest,
             body: "Failed save."
          };
       }
-      return defaultOkResponse();
    }
    else {
       context.error("Failed session validation");      
