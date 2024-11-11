@@ -37,7 +37,7 @@ describe("QueryModel", async function () {
          enrichmentDocumentPrompt: enrichmentDocumentPrompt,
          history: new Array<IConversationElement>(),
          question: question,
-         similarityThreshold: 0.5,
+         similarityThreshold: 0.4,
          maxCount: 2
       };
 

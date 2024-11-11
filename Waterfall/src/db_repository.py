@@ -4,9 +4,13 @@
 # Standard Library Imports
 import os
 import logging
+import datetime
+import uuid
 import requests
+import jsonpickle
 from requests.adapters import HTTPAdapter, Retry
 
+from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableOperationResult
 from src.make_local_file_path import make_local_file_path
 from src.workflow import PipelineItem
 
@@ -24,13 +28,14 @@ headers = {
     'Accept': 'application/json'
 }
 
-class DbRespository:
+
+class DbRepository:
     '''
     Class providing load, save, and existence check for files in the Braid Cosmos database.
     '''
 
     def __init__(self, context_id: str):
-        
+
         self.context_id = context_id
 
         self.session = requests.Session()
@@ -44,7 +49,8 @@ class DbRespository:
             'request': ""
         }
 
-        response = self.session.post(models_url, json=json_input, headers=headers)
+        response = self.session.post(
+            models_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
             data = response.json()
@@ -52,7 +58,7 @@ class DbRespository:
             self.default_embedding_model = data["defaultEmbeddingId"]
 
         else:
-            raise RuntimeError ("Error returned from API:" + response.text)
+            raise RuntimeError("Error returned from API:" + response.text)
 
     def save(self, functional_key: str, item: PipelineItem) -> None:
         '''
@@ -62,22 +68,47 @@ class DbRespository:
            functional_key (str): functionalKey to use for the record
            item (PipelineItem): The content to be saved.
         '''
-               
+
         logger.debug('Loading: %s', functional_key)
 
-        chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
+        utc_time  = datetime.datetime.now(datetime.timezone.utc)
+        utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
+
+        chunk: IStoredChunk = IStoredChunk()
+        chunk.id = str (uuid.uuid4())
+        chunk.applicationId = "Test"
+        chunk.contextId = "TestContext"
+        chunk.userId = None
+        chunk.created = utc_time_string
+        chunk.amended = chunk.created
+        chunk.className = "TestChunkClass"
+        chunk.schemaVersion = "1"
+        chunk.chunkFunctionalKey = functional_key
+        chunk.parentChunkId = None
+        chunk.originalText = item.text
+        # storedEmbedding: Union[IStoredEmbedding, None]
+        chunk.storedEmbedding = None
+        chunk.storedSummary = None
+        chunk.storedTitle = None
+        chunk.relatedChunks = None
+
+        chunk_as_json = jsonpickle.encode(chunk)
+        
+        #chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
+        chunk_url = f'http://localhost:7071/api/SaveChunk?session={            
             SESSION_KEY}'
         json_input = {
-            'request': ""
+            'request': chunk
         }
 
-        response = self.session.post(chunk_url, json=json_input, headers=headers)
+        response = self.session.post(
+            chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            data = response.json()
-            if len(data) >= 1:         
+            data: IStorableOperationResult = response.json()
+            if data.ok:
                return True
-        
+
         return None
 
     def load(self, functional_key: str, context_ID: str) -> PipelineItem:
@@ -92,7 +123,7 @@ class DbRespository:
         Returns:
            item (PipelineItem): The loaded content or None 
         '''
-            
+
         return None
 
     def exists(self, path: str) -> bool:
@@ -105,7 +136,7 @@ class DbRespository:
         Returns:
            bool: True if the record exists, False otherwise.
         '''
-        functional_key = make_local_file_path(path)        
+        functional_key = make_local_file_path(path)
         logger.debug('Loading: %s', functional_key)
 
         chunk_url = f'https://braid-api.azurewebsites.net/api/GetChunk?session={
@@ -114,11 +145,12 @@ class DbRespository:
             'request': ""
         }
 
-        response = self.session.post(chunk_url, json=json_input, headers=headers)
+        response = self.session.post(
+            chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            data = response.json()
-            if len(data) >= 1:         
-               return True
-        
+            data: IStorableOperationResult = response.json()
+            if data.ok:
+                return True
+
         return False

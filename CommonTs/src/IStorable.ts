@@ -22,7 +22,7 @@ export enum EStorableApplicationIds {
  * - created: Date - timestamp of creation
  * - amended: Date - timestamp of amendment
  * - className: string - class name; further fields are class-specific
- * - schemaVersion: number - allows versioning on the schema* 
+ * - schemaVersion: string - allows versioning on the schema* 
  */
 export interface IStorable {
                        
@@ -30,10 +30,10 @@ export interface IStorable {
    applicationId: string;    // Name of the application that generated and uses the chunk
    contextId: string | undefined;  // id to identify context - such as a conversation in Boxer. Undefined if application has no multi-tenanting. 
    userId: string | undefined;     // id to identify the user. Undefined if there is no direct user. 
-   created: Date;      // creation timestamp
-   amended: Date;      // amend timestamp   
+   created: string;      // creation timestamp as ISO date string
+   amended: string;      // amend timestamp as ISO date string  
    className: string;  // className - all further fields are specific to the class
-   schemaVersion: number;  // Allow versioning on the schema       
+   schemaVersion: string;  // Allow versioning on the schema       
 }
 
 /**

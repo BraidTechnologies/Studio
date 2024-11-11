@@ -26,11 +26,12 @@ export async function getStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest: IStorableQuerySpec = await request.json() as IStorableQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;
 
          let logger = new AzureLogger(context);
 
-         let result = await loadStorable (jsonRequest.id, params, logger);
+         let result = await loadStorable (spec.id, params, logger);
          if (result)
             context.log("Loaded:" + result.toString());
          else
@@ -77,11 +78,12 @@ export async function saveStorableApi (request: HttpRequest,
 
    if (isSessionValid(request, context)) {
 
-      let jsonRequest: IStorable = await request.json() as IStorable;
-
       try {
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorable;   
+
          let logger = new AzureLogger(context);
-         await saveStorable(jsonRequest, params, logger);
+         await saveStorable(spec, params, logger);
       }
       catch (e: any) {
          context.error("Failed save:" + e.toString());
@@ -116,11 +118,12 @@ export async function removeStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest: IStorableQuerySpec = await request.json() as IStorableQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;   
 
          let logger = new AzureLogger(context);
 
-         let ok = await removeStorable (jsonRequest.id, params, logger);
+         let ok = await removeStorable (spec.id, params, logger);
 
          let result: IStorableOperationResult = {
             ok: ok
@@ -161,11 +164,12 @@ export async function getRecentStorablesApi(request: HttpRequest,
       let loaded: Array<IStorable> | undefined = undefined;
 
       try {
-         let jsonRequest: IStorableMultiQuerySpec = await request.json() as IStorableMultiQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
 
          let logger = new AzureLogger(context);
 
-         loaded = await loadRecentStorables (jsonRequest, params, logger);
+         loaded = await loadRecentStorables (spec, params, logger);
          context.log("Loaded:" + loaded.toString());
       }
       catch (e: any) {

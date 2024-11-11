@@ -7,7 +7,7 @@ import sys
 import logging
 
 from src.workflow import PipelineItem
-from src.db_repository import DbRespository
+from src.db_repository import DbRepository
 
 test_root = os.path.dirname(__file__)
 parent = os.path.abspath(os.path.join(test_root, '..'))
@@ -27,7 +27,7 @@ logger.setLevel(logging.ERROR)
 def test_basic():
     ''' Test construction '''
     test_context = "TestContext"
-    repository = DbRespository(test_context)
+    repository = DbRepository(test_context)
     assert repository.context_id == test_context
 
 def test_does_not_exist():
@@ -35,7 +35,7 @@ def test_does_not_exist():
     test_path = 'fail_test.html'
     test_context = "TestContext"
 
-    repository = DbRespository(test_context)
+    repository = DbRepository(test_context)
     exists = repository.exists(test_path)
     # saved = repository.load (test_path, test_extention)
 
@@ -50,7 +50,7 @@ def test_save():
     item.summary = "Summary"
     item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
 
-    repository = DbRespository(test_context)
+    repository = DbRepository(test_context)
     saved = repository.save(item.path, item)
 
     assert saved

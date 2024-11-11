@@ -15,12 +15,14 @@ declare var process: any;
 
 describe("StorableChunk", async function () {
 
+   let now = new Date().toISOString();
+
    let record : IStoredChunk = {
       id: randomKey(),
       applicationId: "Test",
-      schemaVersion: 1,
-      created: new Date(),
-      amended: new Date(),      
+      schemaVersion: "1",
+      created: now,
+      amended: now,      
       contextId: "madeupId",
       userId: "madeeupId",
       className: "madeUpClass",

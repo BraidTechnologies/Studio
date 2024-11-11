@@ -44,7 +44,7 @@ export class StorableRepostoryApi {
       var response: any;
 
       try {
-         response = await axios.post(url, record);
+         response = await axios.post(url, {request: record});
 
          if (response.status === 200) {
             return true;
@@ -69,13 +69,13 @@ export class StorableRepostoryApi {
     */
    async remove (recordId: string, url: string) : Promise<boolean> {
 
-      let storable: IStorableQuerySpec = {
+      let query: IStorableQuerySpec = {
          id: recordId
       }
       var response: any;
 
       try {
-         response = await axios.post(url, storable);
+         response = await axios.post(url, {request: query});
 
          if (response.status === 200) {
             return true;
@@ -100,13 +100,13 @@ export class StorableRepostoryApi {
     */
    async load (recordId: string, url: string) : Promise<IStorable | undefined> {
 
-      let storable: IStorableQuerySpec = {
+      let query: IStorableQuerySpec = {
          id: recordId
       }
       var response: any;
 
       try {
-         response = await axios.post(url, storable);
+         response = await axios.post(url, {request: query});
 
          if (response.status === 200) {          
             return (response.data as IStorable);
@@ -134,7 +134,7 @@ export class StorableRepostoryApi {
       var response: any;
 
       try {
-         response = await axios.post(url, querySpec);
+         response = await axios.post(url, {request: querySpec});
 
          if (response.status === 200) {
 

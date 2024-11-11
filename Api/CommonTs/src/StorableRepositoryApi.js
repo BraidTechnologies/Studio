@@ -41,7 +41,7 @@ class StorableRepostoryApi {
             var _a;
             var response;
             try {
-                response = yield axios_1.default.post(url, record);
+                response = yield axios_1.default.post(url, { request: record });
                 if (response.status === 200) {
                     return true;
                 }
@@ -66,12 +66,12 @@ class StorableRepostoryApi {
     remove(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let storable = {
+            let query = {
                 id: recordId
             };
             var response;
             try {
-                response = yield axios_1.default.post(url, storable);
+                response = yield axios_1.default.post(url, { request: query });
                 if (response.status === 200) {
                     return true;
                 }
@@ -96,12 +96,12 @@ class StorableRepostoryApi {
     load(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let storable = {
+            let query = {
                 id: recordId
             };
             var response;
             try {
-                response = yield axios_1.default.post(url, storable);
+                response = yield axios_1.default.post(url, { request: query });
                 if (response.status === 200) {
                     return response.data;
                 }
@@ -128,7 +128,7 @@ class StorableRepostoryApi {
             var _a;
             var response;
             try {
-                response = yield axios_1.default.post(url, querySpec);
+                response = yield axios_1.default.post(url, { request: querySpec });
                 if (response.status === 200) {
                     let responseRecords = response.data;
                     let storedRecords = new Array();

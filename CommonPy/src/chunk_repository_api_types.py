@@ -20,8 +20,6 @@ Classes:
 import datetime
 from typing import TypedDict, Union, List
 
-
-
 class IStoredEmbedding(TypedDict, total=True):
     """
     A TypedDict representing a stored embedding.
@@ -58,16 +56,16 @@ class IStorable:
      created (datetime): The timestamp when the entity was created.
      amended (datetime): The timestamp when the entity was last modified.
      className (str): The name of the class.
-     schemaVersion (float): The version of the schema used by the entity.
+     schemaVersion (str): The version of the schema used by the entity.
     """
     id: Union[str, None]
     applicationId: str
     contextId: Union[str, None]
     userId: Union[str, None]
-    created: datetime
-    amended: datetime
+    created: str
+    amended: str
     className: str
-    schemaVersion: float
+    schemaVersion: str
 
 
 class IStoredChunk(IStorable):
@@ -100,3 +98,9 @@ class IStoredChunkQuerySpec(TypedDict, total=True):
      chunkFunctionalKey (str): The functional key used to identify the chunk.
     """
     chunkFunctionalKey: str
+
+class IStorableOperationResult:
+   """ 
+   Defines the results of a storable operation - true or false. 
+   """
+   ok :bool
