@@ -6,14 +6,14 @@ import logging
 import os
 import json
 
-from workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem, PipelineFileSpec
-from youtube_searcher import YoutubePlaylistSearcher
-from youtube_transcript_downloader import YouTubeTranscriptDownloader
-from youtube_transcript_chunker import YouTubeTranscriptChunker
-from html_link_crawler import HtmlLinkCrawler
-from html_file_downloader import HtmlFileDownloader
-from summariser import Summariser
-from embedder import Embedder
+from src.workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem, PipelineFileSpec
+from src.youtube_searcher import YoutubePlaylistSearcher
+from src.youtube_transcript_downloader import YouTubeTranscriptDownloader
+from src.youtube_transcript_chunker import YouTubeTranscriptChunker
+from src.html_link_crawler import HtmlLinkCrawler
+from src.html_file_downloader import HtmlFileDownloader
+from src.summariser import Summariser
+from src.embedder import Embedder
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

@@ -39,10 +39,8 @@ def test_does_not_exist():
 
     repository = DbRepository(test_context)
     exists = repository.exists(test_path)
-    # saved = repository.load (test_path, test_extention)
 
     assert not exists
-    # assert saved != text
 
 
 def test_save():
@@ -75,13 +73,13 @@ def test_save_exists():
 
     if (saved):
         exists = repository.exists(item.path)
-    # saved = repository.load (test_path, test_extention)
 
     assert saved
     assert exists
 
+
 def test_save_load():
-    ''' Test save & then that it exists '''
+    ''' Test save & then that it can be loaded '''
 
     test_context = "TestContext"
     item = PipelineItem()
@@ -94,8 +92,11 @@ def test_save_load():
 
     loaded = False
 
-    if (saved):
-        loaded = repository.load(item.path, None)
+    if saved:
+        loaded = repository.load(item.path)
 
     assert saved
     assert loaded
+    assert loaded.path == item.path
+    assert loaded.embedding == item.embedding
+    assert loaded.summary == item.summary

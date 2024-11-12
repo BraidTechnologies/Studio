@@ -10,7 +10,8 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableQuerySpec
+from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableQuerySpec, IStoredEmbedding, IStoredTextRendering
+from CommonPy.src.type_utilities import safe_dict_to_object, safe_cast
 from src.make_local_file_path import make_local_file_path
 from src.workflow import PipelineItem
 
@@ -74,6 +75,14 @@ class DbRepository:
         utc_time = datetime.datetime.now(datetime.timezone.utc)
         utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
 
+        summary: IStoredTextRendering = IStoredTextRendering()
+        summary.modelId = self.default_model
+        summary.text = item.summary
+
+        embedding: IStoredEmbedding = IStoredEmbedding()
+        embedding.modelId = self.default_embedding_model
+        embedding.embedding = item.embedding
+
         chunk: IStoredChunk = IStoredChunk()
         chunk.id = str(uuid.uuid4())
         chunk.applicationId = "Test"
@@ -86,9 +95,8 @@ class DbRepository:
         chunk.functionalSearchKey = functional_key
         chunk.parentChunkId = None
         chunk.originalText = item.text
-        # storedEmbedding: Union[IStoredEmbedding, None]
-        chunk.storedEmbedding = None
-        chunk.storedSummary = None
+        chunk.storedEmbedding = embedding.__dict__
+        chunk.storedSummary = summary.__dict__
         chunk.storedTitle = None
         chunk.relatedChunks = None
 
@@ -107,7 +115,7 @@ class DbRepository:
 
         return False
 
-    def load(self, path: str, context_ID: str) -> PipelineItem:
+    def load(self, path: str) -> PipelineItem:
         '''
         Load content from the database based on the provided context and functional key. 
         If the file exists in the output location, its contents are read and returned as a string. 
@@ -126,8 +134,8 @@ class DbRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Loading: %s', functional_key)
 
-        #chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={        
+        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
@@ -137,14 +145,37 @@ class DbRepository:
             chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
+
             response_json = json.loads(response.text)
+
+            # Convert the main class and nested classes from JSON to Python classes
+            response_obj = safe_dict_to_object(response_json)
+            safe_response = safe_cast(response_obj, IStoredChunk)
+
+            summary_obj = safe_dict_to_object(response_json['storedSummary'])
+            safe_summary = safe_cast(summary_obj, IStoredTextRendering)
+
+            embedding_obj = safe_dict_to_object(
+                response_json['storedEmbedding'])
+            safe_embedding = safe_cast(embedding_obj, IStoredEmbedding)
+
+            # Glue them together into one Python class
+            safe_response.storedEmbedding = safe_embedding
+            safe_response.storedSummary = safe_summary
+
+            # Map from a Chunk to a PipelineItem
             item = PipelineItem()
             item.path = path
-            item.text = response_json['originalText']
-            if (response_json['storedSummary']):
-               item.summary = response_json['storedSummary']['text']
-            if (response_json['storedEmbedding']) :                   
-               item.embedding = response_json['storedEmbedding']['embedding']
+            item.text = safe_response.originalText
+            if safe_response.storedSummary:
+                item.summary = safe_response.storedSummary.text
+            else:
+                item.summary = None
+            if safe_response.storedEmbedding:
+                item.embedding = safe_response.storedEmbedding.embedding
+            else:
+                item.embedding = None
+
             return item
 
         return None
@@ -165,8 +196,8 @@ class DbRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Checking existence of: %s', functional_key)
 
-        #chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={        
+        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
