@@ -79,3 +79,23 @@ def test_save_exists():
 
     assert saved
     assert exists
+
+def test_save_load():
+    ''' Test save & then that it exists '''
+
+    test_context = "TestContext"
+    item = PipelineItem()
+    item.path = "https://microsoft.com"
+    item.summary = "Summary"
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    repository = DbRepository(test_context)
+    saved = repository.save(item.path, item)
+
+    loaded = False
+
+    if (saved):
+        loaded = repository.load(item.path, None)
+
+    assert saved
+    assert loaded

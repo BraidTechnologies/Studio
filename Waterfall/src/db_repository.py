@@ -107,7 +107,7 @@ class DbRepository:
 
         return False
 
-    def load(self, functional_key: str, context_ID: str) -> PipelineItem:
+    def load(self, path: str, context_ID: str) -> PipelineItem:
         '''
         Load content from the database based on the provided context and functional key. 
         If the file exists in the output location, its contents are read and returned as a string. 
@@ -119,6 +119,33 @@ class DbRepository:
         Returns:
            item (PipelineItem): The loaded content or None 
         '''
+
+        functional_key = make_local_file_path(path)
+        spec: IStorableQuerySpec = IStorableQuerySpec()
+        spec.id = None
+        spec.functionalSearchKey = functional_key
+        logger.debug('Loading: %s', functional_key)
+
+        #chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        chunk_url = f'http://localhost:7071/api/FindChunk?session={        
+            SESSION_KEY}'
+        json_input = {
+            'request': spec.__dict__
+        }
+
+        response = self.session.post(
+            chunk_url, json=json_input, headers=headers)
+
+        if response.status_code == 200:
+            response_json = json.loads(response.text)
+            item = PipelineItem()
+            item.path = path
+            item.text = response_json['originalText']
+            if (response_json['storedSummary']):
+               item.summary = response_json['storedSummary']['text']
+            if (response_json['storedEmbedding']) :                   
+               item.embedding = response_json['storedEmbedding']['embedding']
+            return item
 
         return None
 
@@ -136,7 +163,7 @@ class DbRepository:
         spec: IStorableQuerySpec = IStorableQuerySpec()
         spec.id = None
         spec.functionalSearchKey = functional_key
-        logger.debug('Loading: %s', functional_key)
+        logger.debug('Checking existence of: %s', functional_key)
 
         #chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
         chunk_url = f'http://localhost:7071/api/FindChunk?session={        
