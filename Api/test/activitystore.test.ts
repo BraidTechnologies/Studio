@@ -15,7 +15,7 @@ declare var process: any;
 
 describe("StorableActivity", async function () {
 
-   let now = new Date().toISOString();
+   let now = new Date().toUTCString();
    let record : IStorable = {
       id: randomKey(),
       applicationId: "Test",
@@ -23,6 +23,7 @@ describe("StorableActivity", async function () {
       created: now,
       amended: now,      
       contextId: "madeupId",
+      functionalSearchKey: undefined,
       userId: "madeeupId",
       className: "madeUpClass"      
    }

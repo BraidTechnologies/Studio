@@ -45,6 +45,18 @@ export class ChunkRepostoryApi extends Api implements IStorableRepostoryApiWrapp
       }
 
    /**
+    * Asynchronously finds a record from the Chunk repository API.
+    * 
+    * @param functionalSearchKey - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+    async find (functionalSearchKey: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.findChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.find (functionalSearchKey, apiUrl);  
+   }
+
+   /**
     * Asynchronously saves a record to the chunk repository API.
     * 
     * @param record - The record to be saved, must implement the IStoredChunk interface.

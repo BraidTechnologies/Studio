@@ -35,20 +35,10 @@ export interface IStoredTextRendering {
  */
 export interface IStoredChunk extends IStorable {
 
-   chunkFunctionalKey: string;              // Application level key
    parentChunkId: string | undefined;       // primary key to parent document
    originalText: string | undefined;        // original text - if undefined, it has been thrown way (as maybe it can be reconstructed)
    storedEmbedding: IStoredEmbedding | undefined;   // Embedding of the original text
    storedSummary: IStoredTextRendering | undefined; // Summary of the original text - generated with application specific prompt
    storedTitle: IStoredTextRendering | undefined;   // Title for the original text - generated with application specific prompt   
    relatedChunks: Array <string> | undefined;       // An optional array of related chunks - often the full set that was pulled from a parent document
-}
-
-/**
- * Defines the structure of a query specification for searching for a single record.
- * Includes the functional key of the record. 
- */
-export interface IStoredChunkQuerySpec {
-
-   chunkFunctionalKey: string;              // Application level key
 }

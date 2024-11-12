@@ -67,7 +67,8 @@ class StorableRepostoryApi {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             let query = {
-                id: recordId
+                id: recordId,
+                functionalSearchKey: undefined
             };
             var response;
             try {
@@ -97,7 +98,39 @@ class StorableRepostoryApi {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             let query = {
-                id: recordId
+                id: recordId,
+                functionalSearchKey: undefined
+            };
+            var response;
+            try {
+                response = yield axios_1.default.post(url, { request: query });
+                if (response.status === 200) {
+                    return response.data;
+                }
+                else {
+                    console.error("Error, status: " + response.status);
+                    return undefined;
+                }
+            }
+            catch (e) {
+                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
+                return undefined;
+            }
+        });
+    }
+    /**
+     * Asynchronously finds a record from the Storable repository API.
+     *
+     * @param recordId - The ID of the record to be removed.
+     * @param url - fully factored URL to the API to call
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+     */
+    find(functionalSearchKey, url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            let query = {
+                id: undefined,
+                functionalSearchKey: functionalSearchKey
             };
             var response;
             try {

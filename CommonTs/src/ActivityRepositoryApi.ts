@@ -44,6 +44,18 @@ export class ActivityRepostoryApi extends Api implements IStorableRepostoryApiWr
    }
 
    /**
+    * Asynchronously finds a record from the activity repository API.
+    * 
+    * @param functionalSearchKey - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async find (functionalSearchKey: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.findActivityApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.load (functionalSearchKey, apiUrl);  
+   }
+
+   /**
     * Asynchronously saves a record to the activity repository API.
     * 
     * @param record - The record to be saved, must implement the IStorable interface.

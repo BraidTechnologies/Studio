@@ -42,7 +42,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    }   
    getActivityApi(): string {
       return "http://localhost:7071/api/GetActivity"      
-   }   
+   }  
+   findActivityApi(): string {
+      return "http://localhost:7071/api/FindActivity"      
+   }     
    loginWithLinkedInApi(): string {
       return "http://localhost:7071/api/LoginWithLinkedIn"; 
    }
@@ -87,7 +90,10 @@ export class DevelopmentEnvironment implements IEnvironment {
    }   
    getChunkApi(): string{
       return "http://localhost:7071/api/GetChunk";
-   }      
+   }    
+   findChunkApi(): string{
+      return "http://localhost:7071/api/FindChunk";
+   }       
 }
 
 /**
@@ -128,6 +134,9 @@ export class StagingEnvironment implements IEnvironment {
    getActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivity"      
    }     
+   findActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindActivity"      
+   }    
    getActivitiesApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivities";      
    }  
@@ -176,6 +185,9 @@ export class StagingEnvironment implements IEnvironment {
    getChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/GetStoredChunk";   
    }
+   findChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/FindStoredChunk";   
+   }   
 }
 
 /**
@@ -217,6 +229,9 @@ export class ProductionEnvironment implements IEnvironment {
    getActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivity"      
    }     
+   findActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindActivity"      
+   }       
    getActivitiesApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetActivities"      
    }       
@@ -265,4 +280,7 @@ export class ProductionEnvironment implements IEnvironment {
    getChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/GetStoredChunk";   
    }   
+   findChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/FindStoredChunk";   
+   }      
 }

@@ -12,6 +12,7 @@ export interface IStorableRepostoryApiWrapper {
    save (record: IStorable) : Promise<boolean>;  
    remove (recordId: string) : Promise<boolean>;
    load (recordId: string) : Promise<IStorable | undefined>;
+   find (functionalSearhKey: string) : Promise<IStorable | undefined>;   
 };
 
 /**
@@ -70,8 +71,10 @@ export class StorableRepostoryApi {
    async remove (recordId: string, url: string) : Promise<boolean> {
 
       let query: IStorableQuerySpec = {
-         id: recordId
+         id: recordId,
+         functionalSearchKey: undefined         
       }
+      
       var response: any;
 
       try {
@@ -101,7 +104,40 @@ export class StorableRepostoryApi {
    async load (recordId: string, url: string) : Promise<IStorable | undefined> {
 
       let query: IStorableQuerySpec = {
-         id: recordId
+         id: recordId,
+         functionalSearchKey: undefined
+      }
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: query});
+
+         if (response.status === 200) {          
+            return (response.data as IStorable);
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return undefined;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return undefined;       
+      } 
+   }
+
+   /**
+    * Asynchronously finds a record from the Storable repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async find (functionalSearchKey: string, url: string) : Promise<IStorable | undefined> {
+
+      let query: IStorableQuerySpec = {
+         id: undefined,
+         functionalSearchKey: functionalSearchKey
       }
       var response: any;
 

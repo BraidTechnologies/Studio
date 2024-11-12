@@ -8,18 +8,18 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 // Internal imports
 import { chunkStorableAttributes } from './CosmosStorableApi';
-import { removeStorableApi, saveStorableApi, getStorableApi, getRecentStorablesApi } from "./AzureStorableApi";
+import { findStorableApi, removeStorableApi, saveStorableApi, getStorableApi, getRecentStorablesApi } from "./AzureStorableApi";
 
 app.http('GetChunk', {
-   methods: ['POST'],
+   methods: ['GET', 'POST'],
    authLevel: 'anonymous',
    handler: getChunk
 });
 
 /**
- * Saves an Chunk record based on the provided request and context.
+ * Loads a Chunk record based on the provided request and context.
  * Validates the session key from the request query parameters against predefined session keys.
- * If the session key is valid, logs the validation status, processes the JSON request, and saves the activity.
+ * If the session key is valid, logs the validation status, processes the JSON request, and loads the Chunk.
  * Returns an HTTP response with a status code and the session key or an error message.
  *
  * @param request - The HTTP request containing the Chunk data.
@@ -29,6 +29,27 @@ app.http('GetChunk', {
 export async function getChunk(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
    
    return getStorableApi (request, chunkStorableAttributes, context);
+};
+
+app.http('FindChunk', {
+   methods: ['GET', 'POST'],
+   authLevel: 'anonymous',
+   handler: findChunk
+});
+
+/**
+ * Loads a Chunk record based on the provided request and context.
+ * Validates the session key from the request query parameters against predefined session keys.
+ * If the session key is valid, logs the validation status, processes the JSON request, and loads the Chunk.
+ * Returns an HTTP response with a status code and the session key or an error message.
+ *
+ * @param request - The HTTP request containing the Chunk data.
+ * @param context - The context for the current invocation.
+ * @returns A promise that resolves to an HTTP response with the status and response body.
+ */
+export async function findChunk(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+   
+   return findStorableApi (request, chunkStorableAttributes, context);
 };
 
 app.http('SaveChunk', {

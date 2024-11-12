@@ -24,11 +24,13 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
+
 def test_basic():
     ''' Test construction '''
     test_context = "TestContext"
     repository = DbRepository(test_context)
     assert repository.context_id == test_context
+
 
 def test_does_not_exist():
     ''' Test non-existence '''
@@ -42,6 +44,7 @@ def test_does_not_exist():
     assert not exists
     # assert saved != text
 
+
 def test_save():
     ''' Test save '''
     test_context = "TestContext"
@@ -54,3 +57,25 @@ def test_save():
     saved = repository.save(item.path, item)
 
     assert saved
+
+
+def test_save_exists():
+    ''' Test save & then that it exists '''
+
+    test_context = "TestContext"
+    item = PipelineItem()
+    item.path = "https://microsoft.com"
+    item.summary = "Summary"
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    repository = DbRepository(test_context)
+    saved = repository.save(item.path, item)
+
+    exists = False
+
+    if (saved):
+        exists = repository.exists(item.path)
+    # saved = repository.load (test_path, test_extention)
+
+    assert saved
+    assert exists

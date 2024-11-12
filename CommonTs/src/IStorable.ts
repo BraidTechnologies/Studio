@@ -19,6 +19,7 @@ export enum EStorableApplicationIds {
  * - applicationId: string - identifies the application - one of the Enums above. 
  * - contextId: string - identifies the context, e.g., a conversation in Boxer
  * - userId: string | undefined - identifies the user; undefined if no direct user
+ * - functionalSearchKey: string | undefined - used if the app needs to searcg by an attribute other than primary key
  * - created: Date - timestamp of creation
  * - amended: Date - timestamp of amendment
  * - className: string - class name; further fields are class-specific
@@ -29,6 +30,7 @@ export interface IStorable {
    id : string | undefined;  // id of the object that is stored - primary key. Can be undefined before the object is stored. 
    applicationId: string;    // Name of the application that generated and uses the chunk
    contextId: string | undefined;  // id to identify context - such as a conversation in Boxer. Undefined if application has no multi-tenanting. 
+   functionalSearchKey: string | undefined; // Used if the app needs to searcg by an attribute other than primary key
    userId: string | undefined;     // id to identify the user. Undefined if there is no direct user. 
    created: string;      // creation timestamp as ISO date string
    amended: string;      // amend timestamp as ISO date string  
@@ -53,6 +55,7 @@ export interface IStorableMultiQuerySpec {
 export interface IStorableQuerySpec {
 
    id : string | undefined;  // id of the object that is stored - primary key.  
+   functionalSearchKey: string | undefined; // If the id is unefined, this is used for the search
 }
 
 /**

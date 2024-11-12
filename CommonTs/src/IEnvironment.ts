@@ -22,6 +22,7 @@ export interface IEnvironment {
    saveActivityApi(): string;
    removeActivityApi(): string;
    getActivityApi(): string;   
+   findActivityApi(): string;      
    getActivitiesApi(): string;
    boxerHome(): string;
    loginWithLinkedInApi(): string;
@@ -38,6 +39,7 @@ export interface IEnvironment {
    saveChunkApi() : string;
    removeChunkApi(): string;
    getChunkApi(): string;
+   findChunkApi(): string;   
 }
 
 

@@ -10,7 +10,7 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableOperationResult
+from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStorableQuerySpec
 from src.make_local_file_path import make_local_file_path
 from src.workflow import PipelineItem
 
@@ -60,7 +60,7 @@ class DbRepository:
         else:
             raise RuntimeError("Error returned from API:" + response.text)
 
-    def save(self, functional_key: str, item: PipelineItem) -> None:
+    def save(self, path: str, item: PipelineItem) -> bool:
         '''
         Save the provided item to the database.
 
@@ -68,14 +68,14 @@ class DbRepository:
            functional_key (str): functionalKey to use for the record
            item (PipelineItem): The content to be saved.
         '''
+        functional_key = make_local_file_path(path)
+        logger.debug('Saving: %s', functional_key)
 
-        logger.debug('Loading: %s', functional_key)
-
-        utc_time  = datetime.datetime.now(datetime.timezone.utc)
+        utc_time = datetime.datetime.now(datetime.timezone.utc)
         utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
 
         chunk: IStoredChunk = IStoredChunk()
-        chunk.id = str (uuid.uuid4())
+        chunk.id = str(uuid.uuid4())
         chunk.applicationId = "Test"
         chunk.contextId = "TestContext"
         chunk.userId = None
@@ -83,7 +83,7 @@ class DbRepository:
         chunk.amended = chunk.created
         chunk.className = "TestChunkClass"
         chunk.schemaVersion = "1"
-        chunk.chunkFunctionalKey = functional_key
+        chunk.functionalSearchKey = functional_key
         chunk.parentChunkId = None
         chunk.originalText = item.text
         # storedEmbedding: Union[IStoredEmbedding, None]
@@ -91,9 +91,9 @@ class DbRepository:
         chunk.storedSummary = None
         chunk.storedTitle = None
         chunk.relatedChunks = None
-       
-        #chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
-        chunk_url = f'http://localhost:7071/api/SaveChunk?session={            
+
+        # chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
+        chunk_url = f'http://localhost:7071/api/SaveChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': chunk.__dict__
@@ -103,11 +103,9 @@ class DbRepository:
             chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            response_json = json.loads(response.text)
-            if response_json['ok']:
-               return True
+            return True
 
-        return None
+        return False
 
     def load(self, functional_key: str, context_ID: str) -> PipelineItem:
         '''
@@ -135,20 +133,22 @@ class DbRepository:
            bool: True if the record exists, False otherwise.
         '''
         functional_key = make_local_file_path(path)
+        spec: IStorableQuerySpec = IStorableQuerySpec()
+        spec.id = None
+        spec.functionalSearchKey = functional_key
         logger.debug('Loading: %s', functional_key)
 
-        chunk_url = f'https://braid-api.azurewebsites.net/api/GetChunk?session={
+        #chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        chunk_url = f'http://localhost:7071/api/FindChunk?session={        
             SESSION_KEY}'
         json_input = {
-            'request': ""
+            'request': spec.__dict__
         }
 
         response = self.session.post(
             chunk_url, json=json_input, headers=headers)
 
         if response.status_code == 200:
-            data: IStorableOperationResult = response.json()
-            if data.ok:
-                return True
+            return True
 
         return False

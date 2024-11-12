@@ -44,6 +44,9 @@ class DevelopmentEnvironment {
     getActivityApi() {
         return "http://localhost:7071/api/GetActivity";
     }
+    findActivityApi() {
+        return "http://localhost:7071/api/FindActivity";
+    }
     loginWithLinkedInApi() {
         return "http://localhost:7071/api/LoginWithLinkedIn";
     }
@@ -89,6 +92,9 @@ class DevelopmentEnvironment {
     getChunkApi() {
         return "http://localhost:7071/api/GetChunk";
     }
+    findChunkApi() {
+        return "http://localhost:7071/api/FindChunk";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -128,6 +134,9 @@ class StagingEnvironment {
     }
     getActivityApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivity";
+    }
+    findActivityApi() {
+        return "https://braid-api.azurewebsites.net/api/FindActivity";
     }
     getActivitiesApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivities";
@@ -177,6 +186,9 @@ class StagingEnvironment {
     getChunkApi() {
         return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
     }
+    findChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -216,6 +228,9 @@ class ProductionEnvironment {
     }
     getActivityApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivity";
+    }
+    findActivityApi() {
+        return "https://braid-api.azurewebsites.net/api/FindActivity";
     }
     getActivitiesApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivities";
@@ -264,6 +279,9 @@ class ProductionEnvironment {
     }
     getChunkApi() {
         return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+    }
+    findChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

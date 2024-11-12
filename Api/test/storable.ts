@@ -27,6 +27,19 @@ export async function saveLoadRemove<TApi extends IStorableRepostoryApiWrapper> 
    return (saved === true) && (loaded?.id === record.id) && (removed === true);
 }
 
+export async function saveFindRemove<TApi extends IStorableRepostoryApiWrapper> (api: TApi, record: IStorable) : Promise<boolean> {
+
+   let saved = await api.save (record);    
+   let loaded = await api.find (record.functionalSearchKey as string);
+   let removed = await api.remove (record.id as string);
+   
+   expect (saved === true).toEqual (true);
+   expect (loaded && (loaded.id === record.id)).toBe (true);
+   expect (removed === true).toEqual (true);
+
+   return (saved === true) && (loaded?.id === record.id) && (removed === true);
+}
+
 export async function failSave <TApi extends IStorableRepostoryApiWrapper> (api: TApi, record: IStorable) : Promise<boolean> {
 
    let saved = await api.save (record);    

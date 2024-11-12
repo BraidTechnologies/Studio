@@ -74,7 +74,63 @@ export class AzureLogger implements ILoggingContext {
 }
 
 /**
- * Asynchronously removes a Storable from the database.
+ * Asynchronously finds a Storable from the database.
+ * 
+ * @param id - The unique identifier of the Storable to be found.
+ * @param params - the ICosmosStorableParams for the collection
+ * @param context - The invocation context for logging purposes.
+ * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
+ */
+export async function findStorable(id: string | undefined, params: ICosmosStorableParams, context: ILoggingContext): Promise<IStorable | undefined> {
+
+   if (!id)
+      return undefined;
+   
+   let dbkey = process.env.CosmosApiKey;
+
+   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+
+      let time = new Date().toUTCString();
+
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      let headers = makePostQueryHeader(key, time, params.partitionKey);
+
+      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
+
+      axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
+         {
+            "query": query,
+            "parameters": [
+               {
+                  "name": "@id",
+                  "value": id
+               }
+            ]
+         },
+         {
+            headers: headers
+         })
+         .then((resp: any) => {
+
+            let responseRecords = resp.data.Documents;
+            let storedRecord = responseRecords[0] as IStorable;
+
+            context.log ("Loaded storable:", storedRecord);
+            resolve(storedRecord);
+         })
+         .catch((error: any) => {
+
+            context.error ("Error calling database:", error);
+            reject(undefined);
+         });
+   });
+
+   return done;
+}
+
+/**
+ * Asynchronously loads a Storable from the database.
  * 
  * @param id - The unique identifier of the Storable to be removed.
  * @param params - the ICosmosStorableParams for the collection

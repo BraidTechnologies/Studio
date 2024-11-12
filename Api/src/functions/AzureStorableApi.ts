@@ -5,9 +5,60 @@
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { isSessionValid, sessionFailResponse, defaultOkResponse, notFoundResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, notFoundResponse } from "./Utility";
 import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "../../../CommonTs/src/IStorable";
-import {AzureLogger, loadStorable, saveStorable, removeStorable, loadRecentStorables, ICosmosStorableParams} from './CosmosStorableApi';
+import {AzureLogger, findStorable, loadStorable, saveStorable, removeStorable, loadRecentStorables, ICosmosStorableParams} from './CosmosStorableApi';
+
+/**
+ * Asynchronous function to load an Storable based on the provided request and context.
+ * Validates the session key from the request query parameters and removes the Storable if the session key matches predefined keys.
+ * Logs the validation and removal status, returning an HTTP response with the appropriate status and message.
+ * 
+ * @param request - The HTTP request containing the session key and Storable data.
+ * @param params The parameters required for saving the record, including partition key and collection path.
+ * @param context - The context object for logging and error handling.
+ * @returns A promise of an HTTP response indicating the status of the removal operation.
+ */
+export async function findStorableApi(request: HttpRequest, 
+   params: ICosmosStorableParams, 
+   context: InvocationContext): Promise<HttpResponseInit> {
+
+   if (isSessionValid(request, context)) {
+
+      try {      
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+
+         let logger = new AzureLogger(context);
+
+         let result = await findStorable (spec.functionalSearchKey, params, logger);
+         if (result)
+            context.log("Found:" + result.toString());
+         else
+            context.log("Found nothing.");
+         
+         if (result)
+            return {
+               status: 200,
+               body: JSON.stringify(result)
+            };
+         else {
+            return notFoundResponse ();
+         }
+      }
+      catch (e: any) {
+         context.error ("Failed find:" + e.toString());
+         return {
+            status: 500,
+            body: "Failed find."
+         };
+      }
+   }
+   else {
+      context.error("Failed session validation");           
+      return sessionFailResponse();
+   }
+};
 
 /**
  * Asynchronous function to load an Storable based on the provided request and context.
