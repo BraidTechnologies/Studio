@@ -1,4 +1,4 @@
-'''driver for the entire pipeline '''
+'''driver for the entire Boxer data generation pipeline '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports

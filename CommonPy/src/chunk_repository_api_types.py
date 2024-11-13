@@ -134,9 +134,9 @@ class IStoredChunk(IStorable):
         if (other):
             self.parentChunkId = other.parentChunkId
             self.originalText = other.originalText
-            self.storedEmbedding = other.storedEmbedding
-            self.storedSummary = other.storedSummary
-            self.storedTitle = other.storedTitle
+            self.storedEmbedding = IStoredEmbedding (other.storedEmbedding)
+            self.storedSummary = IStoredTextRendering (other.storedSummary)
+            self.storedTitle = IStoredTextRendering(other.storedTitle)
             self.relatedChunks = other.relatedChunks
         else:
             self.parentChunkId = None
