@@ -63,7 +63,7 @@ class Embedder (PipelineStep):
 
         response = session.post(embed_url, json=json_input, headers=headers)
 
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
             embedding = response_json['embedding']
 

@@ -1,0 +1,1 @@
+"A website, themalaysianreserve.com, requires a security check to verify if you're human before allowing access. Users need to enable JavaScript and cookies for the site to function properly. The verification is handled by Cloudflare, which ensures the performance and security of the connection."

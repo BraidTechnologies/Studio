@@ -1,0 +1,1 @@
+"Sarthak Pattanaik, CIO of BNY Mellon's Clearing & Collateral Management, discusses the future of financial services at #GoogleCloudNext '20: OnAir. He focuses on deriving value from cloud-based architectures, high performance computing, and big data."

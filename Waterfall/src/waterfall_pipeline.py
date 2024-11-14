@@ -5,20 +5,21 @@
 import logging
 import os
 import json
+import urllib.parse
 import plotly
 import plotly.express as px
 import umap.umap_ as umap
 
-from workflow import PipelineItem, Theme, WebSearchPipelineSpec
-from web_searcher import WebSearcher
-from html_file_downloader import HtmlFileDownloader
-from summariser import Summariser
-from summarise_fail_suppressor import SummariseFailSuppressor
-from embedder import Embedder
-from cluster_analyser import ClusterAnalyser
-from theme_finder import ThemeFinder
-from embedding_finder import EmbeddingFinder
-from google_office_mailer import send_mail
+from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
+from src.web_searcher import WebSearcher
+from src.html_file_downloader import HtmlFileDownloader
+from src.summariser import Summariser
+from src.summarise_fail_suppressor import SummariseFailSuppressor
+from src.embedder import Embedder
+from src.cluster_analyser import ClusterAnalyser
+from src.theme_finder import ThemeFinder
+from src.embedding_finder import EmbeddingFinder
+from src.google_office_mailer import send_mail
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -94,14 +95,14 @@ class WaterfallDataPipeline:
 
         for item in input_items:
             downloaded = None
-            suppression_checked = None            
+            suppression_checked = None
             summarised = None
             embedded = None
 
             downloaded = downloader.download(item)
             if (downloaded):
-                summarised = summariser.summarise(downloaded) 
-            if (summarised):                               
+                summarised = summariser.summarise(downloaded)
+            if (summarised):
                 suppression_checked = suppressor.should_suppress(summarised)
             if (suppression_checked):
                 embedded = embedder.embed(suppression_checked)
@@ -134,7 +135,8 @@ class WaterfallDataPipeline:
         # Accumulate a set of summaries and counts of summaries according to classification
         for i, item in enumerate(items):
             cluster = items[i].cluster
-            accumulated_summaries[cluster] = accumulated_summaries[cluster] + item.summary + "\n "
+            accumulated_summaries[cluster] = accumulated_summaries[cluster] + \
+                item.summary + "\n "
             accumulated_counts[cluster] = accumulated_counts[cluster] + 1
             accumulated_members[cluster].append(item)
 
@@ -151,15 +153,15 @@ class WaterfallDataPipeline:
             themes.append(theme)
 
         # Ask the embedding finder to find nearest article for each theme
-        enriched_themes = []        
-        for i, theme in enumerate (themes):
+        enriched_themes = []
+        for i, theme in enumerate(themes):
             logger.debug('Finding nearest embedding')
 
             # Accumulate the embeddings that are part of the cluster
             embeddings_for_theme = []
             for item in items:
                 if item.cluster == i:
-                   embeddings_for_theme.append(item.embedding)
+                    embeddings_for_theme.append(item.embedding)
 
             # Build embedding finder with the right embeddings, then find the nearest one to the theme that is in the cluster
             embedding_finder = EmbeddingFinder(
@@ -167,18 +169,18 @@ class WaterfallDataPipeline:
             nearest_items: list[PipelineItem] = []
             nearest_embedding = embedding_finder.find_nearest(
                 theme.long_description)
-            
+
             # Store nearest item
             for item in items:
-                # TODO - accumulate top 3 items per theme
                 if item.embedding == nearest_embedding:
                     nearest_items.append(item)
                     theme.example_pipeline_items = nearest_items
                     enriched_themes.append(theme)
                     break
-        
+
         logger.debug('Ordering themes')
-        ordered_themes = sort_array_by_another(enriched_themes, accumulated_counts)
+        ordered_themes = sort_array_by_another(
+            enriched_themes, accumulated_counts)
 
         return ordered_themes
 
@@ -240,9 +242,11 @@ class WaterfallDataPipeline:
             'Where allowed by local law, electronic communications with Braid Technologies Ltd (Braid), including e-mail and instant messaging (including content),' + \
             'may be scanned for the purposes of information security, and assessment of internal compliance with Braid policy.</p>' + \
             '<p>Your privacy is important to us. Braid uses your personal data only in compliance with data protection laws.' + \
-            'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtechnologies.ai/privacy</p>'
+            'For further information on how Braid processes your personal data, please see our privacy statement at https://braidtech.ai/privacy</p>'
+        
+        encoded_summery = summary.encode('utf-8', errors='ignore')
         if (send_final):
-            send_mail(self.output_location, summary,
+            send_mail(self.output_location, encoded_summery,
                       spec.output_chart_name, spec)
 
         # output_file = os.path.join(self.output_location, 'summary.txt')

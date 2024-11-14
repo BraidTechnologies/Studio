@@ -6,8 +6,8 @@ import logging
 from selenium import webdriver
 from bs4 import BeautifulSoup
 
-from workflow import PipelineItem, PipelineStep
-from text_repository_facade import TextRespositoryFacade
+from src.workflow import PipelineItem, PipelineStep
+from src.text_repository_facade import TextRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -32,11 +32,12 @@ class HtmlFileDownloader (PipelineStep):
          output_location (str): The location to save the downloaded file.
     '''
 
+    # pylint: disable-next=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the HtmlFileDownloader object with the provided output location.
         '''
-        super(HtmlFileDownloader, self).__init__(output_location) # pylint: disable=useless-parent-delegation
+        super(HtmlFileDownloader, self).__init__(output_location)
 
     def download(self, pipeline_item: PipelineItem) -> PipelineItem:
         '''

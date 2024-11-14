@@ -1,0 +1,1 @@
+"HSBC and BNY Mellon have adopted Quantexa's Q Assist, a context-aware generative AI technology suite. This suite helps streamline analysis and reporting, reducing dependency on data science teams, and empowering customer service. Quantexa's technology promises to improve efficiency, accuracy, and trust in handling structured and unstructured data across organizations."

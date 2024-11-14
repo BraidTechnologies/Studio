@@ -1,0 +1,1 @@
+"Nationwide Building Society collaborated with IBM to evaluate Fully Homomorphic Encryption (FHE) for enhancing data security. Through workshops and proof-of-concept testing, they confirmed FHE's potential to secure data even during processing, underscoring its maturity and viability for practical application in Nationwide's data strategy."

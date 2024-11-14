@@ -4,12 +4,11 @@
 # Standard Library Imports
 import logging
 import os
-import requests
 import json
+import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from workflow import PipelineItem, PipelineStep
-from summary_repository_facade import SummaryRespositoryFacade
+from src.workflow import PipelineItem, PipelineStep
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -29,6 +28,7 @@ headers = {
 class SummariseFailSuppressor (PipelineStep):
     '''PipelineStep to create a summary for a text string'''
 
+    # pylint: disable-next=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the SummariseFailSuppressor object with the provided output location.
@@ -63,9 +63,9 @@ class SummariseFailSuppressor (PipelineStep):
 
         response = session.post(summary_url, json=input_json, headers=headers)
         keep: bool = True  # If there is an error in the API, we default to 'keep'
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
-            keep = (response_json['isValidSummary'] == 'Yes')
+            keep = response_json['isValidSummary'] == 'Yes'
 
         if keep:
             return pipeline_item

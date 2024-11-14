@@ -1,0 +1,1 @@
+"Nationwide Building Society has invested in Confluent's data streaming technology to drive digital transformation. This includes creating an event hub for resilience and agility, managing increased payment volumes, and enhancing customer experience. Confluent's deployment will support multiple business lines and help Nationwide address competition from agile challenger banks."

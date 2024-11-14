@@ -68,8 +68,8 @@ class DbRepository:
         chunk.functionalSearchKey = functional_key
         chunk.parentChunkId = None
         chunk.originalText = item.text
-        chunk.storedEmbedding = embedding.__dict__
-        chunk.storedSummary = summary.__dict__
+        chunk.storedEmbedding = embedding
+        chunk.storedSummary = summary
         chunk.storedTitle = None
         chunk.relatedChunks = None
 
@@ -116,7 +116,7 @@ class DbRepository:
         Returns:
            bool: True if the record exists, False otherwise.
         '''
-        
+
         functional_key = make_local_file_path(path)
 
         return self.chunk_repository.exists(functional_key)

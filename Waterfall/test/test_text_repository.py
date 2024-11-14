@@ -1,5 +1,5 @@
 # Copyright (c) 2024 Braid Technologies Ltd
-
+''' Tests for the text repository API '''
 # Standard Library Imports
 import pytest
 import os
@@ -23,10 +23,10 @@ from src.text_repository_facade import TextRespositoryFacade
 @pytest.fixture
 def test_output_dir(tmpdir):
     dir_path = tmpdir.mkdir("test_output_text")
-    logger.info(f"Created temporary test output directory: {dir_path}")
+    logger.info("Created temporary test output directory: %s", dir_path)
     yield str(dir_path)
     # Clean up after the test
-    logger.info(f"Cleaning up test output directory: {dir_path}")
+    logger.info("Cleaning up test output directory: %s", dir_path)
     os.chdir ("..")    
     shutil.rmtree(str(dir_path))
 

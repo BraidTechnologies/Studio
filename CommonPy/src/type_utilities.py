@@ -54,7 +54,11 @@ def safe_cast(val, to_type, default=None) -> object:
     Returns:
        The value cast to the specified type, or the default value if casting fails.
     """
+
+    obj = default
+
     try:
-        return to_type(val)
+        if val:        
+           return to_type(val)
     except (ValueError, TypeError):
-        return default
+        return obj

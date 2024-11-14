@@ -1,7 +1,7 @@
 '''Facade to store summaries in local file system'''
 # Copyright (c) 2024 Braid Technologies Ltd
 
-from file_repository import FileRespository
+from src.file_repository import FileRespository
 
 
 class SummaryRespositoryFacade:

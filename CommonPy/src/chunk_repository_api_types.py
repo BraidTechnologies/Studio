@@ -19,6 +19,7 @@ Classes:
 """
 
 from typing import Union, List
+from .type_utilities import safe_cast
 
 
 class IStoredEmbedding:
@@ -134,9 +135,9 @@ class IStoredChunk(IStorable):
         if (other):
             self.parentChunkId = other.parentChunkId
             self.originalText = other.originalText
-            self.storedEmbedding = IStoredEmbedding (other.storedEmbedding)
-            self.storedSummary = IStoredTextRendering (other.storedSummary)
-            self.storedTitle = IStoredTextRendering(other.storedTitle)
+            self.storedEmbedding = safe_cast (other.storedEmbedding, IStoredEmbedding)
+            self.storedSummary = safe_cast (other.storedSummary, IStoredTextRendering)
+            self.storedTitle = safe_cast (other.storedTitle, IStoredTextRendering)
             self.relatedChunks = other.relatedChunks
         else:
             self.parentChunkId = None

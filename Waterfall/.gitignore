@@ -48,8 +48,12 @@ __queuestorage__
 __azurite_db*__.json
 
 test/test_output
-test/demand_output/token.json
-test/demand_output/credential.json
-test/supply_output/token.json
-test/supply_output/credential.json
+test/demand_output
+test/supply_output
+test/telecom_output
+test/nationwide_output
+test/bny_output
+test/bny_output
+test/boxer_output
+
 credential.json

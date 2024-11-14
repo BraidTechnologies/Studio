@@ -6,8 +6,8 @@ import math
 import logging
 import datetime
 
-from workflow import PipelineItem, PipelineStep
-from chunker import Chunker
+from src.workflow import PipelineItem, PipelineStep
+from src.chunker import Chunker
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

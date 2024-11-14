@@ -90,13 +90,13 @@ class BoxerDataPipeline:
             chunk = youtube_downloader.download(chunk)
             chunks = youtube_chunker.chunk(
                 chunk, youtube_spec.max_words, youtube_spec.overlap_words)
-            if (chunks):
+            if chunks:
                 all_chunks.extend(chunks)
 
         for chunk in all_chunks:
             summarised = None
             embedded = None
-            logger.info('Processing:' + chunk.path)
+            logger.info('Processing: %s', chunk.path)
             if chunk.text:
                 summarised = summariser.summarise(chunk)
             if summarised:

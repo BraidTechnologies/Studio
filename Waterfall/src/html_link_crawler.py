@@ -2,11 +2,13 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
-from workflow import PipelineItem, PipelineStep
 import logging
-from bs4 import BeautifulSoup
-import requests
 from urllib.parse import urljoin, urlparse
+import requests
+from bs4 import BeautifulSoup
+
+from src.workflow import PipelineItem, PipelineStep
+
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -147,7 +149,7 @@ def deduplicate(current_links: list[PipelineItem], new_links: list[str]) -> list
     deduped = []
 
     for item in new_links:
-        if (find_matching_entry(current_links, item) == None) and find_matching_entry(deduped, item) == None:
+        if (find_matching_entry(current_links, item) is None) and find_matching_entry(deduped, item) is None:
             deduped.append(item)
 
     return deduped
@@ -155,7 +157,7 @@ def deduplicate(current_links: list[PipelineItem], new_links: list[str]) -> list
 
 # remove links that point outside the main site being searched
 # We keep the argument bcs might need it for more sophisticate checking of URLs leaving the current page
-# pylint: disable-next=unused-argument 
+# pylint: disable-next=unused-argument
 def remove_exits(source_url: str, links: list[str]) -> list[str]:
     # we also remove links starting with #as they are just the same page
     '''Remove links that point outside the main site being searched.
@@ -181,7 +183,7 @@ def remove_exits(source_url: str, links: list[str]) -> list[str]:
         item_path = parsed_item.path
         item_joined = urljoin('https://' + item_domain, item_path)
         if (item_domain == target_domain) and (item_domain == '' or item_path.startswith(target_path)):
-            if (not (find_matching_entry(trimmed, item_joined))) and (len (item_path.split('#')) == 1):
+            if (not (find_matching_entry(trimmed, item_joined))) and (len(item_path.split('#')) == 1):
                 trimmed .append(item)
 
     return trimmed
