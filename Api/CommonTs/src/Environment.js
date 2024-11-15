@@ -95,6 +95,9 @@ class DevelopmentEnvironment {
     findChunkApi() {
         return "http://localhost:7071/api/FindChunk";
     }
+    getChunksApi() {
+        return "http://localhost:7071/api/GetChunks";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -189,6 +192,9 @@ class StagingEnvironment {
     findChunkApi() {
         return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
     }
+    getChunksApi() {
+        return "https://braid-api.azurewebsites.net/api/GetChunks";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -282,6 +288,9 @@ class ProductionEnvironment {
     }
     findChunkApi() {
         return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
+    }
+    getChunksApi() {
+        return "https://braid-api.azurewebsites.net/api/GetChunks";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

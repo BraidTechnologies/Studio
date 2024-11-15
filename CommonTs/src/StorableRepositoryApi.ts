@@ -12,7 +12,8 @@ export interface IStorableRepostoryApiWrapper {
    save (record: IStorable) : Promise<boolean>;  
    remove (recordId: string) : Promise<boolean>;
    load (recordId: string) : Promise<IStorable | undefined>;
-   find (functionalSearhKey: string) : Promise<IStorable | undefined>;   
+   find (functionalSearhKey: string) : Promise<IStorable | undefined>;  
+   recent (querySpec: IStorablesQuerySpec, url: string) : Promise<Array<IStorable>>;
 };
 
 /**

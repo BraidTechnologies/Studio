@@ -81,6 +81,18 @@ class ChunkRepostoryApi extends Api_1.Api {
             return this.storableApi.remove(recordId, apiUrl);
         });
     }
+    /**
+     * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+     *
+     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+     */
+    recent(querySpec) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiUrl = this.environment.getChunksApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.recent(querySpec, apiUrl);
+        });
+    }
 }
 exports.ChunkRepostoryApi = ChunkRepostoryApi;
 //# sourceMappingURL=ChunkRepositoryApi.js.map

@@ -25,18 +25,19 @@ export interface IStoredTextRendering {
  * Interface representing a chunk of data.
  * 
  * Core data for a chunk:
- * - chunkFunctionalKey: Application level key
  * - parentChunkId: Primary key to parent document
  * - originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)
+ * - url: string | undefined;                 // url to external resource, can be null  
  * - storedEmbedding: Embedding of the original text
  * - storedSummary: Summary of the original text - generated with application-specific prompt 
  * - storedTitle: A generated of the original text - generated with application-specific prompt
- * 
+ * - related: Array of IDs to related chunks
  */
 export interface IStoredChunk extends IStorable {
 
    parentChunkId: string | undefined;       // primary key to parent document
    originalText: string | undefined;        // original text - if undefined, it has been thrown way (as maybe it can be reconstructed)
+   url: string | undefined;                 // url to external resource, can be null  
    storedEmbedding: IStoredEmbedding | undefined;   // Embedding of the original text
    storedSummary: IStoredTextRendering | undefined; // Summary of the original text - generated with application specific prompt
    storedTitle: IStoredTextRendering | undefined;   // Title for the original text - generated with application specific prompt   

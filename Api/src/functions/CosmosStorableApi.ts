@@ -314,9 +314,9 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
             let storedRecords = new Array<IStorable>();
 
             for (let i = 0; i < responseRecords.length; i++) {
-               storedRecords.push(responseRecords[i].data);
+               storedRecords.push(responseRecords[i]);
             }
-            context.log ("Loaded activities:", storedRecords);
+            context.log ("Loaded storables:", storedRecords);
             resolve(storedRecords);
          })
          .catch((error: any) => {

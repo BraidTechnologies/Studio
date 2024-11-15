@@ -91,9 +91,12 @@ export class DevelopmentEnvironment implements IEnvironment {
    getChunkApi(): string{
       return "http://localhost:7071/api/GetChunk";
    }    
-   findChunkApi(): string{
+   findChunkApi(): string {
       return "http://localhost:7071/api/FindChunk";
-   }       
+   }   
+   getChunksApi(): string {
+      return "http://localhost:7071/api/GetChunks";
+   }         
 }
 
 /**
@@ -188,6 +191,9 @@ export class StagingEnvironment implements IEnvironment {
    findChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/FindStoredChunk";   
    }   
+   getChunksApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetChunks";
+   }         
 }
 
 /**
@@ -283,4 +289,7 @@ export class ProductionEnvironment implements IEnvironment {
    findChunkApi(): string{
       return "https://braid-api.azurewebsites.net/api/FindStoredChunk";   
    }      
+   getChunksApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetChunks";
+   }        
 }

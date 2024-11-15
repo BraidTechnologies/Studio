@@ -127,6 +127,7 @@ class IStoredChunk(IStorable):
     storedEmbedding: Union[IStoredEmbedding, None]
     storedSummary: Union[IStoredTextRendering, None]
     storedTitle: Union[IStoredTextRendering, None]
+    url:Union[str, None]
     relatedChunks: Union[List[str], None]
 
     def __init__(self, other=None):

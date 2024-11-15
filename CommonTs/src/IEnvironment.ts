@@ -40,6 +40,7 @@ export interface IEnvironment {
    removeChunkApi(): string;
    getChunkApi(): string;
    findChunkApi(): string;   
+   getChunksApi(): string;   
 }
 
 

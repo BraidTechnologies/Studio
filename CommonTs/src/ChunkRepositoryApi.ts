@@ -79,4 +79,17 @@ export class ChunkRepostoryApi extends Api implements IStorableRepostoryApiWrapp
       let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
       return this.storableApi.remove (recordId, apiUrl);  
    }
+
+   /**
+    * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    */
+   async recent (querySpec: IStorableMultiQuerySpec) : Promise<Array<IStorable>> {
+
+      let apiUrl = this.environment.getChunksApi() + "?session=" + this.sessionKey.toString();
+
+      return this.storableApi.recent (querySpec, apiUrl);  
+   }   
 }

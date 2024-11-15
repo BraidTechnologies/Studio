@@ -10,6 +10,8 @@ import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { ChunkRepostoryApi } from '../../CommonTs/src/ChunkRepositoryApi'
 import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
+import { IStorableMultiQuerySpec } from '../../CommonTs/src/IStorable';
+import { throwIfUndefined } from '../../CommonTs/src/Asserts';
 
 declare var process: any;
 
@@ -29,6 +31,7 @@ describe("StorableChunk", async function () {
       functionalSearchKey: "1234",
       parentChunkId: undefined,
       originalText: undefined,
+      url: undefined,
       storedEmbedding: undefined,
       storedSummary: undefined,
       storedTitle: undefined,
@@ -37,6 +40,19 @@ describe("StorableChunk", async function () {
 
    let env = getEnvironment(EEnvironment.kLocal);
    let api = new ChunkRepostoryApi(env, process.env.SessionKey.toString());
+
+   // Clean up temp objects we created
+   afterEach (async function () {
+      let spec: IStorableMultiQuerySpec = {
+         className: "madeUpClass",
+         limit: 10
+      }
+      let recent = await api.recent (spec);
+      for (let i = 0; i < recent.length; i++) {
+         if (recent[i].id)
+            api.remove (recent[i].id as string);
+      }
+   }); 
 
    it("Needs to succeed with saveLoadRemove & valid key in local environment", async function () {
 
