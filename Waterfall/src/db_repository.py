@@ -1,7 +1,7 @@
 '''
-Module to store data in the Chunk table of the BraidApis 
-This module takes in data as 'PipelineItem', as used in waterfall. 
-It converts to Chunk  to pass to the native Chunk API, which is common across multiple applications. 
+Module to store data in the Chunk table of the BraidApis
+This module takes in data as 'PipelineItem', as used in waterfall.
+It converts to Chunk  to pass to the native Chunk API, which is common across multiple applications.
 
 '''
 # Copyright (c) 2024 Braid Technologies Ltd
@@ -12,7 +12,7 @@ import datetime
 import uuid
 
 from CommonPy.src.chunk_repository_api_types import (IStoredChunk,
-   IStoredEmbedding, 
+   IStoredEmbedding,
    IStoredTextRendering)
 from CommonPy.src.chunk_repository_api import (ChunkRepository,
                                                chunk_class_name,
@@ -85,15 +85,15 @@ class DbRepository:
 
     def find(self, path: str) -> PipelineItem:
         '''
-        Load content from the database based on the provided context and functional key. 
-        If the file exists in the output location, its contents are read and returned as a string. 
-        If the record is not found, return None 
+        Load content from the database based on the provided context and functional key.
+        If the file exists in the output location, its contents are read and returned as a string.
+        If the record is not found, return None
 
         Parameters:
            functional_key (str): functionalKey to use for the record
 
         Returns:
-           item (PipelineItem): The loaded content or None 
+           item (PipelineItem): The loaded content or None
         '''
 
         functional_key = make_local_file_path(path)
@@ -117,12 +117,12 @@ class DbRepository:
                 item.embedding = None
         else:
             item = None
-            
+
         return item
 
     def exists(self, path: str) -> bool:
         '''
-        Checks if a record with the specified key and context exists in the database 
+        Checks if a record with the specified key and context exists in the database
 
         Parameters:
            functional_key (str): functionalKey to use for the record

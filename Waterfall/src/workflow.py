@@ -22,7 +22,8 @@ class PipelineItem(Freezable):
     '''A work item that is passed along the processsing pipeline'''
     def __init__(self):
         '''
-        Initializes the PipelineItem class with attributes path, summary, and embedding. Freeze the object to prevent adding spurious variables.
+        Initializes the PipelineItem class with attributes path, summary, and embedding.
+        Freeze the object to prevent adding spurious variables.
         '''
         self.id = None
         self.parent_id = None
@@ -60,7 +61,8 @@ class Theme(Freezable):
     '''A theme is a fully documented cluster of items '''
 
     def __init__(self):
-        '''Initialize the Theme object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.'''
+        '''Initialize the Theme object with default attributes and freeze the object.
+           Freeze the object to prevent adding spurious variables.'''
         self.short_description = None
         self.long_description = None
         self.example_pipeline_items = None
@@ -86,12 +88,13 @@ class Theme(Freezable):
                 (other.short_description.lower(), other.long_description.lower()))
 
 class PipelineStep ():
+    '''Super class for a step in the Waterfall pipeline'''
     def __init__(self, output_location: str):
         '''
         Initialize the PipelineStep with the specified output location.
 
         Parameters:
-        output_location (str): The location where the output will be stored.
+        output_location (str): The location in the file systems where the output will be stored.
         '''
         self.output_location = output_location
 
@@ -100,7 +103,8 @@ class WebSearchPipelineSpec(Freezable):
 
     def __init__(self):
         '''
-        Initialize the WebPipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the WebPipelineSpec object with default attributes and freeze the object.
+        Freeze the object to prevent adding spurious variables.
         '''
         self.pages = 1  # default is to pull back one page
         self.clusters = 2
@@ -119,7 +123,8 @@ class YouTubePipelineSpec(Freezable):
 
     def __init__(self):
         '''
-        Initialize the YouTubePipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the YouTubePipelineSpec object with default attributes and freeze the object.
+        Freeze the object to prevent adding spurious variables.
         '''
         self.playlists = []
         self.max_words = 3500 # This seems to come out at about 15 minutes of video
@@ -133,7 +138,8 @@ class HtmlDirectedPipelineSpec(Freezable):
 
     def __init__(self):
         '''
-        Initialize the WebDirectedPipelineSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the WebDirectedPipelineSpec object with default attributes and freeze the object.
+        Freeze the object to prevent adding spurious variables.
         '''
         self.urls = list[str]
 
@@ -144,8 +150,9 @@ class PipelineFileSpec(Freezable):
 
     def __init__(self):
         '''
-        Initialize the PipelineFileSpec object with default attributes and freeze the object. Freeze the object to prevent adding spurious variables.
+        Initialize the PipelineFileSpec object with default attributes and freeze the object.
+        Freeze the object to prevent adding spurious variables.
         '''
         self.output_data_name = None
 
-        self._freeze()        
+        self._freeze()

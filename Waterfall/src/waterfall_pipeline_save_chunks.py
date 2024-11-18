@@ -6,7 +6,7 @@ import logging
 import uuid
 import datetime
 
-from CommonPy.src.chunk_repository_api import (ChunkRepository, 
+from CommonPy.src.chunk_repository_api import (ChunkRepository,
                                                chunk_class_name,
                                                chunk_schema_version,
                                                waterfall_application_name)
@@ -27,10 +27,10 @@ def set_timestamps (chunk: IStoredChunk, existing: bool) -> None:
     utc_time = datetime.datetime.now(datetime.timezone.utc)
     utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
     if existing:
-        chunk.amended = utc_time_string            
+        chunk.amended = utc_time_string
     else:
         chunk.created = utc_time_string
-        chunk.amended = utc_time_string  
+        chunk.amended = utc_time_string
 
 def create_theme_chunk (short_description: str,
                         context: str,
@@ -44,17 +44,17 @@ def create_theme_chunk (short_description: str,
         theme_to_save = IStoredChunk()
 
     set_timestamps (theme_to_save, existing_theme is not None)
-        
-    theme_to_save.storedSummary = create_text_rendering (long_description, 
+
+    theme_to_save.storedSummary = create_text_rendering (long_description,
                                                          chunk_repository.default_model)
-    theme_to_save.storedTitle = create_text_rendering (short_description, 
+    theme_to_save.storedTitle = create_text_rendering (short_description,
                                                        chunk_repository.default_model)
 
     theme_to_save.applicationId = waterfall_application_name
     theme_to_save.contextId = context
     theme_to_save.className = chunk_class_name
-    theme_to_save.schemaVersion = chunk_schema_version        
-    theme_to_save.functionalSearchKey = short_description        
+    theme_to_save.schemaVersion = chunk_schema_version
+    theme_to_save.functionalSearchKey = short_description
 
     theme_to_save.userId = None
     theme_to_save.originalText = None
@@ -71,7 +71,7 @@ def save_chunks(output_location: str,
     Generates a report based on the provided PipelineItems, Themes, and PipelineSpec.
 
         Parameters:
-        - output_location - directory to store file output        
+        - output_location - directory to store file output
         - items (list[PipelineItem]): A list of PipelineItem objects to generate the report from.
         - themes (list[Theme]): A list of Theme objects associated with the PipelineItems.
         - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
@@ -88,8 +88,8 @@ def save_chunks(output_location: str,
     if loaded_master_theme is None:
         master_id = str(uuid.uuid4())
         master_theme = create_theme_chunk (spec.description,
-                                           spec.description, 
-                                           '', 
+                                           spec.description,
+                                           '',
                                            chunk_repository)
         master_theme.id = master_id
         master_theme.parentChunkId = None
@@ -102,9 +102,9 @@ def save_chunks(output_location: str,
 
         loaded_theme = chunk_repository.find (theme.short_description)
         if loaded_theme is None:
-            theme_to_save = create_theme_chunk (theme.short_description, 
+            theme_to_save = create_theme_chunk (theme.short_description,
                                                spec.description,
-                                               theme.long_description, 
+                                               theme.long_description,
                                                chunk_repository)
             theme_id = str(uuid.uuid4())
             theme_to_save.id = theme_id
@@ -113,8 +113,8 @@ def save_chunks(output_location: str,
             theme_id = loaded_theme.id
             theme_to_save = loaded_theme
             theme_to_save.parentChunkId = master_id
-            theme_to_save.relatedChunks = None            
-        
+            theme_to_save.relatedChunks = None
+
         # Save all the member items
         for item in theme.member_pipeline_items:
             loaded_item = db_repository.find (item.path)
@@ -150,9 +150,9 @@ def save_chunks(output_location: str,
                                                                '\n\n' +
                                                                theme_to_save.storedSummary.text,
                                                                chunk_repository.default_model)
-            
+
     # Save the Theme
-    # TODO sumary URL for master theme points to chart HTML    
+    # TODO sumary URL for master theme points to chart HTML
     chunk_repository.save (master_theme)
 
     return

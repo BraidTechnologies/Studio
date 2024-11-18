@@ -44,7 +44,7 @@ def create_embedding (embedding: List[float], model: str) -> IStoredEmbedding:
     ''' Utility function to create an embedding '''
     rendering: IStoredEmbedding = IStoredEmbedding()
     rendering.embedding = embedding
-    rendering.modelId = model 
+    rendering.modelId = model
 
 class IStoredTextRendering:
     """
@@ -69,7 +69,7 @@ def create_text_rendering (text: str, model: str) -> IStoredTextRendering:
     ''' Utility function to create a text rendering '''
     rendering: IStoredTextRendering = IStoredTextRendering()
     rendering.text = text
-    rendering.modelId = model   
+    rendering.modelId = model
 
     return rendering
 
@@ -81,7 +81,7 @@ class IStorable:
      id (Union[str, None]): The unique identifier for the entity, which can be None.
      applicationId (str): The identifier for the application associated with the entity.
      contextId (Union[str, None]): The identifier for the context, which can be None.
-     functionalSearchKey (str): A key used to identify the chunk functionally.  Can be None.    
+     functionalSearchKey (str): A key used to identify the chunk functionally.  Can be None.
      userId (Union[str, None]): The identifier for the user, which can be None.
      created (datetime): The timestamp when the entity was created.
      amended (datetime): The timestamp when the entity was last modified.
@@ -166,7 +166,7 @@ class IStorableQuerySpec:
 
     Attributes:
      id (str): The primary key used to identify the chunk.
-     functionalSearchKey (str) if id in None, functional key can be used. 
+     functionalSearchKey (str) if id in None, functional key can be used.
     """
     id: str
     functionalSearchKey: str
@@ -181,8 +181,8 @@ class IStorableQuerySpec:
 
 
 class IStorableOperationResult:
-    """ 
-    Defines the results of a storable operation - true or false. 
+    """
+    Defines the results of a storable operation - true or false.
     """
 
     ok: bool

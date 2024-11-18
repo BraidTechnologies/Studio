@@ -104,15 +104,15 @@ class ChunkRepository:
 
     def find(self, functional_key: str) -> IStoredChunk:
         '''
-        Load content from the database based on the provided context and functional key. 
-        If the file exists in the output location, its contents are read and returned as a string. 
-        If the record is not found, return None 
+        Load content from the database based on the provided context and functional key.
+        If the file exists in the output location, its contents are read and returned as a string.
+        If the record is not found, return None
 
         Parameters:
            functional_key (str): functionalKey to use for the record
 
         Returns:
-           item (IStoredChunk): The loaded content or None 
+           item (IStoredChunk): The loaded content or None
         '''
 
         spec: IStorableQuerySpec = IStorableQuerySpec()
@@ -139,7 +139,7 @@ class ChunkRepository:
             safe_summary = safe_cast(summary_obj, IStoredTextRendering)
 
             title_obj = safe_dict_to_object(response_json['storedTitle'])
-            safe_title = safe_cast(title_obj, IStoredTextRendering)            
+            safe_title = safe_cast(title_obj, IStoredTextRendering)
 
             embedding_obj = safe_dict_to_object(
                 response_json['storedEmbedding'])
@@ -163,15 +163,15 @@ class ChunkRepository:
 
     def load(self, record_id: str) -> IStoredChunk:
         '''
-        Load content from the database based on the provided context and functional key. 
-        If the file exists in the output location, its contents are read and returned as a string. 
-        If the record is not found, return None 
+        Load content from the database based on the provided context and functional key.
+        If the file exists in the output location, its contents are read and returned as a string.
+        If the record is not found, return None
 
         Parameters:
            functional_key (str): functionalKey to use for the record
 
         Returns:
-           item (IStoredChunk): The loaded content or None 
+           item (IStoredChunk): The loaded content or None
         '''
 
         spec: IStorableQuerySpec = IStorableQuerySpec()
@@ -216,7 +216,7 @@ class ChunkRepository:
 
     def remove(self, record_id: str) -> bool:
         '''
-        Removes a record with the specified key from database 
+        Removes a record with the specified key from database
 
         Parameters:
            id (str): primary key to use for the record
@@ -248,7 +248,7 @@ class ChunkRepository:
 
     def exists(self, functional_key: str) -> bool:
         '''
-        Checks if a record with the specified key and context exists in the database 
+        Checks if a record with the specified key and context exists in the database
 
         Parameters:
            functional_key (str): functionalKey to use for the record
