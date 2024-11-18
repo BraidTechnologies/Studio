@@ -34,7 +34,7 @@ class IStoredEmbedding:
     embedding: List[float]
 
     def __init__(self, other=None):
-        if (other):
+        if other:
             self.modelId = other.modelId
             self.embedding = other.embedding
         else:
@@ -54,7 +54,7 @@ class IStoredTextRendering:
     text: str
 
     def __init__(self, other=None):
-        if (other):
+        if other:
             self.modelId = other.modelId
             self.text = other.text
         else:
@@ -88,7 +88,7 @@ class IStorable:
     schemaVersion: str
 
     def __init__(self, other=None):
-        if (other):
+        if other:
             self.id = other.id
             self.applicationId = other.applicationId
             self.contextId = other.contextId
@@ -132,8 +132,8 @@ class IStoredChunk(IStorable):
 
     def __init__(self, other=None):
         super().__init__(other)
-        
-        if (other):
+
+        if other:
             self.parentChunkId = other.parentChunkId
             self.originalText = other.originalText
             self.storedEmbedding = safe_cast (other.storedEmbedding, IStoredEmbedding)
@@ -161,7 +161,7 @@ class IStorableQuerySpec:
     functionalSearchKey: str
 
     def __init__(self, other=None):
-        if (other):
+        if other:
             self.id = other.id
             self.functionalSearchKey = other.functionalSearchKey
         else:
@@ -177,7 +177,7 @@ class IStorableOperationResult:
     ok: bool
 
     def __init__(self, other=None):
-        if (other):
+        if other:
             self.ok = other.ok
         else:
             self.ok = None

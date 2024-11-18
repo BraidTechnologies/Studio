@@ -11,8 +11,12 @@ import logging
 import datetime
 import uuid
 
-from CommonPy.src.chunk_repository_api_types import IStoredChunk, IStoredEmbedding, IStoredTextRendering
-from CommonPy.src.chunk_repository_api import ChunkRepository
+from CommonPy.src.chunk_repository_api_types import (IStoredChunk,
+   IStoredEmbedding, 
+   IStoredTextRendering)
+from CommonPy.src.chunk_repository_api import (ChunkRepository,
+                                               chunk_class_name,
+                                               chunk_schema_version)
 from src.make_local_file_path import make_local_file_path
 from src.workflow import PipelineItem
 
@@ -28,12 +32,13 @@ class DbRepository:
     Class providing load, save, and existence check for files in the Braid Cosmos database.
     '''
 
-    def __init__(self, context_id: str):
+    def __init__(self, application_id: str, context_id: str):
 
+        self.application_id = application_id
         self.context_id = context_id
         self.chunk_repository = ChunkRepository()
 
-    def save(self, path: str, item: PipelineItem) -> bool:
+    def save(self, item: PipelineItem) -> bool:
         '''
         Save the provided item to the database.
 
@@ -41,7 +46,7 @@ class DbRepository:
            functional_key (str): functionalKey to use for the record
            item (PipelineItem): The content to be saved.
         '''
-        functional_key = make_local_file_path(path)
+        functional_key = make_local_file_path(item.path)
         logger.debug('Saving: %s', functional_key)
 
         utc_time = datetime.datetime.now(datetime.timezone.utc)
@@ -57,16 +62,19 @@ class DbRepository:
 
         # Create a Chunk from the PipelineItem supplied
         chunk: IStoredChunk = IStoredChunk()
-        chunk.id = str(uuid.uuid4())
-        chunk.applicationId = 'Test'
+        if item.id:
+            chunk.id = item.id
+        else:
+            chunk.id = str(uuid.uuid4())
+        chunk.applicationId = self.application_id
         chunk.contextId = self.context_id
         chunk.userId = None
         chunk.created = utc_time_string
         chunk.amended = chunk.created
-        chunk.className = 'TestChunkClass'
-        chunk.schemaVersion = '1'
+        chunk.className = chunk_class_name
+        chunk.schemaVersion = chunk_schema_version
         chunk.functionalSearchKey = functional_key
-        chunk.parentChunkId = None
+        chunk.parentChunkId = item.parent_id
         chunk.originalText = item.text
         chunk.storedEmbedding = embedding
         chunk.storedSummary = summary
@@ -92,18 +100,24 @@ class DbRepository:
 
         chunk = self.chunk_repository.find(functional_key)
 
-        # Map from a Chunk to a PipelineItem
-        item = PipelineItem()
-        item.path = path
-        item.text = chunk.originalText
-        if chunk.storedSummary:
-            item.summary = chunk.storedSummary.text
+        if chunk:
+            # Map from a Chunk to a PipelineItem
+            item = PipelineItem()
+            item.id = chunk.id
+            item.parent_id = chunk.parentChunkId
+            item.path = path
+            item.text = chunk.originalText
+            if chunk.storedSummary:
+                item.summary = chunk.storedSummary.text
+            else:
+                item.summary = None
+            if chunk.storedEmbedding:
+                item.embedding = chunk.storedEmbedding.embedding
+            else:
+                item.embedding = None
         else:
-            item.summary = None
-        if chunk.storedEmbedding:
-            item.embedding = chunk.storedEmbedding.embedding
-        else:
-            item.embedding = None
+            item = None
+            
         return item
 
     def exists(self, path: str) -> bool:

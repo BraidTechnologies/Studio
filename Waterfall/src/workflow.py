@@ -24,6 +24,8 @@ class PipelineItem(Freezable):
         '''
         Initializes the PipelineItem class with attributes path, summary, and embedding. Freeze the object to prevent adding spurious variables.
         '''
+        self.id = None
+        self.parent_id = None
         self.path = None
         self.text = None
         self.chunk = 0

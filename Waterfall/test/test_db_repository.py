@@ -23,17 +23,19 @@ logger.setLevel(logging.ERROR)
 
 def test_basic():
     ''' Test construction '''
+    application_id = "TestApplication"
     test_context = 'TestContext'
-    repository = DbRepository(test_context)
+    repository = DbRepository(application_id, test_context)
     assert repository.context_id == test_context
 
 
 def test_does_not_exist():
     ''' Test non-existence '''
     test_path = 'fail_test.html'
-    test_context = 'TestContext'
 
-    repository = DbRepository(test_context)
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
     exists = repository.exists(test_path)
 
     assert not exists
@@ -41,14 +43,15 @@ def test_does_not_exist():
 
 def test_save():
     ''' Test save '''
-    test_context = 'TestContext'
     item = PipelineItem()
     item.path = 'https://microsoft.com'
     item.summary = 'Summary'
     item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
 
-    repository = DbRepository(test_context)
-    saved = repository.save(item.path, item)
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
 
     assert saved
 
@@ -56,18 +59,19 @@ def test_save():
 def test_save_exists():
     ''' Test save & then that it exists '''
 
-    test_context = 'TestContext'
     item = PipelineItem()
     item.path = 'https://microsoft.com'
     item.summary = 'Summary'
     item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
 
-    repository = DbRepository(test_context)
-    saved = repository.save(item.path, item)
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
 
     exists = False
 
-    if (saved):
+    if saved:
         exists = repository.exists(item.path)
 
     assert saved
@@ -77,14 +81,15 @@ def test_save_exists():
 def test_save_load():
     ''' Test save & then that it can be loaded '''
 
-    test_context = 'TestContext'
     item = PipelineItem()
     item.path = 'https://microsoft.com'
     item.summary = 'Summary'
     item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
 
-    repository = DbRepository(test_context)
-    saved = repository.save(item.path, item)
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
 
     loaded = False
 
@@ -96,5 +101,3 @@ def test_save_load():
     assert loaded.path == item.path
     assert loaded.embedding == item.embedding
     assert loaded.summary == item.summary
-
-

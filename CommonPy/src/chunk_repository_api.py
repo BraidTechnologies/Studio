@@ -26,6 +26,10 @@ headers = {
     'Accept': 'application/json'
 }
 
+waterfall_application_name = 'Waterfall'
+boxer_application_name = 'Boxer'
+chunk_class_name = 'Chunk'
+chunk_schema_version = '1'
 
 class ChunkRepository:
     '''

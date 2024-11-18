@@ -30,7 +30,19 @@ class ThemeFinder:
         return
 
     def find_theme(self, text: str, length: int) -> str:
+        """
+        Finds a theme for the given text by sending a request to an external API.
 
+        Args:
+        text (str): The input text for which the theme needs to be found.
+        length (int): The desired length of the theme.
+
+        Returns:
+        str: The theme extracted from the text if the request is successful.
+        None: If the request fails or an error occurs.
+
+        Logs an error message if unable to find a theme.
+        """
         session = requests.Session()
         retries = Retry(total=5, backoff_factor=1,
                         status_forcelist=[502, 503, 504])
@@ -46,7 +58,7 @@ class ThemeFinder:
         }
 
         response = session.post(summary_url, json=input_json, headers=headers)
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
             theme = response_json['theme']
 
