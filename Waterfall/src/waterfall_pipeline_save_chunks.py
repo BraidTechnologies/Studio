@@ -88,12 +88,13 @@ def save_chunks(output_location: str,
         for item in theme.member_pipeline_items:
             loaded_item = db_repository.find (item.path)
             if loaded_item is None:
-                loaded_item = PipelineItem()                
+                loaded_item = PipelineItem()
             loaded_item.parent_id = new_id
+            loaded_item.path = item.path
             loaded_item.embedding = item.embedding
             loaded_item.summary = item.summary
             loaded_item.text = item.text
-            db_repository.save (item)
+            db_repository.save (loaded_item)
             
             # Accumulate the related items in the parent Theme
             if theme_to_save.relatedChunks is None:
