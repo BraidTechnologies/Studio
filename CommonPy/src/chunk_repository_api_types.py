@@ -21,7 +21,6 @@ Classes:
 from typing import Union, List
 from .type_utilities import safe_cast
 
-
 class IStoredEmbedding:
     """
     A TypedDict representing a stored embedding.
@@ -41,6 +40,11 @@ class IStoredEmbedding:
             self.modelId = None
             self.embedding = None
 
+def create_embedding (embedding: List[float], model: str) -> IStoredEmbedding:
+    ''' Utility function to create an embedding '''
+    rendering: IStoredEmbedding = IStoredEmbedding()
+    rendering.embedding = embedding
+    rendering.modelId = model 
 
 class IStoredTextRendering:
     """
@@ -61,6 +65,13 @@ class IStoredTextRendering:
             self.modelId = None
             self.text = None
 
+def create_text_rendering (text: str, model: str) -> IStoredTextRendering:
+    ''' Utility function to create a text rendering '''
+    rendering: IStoredTextRendering = IStoredTextRendering()
+    rendering.text = text
+    rendering.modelId = model   
+
+    return rendering
 
 class IStorable:
     """
