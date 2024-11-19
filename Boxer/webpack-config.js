@@ -9,11 +9,11 @@ const {
 module.exports = {
    devtool: 'source-map',
    entry: "./ui/AppEntry.tsx",
-   mode: "development",
+   mode: "production",
    target: 'web', 
    externals: [],
    output: {
-      filename: "aibot.pack.js",
+      filename: "aibot.min.js",
       devtoolModuleFilenameTemplate: '[resource-path]',  // removes the webpack:/// prefix
       libraryTarget: 'window'
    },
@@ -25,10 +25,10 @@ module.exports = {
    plugins: [
       // new FluentUIReactIconsFontSubsettingPlugin(), new NodePolyfillPlugin()      
       new NodePolyfillPlugin(),
-      /* // Include block below only for production build 
+      // Include block below only for production build 
          new WebpackObfuscator ({
          rotateStringArray: true
-     }, ['excluded_bundle_name.js'])     */
+     }, ['excluded_bundle_name.js'])     
    ],   
    module: {
       rules: [
@@ -60,7 +60,8 @@ module.exports = {
          {
             test: /\.(ttf|woff2?)$/,
             type: 'asset',
-         } /*,    // Include block below only for production build    
+         },                       
+         // Include block below only for production build    
          {
             test: /\.js$/,
             exclude: /(node_modules|bower_components)/,
@@ -71,7 +72,7 @@ module.exports = {
                     rotateStringArray: true
                 }
             }
-        }   */       
+        }        
       ]
    }  
 }
