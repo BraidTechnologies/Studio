@@ -1,0 +1,47 @@
+{
+   "compilerOptions": {
+      "target": "ES2022",
+      "lib": [
+         "ES2022",
+         "dom",
+         "dom.iterable",
+         "esnext"
+      ],
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "forceConsistentCasingInFileNames": true,
+      "noFallthroughCasesInSwitch": true,
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": true,
+      "noEmitOnError": true,
+      "removeComments": false,
+      "jsx": "react"
+   },
+   "include": [
+      "src"
+, "test/setupTests.ts"   ],
+   "exclude": [
+      "./node_modules"
+   ],
+   "awesomeTypescriptLoaderOptions": {
+      "useCache": true,
+      "useBabel": true
+   },
+   "strictPropertyInitialization": true,
+   "ts-node": {
+      // Tell ts-node CLI to install the --loader automatically
+      "esm": true
+   },
+   "references": [
+      {
+         "path": "../CommonTs"
+      }
+   ]
+}

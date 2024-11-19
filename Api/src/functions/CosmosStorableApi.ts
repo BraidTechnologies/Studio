@@ -116,7 +116,7 @@ export async function findStorable(id: string | undefined, params: ICosmosStorab
             let responseRecords = resp.data.Documents;
             let storedRecord = responseRecords[0] as IStorable;
 
-            context.log ("Loaded storable:", storedRecord);
+            context.log ("Loaded storable:", storedRecord.id);
             resolve(storedRecord);
          })
          .catch((error: any) => {
@@ -172,7 +172,7 @@ export async function loadStorable(id: string | undefined, params: ICosmosStorab
             let responseRecords = resp.data.Documents;
             let storedRecord = responseRecords[0] as IStorable;
 
-            context.log ("Loaded storable:", storedRecord);
+            context.log ("Loaded storable:", storedRecord.id);
             resolve(storedRecord);
          })
          .catch((error: any) => {
@@ -216,7 +216,7 @@ export async function saveStorable(record: IStorable, params: ICosmosStorablePar
          })
          .then((resp: any) => {
 
-            context.log("Saved storable:", record);
+            context.log("Saved storable:", record.id);
             resolve(true);
          })
          .catch((error: any) => {
@@ -315,8 +315,8 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
 
             for (let i = 0; i < responseRecords.length; i++) {
                storedRecords.push(responseRecords[i]);
+               context.log ("Loaded storable:", storedRecords[i].id);               
             }
-            context.log ("Loaded storables:", storedRecords);
             resolve(storedRecords);
          })
          .catch((error: any) => {

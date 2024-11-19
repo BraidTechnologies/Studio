@@ -33,7 +33,7 @@ export async function findStorableApi(request: HttpRequest,
 
          let result = await findStorable (spec.functionalSearchKey, params, logger);
          if (result)
-            context.log("Found:" + result.toString());
+            context.log("Found:" + result.id);
          else
             context.log("Found nothing.");
          
@@ -84,7 +84,7 @@ export async function getStorableApi(request: HttpRequest,
 
          let result = await loadStorable (spec.id, params, logger);
          if (result)
-            context.log("Loaded:" + result.toString());
+            context.log("Loaded:" + result.id);
          else
             context.log("Loaded nothing.");
          
@@ -228,7 +228,9 @@ export async function getRecentStorablesApi(request: HttpRequest,
          let logger = new AzureLogger(context);
 
          loaded = await loadRecentStorables (spec, params, logger);
-         context.log("Loaded:" + loaded.toString());
+         for (let i = 0; loaded && i < loaded.length; i++) {
+            context.log("Loaded:" + loaded[i].id);
+         }
       }
       catch (e: any) {
          context.log("Failed load:" + e.toString());
