@@ -29,8 +29,8 @@
       "./src/**/*.ts",
       "__tests__/**/*.tsx",
       "__tests__/**/*.ts",      
-      "src/setupTests.test.ts"
-   ], 
+      "src/setupTests.ts"
+, "test/App copy.tsx", "src/ChunkView.tsx"   ], 
    "exclude": [
       "./node_modules"
    ],
