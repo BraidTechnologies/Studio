@@ -1,7 +1,7 @@
 {
-   "name": "aibot",
+   "name": "boxer",
    "version": "0.0.0",
-   "description": "Engine code for an OpenAI assistant that likes to talk about AI, written using Typescript, Node.js, and the Azure stack. GPT-3 backed with a store of AI Canon documents.",
+   "description": "An OpenAI assistant that likes to talk about AI, written using Typescript, Node.js, and the Azure stack. GPT-4 backed with a store of AI Canon documents.",
    "main": "ui/AppEntry.tsx",
    "author": {
       "name": "Jon Verrier"
