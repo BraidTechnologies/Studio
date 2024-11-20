@@ -7,7 +7,9 @@ import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
 
 const fluidFillPageStyles = makeStyles({
    root: {
-      minWidth: "512px",  // Ask for enough for at least the error message, plus don't crowd the entry text box - this is a trial value at 512    
+      minWidth: "512px",  // Ask for enough for at least the error message  
+      height: '100vh', /* fill the screen with flex layout */
+      width: '100vw'   /* fill the screen with flex layout */      
    },
 });
 
@@ -18,7 +20,7 @@ const pageOuterStyles = makeStyles({
       alignItems: 'stretch',  /* for a row, the main axis is vertical, flex-end is items aligned to the bottom of the row */
       justifyContent: 'center', /* for a row, the cross-axis is horizontal, center means vertically centered */
       height: '100vh', /* fill the screen with flex layout */
-      width: '100%',  /* fill the screen with flex layout */
+      width: '100vw',  /* fill the screen with flex layout */
       marginLeft: '0px',
       marginRight: '0px',
       marginTop: '0px',
@@ -38,7 +40,7 @@ export const innerColumnStyles = makeStyles({
       justifyContent: 'flex-start',    // start layout at the top       
       alignItems: 'left',
       maxWidth: '896px',
-      width: '100%',  /* fill the screen with flex layout */      
+      width: '100vw',  /* fill the screen with flex layout */      
    },
 });
 
@@ -68,13 +70,13 @@ function App() {
       userId: "madeupId",
       className: "madeUpClass",
       functionalSearchKey: "1234",
-      parentChunkId: undefined,
+      parentChunkId: 'parent',
       originalText: undefined,
       url: "https://microsoft.com",
       storedEmbedding: undefined,
       storedSummary: { modelId: randomKey(), text: "Summary lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
       storedTitle: { modelId: randomKey(), text: "Title" },
-      relatedChunks: undefined
+      relatedChunks: ['test', 'test2']
    }
 
    let obfusc = "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"
