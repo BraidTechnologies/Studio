@@ -1,0 +1,44 @@
+{
+  "definitions": {
+    "IClassifyRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "IClassifyRequest.text"
+        },
+        "classifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "IClassifyRequest.classifications"
+        }
+      },
+      "required": [
+        "text",
+        "classifications"
+      ],
+      "additionalProperties": false,
+      "title": "IClassifyRequest",
+      "description": "Represents a classification request object with text and classifications."
+    },
+    "IClassifyResponse": {
+      "type": "object",
+      "properties": {
+        "classification": {
+          "type": "string",
+          "title": "IClassifyResponse.classification"
+        }
+      },
+      "required": [
+        "classification"
+      ],
+      "additionalProperties": false,
+      "title": "IClassifyResponse",
+      "description": "Interface for the classification response object."
+    }
+  },
+  "$id": "ClassifyApi.Types.json",
+  "$comment": "Generated from src\\ClassifyApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

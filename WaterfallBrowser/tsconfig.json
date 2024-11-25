@@ -22,15 +22,18 @@
       "noEmit": true,
       "noEmitOnError": true,
       "removeComments": false,
-      "jsx": "react"
+      "jsx": "react",
+      "declaration": true, 
+      "declarationMap": true, 
+      "composite": true,
+      "sourceMap": true      
    },
    "include": [
       "./src/**/*.tsx",
       "./src/**/*.ts",
       "__tests__/**/*.tsx",
-      "__tests__/**/*.ts",      
-      "src/setupTests.ts"
-, "test/App copy.tsx", "src/ChunkView.tsx"   ], 
+      "__tests__/**/*.ts", 
+      "src/CommonTs/src/*.ts"],       
    "exclude": [
       "./node_modules"
    ],

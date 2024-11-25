@@ -1,9 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
 import { FluentProvider, teamsDarkTheme, makeStyles } from '@fluentui/react-components';
 import './App.css';
-import ChunkView from './ChunkView';
-import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
+import ChunkRetriever from './ChunkRetriever';
+import { retrieveChunk } from './ChunkRetriever';
 
 const fluidFillPageStyles = makeStyles({
    root: {
@@ -44,49 +43,25 @@ export const innerColumnStyles = makeStyles({
    },
 });
 
-export function randomInt(min: number, max: number): number {
-   return Math.floor(Math.random() * (max - min)) + min;
-}
-
-export function randomKey(): string {
-   return randomInt(0, 1000000000).toString();
-}
-
 function App() {
 
    const fluidFillPageClasses = fluidFillPageStyles();
    const pageOuterClasses = pageOuterStyles();
    const innerColumnClasses = innerColumnStyles();
 
-   let now = new Date().toUTCString();
+   // If you have a URL like `https://braidapps.io/chunks/123`, you can extract the path segments:
+   const pathSegments = window.location.pathname.split('/');
+   let chunkId : string | undefined = undefined;
 
-   let record: IStoredChunk = {
-      id: randomKey(),
-      applicationId: "Test",
-      schemaVersion: "1",
-      created: now,
-      amended: now,
-      contextId: "madeupId",
-      userId: "madeupId",
-      className: "madeUpClass",
-      functionalSearchKey: "1234",
-      parentChunkId: 'parent',
-      originalText: undefined,
-      url: "https://microsoft.com",
-      storedEmbedding: undefined,
-      storedSummary: { modelId: randomKey(), text: "Summary lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
-      storedTitle: { modelId: randomKey(), text: "Title" },
-      relatedChunks: ['test', 'test2']
+   if (pathSegments.length >= 3) {
+      chunkId = pathSegments[2]; // Assuming 'chunks' is the first segment
    }
-
-   let obfusc = "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"
-   let defusc = atob(obfusc);
 
    return (
       <FluentProvider theme={teamsDarkTheme} className={fluidFillPageClasses.root}>
          <div className={pageOuterClasses.root}>
             <div className={innerColumnClasses.root}>
-               <ChunkView chunk={record} />
+               <ChunkRetriever chunkId={chunkId} retrieverFn={retrieveChunk} />
             </div>
          </div>
       </FluentProvider>
