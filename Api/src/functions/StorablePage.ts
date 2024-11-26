@@ -8,7 +8,32 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 // Internal imports
 import { pageStorableAttributes } from './CosmosStorableApi';
-import { getStorableApi, saveStorableApi } from "./AzureStorableApi";
+import { getStorableApiFromQuery, saveStorableApi } from "./AzureStorableApi";
+import { IStorable } from "../../../CommonTs/src/IStorable";
+import { IStoredPage } from "../../../CommonTs/src/PageRepositoryApi.Types";
+import { decompressString } from "../../../CommonTs/src/Compress";
+
+// A transformer function that can be applied to a storable to transform it to decompress the html field
+function decompressHtml (storable: IStorable) : IStorable {
+
+   let storedPage: IStoredPage = storable as IStoredPage;
+
+   if (storedPage.html)
+      storedPage.html = decompressString (storedPage.html);
+
+   return storedPage;
+}
+
+// A transformer function that can be applied to a storable to transform it to send the html field as the HTTP response
+function sendHtml (storable: IStorable) : HttpResponseInit {
+
+   let storedPage: IStoredPage = storable as IStoredPage;
+
+   return {
+      status: 200,
+      body: storedPage.html
+   };
+}
 
 app.http('GetPage', {
    methods: ['GET', 'POST'],
@@ -28,7 +53,7 @@ app.http('GetPage', {
  */
 export async function getPage(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
    
-   return getStorableApi (request, pageStorableAttributes, context);
+   return await getStorableApiFromQuery (request, pageStorableAttributes, context, decompressHtml, sendHtml);
 };
 
 app.http('SavePage', {

@@ -1,4 +1,5 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageRepostoryApi = void 0;
 const Api_1 = require("./Api");
 const StorableRepositoryApi_1 = require("./StorableRepositoryApi");
+const Compress_1 = require("./Compress");
 /**
  * Represents an API for the Page repository
  *
@@ -43,6 +45,22 @@ class PageRepostoryApi extends Api_1.Api {
             let apiUrl = this.environment.savePageApi() + "?session=" + this.sessionKey.toString();
             return this.storableApi.save(record, apiUrl);
         });
+    }
+    /**
+     * Compresses a string using deflate algorithm
+     * @param input The string to compress
+     * @returns Base64 encoded compressed string
+     */
+    compressString(input) {
+        return (0, Compress_1.compressString)(input);
+    }
+    /**
+     * Decompresses a string that was compressed using compressString
+     * @param input Base64 encoded compressed string
+     * @returns Original decompressed string
+     */
+    decompressString(input) {
+        return (0, Compress_1.decompressString)(input);
     }
 }
 exports.PageRepostoryApi = PageRepostoryApi;

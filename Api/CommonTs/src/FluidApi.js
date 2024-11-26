@@ -8,11 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FluidApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
-const axios_1 = require("axios");
-const axios_retry_1 = require("axios-retry");
+const axios_1 = __importDefault(require("axios"));
+const axios_retry_1 = __importDefault(require("axios-retry"));
 const Api_1 = require("./Api");
 class FluidApi extends Api_1.Api {
     /**

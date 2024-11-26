@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 
-
+import axios from 'axios';
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
@@ -38,16 +38,16 @@ describe("StorablePage", async function () {
 
    let now = new Date().toUTCString();
 
-
-
    let env = getEnvironment(EEnvironment.kLocal);
    let api = new PageRepostoryApi(env, process.env.SessionKey.toString());
 
+   let key = randomKey();
+   let htmlFromFile = loadHtmlFromFile ("test/page_test.html");
+   let htmlCompressed = api.compressString (htmlFromFile);
+
+
    it("Needs to succeed with save & valid key in local environment", async function () {
       
-      let htmlFromFile = loadHtmlFromFile ("test/page_test.html");
-      let htmlCompressed = api.compressString (htmlFromFile);
-
       let record: IStoredPage = {
          id: randomKey(),
          applicationId: "Test",
@@ -62,12 +62,30 @@ describe("StorablePage", async function () {
       }
 
       let myRecord = { ...record };
-      myRecord.id = randomKey();
+      myRecord.id = key;
 
       let ok = await api.save (myRecord);
 
       expect(ok).toBe(true);
 
    }).timeout(20000);
+
+   it("Needs to succeed with load & valid key in local environment", async function () {
+
+      var response: any;
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let url = environment.getPageApi() 
+         + "?session=" + process.env.SessionKey.toString()
+         + "&id=" + key.toString();
+
+      response = await axios.post(url);     
+      
+      let html = response.data;
+
+      expect(html).toBe(htmlFromFile);
+
+   }).timeout(20000);   
 
 });

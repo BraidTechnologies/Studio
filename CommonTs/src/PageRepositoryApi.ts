@@ -1,12 +1,10 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
-import * as pako from 'pako';
-
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 import { IStorable} from "./IStorable";
 import { StorableRepostoryApi, IStorablePageRepostoryApiWrapper} from './StorableRepositoryApi';
-
+import { compressString, decompressString } from './Compress';
 /**
  * Represents an API for the Page repository
  * 
@@ -50,19 +48,7 @@ export class PageRepostoryApi extends Api implements IStorablePageRepostoryApiWr
     * @returns Base64 encoded compressed string
     */
    public compressString(input: string): string {
-      // Convert string to Uint8Array
-      const data = new TextEncoder().encode(input);
-      // Compress the data
-      const compressed = pako.deflate(data);
-      
-      // Universal base64 encoding
-      if (typeof window === 'undefined') {
-         // Node.js environment
-         return Buffer.from(compressed).toString('base64');
-      } else {
-         // Browser environment
-         return btoa(String.fromCharCode.apply(null, Array.from(compressed)));
-      }
+      return compressString(input);
    }
 
    /**
@@ -71,26 +57,7 @@ export class PageRepostoryApi extends Api implements IStorablePageRepostoryApiWr
     * @returns Original decompressed string
     */
    public decompressString(input: string): string {
-      try {
-         // Universal base64 decoding
-         let compressedData: Uint8Array;
-         if (typeof window === 'undefined') {
-            // Node.js environment
-            compressedData = Buffer.from(input, 'base64');
-         } else {
-            // Browser environment
-            compressedData = new Uint8Array(
-               atob(input).split('').map(char => char.charCodeAt(0))
-            );
-         }
-         
-         // Decompress the data
-         const decompressed = pako.inflate(compressedData);
-         // Convert back to string
-         return new TextDecoder().decode(decompressed);
-      } catch (error) {
-         throw new Error('Failed to decompress string: Invalid input');
-      }
+      return decompressString(input);
    }
 
 }
