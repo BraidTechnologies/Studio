@@ -42,11 +42,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: record });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -73,11 +73,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: query });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -104,11 +104,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: query });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return response.data;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return undefined;
                 }
             }

@@ -37,6 +37,17 @@ function mapRelated (value: string, index: number, all: Array<string>) : ReactNo
 }
 
 /**
+ * Splits a string into an array of strings using double newlines as the delimiter.
+ * Empty strings are filtered out from the result.
+ *
+ * @param text - The input string to split
+ * @returns An array of non-empty strings split by double newlines
+ */
+function splitByDoubleNewline(text: string): string[] {
+   return text.split('\n\n').filter(str => str.trim().length > 0);
+}
+
+/**
  * Renders a view for a stored chunk, displaying its title, summary, and URL.
  * Includes navigation to the parent chunk and lists related chunks if available.
  * 
@@ -45,14 +56,21 @@ function mapRelated (value: string, index: number, all: Array<string>) : ReactNo
  */
 export function ChunkView(props: {chunk: IStoredChunk}) {
 
-    
+    let splitSummary: Array<string> = new Array<string> ();
+
+    if (props.chunk.storedSummary?.text) {
+        splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
+    }
+
     return (
         <div>
             <p><b>{uiAppName}</b></p>
             &nbsp;                   
             <p><b>{props.chunk.storedTitle?.text}</b></p>
             &nbsp;
-            <p>{props.chunk.storedSummary?.text}</p>
+            {splitSummary.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+            ))}
             &nbsp;
             <p><a href={props.chunk.url}>{props.chunk.url}</a></p>
             &nbsp;

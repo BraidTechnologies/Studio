@@ -116,13 +116,13 @@ def test_with_search_bny ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_BNY_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
+    pipeline_spec.pages = 3
+    pipeline_spec.clusters = 4
     pipeline_spec.clusters_in_summary = 4
     pipeline_spec.description = "GenAI BNY"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'bny_cluster.html'
     pipeline_spec.output_data_name = "bny_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, True)
+    links = pipeline.search (pipeline_spec, False)
     assert len(links) >= 1

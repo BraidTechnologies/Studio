@@ -84,9 +84,8 @@ class ChunkRepository:
         if chunk.storedSummary:
             chunk_as_json.storedSummary = chunk.storedSummary.__dict__
 
-        # TODO - map embedded structures to JSON __dict__
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
-        chunk_url = f'http://localhost:7071/api/SaveChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/SaveChunk?session={
+        #chunk_url = f'http://localhost:7071/api/SaveChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': chunk_as_json.__dict__

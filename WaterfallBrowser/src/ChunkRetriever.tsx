@@ -4,6 +4,7 @@ import { ChunkRepostoryApi } from './CommonTs/src/ChunkRepositoryApi';
 import { getDefaultEnvironment, getDefaultFluidEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { ChunkView } from './ChunkView';
 import { ChunkViewError } from './ChunkViewError';
+import { ChunkViewLoading } from './ChunkViewLoading';
 
 /**
  * Type for a function that returns an IStoredChunk given a key. 
@@ -51,7 +52,9 @@ export function ChunkRetriever (props: {chunkId: string | undefined, retrieverFn
     }
     
     return (
-      chunk ? <ChunkView chunk={chunk as unknown as IStoredChunk}/> : <ChunkViewError/>
+      chunk ? <ChunkView chunk={chunk as unknown as IStoredChunk}/> 
+            : calling ? <ChunkViewLoading/> 
+                      : <ChunkViewError/>
     );
 }
 

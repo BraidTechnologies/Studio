@@ -47,7 +47,7 @@ export async function findStorableApi(request: HttpRequest,
          }
       }
       catch (e: any) {
-         context.error ("Failed find:" + e.toString());
+         context.error ("Failed find:" + e?.toString());
          return {
             status: 500,
             body: "Failed find."
@@ -98,7 +98,7 @@ export async function getStorableApi(request: HttpRequest,
          }
       }
       catch (e: any) {
-         context.error ("Failed load:" + e.toString());
+         context.error ("Failed load:" + e?.toString());
          return {
             status: 500,
             body: "Failed load."
@@ -145,7 +145,7 @@ export async function saveStorableApi (request: HttpRequest,
          };         
       }
       catch (e: any) {
-         context.error("Failed save:" + e.toString());
+         context.error("Failed save:" + e?.toString());
          return {
             status: 500,
             body: "Failed save."
@@ -192,7 +192,7 @@ export async function removeStorableApi(request: HttpRequest,
          };
       }
       catch (e: any) {
-         context.error ("Failed remove:" + e.toString());
+         context.error ("Failed remove:" + e?.toString());
          return {
             status: 500,
             body: "Failed remove."
@@ -233,10 +233,10 @@ export async function getRecentStorablesApi(request: HttpRequest,
          }
       }
       catch (e: any) {
-         context.log("Failed load:" + e.toString());
+         context.log("Failed load recent:" + e?.toString());
          return {
             status: 500,
-            body: "Failed load."
+            body: "Failed load recent."
          };
       }
 

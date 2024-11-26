@@ -150,7 +150,11 @@ class IStoredChunk(IStorable):
             self.storedEmbedding = safe_cast (other.storedEmbedding, IStoredEmbedding)
             self.storedSummary = safe_cast (other.storedSummary, IStoredTextRendering)
             self.storedTitle = safe_cast (other.storedTitle, IStoredTextRendering)
-            self.relatedChunks = other.relatedChunks
+            if other.relatedChunks:
+               self.relatedChunks = other.relatedChunks[:]
+            else:
+               self.relatedChunks = None                
+            self.url = other.url
         else:
             self.parentChunkId = None
             self.originalText = None
@@ -158,6 +162,7 @@ class IStoredChunk(IStorable):
             self.storedSummary = None
             self.storedTitle = None
             self.relatedChunks = None
+            self.url = None
 
 
 class IStorableQuerySpec:

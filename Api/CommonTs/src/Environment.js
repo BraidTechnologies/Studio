@@ -181,16 +181,16 @@ class StagingEnvironment {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
     }
     saveChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/SaveChunk";
     }
     removeChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/RemoveChunk";
     }
     getChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/GetChunk";
     }
     findChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/FindChunk";
     }
     getChunksApi() {
         return "https://braid-api.azurewebsites.net/api/GetChunks";
@@ -278,16 +278,16 @@ class ProductionEnvironment {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
     }
     saveChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/SaveChunk";
     }
     removeChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/RemoveChunk";
     }
     getChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/GetChunk";
     }
     findChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/FindStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/FindChunk";
     }
     getChunksApi() {
         return "https://braid-api.azurewebsites.net/api/GetChunks";

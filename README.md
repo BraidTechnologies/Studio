@@ -1,6 +1,8 @@
 # Braid Technologies Studio
 - [General Information](#general-information)
 - [Technologies](#technologies)
+- [Key Components](#key-components)
+- [Practices](#practices)
 - [License](#license)
 
 ## General Information
@@ -11,7 +13,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 - **Cascade** (a small waterfall) - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Cascade' directory. Cascade is written in typescript/javascript. 
 
-- Waterfall - a data analysis back end pipeline. This illustrates a date pipline to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
+- **Waterfall** - a data analysis back end pipeline. This illustrates a date pipline to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
 
 '**Api**' contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. Waterfall, Cascade, and Boxer all call Braid Apis for any function requiring server side keys (database or AI model access).
 
@@ -25,9 +27,11 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 '**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly.  It is a full web front end that passes questions to an LLM, and then enriches them with links to relevant document chunks found in its database of useful material - the A16Z AI Cannon. 
 
-'**BoxerEval' - evals for Boxer  
+'**Teams**' contains a Teams plug-in that brings Boxer & Waterfall into the teams environment.
 
-## Technologies
+'**BoxerEval**' - evals for Boxer  
+
+## **Technologies**
 
 For front end development Braid uses Typescript (https://www.typescriptlang.org/), using the Microsoft Fluent UI framework (https://react.fluentui.dev/). Tests are written in Mocha (https://mochajs.org/).
 
@@ -35,7 +39,48 @@ For data processing and AI evaluation, Braid uses Python (https://www.python.org
 
 Braid uses Azure for all processing. 
 
-## Licence
+## **Key Components**
+
+1. Document Processing Pipeline:
+    - Web scraping (using Beautiful Soup)
+    - Text summarization
+    - Embedding generation
+    - Cluster analysis
+
+2. API Layer:
+    - Summarization endpoints
+    - Classification services
+    - Embedding generation
+    - RESTful architecture
+
+3. Testing Framework:
+    - Mocha for TypeScript/JavaScript
+    - pytest for Python components
+    - Automated test generation through Salon
+
+## **Practices**
+   
+1. Code Organization
+    - Core online functionality in TypeScript
+    - Use Python for data processing 
+    - Maintain clear separation between UI and core logic
+
+2. Testing
+    - Write tests for all new features
+    - Maintain test coverage above 90%
+    - Use appropriate testing frameworks (Mocha for TypeScript, pytest for Python)
+
+3. Documentation
+    - Document all public APIs
+    - Keep README files updated
+    - Include code comments for complex logic
+
+4. Version Control
+    - Follow Git branching strategy
+    - Write meaningful commit messages
+    - Keep PRs focused and manageable
+
+## **Licence**
 GNU AFFERO GENERAL PUBLIC LICENSE.
 
 This is intentionally a restrictive licence. The source is  available for non-commercial use (subject to the licence terms as listed, which enable use for learning, self study etc). Commercial use either must abide by the licence terms, which are strong, or a separate licence that enables more normal commercial use & distribution is available from Braid. Contact us for more details mailto:info@braidtechnologies.io.
