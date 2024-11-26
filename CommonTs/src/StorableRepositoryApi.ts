@@ -5,14 +5,22 @@ import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQue
 
 /**
  * Represents a wrapper for interacting with a repository of storable objects.
- * Provides methods to save, remove, and load storable records.
+ * Provides methods to save storable records.
  */
-export interface IStorableRepostoryApiWrapper {
+export interface IStorablePageRepostoryApiWrapper {
    
    save (record: IStorable) : Promise<boolean>;  
+};
+
+/**
+ * Represents a wrapper for interacting with a repository of storable objects.
+ * Provides methods to save, remove, and load storable records.
+ */
+export interface IStorableRepostoryApiWrapper extends IStorablePageRepostoryApiWrapper{
+   
    remove (recordId: string) : Promise<boolean>;
    load (recordId: string) : Promise<IStorable | undefined>;
-   find (functionalSearhKey: string) : Promise<IStorable | undefined>;  
+   find (functionalSearchKey: string) : Promise<IStorable | undefined>;  
    recent (querySpec: IStorablesQuerySpec, url: string) : Promise<Array<IStorable>>;
 };
 

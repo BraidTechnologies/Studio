@@ -41,6 +41,8 @@ export interface IEnvironment {
    getChunkApi(): string;
    findChunkApi(): string;   
    getChunksApi(): string;   
+   savePageApi() : string;   
+   getPageApi(): string;   
 }
 
 

@@ -98,6 +98,12 @@ class DevelopmentEnvironment {
     getChunksApi() {
         return "http://localhost:7071/api/GetChunks";
     }
+    savePageApi() {
+        return "http://localhost:7071/api/SavePage";
+    }
+    getPageApi() {
+        return "http://localhost:7071/api/GetPage";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -195,6 +201,12 @@ class StagingEnvironment {
     getChunksApi() {
         return "https://braid-api.azurewebsites.net/api/GetChunks";
     }
+    savePageApi() {
+        return "https://braid-api.azurewebsites.net/api/SavePage";
+    }
+    getPageApi() {
+        return "https://braid-api.azurewebsites.net/api/GetPage";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -291,6 +303,12 @@ class ProductionEnvironment {
     }
     getChunksApi() {
         return "https://braid-api.azurewebsites.net/api/GetChunks";
+    }
+    savePageApi() {
+        return "https://braid-api.azurewebsites.net/api/SavePage";
+    }
+    getPageApi() {
+        return "https://braid-api.azurewebsites.net/api/GetPage";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

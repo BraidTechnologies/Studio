@@ -18,6 +18,10 @@ const activityPartitionKey: string = "6ea3299d987b4b33a1c0b079a833206f";
 const activityCollectionPath = "dbs/Studio/colls/Activity";
 const activityCollectionName = "Activity";
 
+const pagePartitionKey: string = "f11a7404e266499a84a58fead932eec4";
+const pageCollectionPath = "dbs/Studio/colls/Page";
+const pageCollectionName = "Page";
+
 import { makeStorablePostToken, makeStorableDeleteToken, 
    makePostQueryHeader, makePostHeader, makeDeleteHeader } from './CosmosRepositoryApi';
 
@@ -44,6 +48,12 @@ export let activityStorableAttributes : ICosmosStorableParams = {
    partitionKey: activityPartitionKey,
    collectionPath: activityCollectionPath,
    collectionName: activityCollectionName
+}
+
+export let pageStorableAttributes : ICosmosStorableParams = {
+   partitionKey: pagePartitionKey,
+   collectionPath: pageCollectionPath,
+   collectionName: pageCollectionName
 }
 
 export class AzureLogger implements ILoggingContext {
@@ -221,7 +231,7 @@ export async function saveStorable(record: IStorable, params: ICosmosStorablePar
          })
          .catch((error: any) => {
 
-            context.log("Error calling database:", error);
+            context.error("Error calling database:", error);
             reject(false);
          });
    });
