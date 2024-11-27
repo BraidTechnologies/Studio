@@ -1,5 +1,4 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import axios from 'axios';
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";

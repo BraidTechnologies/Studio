@@ -5,5 +5,14 @@
    ],
    "python.testing.unittestEnabled": false,
    "python.testing.pytestEnabled": true,
-   "python.autoComplete.extraPaths": ["D:\\Code\\Braid", "D:\\Code\\Braid\\CommonPy", "D:\\Code\\Braid\\CommonPy\\src"]
+"python.autoComplete.extraPaths": [
+    "D:\\Code\\Braid",
+    "D:\\Code\\Braid\\CommonPy",
+    "D:\\Code\\Braid\\CommonPy\\src"
+],
+"python.analysis.extraPaths": [
+    "D:\\Code\\Braid",
+    "D:\\Code\\Braid\\CommonPy",
+    "D:\\Code\\Braid\\CommonPy\\src"
+]
 }

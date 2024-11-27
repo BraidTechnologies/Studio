@@ -6,9 +6,9 @@ import os
 import sys
 import logging
 import uuid
-import datetime
 
-from src.page_repository_api import PageRepository, IStoredPage, compress_string
+from src.page_repository_api import (
+    PageRepository, make_page_from_file)
 
 test_root = os.path.dirname(__file__)
 parent = os.path.abspath(os.path.join(test_root, '..'))
@@ -21,21 +21,14 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
-utc_time = datetime.datetime.now(datetime.timezone.utc)
-utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
-
-page: IStoredPage = IStoredPage()
-page.id = str(uuid.uuid4())
-page.applicationId = 'TestApplication'
-page.contextId = 'TestContext'
-page.functionalSearchKey = 'TestKey' + str(uuid.uuid4())
-page.userId = None
-page.created = utc_time_string
-page.amended = utc_time_string
-page.className = 'madeUpClass'
-page.schemaVersion = '1'
-page.html = compress_string('<html></html>')
-
+page = make_page_from_file('TestApplication', 
+                           'TestContext', 
+                           'TestKey' + str(uuid.uuid4()), 
+                           'madeUpClass', 
+                           '1', 
+                           str(uuid.uuid4()),
+                           test_root, 
+                           'page_test.html')
 
 def test_basic():
     ''' Test construction '''

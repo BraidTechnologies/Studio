@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
+import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
-
+import { getDefusc } from './Defusc';
 /**
  * Generates a ReactNode that provides a link back to a parent element.
  *
@@ -57,11 +58,18 @@ function splitByDoubleNewline(text: string): string[] {
 export function ChunkView(props: {chunk: IStoredChunk}) {
 
     let splitSummary: Array<string> = new Array<string> ();
+    let url : string | undefined = undefined
 
     if (props.chunk.storedSummary?.text) {
         splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
     }
 
+    if (!props.chunk.parentChunkId) {
+        let defusc = getDefusc();
+        let env = getDefaultEnvironment();    
+
+        url = env.hostProtocolAndName() + '/api/GetPage?session=' + defusc + '&id=' + props.chunk.id;
+    }
     return (
         <div>
             <p><b>{uiAppName}</b></p>
@@ -72,7 +80,7 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
                 <p key={index}>{paragraph}</p>
             ))}
             &nbsp;
-            <p><a href={props.chunk.url}>{props.chunk.url}</a></p>
+            <p>url ? <a href={url}>{props.chunk.id}</a> : <div/></p>
             &nbsp;
             {backToParent (props.chunk.parentChunkId)}
             &nbsp;

@@ -31,6 +31,9 @@ function sendHtml (storable: IStorable) : HttpResponseInit {
 
    return {
       status: 200,
+      headers: {
+         "Content-Type": "text/html"
+      },
       body: storedPage.html
    };
 }

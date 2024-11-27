@@ -12,6 +12,7 @@ export enum EEnvironment {
 export interface IEnvironment {
 
    name : string;
+   hostProtocolAndName(): string;
    checkSessionApi () : string;
    summariseApi () : string;
    findThemeApi(): string;

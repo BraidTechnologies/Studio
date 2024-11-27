@@ -46,10 +46,6 @@
     "IStoredChunk": {
       "type": "object",
       "properties": {
-        "chunkFunctionalKey": {
-          "type": "string",
-          "title": "IStoredChunk.chunkFunctionalKey"
-        },
         "parentChunkId": {
           "type": "string",
           "title": "IStoredChunk.parentChunkId"
@@ -57,6 +53,10 @@
         "originalText": {
           "type": "string",
           "title": "IStoredChunk.originalText"
+        },
+        "url": {
+          "type": "string",
+          "title": "IStoredChunk.url"
         },
         "storedEmbedding": {
           "$ref": "#/definitions/IStoredEmbedding",
@@ -79,9 +79,9 @@
         }
       },
       "required": [
-        "chunkFunctionalKey",
         "parentChunkId",
         "originalText",
+        "url",
         "storedEmbedding",
         "storedSummary",
         "storedTitle",
@@ -89,22 +89,7 @@
       ],
       "additionalProperties": false,
       "title": "IStoredChunk",
-      "description": "Interface representing a chunk of data.\r\n\r\nCore data for a chunk:\r\n- chunkFunctionalKey: Application level key\r\n- parentChunkId: Primary key to parent document\r\n- originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)\r\n- storedEmbedding: Embedding of the original text\r\n- storedSummary: Summary of the original text - generated with application-specific prompt \r\n- storedTitle: A generated of the original text - generated with application-specific prompt"
-    },
-    "IStoredChunkQuerySpec": {
-      "type": "object",
-      "properties": {
-        "chunkFunctionalKey": {
-          "type": "string",
-          "title": "IStoredChunkQuerySpec.chunkFunctionalKey"
-        }
-      },
-      "required": [
-        "chunkFunctionalKey"
-      ],
-      "additionalProperties": false,
-      "title": "IStoredChunkQuerySpec",
-      "description": "Defines the structure of a query specification for searching for a single record.\r\nIncludes the functional key of the record."
+      "description": "Interface representing a chunk of data.\r\n\r\nCore data for a chunk:\r\n- parentChunkId: Primary key to parent document\r\n- originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)\r\n- url: string | undefined;                 // url to external resource, can be null  \r\n- storedEmbedding: Embedding of the original text\r\n- storedSummary: Summary of the original text - generated with application-specific prompt \r\n- storedTitle: A generated of the original text - generated with application-specific prompt\r\n- related: Array of IDs to related chunks"
     }
   },
   "$id": "ChunkRepositoryApi.Types.json",

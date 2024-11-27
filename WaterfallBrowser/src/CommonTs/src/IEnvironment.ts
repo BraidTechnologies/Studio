@@ -12,6 +12,7 @@ export enum EEnvironment {
 export interface IEnvironment {
 
    name : string;
+   hostProtocolAndName(): string;
    checkSessionApi () : string;
    summariseApi () : string;
    findThemeApi(): string;
@@ -41,6 +42,8 @@ export interface IEnvironment {
    getChunkApi(): string;
    findChunkApi(): string;   
    getChunksApi(): string;   
+   savePageApi() : string;   
+   getPageApi(): string;   
 }
 
 

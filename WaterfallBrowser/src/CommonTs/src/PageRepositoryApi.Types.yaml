@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Converted from PageRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: PageRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\PageRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+components:
+  schemas:
+    IStoredPage:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    IStoredPageRequest:
+      additionalProperties: false
+      title: IStoredPageRequest
+      type: object
+    IStoredPageResponse:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPageResponse, IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    StoredPageApi:
+      title: StoredPageApi
+    paths:
+      /functions:
+        get:
+          operationId: get_page
+          summary: Returns a page. 
+          description: Returns a page. 
+          parameters:
+            - request: request
+              in: query
+              description: A spec for a Page
+              schema:
+                type: IStoredPageRequest
+              required: true
+          responses:
+            '200':
+              description: A Page
+              content:
+                application/json:
+                  schema:
+                    type: IStoredPageResponse    
+            '400':
+              description: An error 
+              content:
+                application/json:
+                  schema:
+                    type: string                       

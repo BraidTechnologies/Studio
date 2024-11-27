@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
 import { ChunkRepostoryApi } from './CommonTs/src/ChunkRepositoryApi';
-import { getDefaultEnvironment, getDefaultFluidEnvironment } from './CommonTs/src/IEnvironmentFactory';
+import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { ChunkView } from './ChunkView';
 import { ChunkViewError } from './ChunkViewError';
 import { ChunkViewLoading } from './ChunkViewLoading';
+import { getDefusc } from './Defusc';
 
 /**
  * Type for a function that returns an IStoredChunk given a key. 
@@ -72,8 +73,7 @@ export default ChunkRetriever;
  */
 export async function retrieveChunk(chunkId: string | undefined): Promise<IStoredChunk | undefined> {
 
-   let obfusc = "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"
-   let defusc = atob(obfusc);
+   let defusc = getDefusc();
 
    let env = getDefaultEnvironment();
    let api = new ChunkRepostoryApi(env, defusc);
@@ -87,3 +87,4 @@ export async function retrieveChunk(chunkId: string | undefined): Promise<IStore
    else
       return undefined;
 }
+

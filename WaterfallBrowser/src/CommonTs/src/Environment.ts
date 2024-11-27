@@ -97,6 +97,15 @@ export class DevelopmentEnvironment implements IEnvironment {
    getChunksApi(): string {
       return "http://localhost:7071/api/GetChunks";
    }         
+   savePageApi() : string {
+      return "http://localhost:7071/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "http://localhost:7071/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "http://localhost:7071";
+   }
 }
 
 /**
@@ -194,6 +203,15 @@ export class StagingEnvironment implements IEnvironment {
    getChunksApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetChunks";
    }         
+   savePageApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "https://braid-api.azurewebsites.net";
+   }
 }
 
 /**
@@ -292,4 +310,13 @@ export class ProductionEnvironment implements IEnvironment {
    getChunksApi(): string {
       return "https://braid-api.azurewebsites.net/api/GetChunks";
    }        
+   savePageApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "https://braid-api.azurewebsites.net";
+   }
 }
