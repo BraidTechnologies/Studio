@@ -45,7 +45,6 @@ describe("StorablePage", async function () {
    let htmlFromFile = loadHtmlFromFile ("test/page_test.html");
    let htmlCompressed = api.compressString (htmlFromFile);
 
-
    it("Needs to succeed with save & valid key in local environment", async function () {
       
       let record: IStoredPage = {

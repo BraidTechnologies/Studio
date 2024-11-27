@@ -9,7 +9,8 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from .chunk_repository_api_types import IStoredChunk, IStorableQuerySpec, IStoredEmbedding, IStoredTextRendering
+from .storable_types import IStorableQuerySpec
+from .chunk_repository_api_types import IStoredChunk, IStoredEmbedding, IStoredTextRendering
 from .type_utilities import safe_dict_to_object, safe_cast
 
 # Set up logging to display information about the execution of the script
@@ -162,12 +163,12 @@ class ChunkRepository:
 
     def load(self, record_id: str) -> IStoredChunk:
         '''
-        Load content from the database based on the provided context and functional key.
+        Load content from the database based on the provided context and key.
         If the file exists in the output location, its contents are read and returned as a string.
         If the record is not found, return None
 
         Parameters:
-           functional_key (str): functionalKey to use for the record
+           record_id (str): key to use for the record
 
         Returns:
            item (IStoredChunk): The loaded content or None

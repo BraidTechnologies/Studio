@@ -1,12 +1,13 @@
 # Copyright (c) 2024 Braid Technologies Ltd
 
-from openai import OpenAI
+
 import argparse
 import json
-import yaml
 import os
 import logging
 from typing import Optional, Union
+import yaml
+from openai import OpenAI
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,7 +19,6 @@ api_key = os.environ.get("OPENAI_API_KEY")
 # Define code snippet markers for extraction
 START_POINT_CODE = '```python'
 END_POINT_CODE = '```'
-
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for the script.
@@ -101,7 +101,7 @@ def main() -> None:
     try:
         assistant = client.beta.assistants.create(
             name="API Test Code Generator",
-            instructions="You are a Python expert. Generate production-ready Pytest test cases for all endpoints in the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions.",
+            instructions="You are a Python expert. Generate Pytest test cases for all endpoints in the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'.",
             tools=[{"type": "code_interpreter"}],
             model="gpt-4o",
         )

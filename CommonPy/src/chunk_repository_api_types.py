@@ -9,8 +9,6 @@ Classes:
         and a list of float values.
     IStoredTextRendering: representing a text rendering with a
         model ID and text content.
-    IStorable: A base class with common attributes for storable entities,
-        including identifiers, timestamps, and schema version.
     IStoredChunk: Inherits from IStorable, representing a chunk of data with
         additional attributes for functional key, parent chunk ID, original
         text, and related stored embeddings and text renderings.
@@ -20,6 +18,8 @@ Classes:
 
 from typing import Union, List
 from .type_utilities import safe_cast
+from .storable_types import IStorable
+
 
 class IStoredEmbedding:
     """
@@ -40,11 +40,13 @@ class IStoredEmbedding:
             self.modelId = None
             self.embedding = None
 
-def create_embedding (embedding: List[float], model: str) -> IStoredEmbedding:
+
+def create_embedding(embedding: List[float], model: str) -> IStoredEmbedding:
     ''' Utility function to create an embedding '''
     rendering: IStoredEmbedding = IStoredEmbedding()
     rendering.embedding = embedding
     rendering.modelId = model
+
 
 class IStoredTextRendering:
     """
@@ -65,60 +67,14 @@ class IStoredTextRendering:
             self.modelId = None
             self.text = None
 
-def create_text_rendering (text: str, model: str) -> IStoredTextRendering:
+
+def create_text_rendering(text: str, model: str) -> IStoredTextRendering:
     ''' Utility function to create a text rendering '''
     rendering: IStoredTextRendering = IStoredTextRendering()
     rendering.text = text
     rendering.modelId = model
 
     return rendering
-
-class IStorable:
-    """
-    A base class for storable entities with common attributes.
-
-    Attributes:
-     id (Union[str, None]): The unique identifier for the entity, which can be None.
-     applicationId (str): The identifier for the application associated with the entity.
-     contextId (Union[str, None]): The identifier for the context, which can be None.
-     functionalSearchKey (str): A key used to identify the chunk functionally.  Can be None.
-     userId (Union[str, None]): The identifier for the user, which can be None.
-     created (datetime): The timestamp when the entity was created.
-     amended (datetime): The timestamp when the entity was last modified.
-     className (str): The name of the class.
-     schemaVersion (str): The version of the schema used by the entity.
-    """
-    id: Union[str, None]
-    applicationId: str
-    contextId: Union[str, None]
-    functionalSearchKey: Union[str, None]
-    userId: Union[str, None]
-    created: str
-    amended: str
-    className: str
-    schemaVersion: str
-
-    def __init__(self, other=None):
-        if other:
-            self.id = other.id
-            self.applicationId = other.applicationId
-            self.contextId = other.contextId
-            self.functionalSearchKey = other.functionalSearchKey
-            self.userId = other.userId
-            self.created = other.created
-            self.amended = other.amended
-            self.className = other.className
-            self.schemaVersion = other.schemaVersion
-        else:
-            self.id = None
-            self.applicationId = None
-            self.contextId = None
-            self.functionalSearchKey = None
-            self.userId = None
-            self.created = None
-            self.amended = None
-            self.className = None
-            self.schemaVersion = None
 
 
 class IStoredChunk(IStorable):
@@ -138,7 +94,7 @@ class IStoredChunk(IStorable):
     storedEmbedding: Union[IStoredEmbedding, None]
     storedSummary: Union[IStoredTextRendering, None]
     storedTitle: Union[IStoredTextRendering, None]
-    url:Union[str, None]
+    url: Union[str, None]
     relatedChunks: Union[List[str], None]
 
     def __init__(self, other=None):
@@ -147,13 +103,16 @@ class IStoredChunk(IStorable):
         if other:
             self.parentChunkId = other.parentChunkId
             self.originalText = other.originalText
-            self.storedEmbedding = safe_cast (other.storedEmbedding, IStoredEmbedding)
-            self.storedSummary = safe_cast (other.storedSummary, IStoredTextRendering)
-            self.storedTitle = safe_cast (other.storedTitle, IStoredTextRendering)
+            self.storedEmbedding = safe_cast(
+                other.storedEmbedding, IStoredEmbedding)
+            self.storedSummary = safe_cast(
+                other.storedSummary, IStoredTextRendering)
+            self.storedTitle = safe_cast(
+                other.storedTitle, IStoredTextRendering)
             if other.relatedChunks:
-               self.relatedChunks = other.relatedChunks[:]
+                self.relatedChunks = other.relatedChunks[:]
             else:
-               self.relatedChunks = None                
+                self.relatedChunks = None
             self.url = other.url
         else:
             self.parentChunkId = None
@@ -163,37 +122,3 @@ class IStoredChunk(IStorable):
             self.storedTitle = None
             self.relatedChunks = None
             self.url = None
-
-
-class IStorableQuerySpec:
-    """
-    A class for specifying query parameters for storables.
-
-    Attributes:
-     id (str): The primary key used to identify the chunk.
-     functionalSearchKey (str) if id in None, functional key can be used.
-    """
-    id: str
-    functionalSearchKey: str
-
-    def __init__(self, other=None):
-        if other:
-            self.id = other.id
-            self.functionalSearchKey = other.functionalSearchKey
-        else:
-            self.id = None
-            self.functionalSearchKey = None
-
-
-class IStorableOperationResult:
-    """
-    Defines the results of a storable operation - true or false.
-    """
-
-    ok: bool
-
-    def __init__(self, other=None):
-        if other:
-            self.ok = other.ok
-        else:
-            self.ok = None

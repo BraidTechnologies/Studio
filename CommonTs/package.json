@@ -20,7 +20,8 @@
       "build": "tsc -b",
       "watch": "tsc -b -w",
       "clean": "rimraf dist",
-      "make_api_def": "npx typeconv -f ts -t jsc src/*.Types.ts"
+      "make_api_def_json": "npx typeconv -f ts -t jsc src/*.Types.ts",
+      "make_api_def_yaml": "npx typeconv -f ts -t oapi src/*.Types.ts"
    },
    "dependencies": {
       "axios-retry": "^4.5.0",
