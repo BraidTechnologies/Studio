@@ -104,6 +104,9 @@ class DevelopmentEnvironment {
     getPageApi() {
         return "http://localhost:7071/api/GetPage";
     }
+    hostProtocolAndName() {
+        return "http://localhost:7071";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -207,6 +210,9 @@ class StagingEnvironment {
     getPageApi() {
         return "https://braid-api.azurewebsites.net/api/GetPage";
     }
+    hostProtocolAndName() {
+        return "https://braid-api.azurewebsites.net";
+    }
 }
 exports.StagingEnvironment = StagingEnvironment;
 /**
@@ -309,6 +315,9 @@ class ProductionEnvironment {
     }
     getPageApi() {
         return "https://braid-api.azurewebsites.net/api/GetPage";
+    }
+    hostProtocolAndName() {
+        return "https://braid-api.azurewebsites.net";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

@@ -76,8 +76,7 @@ describe("StorablePage", async function () {
       let environment = getEnvironment(EEnvironment.kLocal);
 
       let url = environment.getPageApi() 
-         + "?session=" + process.env.SessionKey.toString()
-         + "&id=" + key.toString();
+         + "?id=" + key.toString();
 
       response = await axios.post(url);     
       

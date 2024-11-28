@@ -159,6 +159,7 @@ def save_chunks(output_location: str,
                                                                chunk_repository.default_model)
 
     # Save the Theme
+    master_theme.url = "https://braid-api.azurewebsites.net/api/GetPage?id=" + str(master_theme.id)
     chunk_repository.save (master_theme)
 
     # Save the Page - use functional search key and id from the parent theme

@@ -134,9 +134,8 @@ export async function getStorableApi(request: HttpRequest,
 
 /**
  * Asynchronous function to load an Storable based on the provided request and context.
- * Validates the session key from the request query parameters and removes the Storable if the session key matches predefined keys.
- * Logs the validation and removal status, returning an HTTP response with the appropriate status and message.
- * 
+ * Returns the Storable if the id matches a record in the database.
+ * *Note* This function does not validate the session key. we are not proptecting GPU costs & we want browsers to be able to retrueve directly without the session key appearing in the URL parameters. 
  * @param request - The HTTP request containing the session key and Storable data.
  * @param params The parameters required for saving the record, including partition key and collection path.
  * @param context - The context object for logging and error handling.
@@ -144,48 +143,39 @@ export async function getStorableApi(request: HttpRequest,
  * @param resultTransformer - An optional transformer function to apply to the result storable.
  * @returns A promise of an HTTP response indicating the status of the removal operation.
  */
-export async function getStorableApiFromQuery (request: HttpRequest, 
-   params: ICosmosStorableParams, 
+export async function getStorableApiFromQuery(request: HttpRequest,
+   params: ICosmosStorableParams,
    context: InvocationContext,
    transformer: StorableTransformer | undefined = undefined,
    resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
 
-   if (isSessionValid(request, context)) {
+   let requestedId: string | undefined = undefined;
 
-      let requestedId: string | undefined = undefined;
-
-      for (const [key, value] of request.query.entries()) {
-         if (key === 'id')
-            requestedId = value;
-      }
-
-      let spec: IStorableQuerySpec = {
-         id: requestedId,
-         functionalSearchKey: undefined
-      };
-
-      try {      
-         return await getStorableApiCommon (spec, params, context, transformer, resultTransformer);
-      }
-      catch (e: any) {
-         context.error ("Failed load:" + e?.toString());
-         return {
-            status: 500,
-            body: "Failed load."
-         };
-      }
+   for (const [key, value] of request.query.entries()) {
+      if (key === 'id')
+         requestedId = value;
    }
-   else {
-      context.error("Failed session validation");           
-      return sessionFailResponse();
+
+   let spec: IStorableQuerySpec = {
+      id: requestedId,
+      functionalSearchKey: undefined
+   };
+
+   try {
+      return await getStorableApiCommon(spec, params, context, transformer, resultTransformer);
+   }
+   catch (e: any) {
+      context.error("Failed load:" + e?.toString());
+      return {
+         status: 500,
+         body: "Failed load."
+      };
    }
 };
 
 /**
  * Asynchronous function to load an Storable based on the provided request and context.
- * Validates the session key from the request query parameters and removes the Storable if the session key matches predefined keys.
- * Logs the validation and removal status, returning an HTTP response with the appropriate status and message.
- * 
+ * Returns the Storable if the id matches a record in the database.
  * @param request - The HTTP request containing the session key and Storable data.
  * @param params The parameters required for saving the record, including partition key and collection path.
  * @param context - The context object for logging and error handling.

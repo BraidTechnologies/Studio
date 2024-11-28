@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
 import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
-import { getDefusc } from './Defusc';
 /**
  * Generates a ReactNode that provides a link back to a parent element.
  *
@@ -65,11 +64,14 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
     }
 
     if (!props.chunk.parentChunkId) {
-        let defusc = getDefusc();
-        let env = getDefaultEnvironment();    
 
-        url = env.hostProtocolAndName() + '/api/GetPage?session=' + defusc + '&id=' + props.chunk.id;
+        let env = getDefaultEnvironment();    
+        url = env.hostProtocolAndName() + '/api/GetPage?id=' + props.chunk.id;
     }
+    else {
+        url = props.chunk.url;
+    }
+
     return (
         <div>
             <p><b>{uiAppName}</b></p>
@@ -80,7 +82,7 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
                 <p key={index}>{paragraph}</p>
             ))}
             &nbsp;
-            <p>url ? <a href={url}>{props.chunk.id}</a> : <div/></p>
+            <p>{url ? <a href={url}>{url}</a> : <div/>}</p>
             &nbsp;
             {backToParent (props.chunk.parentChunkId)}
             &nbsp;
