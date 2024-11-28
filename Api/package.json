@@ -11,11 +11,11 @@
     "pull_js_map": "copy ..\\CommonTs\\dist\\src\\*.js.map CommonTs\\src",
     "pull_embeddings": "copy ..\\waterfall\\test\\boxer_output\\api_embeddings_lite.json .",
     "clean": "rimraf dist",
-    "clean_js" : "rimraf CommonTs",
-    "prestart": "npm run clean && npm run clean_js && npm run compile && npm run pull_js && npm run pull_js_map",
+    "clean_js": "rimraf CommonTs",
+    "prestart": "npm run clean && npm run clean_js && npm run compile && md CommonTs && md CommonTs\\src && npm run pull_js && npm run pull_js_map",
     "start": "func start --typescript",
     "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --exit --require ts-node/register test/*chunkstore*.test.ts",
+    "test-mini": "mocha --debug-brk --exit --require ts-node/register test/*pagestore*.test.ts",
     "local-fluid": "npx @fluidframework/azure-local-service@latest"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "@fluidframework/server-services-client": "^5.0.0",
     "axios-retry": "^4.4.2",
     "crypto": "^1.0.1",
+    "pako": "^2.1.0",
     "qs": "^6.13.0"
   },
   "devDependencies": {

@@ -1,0 +1,74 @@
+{
+  "definitions": {
+    "IEnumerateModelsRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "title": "IEnumerateModelsRequest",
+      "description": "Interface for the EnumerateModels request object."
+    },
+    "IEnumerateModelsResponse": {
+      "type": "object",
+      "properties": {
+        "defaultId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.defaultId"
+        },
+        "defaultEmbeddingId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.defaultEmbeddingId"
+        },
+        "largeId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.largeId"
+        },
+        "largeEmbeddingId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.largeEmbeddingId"
+        },
+        "smallId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.smallId"
+        },
+        "smallEmbeddingId": {
+          "type": "string",
+          "title": "IEnumerateModelsResponse.smallEmbeddingId"
+        }
+      },
+      "required": [
+        "defaultId",
+        "defaultEmbeddingId",
+        "largeId",
+        "largeEmbeddingId",
+        "smallId",
+        "smallEmbeddingId"
+      ],
+      "additionalProperties": false,
+      "title": "IEnumerateModelsResponse",
+      "description": "Interface for the EnumerateModels response object."
+    },
+    "IEnumerateRepositoriesRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "title": "IEnumerateRepositoriesRequest",
+      "description": "Interface for the EnumerateRepositories request object."
+    },
+    "IEnumerateReposotoriesResponse": {
+      "type": "object",
+      "properties": {
+        "repositoryIds": {
+          "type": "array",
+          "items": {},
+          "title": "IEnumerateReposotoriesResponse.repositoryIds"
+        }
+      },
+      "required": [
+        "repositoryIds"
+      ],
+      "additionalProperties": false,
+      "title": "IEnumerateReposotoriesResponse",
+      "description": "Interface for the EnumerateModels response object."
+    }
+  },
+  "$id": "EnumerateModelsApi.Types.json",
+  "$comment": "Generated from src\\EnumerateModelsApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

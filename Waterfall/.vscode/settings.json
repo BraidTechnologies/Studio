@@ -1,7 +1,18 @@
 {
+   "editor.tabSize": 4,
    "python.testing.pytestArgs": [
       "test"
    ],
    "python.testing.unittestEnabled": false,
-   "python.testing.pytestEnabled": true
+   "python.testing.pytestEnabled": true,
+"python.autoComplete.extraPaths": [
+    "D:\\Code\\Braid",
+    "D:\\Code\\Braid\\CommonPy",
+    "D:\\Code\\Braid\\CommonPy\\src"
+],
+"python.analysis.extraPaths": [
+    "D:\\Code\\Braid",
+    "D:\\Code\\Braid\\CommonPy",
+    "D:\\Code\\Braid\\CommonPy\\src"
+]
 }

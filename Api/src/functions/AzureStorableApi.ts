@@ -5,9 +5,40 @@
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, notFoundResponse } from "./Utility";
 import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "../../../CommonTs/src/IStorable";
-import {AzureLogger, loadStorable, saveStorable, removeStorable, loadRecentStorables, ICosmosStorableParams} from './CosmosStorableApi';
+import {AzureLogger, findStorable, loadStorable, saveStorable, removeStorable, 
+        loadRecentStorables, ICosmosStorableParams, StorableTransformer} from './CosmosStorableApi';
+
+// A transformer function that can be applied to a storable to transform it in some way to the HTTP response
+export type StorableResponseTransformer = (storable: IStorable) => HttpResponseInit;
+
+// A transformer function that can be applied to a storable to transform it in some way to the HTTP response
+export type StorableArrayResponseTransformer = (storable: Array<IStorable>) => HttpResponseInit;
+
+// Applies a transformer function to a storable if it is provided.
+function applyTransformer (storable: IStorable, transformer: StorableResponseTransformer | undefined) : HttpResponseInit {
+
+   if (transformer)
+      return transformer (storable);
+
+   return {
+      status: 200,
+      body: JSON.stringify(storable)
+   };
+}
+
+// Applies a transformer function to a storable array if it is provided.
+function applyArrayTransformer (storable: Array<IStorable>, transformer: StorableArrayResponseTransformer | undefined) : HttpResponseInit {
+
+   if (transformer)
+      return transformer (storable);   
+
+   return {
+      status: 200,
+      body: JSON.stringify(storable)
+   };
+}
 
 /**
  * Asynchronous function to load an Storable based on the provided request and context.
@@ -17,32 +48,78 @@ import {AzureLogger, loadStorable, saveStorable, removeStorable, loadRecentStora
  * @param request - The HTTP request containing the session key and Storable data.
  * @param params The parameters required for saving the record, including partition key and collection path.
  * @param context - The context object for logging and error handling.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @param resultTransformer - An optional transformer function to apply to the result storable.
  * @returns A promise of an HTTP response indicating the status of the removal operation.
  */
-export async function getStorableApi(request: HttpRequest, 
+export async function findStorableApi(request: HttpRequest, 
    params: ICosmosStorableParams, 
-   context: InvocationContext): Promise<HttpResponseInit> {
+   context: InvocationContext,
+   transformer: StorableTransformer | undefined = undefined,
+   resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest: IStorableQuerySpec = await request.json() as IStorableQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;
 
          let logger = new AzureLogger(context);
 
-         let result = await loadStorable (jsonRequest.id, params, logger);
+         let result = await findStorable (spec.functionalSearchKey, params, logger, transformer);
          if (result)
-            context.log("Loaded:" + result.toString());
+            context.log("Found:" + result.id);
          else
-            context.log("Loaded nothing.");
+            context.log("Found nothing.");
          
-         return {
-            status: 200,
-            body: JSON.stringify(result)
-         };
+         if (result)
+            return applyTransformer (result, resultTransformer);
+         else {
+            return notFoundResponse ();
+         }
       }
       catch (e: any) {
-         context.error ("Failed load:" + e.toString());
+         context.error ("Failed find:" + e?.toString());
+         return {
+            status: 500,
+            body: "Failed find."
+         };
+      }
+   }
+   else {
+      context.error("Failed session validation");           
+      return sessionFailResponse();
+   }
+};
+
+/**
+ * Asynchronous function to load an Storable based on the provided request and context.
+ * Validates the session key from the request query parameters and removes the Storable if the session key matches predefined keys.
+ * Logs the validation and removal status, returning an HTTP response with the appropriate status and message.
+ * 
+ * @param request - The HTTP request containing the session key and Storable data.
+ * @param params The parameters required for saving the record, including partition key and collection path.
+ * @param context - The context object for logging and error handling.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @param resultTransformer - An optional transformer function to apply to the result storable.
+ * @returns A promise of an HTTP response indicating the status of the removal operation.
+ */
+export async function getStorableApi(request: HttpRequest, 
+   params: ICosmosStorableParams, 
+   context: InvocationContext,
+   transformer: StorableTransformer | undefined = undefined,
+   resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
+
+   if (isSessionValid(request, context)) {
+
+      try {      
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+
+         return await getStorableApiCommon (spec, params, context, transformer, resultTransformer);
+      }
+      catch (e: any) {
+         context.error ("Failed load:" + e?.toString());
          return {
             status: 500,
             body: "Failed load."
@@ -54,6 +131,88 @@ export async function getStorableApi(request: HttpRequest,
       return sessionFailResponse();
    }
 };
+
+/**
+ * Asynchronous function to load an Storable based on the provided request and context.
+ * Returns the Storable if the id matches a record in the database.
+ * *Note* This function does not validate the session key. we are not proptecting GPU costs & we want browsers to be able to retrueve directly without the session key appearing in the URL parameters. 
+ * @param request - The HTTP request containing the session key and Storable data.
+ * @param params The parameters required for saving the record, including partition key and collection path.
+ * @param context - The context object for logging and error handling.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @param resultTransformer - An optional transformer function to apply to the result storable.
+ * @returns A promise of an HTTP response indicating the status of the removal operation.
+ */
+export async function getStorableApiFromQuery(request: HttpRequest,
+   params: ICosmosStorableParams,
+   context: InvocationContext,
+   transformer: StorableTransformer | undefined = undefined,
+   resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
+
+   let requestedId: string | undefined = undefined;
+
+   for (const [key, value] of request.query.entries()) {
+      if (key === 'id')
+         requestedId = value;
+   }
+
+   let spec: IStorableQuerySpec = {
+      id: requestedId,
+      functionalSearchKey: undefined
+   };
+
+   try {
+      return await getStorableApiCommon(spec, params, context, transformer, resultTransformer);
+   }
+   catch (e: any) {
+      context.error("Failed load:" + e?.toString());
+      return {
+         status: 500,
+         body: "Failed load."
+      };
+   }
+};
+
+/**
+ * Asynchronous function to load an Storable based on the provided request and context.
+ * Returns the Storable if the id matches a record in the database.
+ * @param request - The HTTP request containing the session key and Storable data.
+ * @param params The parameters required for saving the record, including partition key and collection path.
+ * @param context - The context object for logging and error handling.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @param resultTransformer - An optional transformer function to apply to the result storable.
+ * @returns A promise of an HTTP response indicating the status of the removal operation.
+ */
+async function getStorableApiCommon(spec: IStorableQuerySpec,
+   params: ICosmosStorableParams,
+   context: InvocationContext,
+   transformer: StorableTransformer | undefined = undefined,
+   resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
+
+   try {
+      let logger = new AzureLogger(context);
+
+      let result = await loadStorable(spec.id, params, logger, transformer);
+      if (result)
+         context.log("Loaded:" + result.id);
+      else
+         context.log("Loaded nothing.");
+
+      if (result) {
+         return applyTransformer(result, resultTransformer);
+      }
+      else {
+         return notFoundResponse();
+      }
+   }
+   catch (e: any) {
+      context.error("Failed load:" + e?.toString());
+      return {
+         status: 500,
+         body: "Failed load."
+      };
+   }
+}
 
 /**
  * Saves a Storable record based on the provided request and context.
@@ -73,20 +232,28 @@ export async function saveStorableApi (request: HttpRequest,
 
    if (isSessionValid(request, context)) {
 
-      let jsonRequest: IStorable = await request.json() as IStorable;
-
       try {
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorable;   
+
          let logger = new AzureLogger(context);
-         await saveStorable(jsonRequest, params, logger);
+         await saveStorable(spec, params, logger);
+
+         let result: IStorableOperationResult = {
+            ok: true
+         }
+         return {
+            status: 200,
+            body: JSON.stringify(result)
+         };         
       }
       catch (e: any) {
-         context.error("Failed save:" + e.toString());
+         context.error("Failed save:" + e?.toString());
          return {
             status: 500,
             body: "Failed save."
          };
       }
-      return defaultOkResponse();
    }
    else {
       context.error("Failed session validation");      
@@ -112,11 +279,12 @@ export async function removeStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest: IStorableQuerySpec = await request.json() as IStorableQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableQuerySpec;   
 
          let logger = new AzureLogger(context);
 
-         let ok = await removeStorable (jsonRequest.id, params, logger);
+         let ok = await removeStorable (spec.id, params, logger);
 
          let result: IStorableOperationResult = {
             ok: ok
@@ -127,7 +295,7 @@ export async function removeStorableApi(request: HttpRequest,
          };
       }
       catch (e: any) {
-         context.error ("Failed remove:" + e.toString());
+         context.error ("Failed remove:" + e?.toString());
          return {
             status: 500,
             body: "Failed remove."
@@ -145,37 +313,42 @@ export async function removeStorableApi(request: HttpRequest,
  * Asynchronous function to handle retrieving activities based on the provided request and context.
  * 
  * @param request - The HTTP request object containing query parameters.
+ * @param params - The parameters required for saving the record, including partition key and collection path.
  * @param context - The invocation context for logging and other operations.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @param resultTransformer - An optional transformer function to apply to the result storable array.
  * @returns A promise that resolves to an HTTP response initialization object.
  */
 export async function getRecentStorablesApi(request: HttpRequest, 
    params: ICosmosStorableParams,    
-   context: InvocationContext): Promise<HttpResponseInit> {
+   context: InvocationContext,
+   transformer: StorableTransformer | undefined = undefined,
+   resultTransformer: StorableArrayResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
 
       let loaded: Array<IStorable> | undefined = undefined;
 
       try {
-         let jsonRequest: IStorableMultiQuerySpec = await request.json() as IStorableMultiQuerySpec;
+         let jsonRequest = await request.json();
+         let spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
 
          let logger = new AzureLogger(context);
 
-         loaded = await loadRecentStorables (jsonRequest, params, logger);
-         context.log("Loaded:" + loaded.toString());
+         loaded = await loadRecentStorables (spec, params, logger, transformer);
+         for (let i = 0; loaded && i < loaded.length; i++) {
+            context.log("Loaded:" + loaded[i].id);
+         }
+
+         return applyArrayTransformer (loaded, resultTransformer);         
       }
       catch (e: any) {
-         context.log("Failed load:" + e.toString());
+         context.log("Failed load recent:" + e?.toString());
          return {
             status: 500,
-            body: "Failed load."
+            body: "Failed load recent."
          };
       }
-
-      return {
-         status: 200, // Ok
-         body: JSON.stringify(loaded)
-      };
    }
    else {
       return sessionFailResponse();

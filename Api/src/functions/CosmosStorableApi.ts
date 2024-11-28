@@ -9,7 +9,6 @@ import axios from "axios";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
 import { IStorable, IStorableMultiQuerySpec } from "../../../CommonTs/src/IStorable";
 
-
 const chunkPartitionKey: string = "c02af798a60b48129c5e223e645a9b72";
 const chunkCollectionPath = "dbs/Studio/colls/Chunk";
 const chunkCollectionName = "Chunk";
@@ -18,8 +17,24 @@ const activityPartitionKey: string = "6ea3299d987b4b33a1c0b079a833206f";
 const activityCollectionPath = "dbs/Studio/colls/Activity";
 const activityCollectionName = "Activity";
 
+const pagePartitionKey: string = "f11a7404e266499a84a58fead932eec4";
+const pageCollectionPath = "dbs/Studio/colls/Page";
+const pageCollectionName = "Page";
+
 import { makeStorablePostToken, makeStorableDeleteToken, 
    makePostQueryHeader, makePostHeader, makeDeleteHeader } from './CosmosRepositoryApi';
+
+// A transformer function that can be applied to a storable to transform it in some way.
+export type StorableTransformer = (storable: IStorable) => IStorable;
+
+// Applies a transformer function to a storable if it is provided.
+function applyTransformer (storable: IStorable, transformer: StorableTransformer | undefined) : IStorable {
+
+   if (transformer)
+      return transformer (storable);
+
+   return storable;
+}
 
 export interface ICosmosStorableParams {
    partitionKey: string;
@@ -44,6 +59,12 @@ export let activityStorableAttributes : ICosmosStorableParams = {
    partitionKey: activityPartitionKey,
    collectionPath: activityCollectionPath,
    collectionName: activityCollectionName
+}
+
+export let pageStorableAttributes : ICosmosStorableParams = {
+   partitionKey: pagePartitionKey,
+   collectionPath: pageCollectionPath,
+   collectionName: pageCollectionName
 }
 
 export class AzureLogger implements ILoggingContext {
@@ -74,14 +95,78 @@ export class AzureLogger implements ILoggingContext {
 }
 
 /**
- * Asynchronously removes a Storable from the database.
+ * Asynchronously finds a Storable from the database.
+ * 
+ * @param id - The unique identifier of the Storable to be found.
+ * @param params - the ICosmosStorableParams for the collection
+ * @param context - The invocation context for logging purposes.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
+ */
+export async function findStorable(id: string | undefined,    
+   params: ICosmosStorableParams, 
+   context: ILoggingContext,
+   transformer: StorableTransformer | undefined = undefined): Promise<IStorable | undefined> {
+
+   if (!id)
+      return undefined;
+   
+   let dbkey = process.env.CosmosApiKey;
+
+   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+
+      let time = new Date().toUTCString();
+
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      let headers = makePostQueryHeader(key, time, params.partitionKey);
+
+      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
+
+      axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
+         {
+            "query": query,
+            "parameters": [
+               {
+                  "name": "@id",
+                  "value": id
+               }
+            ]
+         },
+         {
+            headers: headers
+         })
+         .then((resp: any) => {
+
+            let responseRecords = resp.data.Documents;
+            let storedRecord = responseRecords[0] as IStorable;
+
+            context.log ("Loaded storable:", storedRecord.id);
+            resolve(applyTransformer(storedRecord, transformer));
+         })
+         .catch((error: any) => {
+
+            context.error ("Error calling database:", error);
+            reject(undefined);
+         });
+   });
+
+   return done;
+}
+
+/**
+ * Asynchronously loads a Storable from the database.
  * 
  * @param id - The unique identifier of the Storable to be removed.
  * @param params - the ICosmosStorableParams for the collection
  * @param context - The invocation context for logging purposes.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
  * @returns A Promise that resolves to a boolean indicating the success of the removal operation.
  */
-export async function loadStorable(id: string | undefined, params: ICosmosStorableParams, context: ILoggingContext): Promise<IStorable | undefined> {
+export async function loadStorable(id: string | undefined, 
+   params: ICosmosStorableParams, 
+   context: ILoggingContext,
+   transformer: StorableTransformer | undefined = undefined): Promise<IStorable | undefined> {
 
    if (!id)
       return undefined;
@@ -116,8 +201,8 @@ export async function loadStorable(id: string | undefined, params: ICosmosStorab
             let responseRecords = resp.data.Documents;
             let storedRecord = responseRecords[0] as IStorable;
 
-            context.log ("Loaded storable:", storedRecord);
-            resolve(storedRecord);
+            context.log ("Loaded storable:", storedRecord.id);
+            resolve(applyTransformer(storedRecord, transformer));
          })
          .catch((error: any) => {
 
@@ -160,12 +245,12 @@ export async function saveStorable(record: IStorable, params: ICosmosStorablePar
          })
          .then((resp: any) => {
 
-            context.log("Saved storable:", record);
+            context.log("Saved storable:", record.id);
             resolve(true);
          })
          .catch((error: any) => {
 
-            context.log("Error calling database:", error);
+            context.error("Error calling database:", error);
             reject(false);
          });
    });
@@ -221,11 +306,13 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
  * @param querySpec - The query specifications including the limit and className.
  * @param params - the ICosmosStorableParams for the collection
  * @param context - The invocation context for logging and tracing.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
  * @returns A promise that resolves to an array of storable objects representing the loaded activities.
  */
 export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec, 
    params: ICosmosStorableParams, 
-   context: ILoggingContext): Promise<Array<IStorable>> {
+   context: ILoggingContext,
+   transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
    let dbkey = process.env.CosmosApiKey;
 
@@ -258,9 +345,9 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
             let storedRecords = new Array<IStorable>();
 
             for (let i = 0; i < responseRecords.length; i++) {
-               storedRecords.push(responseRecords[i].data);
+               storedRecords.push(applyTransformer(responseRecords[i], transformer));
+               context.log ("Loaded storable:", storedRecords[i].id);               
             }
-            context.log ("Loaded activities:", storedRecords);
             resolve(storedRecords);
          })
          .catch((error: any) => {
@@ -272,3 +359,4 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
 
    return done;
 }
+

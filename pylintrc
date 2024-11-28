@@ -173,7 +173,7 @@ include-naming-hint=no
 property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
 
 # Regular expression matching correct function names
-function-rgx=^(?:(?P<exempt>setUp|tearDown|setUpModule|tearDownModule)|(?P<camel_case>_?[A-Z][a-zA-Z0-9]*)|(?P<snake_case>_?[a-z][a-z0-9_]*))$
+function-rgx=^(?:(?P<exempt>setUp|tearDown|setUpModule|tearDownModule)|(?P<camel_case>_?[A-Z][a-zA-Z0-9]*)|(?P<snake_case>_?[a-z][a-z0-9_]*)||(?P<pascal_case>_?[a-z][a-z0-9_]*))$
 
 # Regular expression matching correct variable names
 variable-rgx=^[a-z][a-z0-9_]*$
@@ -238,7 +238,7 @@ generated-members=
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=160
+max-line-length=200
 
 # TODO(https://github.com/pylint-dev/pylint/issues/3352): Direct pylint to exempt
 # lines made too long by directives to pytype.
@@ -397,3 +397,6 @@ valid-classmethod-first-arg=cls,
 
 # List of valid names for the first argument in a metaclass class method.
 valid-metaclass-classmethod-first-arg=mcs
+
+[MASTER]
+init-hook='import sys; sys.path.append("/Code/Braid/CommonPy")'

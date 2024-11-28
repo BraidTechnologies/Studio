@@ -14,9 +14,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-from workflow import WebSearchPipelineSpec
-
-
+from src.workflow import WebSearchPipelineSpec
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
@@ -50,7 +48,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchP
             )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open(token_path, 'w+') as token:
+        with open(token_path, 'w+', encoding='utf-8') as token:
             token.write(creds.to_json())
 
     try:
@@ -61,7 +59,7 @@ def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchP
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        logger.error(f'An error occurred: {error}')
+        logger.error('An error occurred: %s', error, exc_info=True)
 
 
 def send_message_with_attachment(service, output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
@@ -88,16 +86,23 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
         message['Subject'] = spec.description
 
         # attachment
-        attachment_path = os.path.join(output_location, attachment)
+        try:
+            attachment_path = os.path.join(output_location, attachment)
 
-        # guessing the MIME type
-        type_subtype, _ = mimetypes.guess_type(attachment_path)
-        maintype, subtype = type_subtype.split('/')
+            # guessing the MIME type
+            type_subtype, _ = mimetypes.guess_type(attachment_path)
+            maintype, subtype = type_subtype.split('/')
 
-        with open(attachment_path, 'rb') as fp:
-            attachment_data = fp.read()
-        message.add_attachment(attachment_data, maintype, subtype)
-
+            with open(attachment_path, 'rb') as fp:
+                attachment_data = fp.read()
+            message.add_attachment(attachment_data, maintype, subtype)
+        
+        # pylint: disable-broad-exception-caught
+        except Exception:
+            # we allow the message to be sent event if we have an error adding the attachment
+            ok = True
+            ok
+         
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
         create_message = {'raw': encoded_message}
@@ -109,9 +114,9 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
             .send(userId='me', body=create_message)
             .execute()
         )
-        logger.error(f'Message Id: {send_message['id']}')
+
     except HttpError as error:
-        logger.error(f'An error occurred: {error}')
+        logger.error('An error occurred:%s', error, exc_info=True)
         send_message = None
     return send_message
 

@@ -77,7 +77,7 @@ class Chunker (PipelineStep):
         response = session.post(summary_url, json=input_json, headers=headers)
         pipeline_chunks = []  # If there is an error in the API, return an empty list
 
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
             chunks = response_json['chunks']
 

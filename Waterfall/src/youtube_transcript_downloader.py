@@ -7,8 +7,8 @@ from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled, VideoUnavailable
 # from youtube_transcript_api.formatters import WebVTTFormatter
 
-from workflow import PipelineStep, PipelineItem
-from text_repository_facade import TextRespositoryFacade
+from src.workflow import PipelineStep, PipelineItem
+from src.text_repository_facade import TextRespositoryFacade
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -58,12 +58,13 @@ class YouTubeTranscriptDownloader (PipelineStep):
          output_location (str): The location to save the text of the downloaded file.
     '''
 
+    # pylint: disable=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the YouTubeTranscriptDownloader object with the provided output location.
         '''
         super(YouTubeTranscriptDownloader, self).__init__(
-            output_location)  # pylint: disable=useless-parent-delegation
+            output_location)  
 
     def download(self, pipeline_item: PipelineItem) -> PipelineItem:
         '''
@@ -83,7 +84,7 @@ class YouTubeTranscriptDownloader (PipelineStep):
             full_text = ""
             video_id = parse_video_id(pipeline_item.path)
             if not video_id:
-                raise Exception("Unable to parse video id")
+                raise RuntimeError ("Unable to parse video id")
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             # Remove \n from the text
             for item in transcript:
@@ -98,6 +99,7 @@ class YouTubeTranscriptDownloader (PipelineStep):
         except VideoUnavailable:
             logger.error("Video unavailable: %s", path)
             return False
+        # pylint: disable-broad-exception-caught
         except Exception as exception:
             logger.error("An error occurred: %s", str(exception))
             logger.v("Transcription not found for video: %s", path)

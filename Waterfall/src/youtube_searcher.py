@@ -9,8 +9,8 @@ import datetime
 import googleapiclient.discovery
 import googleapiclient.errors
 
-from workflow import PipelineItem, YouTubePipelineSpec
-from boxer_sources import youtube_playlists
+from src.workflow import PipelineItem, YouTubePipelineSpec
+from src.boxer_sources import youtube_playlists
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

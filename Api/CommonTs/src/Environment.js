@@ -44,6 +44,9 @@ class DevelopmentEnvironment {
     getActivityApi() {
         return "http://localhost:7071/api/GetActivity";
     }
+    findActivityApi() {
+        return "http://localhost:7071/api/FindActivity";
+    }
     loginWithLinkedInApi() {
         return "http://localhost:7071/api/LoginWithLinkedIn";
     }
@@ -89,6 +92,21 @@ class DevelopmentEnvironment {
     getChunkApi() {
         return "http://localhost:7071/api/GetChunk";
     }
+    findChunkApi() {
+        return "http://localhost:7071/api/FindChunk";
+    }
+    getChunksApi() {
+        return "http://localhost:7071/api/GetChunks";
+    }
+    savePageApi() {
+        return "http://localhost:7071/api/SavePage";
+    }
+    getPageApi() {
+        return "http://localhost:7071/api/GetPage";
+    }
+    hostProtocolAndName() {
+        return "http://localhost:7071";
+    }
 }
 exports.DevelopmentEnvironment = DevelopmentEnvironment;
 /**
@@ -128,6 +146,9 @@ class StagingEnvironment {
     }
     getActivityApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivity";
+    }
+    findActivityApi() {
+        return "https://braid-api.azurewebsites.net/api/FindActivity";
     }
     getActivitiesApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivities";
@@ -169,13 +190,28 @@ class StagingEnvironment {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
     }
     saveChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/SaveChunk";
     }
     removeChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/RemoveChunk";
     }
     getChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/GetChunk";
+    }
+    findChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/FindChunk";
+    }
+    getChunksApi() {
+        return "https://braid-api.azurewebsites.net/api/GetChunks";
+    }
+    savePageApi() {
+        return "https://braid-api.azurewebsites.net/api/SavePage";
+    }
+    getPageApi() {
+        return "https://braid-api.azurewebsites.net/api/GetPage";
+    }
+    hostProtocolAndName() {
+        return "https://braid-api.azurewebsites.net";
     }
 }
 exports.StagingEnvironment = StagingEnvironment;
@@ -217,6 +253,9 @@ class ProductionEnvironment {
     getActivityApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivity";
     }
+    findActivityApi() {
+        return "https://braid-api.azurewebsites.net/api/FindActivity";
+    }
     getActivitiesApi() {
         return "https://braid-api.azurewebsites.net/api/GetActivities";
     }
@@ -257,13 +296,28 @@ class ProductionEnvironment {
         return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
     }
     saveChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/SaveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/SaveChunk";
     }
     removeChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/RemoveStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/RemoveChunk";
     }
     getChunkApi() {
-        return "https://braid-api.azurewebsites.net/api/GetStoredChunk";
+        return "https://braid-api.azurewebsites.net/api/GetChunk";
+    }
+    findChunkApi() {
+        return "https://braid-api.azurewebsites.net/api/FindChunk";
+    }
+    getChunksApi() {
+        return "https://braid-api.azurewebsites.net/api/GetChunks";
+    }
+    savePageApi() {
+        return "https://braid-api.azurewebsites.net/api/SavePage";
+    }
+    getPageApi() {
+        return "https://braid-api.azurewebsites.net/api/GetPage";
+    }
+    hostProtocolAndName() {
+        return "https://braid-api.azurewebsites.net";
     }
 }
 exports.ProductionEnvironment = ProductionEnvironment;

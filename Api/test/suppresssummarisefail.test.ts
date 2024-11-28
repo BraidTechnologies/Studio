@@ -89,7 +89,7 @@ describe("SuppressSummariseFail", async function () {
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         expect (failCode).toBe (ESuppressSummariseFail.kNo) ;           
+         expect (failCode).toBe (ESuppressSummariseFail.kNo.toString()) ;           
       }   
 
    }).timeout(20000);
@@ -119,7 +119,8 @@ describe("SuppressSummariseFail", async function () {
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         expect (failCode == ESuppressSummariseFail.kNo).toBe (true) ;           
+         let noValue = ESuppressSummariseFail.kNo;
+         expect (failCode == noValue).toBe (true) ;           
       }   
 
    }).timeout(20000);

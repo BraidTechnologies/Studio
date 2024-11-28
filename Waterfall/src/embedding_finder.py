@@ -6,8 +6,8 @@ import logging
 import numpy as np
 from numpy.linalg import norm
 
-from embedder import Embedder
-from workflow import PipelineItem
+from src.embedder import Embedder
+from src.workflow import PipelineItem
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,

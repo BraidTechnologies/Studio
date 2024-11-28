@@ -1,4 +1,5 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,6 +47,18 @@ class ChunkRepostoryApi extends Api_1.Api {
         });
     }
     /**
+     * Asynchronously finds a record from the Chunk repository API.
+     *
+     * @param functionalSearchKey - The ID of the record to be removed.
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+     */
+    find(functionalSearchKey) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiUrl = this.environment.findChunkApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.find(functionalSearchKey, apiUrl);
+        });
+    }
+    /**
      * Asynchronously saves a record to the chunk repository API.
      *
      * @param record - The record to be saved, must implement the IStoredChunk interface.
@@ -67,6 +80,18 @@ class ChunkRepostoryApi extends Api_1.Api {
         return __awaiter(this, void 0, void 0, function* () {
             let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
             return this.storableApi.remove(recordId, apiUrl);
+        });
+    }
+    /**
+     * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+     *
+     * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+     * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+     */
+    recent(querySpec) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiUrl = this.environment.getChunksApi() + "?session=" + this.sessionKey.toString();
+            return this.storableApi.recent(querySpec, apiUrl);
         });
     }
 }

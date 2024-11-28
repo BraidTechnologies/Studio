@@ -1,4 +1,4 @@
-'''driver for the entire pipeline '''
+'''driver for the entire Boxer data generation pipeline '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -6,14 +6,14 @@ import logging
 import os
 import json
 
-from workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem, PipelineFileSpec
-from youtube_searcher import YoutubePlaylistSearcher
-from youtube_transcript_downloader import YouTubeTranscriptDownloader
-from youtube_transcript_chunker import YouTubeTranscriptChunker
-from html_link_crawler import HtmlLinkCrawler
-from html_file_downloader import HtmlFileDownloader
-from summariser import Summariser
-from embedder import Embedder
+from src.workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineItem, PipelineFileSpec
+from src.youtube_searcher import YoutubePlaylistSearcher
+from src.youtube_transcript_downloader import YouTubeTranscriptDownloader
+from src.youtube_transcript_chunker import YouTubeTranscriptChunker
+from src.html_link_crawler import HtmlLinkCrawler
+from src.html_file_downloader import HtmlFileDownloader
+from src.summariser import Summariser
+from src.embedder import Embedder
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -90,13 +90,13 @@ class BoxerDataPipeline:
             chunk = youtube_downloader.download(chunk)
             chunks = youtube_chunker.chunk(
                 chunk, youtube_spec.max_words, youtube_spec.overlap_words)
-            if (chunks):
+            if chunks:
                 all_chunks.extend(chunks)
 
         for chunk in all_chunks:
             summarised = None
             embedded = None
-            logger.info('Processing:' + chunk.path)
+            logger.info('Processing: %s', chunk.path)
             if chunk.text:
                 summarised = summariser.summarise(chunk)
             if summarised:

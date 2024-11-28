@@ -1,6 +1,6 @@
 'use strict';
 // Copyright Braid technologies ltd, 2024
-import { IStoredActivity, makeDateUTC, IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, 
+import {  IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, 
    urlActivityRecordClassName, urlLikeActivityRecordClassName, messageActivityRecordClassName,
    urlActivityRecordSchemaNumber, urlLikeActivityRecordSchemaNumber, messageActivityRecordSchemaNumber } from '../core/ActivityRecord';
 import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
@@ -13,16 +13,6 @@ import { describe, it } from 'mocha';
 import { throwIfUndefined } from '../core/Asserts';
 
 const keyGenerator = getDefaultKeyGenerator();
-
-var myId: string = "1234";
-var myConversationId = "1234;"
-var myEmail: string = "Jon";
-var myHappenedAt = makeDateUTC (new Date());
-
-var someoneElsesId: string = "5678";
-var someoneElsesConversationId = "1234;"
-var someoneElsesEmail: string = "Barry";
-var someoneElsesHappenedAt = makeDateUTC (new Date());
 
 describe("ActivityRepository", function () {
 
@@ -44,8 +34,9 @@ describe("ActivityRepository", function () {
          applicationId: EStorableApplicationIds.kBoxer,
          contextId: "madeupconversationKey",
          userId: "madeupname@hotmail.com",
-         created: new Date(),
-         amended: new Date(),  
+         created: new Date().toUTCString(),
+         amended: new Date().toUTCString(),  
+         functionalSearchKey: undefined,  
          className: urlActivityRecordClassName,
          schemaVersion: urlActivityRecordSchemaNumber, 
          url: "https://test.cosmos"
@@ -63,8 +54,9 @@ describe("ActivityRepository", function () {
          applicationId: EStorableApplicationIds.kBoxer,
          contextId: "madeupconversationKey",
          userId: "madeupname@hotmail.com",
-         created: new Date(),
-         amended: new Date(),  
+         created: new Date().toUTCString(),
+         amended: new Date().toUTCString(),  
+         functionalSearchKey: undefined,  
          className: urlLikeActivityRecordClassName,
          schemaVersion: urlLikeActivityRecordSchemaNumber, 
          url: "https://test.cosmos",
@@ -83,8 +75,9 @@ describe("ActivityRepository", function () {
          applicationId: EStorableApplicationIds.kBoxer,
          contextId: "madeupconversationKey",
          userId: "madeupname@hotmail.com",
-         created: new Date(),
-         amended: new Date(),  
+         created: new Date().toUTCString(),
+         amended: new Date().toUTCString(),  
+         functionalSearchKey: undefined,  
          className: messageActivityRecordClassName,
          schemaVersion: messageActivityRecordSchemaNumber, 
          message: "Test message"
@@ -101,8 +94,9 @@ describe("ActivityRepository", function () {
          applicationId: EStorableApplicationIds.kBoxer,
          contextId: "madeupconversationKey",
          userId: "madeupname@hotmail.com",
-         created: new Date(),
-         amended: new Date(),  
+         created: new Date().toUTCString(),
+         amended: new Date().toUTCString(),  
+         functionalSearchKey: undefined,  
          className: urlLikeActivityRecordClassName,
          schemaVersion: urlLikeActivityRecordSchemaNumber, 
          url: "https://test.cosmos",
@@ -123,8 +117,9 @@ describe("ActivityRepository", function () {
          applicationId: EStorableApplicationIds.kBoxer,
          contextId: "madeupconversationKey",
          userId: "madeupname@hotmail.com",
-         created: new Date(),
-         amended: new Date(),  
+         created: new Date().toUTCString(),
+         amended: new Date().toUTCString(),  
+         functionalSearchKey: undefined,  
          className: messageActivityRecordClassName,
          schemaVersion: messageActivityRecordSchemaNumber, 
          message: "Test message"

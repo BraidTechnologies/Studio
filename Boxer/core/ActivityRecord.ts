@@ -11,7 +11,7 @@ export interface IStoredActivity extends IStorable {
 }
 
 export const urlActivityRecordClassName = "IStoredUrlActivity";
-export const urlActivityRecordSchemaNumber = 1;
+export const urlActivityRecordSchemaNumber = "1";
 
 // ActivityRecord - activity details plus the URL they clicked on 
 export interface IStoredUrlActivity extends IStoredActivity {
@@ -20,7 +20,7 @@ export interface IStoredUrlActivity extends IStoredActivity {
 }
 
 export const urlLikeActivityRecordClassName = "IStoredLikeUrlActivity";
-export const urlLikeActivityRecordSchemaNumber = 1;
+export const urlLikeActivityRecordSchemaNumber = "1";
 
 // ActivityRecord - URL activity details plus a flag to say like (unlike if false) 
 export interface IStoredLikeUrlActivity extends IStoredUrlActivity {
@@ -29,7 +29,7 @@ export interface IStoredLikeUrlActivity extends IStoredUrlActivity {
 }
 
 export const messageActivityRecordClassName = "IStoredMessageActivity";
-export const messageActivityRecordSchemaNumber = 1;
+export const messageActivityRecordSchemaNumber = "1";
 
 // ActivityRecord - activity details plus the URL they clicked on 
 export interface IStoredMessageActivity extends IStoredActivity {

@@ -34,7 +34,7 @@ class ClusterAnalyser (PipelineStep):
         Returns:
            list[PipelineItem]: A list of PipelineItem objects with updated cluster assignments.
         '''
-        
+
         x = len (items[0].embedding)
         y = len (items)
 

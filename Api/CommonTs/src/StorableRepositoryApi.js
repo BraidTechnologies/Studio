@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StorableRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
-const axios_1 = require("axios");
+const axios_1 = __importDefault(require("axios"));
+;
 ;
 /**
  * Represents an API for Storables.
@@ -41,12 +45,12 @@ class StorableRepostoryApi {
             var _a;
             var response;
             try {
-                response = yield axios_1.default.post(url, record);
-                if (response.status === 200) {
+                response = yield axios_1.default.post(url, { request: record });
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -66,17 +70,18 @@ class StorableRepostoryApi {
     remove(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let storable = {
-                id: recordId
+            let query = {
+                id: recordId,
+                functionalSearchKey: undefined
             };
             var response;
             try {
-                response = yield axios_1.default.post(url, storable);
-                if (response.status === 200) {
+                response = yield axios_1.default.post(url, { request: query });
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -96,12 +101,44 @@ class StorableRepostoryApi {
     load(recordId, url) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let storable = {
-                id: recordId
+            let query = {
+                id: recordId,
+                functionalSearchKey: undefined
             };
             var response;
             try {
-                response = yield axios_1.default.post(url, storable);
+                response = yield axios_1.default.post(url, { request: query });
+                if (response && response.status === 200) {
+                    return response.data;
+                }
+                else {
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
+                    return undefined;
+                }
+            }
+            catch (e) {
+                console.error("Error: " + ((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.data));
+                return undefined;
+            }
+        });
+    }
+    /**
+     * Asynchronously finds a record from the Storable repository API.
+     *
+     * @param recordId - The ID of the record to be removed.
+     * @param url - fully factored URL to the API to call
+     * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+     */
+    find(functionalSearchKey, url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            let query = {
+                id: undefined,
+                functionalSearchKey: functionalSearchKey
+            };
+            var response;
+            try {
+                response = yield axios_1.default.post(url, { request: query });
                 if (response.status === 200) {
                     return response.data;
                 }
@@ -128,7 +165,7 @@ class StorableRepostoryApi {
             var _a;
             var response;
             try {
-                response = yield axios_1.default.post(url, querySpec);
+                response = yield axios_1.default.post(url, { request: querySpec });
                 if (response.status === 200) {
                     let responseRecords = response.data;
                     let storedRecords = new Array();

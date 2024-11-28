@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Converted from ChunkApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IChunkRequest:
+      properties:
+        text:
+          title: IChunkRequest.text
+          type: string
+        chunkSize:
+          title: IChunkRequest.chunkSize
+          type: number
+        overlapWords:
+          title: IChunkRequest.overlapWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: IChunkRequest
+      description: >-
+        Interface for chunk reqiest API.
+
+        @property {string} text - The text content of the chunk.
+
+        @property {number | undefined} chunkSize - The size of the chunk in
+        tokens, if specified.
+
+        @property {number | undefined} overlapWords - The size of the overlap
+        between chunks, in words (=2 * tokens) if specified.
+      type: object
+    IChunkResponse:
+      properties:
+        chunks:
+          items:
+            type: string
+          title: IChunkResponse.chunks
+          type: array
+      required:
+        - chunks
+      additionalProperties: false
+      title: IChunkResponse
+      description: |-
+        Return type of chunk reqiest API.
+        @property {Array<string>} chunks - Array of text chunks
+      type: object

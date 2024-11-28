@@ -5,9 +5,9 @@
 import os
 from glob import glob
 
-from file_repository import FileRespository
+from src.file_repository import FileRespository
 
-spec = "embed.txt"
+SPEC = "embed.txt"
 
 def read_file_names(path: str, file_spec: str):
     """
@@ -42,7 +42,7 @@ class EmbeddingRespositoryFacade:
         """
         self.file__repository = FileRespository(output_location)
         self.output_location = output_location
-        self.extension = spec
+        self.extension = SPEC
 
     @staticmethod
     def spec() -> str:
@@ -52,7 +52,7 @@ class EmbeddingRespositoryFacade:
         Returns:
         str: The file extension pattern prefixed with '*.'.
         """
-        return "*." + spec
+        return "*." + SPEC
 
     def list_contents(self) -> list[str]:
         """

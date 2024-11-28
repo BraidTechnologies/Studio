@@ -15,13 +15,15 @@ declare var process: any;
 
 describe("StorableActivity", async function () {
 
+   let now = new Date().toUTCString();
    let record : IStorable = {
       id: randomKey(),
       applicationId: "Test",
-      schemaVersion: 1,
-      created: new Date(),
-      amended: new Date(),      
+      schemaVersion: "1",
+      created: now,
+      amended: now,      
       contextId: "madeupId",
+      functionalSearchKey: undefined,
       userId: "madeeupId",
       className: "madeUpClass"      
    }
@@ -31,7 +33,7 @@ describe("StorableActivity", async function () {
 
    it("Needs to succeed with valid key", async function () {
       
-       let myRecord = { ...record };
+      let myRecord = { ...record };
       myRecord.id = randomKey();   
 
       let ok = await saveLoadRemove (api, myRecord); 
