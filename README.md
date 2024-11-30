@@ -23,7 +23,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 '**CommonPy**' contains Python utility classes used to access the typescript server Apis and to hold common code used in multiple apps.
 
-'**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
+'**Salon**' - (a place where you do Braiding) is a set of scripts to help the engineering process. One script uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'ApiTest' directory. The second script, repo_to_text, scans a directory system and procduces a set of text files containing concatenated code. These files can be loaded into almost any LLM, to use for a 'Chat to your code' assistant. 
 
 '**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly.  It is a full web front end that passes questions to an LLM, and then enriches them with links to relevant document chunks found in its database of useful material - the A16Z AI Cannon. 
 
