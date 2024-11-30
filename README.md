@@ -29,7 +29,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 '**Teams**' contains a Teams plug-in that brings Boxer & Waterfall into the teams environment.
 
-'**BoxerEval**' - evals for Boxer  
+'**BoxerEval**' - evals for Boxer. 
 
 ## **Technologies**
 

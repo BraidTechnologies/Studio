@@ -33,3 +33,4 @@ skip_patterns:
     - "*.txt"    
     - "*.mdd"       
     - "*.vtt"       
+    - "*.html"
