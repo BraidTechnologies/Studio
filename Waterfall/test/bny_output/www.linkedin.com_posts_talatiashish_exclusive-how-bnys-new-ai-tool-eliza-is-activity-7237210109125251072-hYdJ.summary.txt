@@ -1,1 +1,0 @@
-"BNY Mellon launched Eliza, an AI tool aimed at boosting efficiency and cutting costs by allowing employees to create custom AI agents. Utilizing Microsoft Azure and Large Language Models, Eliza is used by 14,000 staff, enhancing processes like Agile project management. Expected to save billions, it underscores AI's transformative potential in banking."

@@ -1,1 +1,0 @@
-"BNY Mellon utilized Denodo's Data Virtualization to create an enterprise data platform (EDP) for enhanced analytics and reporting. This EDP allows them to generate actionable insights, improving processes and business performance. The Denodo Platform helps organizations manage data efficiently, delivering significant ROI across various sectors."

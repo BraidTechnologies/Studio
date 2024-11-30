@@ -1,1 +1,0 @@
-"BNY Mellon collaborates with ThoughtSpot and Snowflake to integrate AI capabilities into its data estate. This partnership facilitates data accessibility and insights, leveraging generative AI to enhance financial services. The integration marks a shift to cloud-based data strategies, enabling AI-driven innovations and organizational transformation within the banking sector."
