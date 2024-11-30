@@ -1,0 +1,1724 @@
+****************************************
+Waterfall\test\simple_test.html
+****************************************
+<!DOCTYPE html>
+<!-- Copyright Braid Technologies Ltd, 2024  -->
+<html lang="en">
+
+   <title>Waterfall</title>
+
+   <head>
+	   <title>Waterfall</title>	   
+   </head>
+
+   <body>
+	   <h3>Waterfall from Braid Technologies</h1>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>  
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>
+      <p>Here is some text. This is pretty simple text, but should be long enough to summarise. If you are the summariser, you can summarise this as a simple sample text.</p>                
+   </body>
+
+</html>
+****************************************
+
+****************************************
+Waterfall\test\test_boxer_pipeline.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+from src.workflow import YouTubePipelineSpec, HtmlDirectedPipelineSpec, PipelineFileSpec
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.boxer_sources import youtube_playlists, html_pages
+from src.boxer_pipeline import BoxerDataPipeline
+
+def test_youtube_boxer_pipeline():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'boxer_output'
+
+    pipeline = BoxerDataPipeline (test_output_location)
+
+    file_spec = PipelineFileSpec()
+    file_spec.output_data_name = "test_youtube_only.json"
+
+    html_spec = HtmlDirectedPipelineSpec()
+    html_spec.urls = []
+
+    # make a short playlist from first entry
+    youtube_spec = YouTubePipelineSpec()
+    youtube_spec.playlists = []
+    youtube_spec.playlists.append (youtube_playlists[0])
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec, file_spec)  
+
+    assert len(pipeline_items) >= 1 
+
+def test_html_boxer_pipeline():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'boxer_output'
+
+    pipeline = BoxerDataPipeline (test_output_location)
+
+    file_spec = PipelineFileSpec()
+    file_spec.output_data_name = "test_html_only.json"
+
+    youtube_spec = YouTubePipelineSpec()
+
+    # make a short playlist from first entry
+    html_spec = HtmlDirectedPipelineSpec()
+    html_spec.urls = []
+    html_spec.urls.append (html_pages[0])
+    html_spec.urls.append (html_pages[1])
+    html_spec.urls.append (html_pages[2])
+    html_spec.urls.append (html_pages[3])
+    html_spec.urls.append (html_pages[4])
+    html_spec.urls.append (html_pages[5])
+    html_spec.urls.append (html_pages[6])            
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec, file_spec)  
+
+    assert len(pipeline_items) >= 1 
+
+def test_full_boxer_pipeline():
+    
+    # Normally we leave this commented out - only uncomment when you want to do a full production build
+    assert (True)
+    return
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'boxer_output'
+
+    pipeline = BoxerDataPipeline (test_output_location)
+
+    file_spec = PipelineFileSpec()
+    file_spec.output_data_name = "api_embeddings_lite.json"
+
+    youtube_spec = YouTubePipelineSpec() 
+    youtube_spec.playlists = youtube_playlists
+                                       
+    html_spec = HtmlDirectedPipelineSpec()              
+    html_spec.urls = html_pages
+
+    pipeline_items = pipeline.search (youtube_spec, html_spec, file_spec)  
+
+    assert len(pipeline_items) >= 1
+****************************************
+
+****************************************
+Waterfall\test\test_chunker.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+import json
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.chunker import Chunker
+from src.html_file_downloader import HtmlFileDownloader
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+
+    sumchunkerariser = Chunker (test_output_location)
+    assert sumchunkerariser.output_location == test_output_location 
+
+def test_with_output (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'simple_test.html')
+    os.chdir (test_root)
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+    chunks : PipelineItem = chunker.chunk (enriched_text, 0, 0)  
+
+    assert len(chunks) == 1
+
+def test_long (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+
+    max = 15
+    i = 0
+    long_text = "this is going to be long "
+    while i < max:
+       long_text = long_text + long_text
+       i = i + 1
+
+    enriched_text.text = long_text
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0, 0)  
+
+    assert len(chunks_overlapped) > 1
+
+def test_long_with_overlap (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+
+    max = 15
+    i = 0
+    long_text = "this is going to be long "
+    while i < max:
+       long_text = long_text + long_text
+       i = i + 1
+
+    enriched_text.text = long_text
+    chunks : list[PipelineItem] = chunker.chunk (enriched_text, 0, 0)      
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, 0, 1024)  
+
+    assert len(chunks_overlapped) > len (chunks)
+
+def test_long_overlap (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    chunker = Chunker (test_output_location)
+
+    max = 1
+    i = 0
+    long_text = "this is going to be long but also needs to be long enough so we can see overlap errors when degugging and also needs to be more than 20 words"
+    while i < max:
+       long_text = long_text + long_text
+       i = i + 1
+
+    enriched_text.text = long_text  
+    chunk_words = 20
+    overlap_words = 5   
+    chars_per_word = 4
+    chunks_overlapped : list[PipelineItem] = chunker.chunk (enriched_text, chunk_words, overlap_words) 
+
+    chunk_0 = chunks_overlapped[0].text
+    chunk_1 = chunks_overlapped[1].text
+    length = len(chunk_0)
+    last_block = chunk_0[length-(overlap_words * chars_per_word):length]
+
+    start_point = chunk_1.find (last_block)
+    test_depth = (overlap_words * chars_per_word * 4)
+
+    assert  start_point < test_depth
+****************************************
+
+****************************************
+Waterfall\test\test_cluster_analyser.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+# Set paths tp find the 'src' directory
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.cluster_analyser import ClusterAnalyser
+from src.html_file_downloader import HtmlFileDownloader
+from src.summariser import Summariser
+from src.embedder import Embedder
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_path = 'test'
+    test_output_location = test_output_dir
+
+    items: list [PipelineItem] = []
+    item: PipelineItem = PipelineItem()
+    item.path = test_path
+    item.embedding = [1.0,2.0]   
+    items.append (item)
+        
+    analyser = ClusterAnalyser (test_output_location, 2)
+
+    assert analyser.output_location == test_output_location
+  
+
+def test_with_output (test_output_dir):
+    
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
+    test_output_location = 'test_output'
+
+    items: list [PipelineItem] = []
+ 
+    for test_path in test_paths:
+       item: PipelineItem = PipelineItem() 
+       item.path = test_path
+
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
+
+       summariser = Summariser (test_output_location)   
+       item = summariser.summarise (item) 
+
+       embedder = Embedder (test_output_location)
+       item = embedder.embed (item)   
+       
+       items.append (item)
+
+    cluster_analyser = ClusterAnalyser (test_output_location, 2) 
+    cluster_labels = cluster_analyser.analyse (items)
+
+    assert len(cluster_labels) == len (items)
+****************************************
+
+****************************************
+Waterfall\test\test_db_repository.py
+****************************************
+''' Tests for the DB API '''
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+from src.workflow import PipelineItem
+from src.db_repository import DbRepository
+
+test_root = os.path.dirname(__file__)
+parent = os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+
+def test_basic():
+    ''' Test construction '''
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    assert repository.context_id == test_context
+
+
+def test_does_not_exist():
+    ''' Test non-existence '''
+    test_path = 'fail_test.html'
+
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    exists = repository.exists(test_path)
+
+    assert not exists
+
+
+def test_save():
+    ''' Test save '''
+    item = PipelineItem()
+    item.path = 'https://microsoft.com'
+    item.summary = 'Summary'
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
+
+    assert saved
+
+
+def test_save_exists():
+    ''' Test save & then that it exists '''
+
+    item = PipelineItem()
+    item.path = 'https://microsoft.com'
+    item.summary = 'Summary'
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
+
+    exists = False
+
+    if saved:
+        exists = repository.exists(item.path)
+
+    assert saved
+    assert exists
+
+
+def test_save_load():
+    ''' Test save & then that it can be loaded '''
+
+    item = PipelineItem()
+    item.path = 'https://microsoft.com'
+    item.summary = 'Summary'
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    application_id = "TestApplication"
+    test_context = 'TestContext'
+    repository = DbRepository(application_id, test_context)
+    saved = repository.save(item)
+
+    loaded = False
+
+    if saved:
+        loaded = repository.find(item.path)
+
+    assert saved
+    assert loaded
+    assert loaded.path == item.path
+    assert loaded.embedding == item.embedding
+    assert loaded.summary == item.summary
+****************************************
+
+****************************************
+Waterfall\test\test_embedder.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+# Set paths tp find the 'src' directory
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.embedder import Embedder
+from src.html_file_downloader import HtmlFileDownloader
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+
+    embedder = Embedder (test_output_location) 
+    assert embedder.output_location == test_output_location 
+
+def test_with_output (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    embedder = Embedder (test_output_location)
+    enriched_embedding : PipelineItem = embedder.embed (enriched_text)    
+    assert len(enriched_embedding.embedding) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_embedding_finder.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.embedding_finder import EmbeddingFinder
+from src.html_file_downloader import HtmlFileDownloader
+from src.summariser import Summariser
+from src.embedder import Embedder
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+
+    embeddings = []
+    proxy_embedding = 0.0 * 10
+    embeddings.append (proxy_embedding)
+        
+    finder = EmbeddingFinder (embeddings, test_output_dir)
+
+    assert finder.embeddings == embeddings  
+
+def test_with_output (test_output_dir):
+    
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_paths = ['cluster_test_1.html', 'cluster_test_2.html', 'cluster_test_3.html', 'cluster_test_4.html', 'cluster_test_5.html']
+    test_output_location = test_output_dir
+
+    texts = []
+    embeddings = []
+
+    for test_path in test_paths:
+       item: PipelineItem = PipelineItem() 
+       item.path = test_path
+
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
+       texts.append(item.text)
+
+       summariser = Summariser (test_output_location)   
+       item = summariser.summarise (item) 
+
+       embedder = Embedder (test_output_location)
+       item = embedder.embed (item)   
+
+       embeddings.append (item.embedding)
+
+    embedding_finder = EmbeddingFinder (embeddings, test_output_dir) 
+    found = embedding_finder.find_nearest (texts[0])
+
+    assert len(found) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_embedding_repository.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.embedder_repository_facade import EmbeddingRespositoryFacade
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output_file")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    os.chdir ("..")    
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+    repository = EmbeddingRespositoryFacade (test_output_location)
+    assert repository.output_location == test_output_location   
+
+def test_with_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'pass_test.html'
+    test_output_location = test_output_dir
+    test = [0.0, 1.0]
+
+    repository = EmbeddingRespositoryFacade (test_output_location)  
+    repository.save (test_path, test)
+    exists = repository.exists (test_path)
+    caught = False
+    try:
+       saved = repository.load (test_path)
+    except:
+        caught = True
+
+    assert exists == True
+    assert caught == False
+    assert saved == test
+
+def test_with_no_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'fail_test.html'
+    test_output_location = test_output_dir
+    test = [0.0, 1.0]
+
+    repository = EmbeddingRespositoryFacade (test_output_location)  
+    try:
+       saved = repository.load (test_path)
+    except:
+        caught = True
+
+    assert caught == True
+****************************************
+
+****************************************
+Waterfall\test\test_errors.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+from src.workflow import PipelineItem
+from src.summariser import Summariser
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+def test_basic ():
+
+    logger.error('Error')  
+    logger.warning ('Warning')
+    logger.info ('Info')
+    logger.debug ('Debug')
+
+    assert(True)
+
+def test_with_output ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = "test+output"
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    pipeline_item.text = "Let’s be real, the war has started, a former minister tells me. What happens in the Middle East never stays in the Middle East.\
+It’s hard not to be moved by the burning conflict – the killing of Israelis by Hamas almost a year ago and agony of the families of hostages snatched; the killing of thousands of Gazans by Israel in its response and the terrible suffering there.\
+And now Lebanon, where Israel has struck again after almost a year of cross-border hostilities, killing hundreds in air strikes against Hezbollah. Hundreds of thousands more civilians are on the move, desperate to find safety.\
+But it can feel bewildering, and far away. So why does it matter at home?\
+There’s the humanitarian horror, says a former diplomat. And of course there are many families in the UK worried about the safety of friends or relatives still in Lebanon, Israel and Gaza. There is a potential bump in the number of refugees likely to head for Europe from Lebanon if all-out war begins.\
+The conflict has stirred tensions here as well. We see it on our streets, the former minister says, whether that’s at Gaza protests, the rise in antisemitism or even a handful of pro-Palestinian politicians winning seats in Parliament.\
+If - as US President Joe Biden has acknowledged in public - Israel goes ahead and hits Iran’s oil industry, the costs could hit us all.\
+The price of oil jumped 5% after Biden’s remarks. Iran is the seventh biggest oil producer in the world. Just at a time when the world has been getting used to inflation cooling down, spiralling costs of energy could pump it right back up again and we’d all feel it.\
+One source suggested if the conflict keeps intensifying, the Iranians might block the crucial Strait of Hormuz to show their power which could, they suggest, tip us into a 70s style crisis.\
+Around 20% of the world’s oil passes through the narrow channel of water. It’s the pocket book effect, says another Whitehall source. The impact on the economy could be huge.\
+So what can the UK do about a hellishly complicated situation, especially with a new government that is still finding its feet? There’s the practical, the defence, and the diplomatic."
+
+    summariser = Summariser (test_output_location)
+    enriched_summary : PipelineItem = summariser.summarise (pipeline_item)  
+
+    assert len(enriched_summary.summary) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_file_repository.py
+****************************************
+''' Tests for the File System API '''
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+
+import os
+import shutil
+import sys
+import logging
+import pytest
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.file_repository import FileRespository
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output_file")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    os.chdir ("..")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+    repository = FileRespository (test_output_location)
+    assert repository.output_location == test_output_location   
+
+def test_with_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'pass_test.html'
+    test_extention = "text"
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = FileRespository (test_output_location)  
+    repository.save (test_path, test_extention, text)
+    exists = repository.exists (test_path, test_extention)
+    saved = repository.load (test_path, test_extention)
+
+    assert exists == True
+    assert saved == text
+
+def test_with_no_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'fail_test.html'
+    test_extention = "text"
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = FileRespository (test_output_location)  
+    exists = repository.exists (test_path, test_extention)
+    saved = repository.load (test_path, test_extention)
+
+    assert exists == False
+    assert saved != text
+****************************************
+
+****************************************
+Waterfall\test\test_html_file_downloader.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.html_file_downloader import HtmlFileDownloader
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))    
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+    downloader = HtmlFileDownloader (test_output_location)
+    assert downloader.output_location == test_output_location   
+
+
+def test_with_output (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+
+    downloader = HtmlFileDownloader (test_output_location)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    enriched : PipelineItem = downloader.download (pipeline_item)    
+
+    assert len(enriched.text) > 0
+
+
+def test_connected (test_output_dir):
+    test_path = 'https://openai.com/'
+    test_output_location = test_output_dir
+
+    downloader = HtmlFileDownloader (test_output_location)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    enriched : PipelineItem = downloader.download (pipeline_item) 
+      
+    assert len(enriched.text) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_html_link_crawler.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import shutil
+import sys
+import logging
+import pytest
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.html_link_crawler import HtmlLinkCrawler
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_path = 'test'
+    test_output_location = test_output_dir
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    assert crawler.output_location == test_output_location
+    assert crawler.max_depth == 5    
+
+def test_with_output (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)    
+    assert len(links) == 1
+
+
+def test_with_one_recursion(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'two.html')    
+    os.chdir (test_root)
+
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)     
+    assert len(links) == 2
+
+def test_with_two_recursions(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    test_path = os.path.join (test_root, 'three.html')        
+    os.chdir (test_root)
+
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
+    assert len(links) == 3
+
+def test_many_sublinks(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'https://course.fast.ai/'  
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
+    assert len(links) > 5
+
+
+def test_mad_page(test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/'  
+    test_output_location = test_output_dir
+
+    crawler = HtmlLinkCrawler (test_output_location, 5)
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+    links = crawler.crawl (pipeline_item)   
+    assert len(links) == 1
+****************************************
+
+****************************************
+Waterfall\test\test_summariser.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.summariser import Summariser
+from src.html_file_downloader import HtmlFileDownloader
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+
+    summariser = Summariser (test_output_location)
+    assert summariser.output_location == test_output_location 
+
+def test_with_output (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path
+
+    downloader = HtmlFileDownloader (test_output_location)
+    enriched_text: PipelineItem = downloader.download (pipeline_item) 
+
+    summariser = Summariser (test_output_location)
+    enriched_summary : PipelineItem = summariser.summarise (enriched_text)  
+
+    assert len(enriched_summary.summary) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_summarise_fail_suppressor.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.summarise_fail_suppressor import SummariseFailSuppressor
+from src.html_file_downloader import HtmlFileDownloader
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+
+    summariser = SummariseFailSuppressor (test_output_location)
+    assert summariser.output_location == test_output_location 
+
+def test_with_no_suppression ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path 
+    pipeline_item.summary = "This article explains how generative AI can drive customer value growth in various areas such as product development, marketing, and customer service. It discusses the challenges of implementing generative AI and mentions that Accenture is using AI to transform its operations."
+
+    summariser = SummariseFailSuppressor (test_output_location)
+    enriched : PipelineItem = summariser.should_suppress (pipeline_item)  
+
+    assert enriched 
+
+def test_with_suppression (test_output_dir):
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_path = 'simple_test.html'
+    test_output_location = test_output_dir
+    
+    pipeline_item = PipelineItem()
+    pipeline_item.path = test_path 
+    pipeline_item.summary = "Im sorry, but it seems that the text you provided is not the main body of the text but rather website navigation and cookie preferences. Therefore, I cannot provide a summary."
+
+    summariser = SummariseFailSuppressor (test_output_location)
+    enriched : PipelineItem = summariser.should_suppress (pipeline_item)  
+
+    assert enriched is None
+****************************************
+
+****************************************
+Waterfall\test\test_summary_repository.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.summary_repository_facade import SummaryRespositoryFacade
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output_file")
+    logger.info(f"Created temporary test output directory: {dir_path}")
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info(f"Cleaning up test output directory: {dir_path}")
+    os.chdir ("..")    
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+    repository = SummaryRespositoryFacade (test_output_location)
+    assert repository.output_location == test_output_location   
+
+def test_with_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'pass_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = SummaryRespositoryFacade (test_output_location)  
+    repository.save (test_path, text)
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
+
+    assert exists == True
+    assert saved == text
+
+def test_with_no_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'fail_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = SummaryRespositoryFacade (test_output_location)  
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
+
+    assert exists == False
+    assert saved != text
+****************************************
+
+****************************************
+Waterfall\test\test_text_repository.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+''' Tests for the text repository API '''
+# Standard Library Imports
+import pytest
+import os
+import shutil
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.text_repository_facade import TextRespositoryFacade
+
+# Fixture to create a temporary directory for test output
+@pytest.fixture
+def test_output_dir(tmpdir):
+    dir_path = tmpdir.mkdir("test_output_text")
+    logger.info("Created temporary test output directory: %s", dir_path)
+    yield str(dir_path)
+    # Clean up after the test
+    logger.info("Cleaning up test output directory: %s", dir_path)
+    os.chdir ("..")    
+    shutil.rmtree(str(dir_path))
+
+def test_basic (test_output_dir):
+    test_output_location = test_output_dir
+    repository = TextRespositoryFacade (test_output_location)
+    assert repository.output_location == test_output_location   
+
+def test_with_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'pass_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = TextRespositoryFacade (test_output_location)  
+    repository.save (test_path, text)
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
+
+    assert exists == True
+    assert saved == text
+
+def test_with_no_output (test_output_dir):
+
+    os.chdir (test_output_dir)
+    test_path = 'fail_test.html'
+    test_output_location = test_output_dir
+    text = "Here is some text"
+
+    repository = TextRespositoryFacade (test_output_location)  
+    exists = repository.exists (test_path)
+    saved = repository.load (test_path)
+
+    assert exists == False
+    assert saved != text
+****************************************
+
+****************************************
+Waterfall\test\test_theme_finder.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.workflow import PipelineItem
+from src.theme_finder import ThemeFinder
+from src.summariser import Summariser
+from src.html_file_downloader import HtmlFileDownloader
+
+def test_basic ():
+    test_text = "This is some text"
+
+    summariser = ThemeFinder  ()
+    assert summariser != None
+
+def test_with_output ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_paths = ['cluster_test_4.html','cluster_test_5.html']
+    test_output_location = 'test_output'
+
+    accumulated_summary = ""
+    for test_path in test_paths:
+       item: PipelineItem = PipelineItem() 
+       item.path = test_path
+
+       downloader = HtmlFileDownloader (test_output_location)
+       item = downloader.download (item) 
+
+       summariser = Summariser (test_output_location)
+       item = summariser.summarise (item)    
+
+       accumulated_summary = accumulated_summary + "\n\n" + item.summary
+
+    theme_finder = ThemeFinder ()
+    theme = theme_finder.find_theme (accumulated_summary, 15)    
+    assert len(theme) > 0
+****************************************
+
+****************************************
+Waterfall\test\test_waterfall_pipeline.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+''' Tests for the entite Waterfall pipeline '''
+# Standard Library Imports
+import os
+import logging
+
+import pytest
+
+from src.workflow import WebSearchPipelineSpec
+from src.waterfall_pipeline import WaterfallDataPipeline
+from src.web_searcher import (AI_SUPPLY_STACK_SEARCH_ENGINE_ID,
+                              AI_DEMAND_STACK_SEARCH_ENGINE_ID,
+                              AI_TELECOM_SEARCH_ENGINE_ID,
+                              AI_NATIONWIDE_SEARCH_ENGINE_ID,
+                              AI_BNY_SEARCH_ENGINE_ID)
+
+test_root = os.path.dirname(__file__)
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+def test_basic ():
+    test_output_location = 'test_output'
+    pipeline = WaterfallDataPipeline (test_output_location)
+    assert pipeline.output_location == test_output_location
+
+@pytest.mark.timeout(9000)
+def test_with_search_supply ():
+    os.chdir (test_root)
+    test_output_location = 'supply_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 2
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI Supply Side"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'supply_cluster.html'
+    pipeline_spec.output_data_name = "supply_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, False)
+    assert len(links) >= 1
+
+@pytest.mark.timeout(9000)
+def test_with_search_demand ():
+    os.chdir (test_root)
+    test_output_location = 'demand_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_DEMAND_STACK_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 2
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI Demand Side"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'demand_cluster.html'
+    pipeline_spec.output_data_name = "demand_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, False)
+    assert len(links) >= 1
+
+@pytest.mark.timeout(9000)
+def test_with_search_telecom ():
+    os.chdir (test_root)
+    test_output_location = 'telecom_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_TELECOM_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI Telecoms"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'telco_cluster.html'
+    pipeline_spec.output_data_name = "telco_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, False)
+    assert len(links) >= 1
+
+@pytest.mark.timeout(9000)
+def test_with_search_nationwide ():
+    os.chdir (test_root)
+    test_output_location = 'nationwide_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_NATIONWIDE_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI Nationwide"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'nationwide_cluster.html'
+    pipeline_spec.output_data_name = "nationwide_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, True)
+    assert len(links) >= 1
+
+@pytest.mark.timeout(15000)
+def test_with_search_bny ():
+    os.chdir (test_root)
+    test_output_location = 'bny_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = WebSearchPipelineSpec()
+    pipeline_spec.search_key = AI_BNY_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 3
+    pipeline_spec.clusters = 4
+    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.description = "GenAI BNY"
+    pipeline_spec.mail_to = "jon@braidtech.ai"
+    pipeline_spec.output_chart_name = 'bny_cluster.html'
+    pipeline_spec.output_data_name = "bny_cluster_output.json"
+
+    links = pipeline.search (pipeline_spec, False)
+    assert len(links) >= 1
+****************************************
+
+****************************************
+Waterfall\test\test_web_searcher.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+from src.workflow import WebSearchPipelineSpec
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.waterfall_pipeline import WebSearcher
+from src.web_searcher import AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+
+def test_basic ():
+    test_output_location = 'test_output'
+    searcher = WebSearcher (test_output_location)
+    assert searcher.output_location == test_output_location 
+
+def test_with_search ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'test_output'
+
+    searcher = WebSearcher (test_output_location)
+    pipeline = WebSearchPipelineSpec()
+    pipeline.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
+    pipeline.pages = 1
+    pipeline_items = searcher.search (pipeline)    
+    assert len(pipeline_items) >= 1
+****************************************
+
+****************************************
+Waterfall\test\test_workflow.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+from src.workflow import WebSearchPipelineSpec, PipelineItem, Theme
+import os
+import sys
+import logging
+
+test_root = os.path.dirname(__file__)
+parent = os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+
+def test_pipeline_item():
+    item = PipelineItem()
+    item.path = "https://microsoft.com"
+    item.summary = "Summary"
+    item.embedding = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+
+    caught = False
+    try:
+        item.wont_work = ""
+    except TypeError:
+        caught = True
+
+    assert caught == True
+
+
+def test_theme():
+    item = PipelineItem()
+    items = [item]
+
+    theme = Theme()
+    theme.short_description = "Short"
+    theme.long_description = "Long long long"
+    theme.example_pipeline_items = items
+
+    caught = False
+    try:
+        theme.wont_work = ""
+    except TypeError:
+        caught = True
+    assert len(theme.example_pipeline_items) == 1
+    assert caught == True
+
+
+def test_pipeline():
+    pipeline = WebSearchPipelineSpec()
+    items = [pipeline]
+
+    theme = Theme()
+    theme.short_description = "Short"
+    theme.long_description = "Long long long"
+    theme.example_pipeline_items = items
+    themes = [theme]
+
+    pipeline = WebSearchPipelineSpec()
+    pipeline.search_key = "1234"
+    pipeline.description = "Description"
+    pipeline.themes = themes
+    pipeline.output_chart_name = "test.html"
+
+    caught = False
+    try:
+        pipeline.wont_work = ""
+    except TypeError:
+        caught = True
+
+    assert len(pipeline.themes) == 1
+    assert caught == True
+****************************************
+
+****************************************
+Waterfall\test\test_youtube_playlist.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+# Standard Library Imports
+import os
+import sys
+import logging
+
+from src.workflow import YouTubePipelineSpec
+
+test_root = os.path.dirname(__file__)
+parent= os.path.abspath(os.path.join(test_root, '..'))
+src_dir = os.path.join(parent, 'src')
+sys.path.extend([parent, src_dir])
+
+# Set up logging to display information about the execution of the script
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
+
+from src.youtube_searcher import YoutubePlaylistSearcher
+from src.youtube_transcript_downloader import YouTubeTranscriptDownloader
+from src.boxer_sources import youtube_playlists
+
+def test_basic ():
+    test_output_location = 'test_output'
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    assert searcher.output_location == test_output_location 
+
+def test_with_search ():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'test_output'
+
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    pipeline = YouTubePipelineSpec()
+    pipeline.playlists = youtube_playlists
+    pipeline_items = searcher.search (pipeline)    
+    assert len(pipeline_items) >= 1   
+
+def test_download():
+    test_root = os.path.dirname(__file__)
+    os.chdir (test_root)
+    test_output_location = 'test_output'
+
+    searcher = YoutubePlaylistSearcher (test_output_location)
+    downloader = YouTubeTranscriptDownloader (test_output_location)
+    pipeline = YouTubePipelineSpec()
+
+    pipeline.playlists = []
+    pipeline.playlists.append (youtube_playlists[0])
+    pipeline_items = searcher.search (pipeline)  
+
+    for item in pipeline_items:
+       item = downloader.download (item)
+       assert len(item.text) >= 1 
+
+    assert len(pipeline_items) >= 1
+****************************************
+
+****************************************
+Waterfall\test\three.html
+****************************************
+<!DOCTYPE html>
+<!-- Copyright Braid Technologies Ltd, 2024  -->
+<html lang="en">
+
+   <title>Waterfall</title>
+
+   <head>
+	   <title>Waterfall</title>	   
+   </head>
+
+   <body>
+	   <h3>Waterfall from Braid Technologies</h1>
+      <p>Here is some text.</p>
+      <a href="two.html"></a>      
+   </body>
+
+</html>
+****************************************
+
+****************************************
+Waterfall\test\two.html
+****************************************
+<!DOCTYPE html>
+<!-- Copyright Braid Technologies Ltd, 2024  -->
+<html lang="en">
+
+   <title>Waterfall</title>
+
+   <head>
+	   <title>Waterfall</title>	   
+   </head>
+
+   <body>
+	   <h3>Waterfall from Braid Technologies</h1>
+      <p>Here is some text.</p>
+      <a href="one.html"></a>
+   </body>
+
+</html>
+****************************************
+
+****************************************
+Waterfall\test\__init__.py
+****************************************
+
+****************************************
+
+****************************************
+Waterfall\.pytest_cache\v\cache\lastfailed
+****************************************
+{
+  "test/test_waterfall_pipeline.py::test_with_search_demand": true,
+  "test/test_waterfall_pipeline.py::test_with_search_telecom": true,
+  "test/test_waterfall_pipeline.py::test_with_search_nationwide": true,
+  "test/test_waterfall_pipeline.py::test_basic": true,
+  "test/test_web_searcher.py::test_basic": true,
+  "test/test_web_searcher.py::test_with_search": true,
+  "test/test_waterfall_pipeline.py::test_with_search_bny": true
+}
+****************************************
+
+****************************************
+Waterfall\.pytest_cache\v\cache\nodeids
+****************************************
+[
+  "test/test_waterfall_pipeline.py::test_basic",
+  "test/test_waterfall_pipeline.py::test_with_search_bny",
+  "test/test_waterfall_pipeline.py::test_with_search_supply"
+]
+****************************************
+
+****************************************
+Waterfall\.pytest_cache\v\cache\stepwise
+****************************************
+[]
+****************************************
