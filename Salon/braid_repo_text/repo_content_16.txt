@@ -1,0 +1,3758 @@
+****************************************
+WaterfallBrowser\build\index.html
+****************************************
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React App</title><script defer="defer" src="/static/js/main.68fbc6f1.js"></script><link href="/static/css/main.f855e6bc.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+****************************************
+
+****************************************
+WaterfallBrowser\public\index.html
+****************************************
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+****************************************
+
+****************************************
+WaterfallBrowser\src\App.css
+****************************************
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\App.tsx
+****************************************
+import React from 'react';
+import { FluentProvider, teamsDarkTheme, makeStyles } from '@fluentui/react-components';
+import './App.css';
+import ChunkRetriever from './ChunkRetriever';
+import { retrieveChunk } from './ChunkRetriever';
+
+const fluidFillPageStyles = makeStyles({
+   root: {
+      minWidth: "512px",  // Ask for enough for at least the error message  
+      height: '100vh', /* fill the screen with flex layout */
+      width: '100vw'   /* fill the screen with flex layout */      
+   },
+});
+
+const pageOuterStyles = makeStyles({
+   root: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'stretch',  /* for a row, the main axis is vertical, flex-end is items aligned to the bottom of the row */
+      justifyContent: 'center', /* for a row, the cross-axis is horizontal, center means vertically centered */
+      height: '100vh', /* fill the screen with flex layout */
+      width: '100vw',  /* fill the screen with flex layout */
+      marginLeft: '0px',
+      marginRight: '0px',
+      marginTop: '0px',
+      marginBottom: '0px',
+      paddingLeft: '20px',
+      paddingRight: '20px',
+      paddingTop: '20px',
+      paddingBottom: '20px',
+      webkitTextSizeAdjust: '100%'
+   },
+});
+
+export const innerColumnStyles = makeStyles({
+   root: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',    // start layout at the top       
+      alignItems: 'left',
+      maxWidth: '896px',
+      width: '100vw',  /* fill the screen with flex layout */      
+   },
+});
+
+function App() {
+
+   const fluidFillPageClasses = fluidFillPageStyles();
+   const pageOuterClasses = pageOuterStyles();
+   const innerColumnClasses = innerColumnStyles();
+
+   // If you have a URL like `https://braidapps.io/chunks/123`, you can extract the path segments:
+   const pathSegments = window.location.pathname.split('/');
+   let chunkId : string | undefined = undefined;
+
+   if (pathSegments.length >= 3) {
+      chunkId = pathSegments[2]; // Assuming 'chunks' is the first segment
+   }
+
+   return (
+      <FluentProvider theme={teamsDarkTheme} className={fluidFillPageClasses.root}>
+         <div className={pageOuterClasses.root}>
+            <div className={innerColumnClasses.root}>
+               <ChunkRetriever chunkId={chunkId} retrieverFn={retrieveChunk} />
+            </div>
+         </div>
+      </FluentProvider>
+   );
+}
+
+export default App;
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkRetriever.test.tsx
+****************************************
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { ChunkRetriever } from './ChunkRetriever';
+import { parentKey, testChunkRetriever } from './ChunkTestHelpers';
+import { act } from 'react';
+
+// Simple set of tests - just check we can pick up a few fields from the DOM
+test('renders Chunk in text', async () => {
+
+   await act( async () => render(<ChunkRetriever chunkId={parentKey} retrieverFn={testChunkRetriever} />));
+
+   await new Promise(process.nextTick);
+
+   const summaryLinkElement = screen.getByText(/Summary/i);
+   expect(summaryLinkElement).toBeInTheDocument();
+
+   const titleLinkElement = screen.getByText(/Title/i);
+   expect(titleLinkElement).toBeInTheDocument();
+
+   const linkElement = screen.getByText(/microsoft/i);
+   expect(linkElement).toBeInTheDocument();
+});
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkRetriever.tsx
+****************************************
+import React, { useState } from 'react';
+import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
+import { ChunkRepostoryApi } from './CommonTs/src/ChunkRepositoryApi';
+import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
+import { ChunkView } from './ChunkView';
+import { ChunkViewError } from './ChunkViewError';
+import { ChunkViewLoading } from './ChunkViewLoading';
+import { getDefusc } from './Defusc';
+
+/**
+ * Type for a function that returns an IStoredChunk given a key. 
+ * This allows test code to replace it with a stub.
+ * Production calls the relevant API. 
+ **/
+export type ChunkRetriveFunction = (chunkId: string | undefined) => Promise <IStoredChunk | undefined>;
+
+/**
+ * A React component that retrieves and displays a chunk of data using a provided retrieval function.
+ * 
+ * @param props - The properties for the component.
+ * @param props.chunkId - The unique identifier for the chunk to be retrieved.
+ * @param props.retrieverFn - A function that retrieves the chunk data based on the chunkId.
+ * 
+ * @returns A JSX element displaying the retrieved chunk using the ChunkView component, 
+ * or an empty div if the chunk is not yet retrieved.
+ * 
+ * The component manages the retrieval state using internal state variables to track if the retrieval
+ * process is ongoing or completed, and updates the UI accordingly.
+ */
+export function ChunkRetriever (props: {chunkId: string | undefined, retrieverFn: ChunkRetriveFunction}) {
+    
+    const [chunk, setChunk] = useState<IStoredChunk | undefined> (undefined);
+    const [calling, setCalling] = useState<boolean> (false);    
+    const [called, setCalled] = useState<boolean> (false);  
+
+    if (!chunk && props.chunkId) {
+       if (!calling && !called) {
+
+       setCalling (true);
+        props.retrieverFn (props.chunkId).then ((prom) => {
+            setCalling (false);
+            setCalled (true);
+
+            let retrivedChunk = prom;
+            if (retrivedChunk)
+               setChunk (retrivedChunk);
+        }).catch ((e) => {
+            setCalling (false);
+            setCalled (true);
+
+        })
+      }
+    }
+    
+    return (
+      chunk ? <ChunkView chunk={chunk as unknown as IStoredChunk}/> 
+            : calling ? <ChunkViewLoading/> 
+                      : <ChunkViewError/>
+    );
+}
+
+export default ChunkRetriever;
+
+/**
+ * Asynchronously retrieves a stored chunk by its unique identifier.
+ *
+ * @param chunkId - The unique identifier of the chunk to be retrieved.
+ * @returns A promise that resolves to the retrieved IStoredChunk or undefined if not found.
+ *
+ * The function decodes an obfuscated string to obtain an API key, initializes
+ * the ChunkRepositoryApi with the default environment and the decoded key,
+ * and attempts to load the chunk using the provided chunkId.
+ */
+export async function retrieveChunk(chunkId: string | undefined): Promise<IStoredChunk | undefined> {
+
+   let defusc = getDefusc();
+
+   let env = getDefaultEnvironment();
+   let api = new ChunkRepostoryApi(env, defusc);
+
+   if (chunkId) {
+      let loaded = await api.load(chunkId);
+      let loadedChunk: IStoredChunk | undefined = loaded as IStoredChunk | undefined;
+
+      return loadedChunk;
+   }
+   else
+      return undefined;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkTestHelpers.tsx
+****************************************
+
+import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
+
+
+
+export let parentKey = "123";
+let childKey1 = "456";
+let childKey2 = "789";
+let modelKey = "TestModel";
+
+let now = new Date().toUTCString();
+
+export let testChunk: IStoredChunk = {
+   id: parentKey,
+   applicationId: "Test",
+   schemaVersion: "1",
+   created: now,
+   amended: now,
+   contextId: "madeupId",
+   userId: "madeupId",
+   className: "madeUpClass",
+   functionalSearchKey: parentKey,
+   parentChunkId: undefined,
+   originalText: undefined,
+   url: "https://microsoft.com",
+   storedEmbedding: undefined,
+   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
+   storedTitle: {modelId: modelKey, text: "Title"},
+   relatedChunks: [childKey1, childKey2]
+}
+
+export let childChunk1: IStoredChunk = {
+   id: childKey1,
+   applicationId: "Test",
+   schemaVersion: "1",
+   created: now,
+   amended: now,
+   contextId: "madeupId",
+   userId: "madeupId",
+   className: "madeUpClass",
+   functionalSearchKey: childKey1,
+   parentChunkId: parentKey,
+   originalText: undefined,
+   url: "https://microsoft.com",
+   storedEmbedding: undefined,
+   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
+   storedTitle: {modelId: modelKey, text: "Title"},
+   relatedChunks: undefined
+}
+
+export let childChunk2: IStoredChunk = {
+   id: childKey1,
+   applicationId: "Test",
+   schemaVersion: "1",
+   created: now,
+   amended: now,
+   contextId: "madeupId",
+   userId: "madeupId",
+   className: "madeUpClass",
+   functionalSearchKey: childKey2,
+   parentChunkId: parentKey,
+   originalText: undefined,
+   url: "https://microsoft.com",
+   storedEmbedding: undefined,
+   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
+   storedTitle: {modelId: modelKey, text: "Title"},
+   relatedChunks: undefined
+}
+
+export let parentChunk = testChunk;
+
+
+export async function testChunkRetriever (chunkId: string | undefined) : Promise <IStoredChunk | undefined> {
+
+   switch (chunkId) {
+      case parentKey:
+         return parentChunk;
+      case childKey1:
+         return childChunk1;        
+      case childKey2:
+         return childChunk2;            
+      default:
+         return undefined;
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkView.test.tsx
+****************************************
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import ChunkView from './ChunkView';
+import { testChunk } from './ChunkTestHelpers';
+
+// Simple set of tests - just check we can pick up a few fields from the DOM
+test('renders Chunk in text', () => {
+  
+  render(<ChunkView chunk={testChunk}/>);
+
+  const summaryLinkElement = screen.getByText(/Summary/i);
+  expect(summaryLinkElement).toBeInTheDocument();
+
+  const titleLinkElement = screen.getByText(/Title/i);
+  expect(titleLinkElement).toBeInTheDocument();  
+
+  const linkElement = screen.getByText(/microsoft/i);
+  expect(linkElement).toBeInTheDocument();   
+});
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkView.tsx
+****************************************
+import React, { ReactNode } from 'react';
+import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
+import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
+import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
+/**
+ * Generates a ReactNode that provides a link back to a parent element.
+ *
+ * @param value - The identifier for the parent element, used to construct the URL.
+ * @returns A paragraph element containing a link if the value is provided, or an empty paragraph if undefined.
+ */
+function backToParent (value: string | undefined) : ReactNode {
+
+   if (value) {
+      let relatedUrl = '/chunks/' + value.toString();
+
+      return (<p>{uiBackToParentChunk} <a href={relatedUrl}>{value}</a> </p>)
+   }
+   else
+      return <p></p>
+}
+
+/**
+ * Maps a string value to a ReactNode containing a paragraph with a hyperlink.
+ *
+ * @param value - The string value used to generate the URL and key for the ReactNode.
+ * @param index - The index of the current element in the array (unused).
+ * @param all - The array of strings being processed (unused).
+ * @returns A ReactNode containing a paragraph with a hyperlink pointing to a URL
+ *          constructed from the input string value.
+ */
+function mapRelated (value: string, index: number, all: Array<string>) : ReactNode {
+
+   let relatedUrl = '/chunks/' + value.toString();
+   let nodeWithKey : ReactNode = <p key={value}> <a href={relatedUrl}>{value}</a> </p>;
+
+   return (nodeWithKey)
+}
+
+/**
+ * Splits a string into an array of strings using double newlines as the delimiter.
+ * Empty strings are filtered out from the result.
+ *
+ * @param text - The input string to split
+ * @returns An array of non-empty strings split by double newlines
+ */
+function splitByDoubleNewline(text: string): string[] {
+   return text.split('\n\n').filter(str => str.trim().length > 0);
+}
+
+/**
+ * Renders a view for a stored chunk, displaying its title, summary, and URL.
+ * Includes navigation to the parent chunk and lists related chunks if available.
+ * 
+ * @param props - Contains the stored chunk data to be displayed.
+ * @returns A ReactNode representing the chunk view.
+ */
+export function ChunkView(props: {chunk: IStoredChunk}) {
+
+    let splitSummary: Array<string> = new Array<string> ();
+    let url : string | undefined = undefined
+
+    if (props.chunk.storedSummary?.text) {
+        splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
+    }
+
+    if (!props.chunk.parentChunkId) {
+
+        let env = getDefaultEnvironment();    
+        url = env.hostProtocolAndName() + '/api/GetPage?id=' + props.chunk.id;
+    }
+    else {
+        url = props.chunk.url;
+    }
+
+    return (
+        <div>
+            <p><b>{uiAppName}</b></p>
+            &nbsp;                   
+            <p><b>{props.chunk.storedTitle?.text}</b></p>
+            &nbsp;
+            {splitSummary.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+            ))}
+            &nbsp;
+            <p>{url ? <a href={url}>{url}</a> : <div/>}</p>
+            &nbsp;
+            {backToParent (props.chunk.parentChunkId)}
+            &nbsp;
+            {props.chunk.relatedChunks ? <p>{uiRelatedChunks}</p> : <div/>}            
+            {props.chunk.relatedChunks ? props.chunk.relatedChunks.map (mapRelated) : <div/>}
+            &nbsp;
+        </div>
+    );
+}
+
+export default ChunkView;
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkViewError.tsx
+****************************************
+import React from 'react';
+
+import { uiAppName, uiSorryNoData } from './UIString';
+
+export function ChunkViewError () {
+
+    
+    return (
+        <div>
+            <p><b>{uiAppName}</b></p>
+            &nbsp;                   
+            <p>{uiSorryNoData}</p>
+            &nbsp;
+        </div>
+    );
+}
+
+export default ChunkViewError;
+****************************************
+
+****************************************
+WaterfallBrowser\src\ChunkViewLoading.tsx
+****************************************
+import React from 'react';
+
+import { uiAppName, uiLoading } from './UIString';
+
+export function ChunkViewLoading () {
+
+    
+    return (
+        <div>
+            <p><b>{uiAppName}</b></p>
+            &nbsp;                   
+            <p>{uiLoading}</p>
+            &nbsp;
+        </div>
+    );
+}
+
+export default ChunkViewLoading;
+****************************************
+
+****************************************
+WaterfallBrowser\src\Defusc.tsx
+****************************************
+/**
+ * Decodes an obfuscated string using base64 decoding
+ * @returns {string} The decoded string value
+ */
+export function getDefusc (): string {
+   let obfusc = "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"
+   let defusc = atob(obfusc);
+
+   return defusc;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\index.css
+****************************************
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\index.tsx
+****************************************
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+****************************************
+
+****************************************
+WaterfallBrowser\src\logo.svg
+****************************************
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>
+****************************************
+
+****************************************
+WaterfallBrowser\src\react-app-env.d.ts
+****************************************
+/// <reference types="react-scripts" />
+****************************************
+
+****************************************
+WaterfallBrowser\src\reportWebVitals.ts
+****************************************
+import { ReportHandler } from 'web-vitals';
+
+const reportWebVitals = (onPerfEntry?: ReportHandler) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+****************************************
+
+****************************************
+WaterfallBrowser\src\setupTests.ts
+****************************************
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+****************************************
+
+****************************************
+WaterfallBrowser\src\UIString.ts
+****************************************
+
+export let uiAppName = "Waterfall Browser";
+export let uiSorryNoData = "Sorry, we can't fund a chunk of data with that ID.";
+export let uiBackToParentChunk = "Back to parent:";
+export let uiRelatedChunks = "Related:";
+export let uiLoading = "Loading."
+****************************************
+
+****************************************
+WaterfallBrowser\build\static\css\main.f855e6bc.css
+****************************************
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;margin:0}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.App{text-align:center}.App-logo{height:40vmin;pointer-events:none}@media (prefers-reduced-motion:no-preference){.App-logo{animation:App-logo-spin 20s linear infinite}}.App-header{align-items:center;background-color:#282c34;color:#fff;display:flex;flex-direction:column;font-size:calc(10px + 2vmin);justify-content:center;min-height:100vh}.App-link{color:#61dafb}@keyframes App-logo-spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
+/*# sourceMappingURL=main.f855e6bc.css.map*/
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ActivityRepositoryApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+import { Api } from './Api';
+import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
+import { IEnvironment } from "./IEnvironment";
+import { StorableRepostoryApi, IStorableRepostoryApiWrapper } from './StorableRepositoryApi';
+
+/**
+ * Represents an API for activities.
+ * 
+ * @param {EEnvironment} environment_ - The environment to use for saving activities.
+ * @param {string} sessionKey_ - The session key for authentication.
+ * 
+ * @method save - Saves a record to the Activity API.
+ * @method remove - removes a record
+ * @method load - load an Activity given the key 
+ * @method recent - return a list of recent activities
+ */
+export class ActivityRepostoryApi extends Api implements IStorableRepostoryApiWrapper {
+
+   private storableApi: StorableRepostoryApi;
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+
+      this.storableApi = new StorableRepostoryApi();
+   }  
+
+   /**
+    * Asynchronously loads a record from the activity repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async load (recordId: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.getActivityApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.load (recordId, apiUrl);  
+   }
+
+   /**
+    * Asynchronously finds a record from the activity repository API.
+    * 
+    * @param functionalSearchKey - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async find (functionalSearchKey: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.findActivityApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.load (functionalSearchKey, apiUrl);  
+   }
+
+   /**
+    * Asynchronously saves a record to the activity repository API.
+    * 
+    * @param record - The record to be saved, must implement the IStorable interface.
+    * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
+    */
+   async save (record: IStorable) : Promise<boolean> {
+
+      let apiUrl = this.environment.saveActivityApi() + "?session=" + this.sessionKey.toString();
+      
+      return this.storableApi.save (record, apiUrl);
+   }
+
+   /**
+    * Asynchronously removes a record from the activity repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+    */
+   async remove (recordId: string) : Promise<boolean> {
+
+      let apiUrl = this.environment.removeActivityApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.remove (recordId, apiUrl);  
+   }
+
+   /**
+    * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    */
+   async recent (querySpec: IStorableMultiQuerySpec) : Promise<Array<IStorable>> {
+
+      let apiUrl = this.environment.getActivitiesApi() + "?session=" + this.sessionKey.toString();
+
+      return this.storableApi.recent (querySpec, apiUrl);  
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Api.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { IEnvironment } from "./IEnvironment";
+
+/**
+ * Represents an API class that interacts with the specified environment using the provided session key. 
+ * This is a super class of each actual (useful) API. In itself it isn't very useful, it just holds common data. 
+ * @param {IEnvironment} environemnt_ - The environment interface to interact with.
+ * @param {string} sessionKey_ - The session key for authentication.
+ */
+export class Api {
+   private _environment: IEnvironment;
+   private _sessionKey: string;
+
+   public constructor(environemnt_: IEnvironment, sessionKey_: string) {
+      this._environment = environemnt_;
+      this._sessionKey = sessionKey_;
+   }  
+
+   public get environment() : IEnvironment  {
+      return this._environment;
+   }
+   public get sessionKey() : string  {
+      return this._sessionKey;
+   }   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Asserts.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+import { AssertionFailedError} from './Errors';
+
+export const throwIfUndefined: <T, >(x: T | undefined) => asserts x is T = x => {
+   if (typeof x === "undefined") throw new AssertionFailedError ("Object is undefined.");
+}
+
+export const throwIfNull: <T, >(x: T | null) => asserts x is T = x => {
+   if (x === null) throw new AssertionFailedError ("Object is null.");
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ChunkApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Chunk API
+
+/**
+ * Interface for chunk reqiest API.
+ * @property {string} text - The text content of the chunk.
+ * @property {number | undefined} chunkSize - The size of the chunk in tokens, if specified.
+ * @property {number | undefined} overlapWords - The size of the overlap between chunks, in words (=2 * tokens) if specified.
+ */
+export interface IChunkRequest{
+
+   text: string;
+   chunkSize?: number | undefined;
+   overlapWords?: number | undefined;
+}
+
+/**
+ * Return type of chunk reqiest API.
+ * @property {Array<string>} chunks - Array of text chunks
+ */
+export interface IChunkResponse {
+
+   chunks: Array<string>;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ChunkApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ChunkApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IChunkRequest:
+      properties:
+        text:
+          title: IChunkRequest.text
+          type: string
+        chunkSize:
+          title: IChunkRequest.chunkSize
+          type: number
+        overlapWords:
+          title: IChunkRequest.overlapWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: IChunkRequest
+      description: >-
+        Interface for chunk reqiest API.
+
+        @property {string} text - The text content of the chunk.
+
+        @property {number | undefined} chunkSize - The size of the chunk in
+        tokens, if specified.
+
+        @property {number | undefined} overlapWords - The size of the overlap
+        between chunks, in words (=2 * tokens) if specified.
+      type: object
+    IChunkResponse:
+      properties:
+        chunks:
+          items:
+            type: string
+          title: IChunkResponse.chunks
+          type: array
+      required:
+        - chunks
+      additionalProperties: false
+      title: IChunkResponse
+      description: |-
+        Return type of chunk reqiest API.
+        @property {Array<string>} chunks - Array of text chunks
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ChunkRepositoryApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
+import { StorableRepostoryApi, IStorableRepostoryApiWrapper} from './StorableRepositoryApi';
+
+/**
+ * Represents an API for the Chunk repository
+ * 
+ * @param {EEnvironment} environment_ - The environment to use for saving Chunks.
+ * @param {string} sessionKey_ - The session key for authentication.
+ * 
+ * @method save - Saves a record to the Chunk API.
+ * @method remove - removes a record
+ * @method load - load an Chunk given the key 
+ */
+export class ChunkRepostoryApi extends Api implements IStorableRepostoryApiWrapper {
+   
+   private storableApi: StorableRepostoryApi;
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+
+      this.storableApi = new StorableRepostoryApi();      
+   }  
+
+   /**
+    * Asynchronously loads a record from the Chunk repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+    async load (recordId: string) : Promise<IStorable | undefined> {
+
+         let apiUrl = this.environment.getChunkApi() + "?session=" + this.sessionKey.toString();
+         return this.storableApi.load (recordId, apiUrl);  
+      }
+
+   /**
+    * Asynchronously finds a record from the Chunk repository API.
+    * 
+    * @param functionalSearchKey - The ID of the record to be removed.
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+    async find (functionalSearchKey: string) : Promise<IStorable | undefined> {
+
+      let apiUrl = this.environment.findChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.find (functionalSearchKey, apiUrl);  
+   }
+
+   /**
+    * Asynchronously saves a record to the chunk repository API.
+    * 
+    * @param record - The record to be saved, must implement the IStoredChunk interface.
+    * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
+    */
+   async save (record: IStorable) : Promise<boolean> {
+
+      let apiUrl = this.environment.saveChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.save (record, apiUrl);             
+   }  
+
+   /**
+    * Asynchronously removes a record from the Chunk repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+    */
+   async remove (recordId: string) : Promise<boolean> {
+
+      let apiUrl = this.environment.removeChunkApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.remove (recordId, apiUrl);  
+   }
+
+   /**
+    * Asynchronously retrieves recent records from the activity repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    */
+   async recent (querySpec: IStorableMultiQuerySpec) : Promise<Array<IStorable>> {
+
+      let apiUrl = this.environment.getChunksApi() + "?session=" + this.sessionKey.toString();
+
+      return this.storableApi.recent (querySpec, apiUrl);  
+   }   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ChunkRepositoryApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the ChunkRepository API
+
+import { IStorable} from "./IStorable";
+
+/**
+ * Represents an interface for storing embeddings with a model ID and an array of numbers representing the embedding.
+ */
+export interface IStoredEmbedding {
+
+   modelId: string;
+   embedding: Array<number>;
+};
+
+/**
+ * Defines the structure of a stored text rendering object.
+ */
+export interface IStoredTextRendering {
+
+   modelId: string;
+   text: string;
+};
+
+/**
+ * Interface representing a chunk of data.
+ * 
+ * Core data for a chunk:
+ * - parentChunkId: Primary key to parent document
+ * - originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)
+ * - url: string | undefined;                 // url to external resource, can be null  
+ * - storedEmbedding: Embedding of the original text
+ * - storedSummary: Summary of the original text - generated with application-specific prompt 
+ * - storedTitle: A generated of the original text - generated with application-specific prompt
+ * - related: Array of IDs to related chunks
+ */
+export interface IStoredChunk extends IStorable {
+
+   parentChunkId: string | undefined;       // primary key to parent document
+   originalText: string | undefined;        // original text - if undefined, it has been thrown way (as maybe it can be reconstructed)
+   url: string | undefined;                 // url to external resource, can be null  
+   storedEmbedding: IStoredEmbedding | undefined;   // Embedding of the original text
+   storedSummary: IStoredTextRendering | undefined; // Summary of the original text - generated with application specific prompt
+   storedTitle: IStoredTextRendering | undefined;   // Title for the original text - generated with application specific prompt   
+   relatedChunks: Array <string> | undefined;       // An optional array of related chunks - often the full set that was pulled from a parent document
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ChunkRepositoryApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ChunkRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IStoredEmbedding:
+      properties:
+        modelId:
+          title: IStoredEmbedding.modelId
+          type: string
+        embedding:
+          items:
+            type: number
+          title: IStoredEmbedding.embedding
+          type: array
+      required:
+        - modelId
+        - embedding
+      additionalProperties: false
+      title: IStoredEmbedding
+      description: >-
+        Represents an interface for storing embeddings with a model ID and an
+        array of numbers representing the embedding.
+      type: object
+    IStoredTextRendering:
+      properties:
+        modelId:
+          title: IStoredTextRendering.modelId
+          type: string
+        text:
+          title: IStoredTextRendering.text
+          type: string
+      required:
+        - modelId
+        - text
+      additionalProperties: false
+      title: IStoredTextRendering
+      description: Defines the structure of a stored text rendering object.
+      type: object
+    IStoredChunk:
+      properties:
+        parentChunkId:
+          title: IStoredChunk.parentChunkId
+          type: string
+        originalText:
+          title: IStoredChunk.originalText
+          type: string
+        url:
+          title: IStoredChunk.url
+          type: string
+        storedEmbedding:
+          $ref: '#/components/schemas/IStoredEmbedding'
+          title: IStoredChunk.storedEmbedding
+        storedSummary:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedSummary
+        storedTitle:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedTitle
+        relatedChunks:
+          items:
+            type: string
+          title: IStoredChunk.relatedChunks
+          type: array
+      required:
+        - parentChunkId
+        - originalText
+        - url
+        - storedEmbedding
+        - storedSummary
+        - storedTitle
+        - relatedChunks
+      additionalProperties: false
+      title: IStoredChunk
+      description: "Interface representing a chunk of data.\r\n\r\nCore data for a chunk:\r\n- parentChunkId: Primary key to parent document\r\n- originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)\r\n- url: string | undefined;                 // url to external resource, can be null  \r\n- storedEmbedding: Embedding of the original text\r\n- storedSummary: Summary of the original text - generated with application-specific prompt \r\n- storedTitle: A generated of the original text - generated with application-specific prompt\r\n- related: Array of IDs to related chunks"
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ClassifyApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Chunk API
+
+/**
+ * Represents a classification request object with text and classifications.
+ */
+export interface IClassifyRequest{
+
+   text: string;
+   classifications: Array<string>;
+}
+
+/**
+ * Interface for the classification response object.
+ */
+export interface IClassifyResponse {
+
+   classification: string;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ClassifyApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ClassifyApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ClassifyApi.Types.yaml
+  x-comment: >-
+    Generated from src\ClassifyApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IClassifyRequest:
+      properties:
+        text:
+          title: IClassifyRequest.text
+          type: string
+        classifications:
+          items:
+            type: string
+          title: IClassifyRequest.classifications
+          type: array
+      required:
+        - text
+        - classifications
+      additionalProperties: false
+      title: IClassifyRequest
+      description: >-
+        Represents a classification request object with text and
+        classifications.
+      type: object
+    IClassifyResponse:
+      properties:
+        classification:
+          title: IClassifyResponse.classification
+          type: string
+      required:
+        - classification
+      additionalProperties: false
+      title: IClassifyResponse
+      description: Interface for the classification response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Compress.ts
+****************************************
+import * as pako from 'pako';
+
+
+/**
+ * Compresses a string using deflate algorithm
+ * @param input The string to compress
+ * @returns Base64 encoded compressed string
+ */
+export function compressString(input: string): string {
+   // Convert string to Uint8Array
+   const data = new TextEncoder().encode(input);
+   // Compress the data
+   const compressed = pako.deflate(data);
+
+   // Universal base64 encoding
+   if (typeof window === 'undefined') {
+      // Node.js environment
+      return Buffer.from(compressed).toString('base64');
+   } else {
+      // Browser environment
+      return btoa(String.fromCharCode.apply(null, Array.from(compressed)));
+   }
+}
+
+/**
+ * Decompresses a string that was compressed using compressString
+ * @param input Base64 encoded compressed string
+ * @returns Original decompressed string
+ */
+export function decompressString(input: string): string {
+   try {
+      // Universal base64 decoding
+      let compressedData: Uint8Array;
+      if (typeof window === 'undefined') {
+         // Node.js environment
+         compressedData = Buffer.from(input, 'base64');
+      } else {
+         // Browser environment
+         compressedData = new Uint8Array(
+            atob(input).split('').map(char => char.charCodeAt(0))
+         );
+      }
+
+      // Decompress the data
+      const decompressed = pako.inflate(compressedData);
+      // Convert back to string
+      return new TextDecoder().decode(decompressed);
+   } catch (error) {
+      throw new Error('Failed to decompress string: Invalid input');
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EmbedApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Embed API
+
+/**
+ * Interface for the embedding request object.
+ */
+export interface IEmbedRequest{
+
+   text: string;
+}
+
+/**
+ * Interface for the embedding response object.
+ */
+export interface IEmbedResponse {
+
+   embedding: Array<number>;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EmbedApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from EmbedApi.Types.yaml with typeconv
+  version: '1'
+  x-id: EmbedApi.Types.yaml
+  x-comment: >-
+    Generated from src\EmbedApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IEmbedRequest:
+      properties:
+        text:
+          title: IEmbedRequest.text
+          type: string
+      required:
+        - text
+      additionalProperties: false
+      title: IEmbedRequest
+      description: Interface for the embedding request object.
+      type: object
+    IEmbedResponse:
+      properties:
+        embedding:
+          items:
+            type: number
+          title: IEmbedResponse.embedding
+          type: array
+      required:
+        - embedding
+      additionalProperties: false
+      title: IEmbedResponse
+      description: Interface for the embedding response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EnrichedChunk.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Chunk API
+
+// For now there is only one sort of chunk repository. In future there may be new ones so we have an ID to distinguish them. 
+export enum EChunkRepository {
+
+   kBoxer = "Boxer"
+};
+
+// Default is we only consider >= 50% relevant to present to the user (GPT4 seems to generate low scores ...)
+export const kDefaultSimilarityThreshold = 0.5;
+
+/**
+ * Represents a Chunk enriched with specific properties.
+ * This is a summary class that can be passed between client & server. 
+ * @property {string} url - The URL associated with the chunk.
+ * @property {string} text - The textual content of the chunk.
+ * @property {string} summary - The summary content of the chunk.
+ */
+export interface IEnrichedChunkSummary {
+
+   url: string;
+   text: string;
+   summary: string;
+}
+
+/**
+ * Represents a Chunk enriched with specific properties.
+  * This is a server side class only - its for storage. 
+ * @property {string} id - The unique identifier of the chunk.
+ * @property {Array<number>} embedding - An array of numbers representing the embedding of the chunk.
+ */
+export interface IEnrichedChunk extends IEnrichedChunkSummary {
+
+   id: string;
+   embedding: number[];
+}
+
+/**
+ * Represents a relevant chunk with its associated relevance score.
+ */
+export interface IRelevantEnrichedChunk {
+
+   chunk: IEnrichedChunkSummary;
+   relevance: number;
+}
+
+/**
+ * Defines the structure of a chunk query specification object.
+ * 
+ * @property {EChunkRepository} repositoryId - The ID of the repository to query.
+ * @property {number} maxCount - The maximum number of results to retrieve.
+ * @property {number} similarityThreshold - The threshold for similarity comparison.
+ */
+export interface IChunkQuerySpec {
+
+   repositoryId: EChunkRepository;
+   maxCount: number;
+   similarityThreshold: number;
+}
+
+/**
+ * Extends the IChunkQuerySpec interface to include a 'url' property of type string.
+ */
+export interface IChunkQueryRelevantToUrlSpec extends IChunkQuerySpec {
+
+   url: string;
+}
+
+/**
+ * Extends the IChunkQuerySpec interface to include a 'summary' property of type string.
+ */
+export interface IChunkQueryRelevantToSummarySpec extends IChunkQuerySpec {
+
+   summary: string;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EnrichedQuery.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Query API
+
+import { EChunkRepository, IRelevantEnrichedChunk} from "./EnrichedChunk";
+
+
+/**
+ * Defines the structure of a conversation element.
+ */
+export enum EConversationRole {
+
+   kSystem = "system",
+   kAssistant = "assistant",
+   kUser = "user"
+};
+
+/**
+ * Enum representing standard prompts for an AI assistant helping an application developer understand generative AI.
+ * Includes prompts for initial questions, enrichment, follow-up questions, and generating questions.
+ * Each prompt provides specific instructions and limitations for the AI assistant's responses.
+ */
+export enum EStandardPrompts {
+
+   kOpenAiPersonaPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs),, say 'That doesn't seem to be about AI'.",
+   kEnrichmentPrompt = "You will be provided with a question about building applications that use generative AI technology. Write a 50 word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n",
+   kFollowUpPrompt = "You will be provided with a summary of an article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might ask as a follow up to reading the article.",
+   kFollowUpPrefix = "Article summary: ",
+   kGenerateAQuestionPrompt = "You are an AI assistant helping an application developer understand generative AI. Based on the dialog presented as context, generate a 10 word question that is relevant to the subjects being discussed.\n"   
+};
+
+
+/**
+ * Defines the structure of a conversation element.
+ */
+export interface IConversationElement {
+   role: EConversationRole,
+   content: string
+}
+
+/**
+ * Defines the structure of an enriched query object.
+ * Contains information about the repository, persona prompt, question prompt,
+ * enrichment document prompt, and conversation history.
+ */
+export interface IEnrichedQuery {
+
+   repositoryId : EChunkRepository;
+   personaPrompt: string;
+   enrichmentDocumentPrompt: string;
+   similarityThreshold: number;
+   maxCount: number;
+   history: Array<IConversationElement>;
+   question: string;
+}
+
+/**
+ * Defines the structure of an enriched response object.
+ * Contains an answer field of type string and a chunks field as an array of Relevant Enriched Chunk objects.
+ */
+export interface IEnrichedResponse {
+
+   answer: string;
+   chunks: Array<IRelevantEnrichedChunk>;
+}
+
+/**
+ * Interface for generating questions query.
+ * Contains persona prompt, question generation prompt, and summary fields.
+ */
+export interface IGenerateQuestionQuery {
+
+   personaPrompt: string;
+   questionGenerationPrompt: string;
+   summary: string;
+}
+
+/**
+ * Defines the structure of a response object for question generation.
+ * Contains a property 'question' of type string representing the generated question.
+ */
+export interface IQuestionGenerationResponse {
+
+   question: string;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EnumerateModelsApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the EnumerateModels API
+
+import {EChunkRepository} from './EnrichedChunk';
+
+/**
+ * Interface for the EnumerateModels request object.
+ */
+export interface IEnumerateModelsRequest{
+
+}
+
+/**
+ * Interface for the EnumerateModels response object.
+ */
+export interface IEnumerateModelsResponse {
+
+   defaultId: string;
+   defaultEmbeddingId: string;   
+   largeId: string;
+   largeEmbeddingId: string;
+   smallId: string;
+   smallEmbeddingId: string;   
+}
+
+/**
+ * Interface for the EnumerateRepositories request object.
+ */
+export interface IEnumerateRepositoriesRequest{
+
+}
+
+/**
+ * Interface for the EnumerateModels response object.
+ */
+export interface IEnumerateReposotoriesResponse {
+
+   repositoryIds: Array<EChunkRepository>
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\EnumerateModelsApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from EnumerateModelsApi.Types.yaml with typeconv
+  version: '1'
+  x-id: EnumerateModelsApi.Types.yaml
+  x-comment: >-
+    Generated from src\EnumerateModelsApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IEnumerateModelsRequest:
+      additionalProperties: false
+      title: IEnumerateModelsRequest
+      description: Interface for the EnumerateModels request object.
+      type: object
+    IEnumerateModelsResponse:
+      properties:
+        defaultId:
+          title: IEnumerateModelsResponse.defaultId
+          type: string
+        defaultEmbeddingId:
+          title: IEnumerateModelsResponse.defaultEmbeddingId
+          type: string
+        largeId:
+          title: IEnumerateModelsResponse.largeId
+          type: string
+        largeEmbeddingId:
+          title: IEnumerateModelsResponse.largeEmbeddingId
+          type: string
+        smallId:
+          title: IEnumerateModelsResponse.smallId
+          type: string
+        smallEmbeddingId:
+          title: IEnumerateModelsResponse.smallEmbeddingId
+          type: string
+      required:
+        - defaultId
+        - defaultEmbeddingId
+        - largeId
+        - largeEmbeddingId
+        - smallId
+        - smallEmbeddingId
+      additionalProperties: false
+      title: IEnumerateModelsResponse
+      description: Interface for the EnumerateModels response object.
+      type: object
+    IEnumerateRepositoriesRequest:
+      additionalProperties: false
+      title: IEnumerateRepositoriesRequest
+      description: Interface for the EnumerateRepositories request object.
+      type: object
+    IEnumerateReposotoriesResponse:
+      properties:
+        repositoryIds:
+          items: {}
+          title: IEnumerateReposotoriesResponse.repositoryIds
+          type: array
+      required:
+        - repositoryIds
+      additionalProperties: false
+      title: IEnumerateReposotoriesResponse
+      description: Interface for the EnumerateModels response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Environment.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import {EEnvironment, IEnvironment} from './IEnvironment';
+
+/**
+ * Class representing the Development Environment with methods to retrieve various API endpoints.
+ * @class DevelopmentEnvironment
+ */
+export class DevelopmentEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kLocal;
+
+   checkSessionApi () : string {
+      return "http://localhost:7071/api/CheckSession"; 
+   }
+   summariseApi () : string {
+      return "http://localhost:7071/api/Summarize"; 
+
+   }
+   findThemeApi(): string {
+      return "http://localhost:7071/api/FindTheme";
+   }
+   classifyApi () : string {
+      return "http://localhost:7071/api/Classify"; 
+   }
+   chunkApi () : string {
+      return "http://localhost:7071/api/Chunk"; 
+   }
+   embedApi () : string {
+      return "http://localhost:7071/api/Embed"; 
+   }
+   suppressSummariseFail(): string {
+      return "http://localhost:7071/api/SuppressSummariseFail";
+   }
+   saveActivityApi(): string {
+      return "http://localhost:7071/api/SaveActivity"
+   }
+   removeActivityApi(): string {
+      return "http://localhost:7071/api/RemoveActivity"
+   }   
+   getActivitiesApi(): string {
+      return "http://localhost:7071/api/GetActivities"      
+   }   
+   getActivityApi(): string {
+      return "http://localhost:7071/api/GetActivity"      
+   }  
+   findActivityApi(): string {
+      return "http://localhost:7071/api/FindActivity"      
+   }     
+   loginWithLinkedInApi(): string {
+      return "http://localhost:7071/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "http://localhost:7071/api/ProcessAuthFromLinkedIn"; 
+   }   
+   boxerHome(): string {
+      return "http://localhost:1337/aibot.html";
+   }
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";
+   }
+   findRelevantEnrichedChunksFromSummary(): string{
+      return "http://localhost:7071/api/FindRelevantEnrichedChunksFromSummary";
+   }
+   findEnrichedChunkFromUrl(): string {
+      return "http://localhost:7071/api/FindEnrichedChunkFromUrl";      
+   }
+   queryModelWithEnrichment(): string {
+      return "http://localhost:7071/api/QueryModelWithEnrichment";        
+   }
+   generateQuestion(): string{
+      return "http://localhost:7071/api/GenerateQuestion";       
+   }      
+   generateFluidTokenApi(): string {
+      return "http://localhost:7071/api/GenerateFluidToken";        
+   } 
+   fluidApi(): string {
+      return  "http://localhost:7070";
+   }
+   fluidTenantId(): string {
+      return "b9576484-5c2e-4613-bfdf-039948cdd521";
+   }     
+   studioForTeamsBoxer(): string {
+      return "http://localhost:7071/api/StudioForTeams-Boxer";
+   }   
+   saveChunkApi() : string {
+      return "http://localhost:7071/api/SaveChunk";
+   }   
+   removeChunkApi(): string{
+      return "http://localhost:7071/api/RemoveChunk";
+   }   
+   getChunkApi(): string{
+      return "http://localhost:7071/api/GetChunk";
+   }    
+   findChunkApi(): string {
+      return "http://localhost:7071/api/FindChunk";
+   }   
+   getChunksApi(): string {
+      return "http://localhost:7071/api/GetChunks";
+   }         
+   savePageApi() : string {
+      return "http://localhost:7071/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "http://localhost:7071/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "http://localhost:7071";
+   }
+}
+
+/**
+ * Class representing the Staging Environment with methods to retrieve various API endpoints.
+ * @class StagingEnvironment
+ */
+export class StagingEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kStaging;
+
+   checkSessionApi () : string {
+      return "https://braid-api.azurewebsites.net/api/CheckSession";
+   }
+   summariseApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Summarize"; 
+   }
+   findThemeApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindTheme";
+   }
+   classifyApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Classify"; 
+   }
+   chunkApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Chunk"; 
+   }
+   embedApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Embed"; 
+   }   
+   suppressSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   }   
+   saveActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/SaveActivity";
+   }  
+   removeActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/RemoveActivity";
+   }   
+   getActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivity"      
+   }     
+   findActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindActivity"      
+   }    
+   getActivitiesApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivities";      
+   }  
+   loginWithLinkedInApi(): string {
+      return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+   }
+   boxerHome(): string {
+      return "https://braidapps.io/aibot.html";
+   }   
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+   }
+   findRelevantEnrichedChunksFromSummary(): string{
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";
+   }   
+   findEnrichedChunkFromUrl(): string {
+      return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+   }   
+   queryModelWithEnrichment(): string {
+      return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";        
+   }   
+   generateQuestion(): string{
+      return "https://braid-api.azurewebsites.net/api/GenerateQuestion";       
+   }     
+   generateFluidTokenApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";        
+   }    
+   fluidApi(): string {
+      return  "https://eu.fluidrelay.azure.com";
+   }
+   fluidTenantId(): string {
+      return "b9576484-5c2e-4613-bfdf-039948cdd521";
+   }    
+   studioForTeamsBoxer(): string {
+      return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
+   }
+   saveChunkApi() : string{
+      return "https://braid-api.azurewebsites.net/api/SaveChunk";
+   }   
+   removeChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/RemoveChunk";
+   }   
+   getChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/GetChunk";   
+   }
+   findChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/FindChunk";   
+   }   
+   getChunksApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetChunks";
+   }         
+   savePageApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "https://braid-api.azurewebsites.net";
+   }
+}
+
+/**
+ * Class representing a Production Environment with methods to retrieve various API endpoints.
+ * @class ProductionEnvironment
+ */
+export class ProductionEnvironment implements IEnvironment {
+
+   name: string = EEnvironment.kProduction;
+   
+   checkSessionApi () : string {
+      return "https://braid-api.azurewebsites.net/api/CheckSession";
+   }
+   summariseApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Summarize"; 
+
+   }
+   findThemeApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindTheme";
+   }
+   classifyApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Classify"; 
+   }
+   chunkApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Chunk"; 
+   }   
+   embedApi () : string {
+      return "https://braid-api.azurewebsites.net/api/Embed"; 
+   }    
+   suppressSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   }      
+   saveActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/SaveActivity"
+   }    
+   removeActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/RemoveActivity"
+   }    
+   getActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivity"      
+   }     
+   findActivityApi(): string {
+      return "https://braid-api.azurewebsites.net/api/FindActivity"      
+   }       
+   getActivitiesApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetActivities"      
+   }       
+   loginWithLinkedInApi(): string {
+      return "https://braid-api.azurewebsites.net/api/LoginWithLinkedIn"; 
+   }
+   authFromLinkedInApi(): string {
+      return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
+   }    
+   boxerHome(): string {
+      return "https://braidapps.io/aibot.html";
+   }  
+   findRelevantEnrichedChunksFromUrl (): string {
+      return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
+   }
+   findRelevantEnrichedChunksFromSummary(): string {
+      return "https:/braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromSummary";   
+   }
+   findEnrichedChunkFromUrl(): string {
+      return "https://braid-api.azurewebsites.net/api/FindEnrichedChunkFromUrl";      
+   }    
+   queryModelWithEnrichment(): string {
+      return "https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment";        
+   } 
+   generateQuestion(): string{
+      return "https://braid-api.azurewebsites.net/api/GenerateQuestion";       
+   }   
+   generateFluidTokenApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GenerateFluidToken";        
+   }
+   fluidApi(): string {
+      return  "https://eu.fluidrelay.azure.com";
+   }
+   fluidTenantId(): string {
+      return "b9576484-5c2e-4613-bfdf-039948cdd521";
+   }  
+   studioForTeamsBoxer(): string {
+      return "https://braid-api.azurewebsites.net/api/StudioForTeams-Boxer";
+   }      
+   saveChunkApi() : string{
+      return "https://braid-api.azurewebsites.net/api/SaveChunk";
+   }   
+   removeChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/RemoveChunk";
+   }   
+   getChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/GetChunk";   
+   }   
+   findChunkApi(): string{
+      return "https://braid-api.azurewebsites.net/api/FindChunk";   
+   }      
+   getChunksApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetChunks";
+   }        
+   savePageApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SavePage";
+   }   
+   getPageApi(): string {
+      return "https://braid-api.azurewebsites.net/api/GetPage";
+   }   
+   hostProtocolAndName(): string {
+      return "https://braid-api.azurewebsites.net";
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Errors.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+import { logApiError, logCoreError } from "./Logging";
+
+/**
+ * Represents an error thrown when an invalid parameter is encountered.
+ * @param {string} message - The error message describing the invalid parameter.
+ */
+export class InvalidParameterError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidParameterError.name; // stack traces display correctly now
+
+      logCoreError ("InvalidParameterError:" + (message ? message : ""), JSON.stringify (this));
+   }
+}
+
+/**
+ * Represents an error that occurs when an invalid operation is attempted.
+ * @extends Error
+ * @constructor
+ * @param {string} [message] - The error message.
+ */
+export class InvalidOperationError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidOperationError.name; // stack traces display correctly now
+
+      logCoreError ("InvalidOperationError:" + (message ? message : ""), JSON.stringify (this));      
+   }
+}
+
+
+/**
+ * Represents an error indicating an invalid state.
+ * @param message - Optional. A message to describe the error.
+ */
+export class InvalidStateError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidStateError.name; // stack traces display correctly now
+
+      logCoreError ("InvalidStateError:" + (message ? message : ""), JSON.stringify (this));      
+   }
+}
+
+/**
+ * Represents a custom error class for connection-related errors.
+ * @class ConnectionError
+ * @extends Error
+ * @constructor
+ * @param {string} [message] - The error message.
+ */
+export class ConnectionError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = ConnectionError.name; // stack traces display correctly now
+
+      logApiError ("ConnectionError:" + (message ? message : ""), JSON.stringify (this));      
+   }
+}
+
+/**
+ * Represents an error related to the environment.
+ * @param {string} [message] - The error message.
+ */
+export class EnvironmentError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = EnvironmentError.name; // stack traces display correctly now
+
+      logCoreError ("EnvironmentError:" + (message ? message : ""), JSON.stringify (this));       
+   }
+}
+
+/**
+ * Represents an error that occurs when an assertion fails.
+ * @param message - Optional. A message to describe the error.
+ */
+export class AssertionFailedError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = AssertionFailedError.name; // stack traces display correctly now
+
+      logCoreError ("AssertionFailedError:" + (message ? message : ""), JSON.stringify (this));       
+   }
+}
+
+/*
+ 
+export class InvalidUnitError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidUnitError.name; // stack traces display correctly now
+   }
+}
+
+export class InvalidFormatError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidFormatError.name; // stack traces display correctly now
+   }
+}
+
+export class InvalidServerResponseError extends Error {
+   constructor(message?: string) {
+      super(message);
+      // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+      this.name = InvalidServerResponseError.name; // stack traces display correctly now
+   }
+}
+
+*/
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\FindEnrichedChunkApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrichedChunkSummary, IRelevantEnrichedChunk } from './EnrichedChunk';
+
+
+/**
+ * Class representing an API for finding enriched chunks.
+ */
+export class FindEnrichedChunkApi extends Api {
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */   
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+
+   /**
+    * Asynchronously finds an enriched chunk summary based on the provided URL query.
+    * 
+    * @param urlQuery - The URL query specifying the URL to search for the enriched chunk.
+    * @returns An IEnrichedChunkSummary objects representing the found enriched chunk summary, or undefined.
+    */
+   async findChunkFromUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<IEnrichedChunkSummary | undefined> {
+
+      let apiUrl = this.environment.findEnrichedChunkFromUrl() + "?session=" + this.sessionKey.toString();
+      var response: any;
+      let empty = undefined;
+
+      try {
+         response = await axios.post(apiUrl, {
+            data: urlQuery
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;      
+      }          
+   }
+
+   /**
+    * Asynchronously finds relevant enriched chunks based on the provided URL query.
+    * 
+    * @param urlQuery - The URL query specifying the URL to search for relevant enriched chunks.
+    * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
+    */
+   async findRelevantChunksFromUrl (urlQuery: IChunkQueryRelevantToUrlSpec) : Promise<Array<IRelevantEnrichedChunk>> {
+
+      let apiUrl = this.environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this.sessionKey.toString();
+      var response: any;
+      let empty = new Array<IRelevantEnrichedChunk> ();
+
+      try {
+         response = await axios.post(apiUrl, {
+            data: urlQuery
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;      
+      }          
+   }
+
+   /**
+    * Asynchronously finds relevant enriched chunks based on the provided summary query.
+    * 
+    * @param urlQuery - The summary query specifying the summary to search for relevant enriched chunks.
+    * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
+    */
+   async findRelevantChunksFromSummary (urlQuery: IChunkQueryRelevantToSummarySpec) : Promise<Array<IRelevantEnrichedChunk>> {
+
+      let apiUrl = this.environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this.sessionKey.toString();
+      var response: any;
+      let empty = new Array<IRelevantEnrichedChunk> ();      
+
+      try {
+         response = await axios.post(apiUrl, {
+            data: urlQuery
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;    
+      }          
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\FindThemeApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the FindTheme API
+
+/**
+ * Interface for the find theme request object.
+ */
+export interface IFindThemeRequest{
+
+   text: string;
+   length: number;
+}
+
+/**
+ * Interface for the find theme response object.
+ */
+export interface IFindThemeResponse {
+
+   theme: string;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\FindThemeApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from FindThemeApi.Types.yaml with typeconv
+  version: '1'
+  x-id: FindThemeApi.Types.yaml
+  x-comment: >-
+    Generated from src\FindThemeApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IFindThemeRequest:
+      properties:
+        text:
+          title: IFindThemeRequest.text
+          type: string
+        length:
+          title: IFindThemeRequest.length
+          type: number
+      required:
+        - text
+        - length
+      additionalProperties: false
+      title: IFindThemeRequest
+      description: Interface for the find theme request object.
+      type: object
+    IFindThemeResponse:
+      properties:
+        theme:
+          title: IFindThemeResponse.theme
+          type: string
+      required:
+        - theme
+      additionalProperties: false
+      title: IFindThemeResponse
+      description: Interface for the find theme response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Fluid.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Fluid Token API
+
+/**
+ * Represents a Fluid user.
+ * @interface
+ * @property {boolean} local - if true, we are running locally - use local tentantID
+ * @property {string} userId - The ID of the user making the request.
+ * @property {string} userName - The name of the user making the request.
+ 
+ */
+export interface IFluidUser {
+
+   local: boolean;
+   userId: string;
+   userName: string; 
+}
+
+/**
+ * Represents a request for a Fluid token.
+ * @interface
+ * @property {string} documentId - ID of the shared document.
+ */
+export interface IFluidTokenRequest extends IFluidUser {
+
+   documentId: string;   
+}
+
+/**
+ * Represents a response to a request for a Fluid token.
+ * @interface
+ * @property {string} token - the token 
+ */
+export interface IFluidTokenResponse {
+
+   token: string;   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\FluidApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IFluidTokenRequest } from './Fluid';
+
+
+export class FluidApi extends Api {
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+   /**
+    * Asynchronously generates a token using the provided query parameters.
+    * 
+    * @param query - The request object containing documentId, userId, and userName.
+    * @returns A Promise that resolves to a string if successful, otherwise undefined.
+    */
+   async generateToken (query: IFluidTokenRequest ) : Promise<string | undefined> {
+
+      let apiUrl = this.environment.generateFluidTokenApi() + "?session=" + this.sessionKey;
+      var response: any;
+      let empty = undefined;
+
+      try {
+         // Up to 5 retries - it is a big fail if we cannot get a token for Fluid
+         axiosRetry(axios, {
+            retries: 5,
+            retryDelay: axiosRetry.exponentialDelay,
+            retryCondition: (error) => {
+               return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
+            }
+         });
+
+         response = await axios.post(apiUrl, {
+            data: query
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;      
+      }          
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\FluidTokenProvider.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Implementation of the Fluid connection API
+
+import { AzureRemoteConnectionConfig, AzureClientProps, ITokenProvider, ITokenResponse } from "@fluidframework/azure-client";
+
+import { IEnvironment, EEnvironment } from "./IEnvironment";
+import { FluidApi } from "./FluidApi";
+import { IFluidUser, IFluidTokenRequest } from "./Fluid";
+import { ConnectionError } from "./Errors";
+import { getDefaultFluidEnvironment, getEnvironment } from "./IEnvironmentFactory";
+
+/**
+ * Token Provider implementation for connecting to an Azure Function endpoint for
+ * Azure Fluid Relay token resolution.
+ */
+export class FluidTokenProvider implements ITokenProvider {
+   
+   private _api: FluidApi;
+   private _user: IFluidUser;
+
+   /**
+    * Creates a new instance using configuration parameters.
+    * @param environment The environment settings to be used.
+    * @param sessionKey The session key for authentication 
+    * @param user - User object
+    */
+   constructor(environment: IEnvironment, sessionKey: string, user: IFluidUser) {
+
+      this._api = new FluidApi(environment, sessionKey);
+      this._user = user;
+   }
+
+   public async fetchOrdererToken(tenantId: string, documentId?: string): Promise<ITokenResponse> {
+      return {
+         jwt: await this.getToken(tenantId, documentId),
+      };
+   }
+
+   public async fetchStorageToken(tenantId: string, documentId: string): Promise<ITokenResponse> {
+      return {
+         jwt: await this.getToken(tenantId, documentId),
+      };
+   }
+
+   private async getToken(tenantId: string, documentId: string | undefined): Promise<string> {
+
+      let local = false;
+      if (tenantId === "local")
+         local = true;
+
+      let request : IFluidTokenRequest = {
+         local: local,
+         userId: this._user.userId,
+         userName: this._user.userName,
+         documentId: documentId? documentId : ""
+      }
+
+      console.log ("Requesting token for:" + JSON.stringify(request) + " tenantId:" + tenantId);
+      
+      const response = await this._api.generateToken(request);
+      if (!response)
+         throw new ConnectionError("Unable to generate Fluid Token");
+      return response;
+   }
+}
+
+export class FluidConnectionConfig implements AzureRemoteConnectionConfig {
+
+   tokenProvider: ITokenProvider; 
+   endpoint: string;
+   type: any;
+   tenantId: string;
+   documentId: string = "";
+
+   /**
+    * Creates a new instance using configuration parameters.
+    * @param sessionKey The session key for authentication 
+    * @param tokenRequest - Details to request a token
+    * @param forceProduction - boolean, if true then connect to production else default
+    */
+   constructor(sessionKey: string, tokenRequest: IFluidTokenRequest, forceProduction: boolean) {
+
+      let environment = getDefaultFluidEnvironment();
+      if (forceProduction)
+         environment = getEnvironment (EEnvironment.kProduction);
+
+      if (environment.name === EEnvironment.kLocal)
+         this.type = "local";
+      else
+         this.type = "remote";
+
+      this.tenantId = environment.fluidTenantId();
+      this.endpoint = environment.fluidApi();   
+      if (tokenRequest.documentId)   
+         this.documentId = tokenRequest.documentId;
+      this.tokenProvider = new FluidTokenProvider (environment, sessionKey, tokenRequest);
+   }
+};
+
+export class FluidClientProps implements AzureClientProps {
+   connection: FluidConnectionConfig;
+
+   /**
+    * Creates a new instance using configuration parameters.
+    * @param sessionKey The session key for authentication 
+    * @param tokenRequest - Details to request a token
+    * @param forceProduction - boolean, if true then connect to production else default
+    */   
+   constructor(sessionKey: string, tokenRequest: IFluidTokenRequest, forceProduction: boolean) {
+      this.connection = new FluidConnectionConfig(sessionKey, tokenRequest, forceProduction);
+   }
+};
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\IEnvironment.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+export const BRAID_ENVIRONMENT_KEY = "BRAID_ENVIRONMENT"
+
+export enum EEnvironment {
+
+   kLocal = "Local", 
+   kStaging = "Staging", 
+   kProduction = "Production"   
+};
+
+export interface IEnvironment {
+
+   name : string;
+   hostProtocolAndName(): string;
+   checkSessionApi () : string;
+   summariseApi () : string;
+   findThemeApi(): string;
+   chunkApi () : string;   
+   classifyApi () : string;
+   embedApi() : string;
+   suppressSummariseFail(): string;
+   saveActivityApi(): string;
+   removeActivityApi(): string;
+   getActivityApi(): string;   
+   findActivityApi(): string;      
+   getActivitiesApi(): string;
+   boxerHome(): string;
+   loginWithLinkedInApi(): string;
+   authFromLinkedInApi(): string;
+   findRelevantEnrichedChunksFromUrl(): string;
+   findRelevantEnrichedChunksFromSummary(): string;   
+   findEnrichedChunkFromUrl(): string;   
+   queryModelWithEnrichment(): string;
+   generateQuestion(): string;   
+   generateFluidTokenApi(): string;
+   fluidApi(): string;
+   fluidTenantId(): string;
+   studioForTeamsBoxer() : string;
+   saveChunkApi() : string;
+   removeChunkApi(): string;
+   getChunkApi(): string;
+   findChunkApi(): string;   
+   getChunksApi(): string;   
+   savePageApi() : string;   
+   getPageApi(): string;   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\IEnvironmentFactory.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+// Internal imports
+import {EEnvironment, IEnvironment} from './IEnvironment';
+import {DevelopmentEnvironment, StagingEnvironment, ProductionEnvironment} from './Environment';
+
+declare var process : any;
+
+
+/**
+ * Returns the default environment based on the current execution context.
+ * If running in a browser and on localhost, returns a DevelopmentEnvironment instance.
+ * If the process environment variable BRAID_ENVIRONMENT is set to 'Local', returns a DevelopmentEnvironment instance.
+ * Otherwise, returns a ProductionEnvironment instance.
+ * @returns An instance of IEnvironment representing the default environment.
+ */
+export function getDefaultEnvironment () : IEnvironment  {
+
+   // Use Development if we are running in Node.js
+   if (typeof process !== 'undefined') {
+      if (process.env.BRAID_ENVIRONMENT === EEnvironment.kLocal) {
+         return new DevelopmentEnvironment();
+      }
+   }
+
+   return new ProductionEnvironment();   
+}
+
+export function getDefaultFluidEnvironment () : IEnvironment  {
+
+   let environment = getDefaultEnvironment();
+
+   // If we are in Browser, and in localhost, use development
+   if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+         environment = getEnvironment (EEnvironment.kLocal);
+      }
+   }
+   return environment;
+}
+
+export function getDefaultLoginEnvironment () : IEnvironment  {
+
+   let environment = getDefaultEnvironment();
+
+   // If we are in Browser, and in localhost, use development
+   if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+         environment = getEnvironment (EEnvironment.kLocal);
+      }
+   }
+   return environment;
+}
+
+/**
+ * Returns an instance of IEnvironment based on the provided EEnvironment type.
+ * 
+ * @param environmentString - The EEnvironment type to determine the environment.
+ * @returns An instance of IEnvironment corresponding to the specified EEnvironment type.
+ */
+export function getEnvironment (environmentString: EEnvironment) : IEnvironment  {
+
+   switch (environmentString) {
+      case EEnvironment.kLocal:
+         return new DevelopmentEnvironment();   
+
+      case EEnvironment.kStaging:
+         return new StagingEnvironment();   
+
+      case EEnvironment.kProduction:
+      default:
+         return new ProductionEnvironment();
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\IModel.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * Enum representing different sizes of a model.
+ * 
+ * @enum {string}
+ */
+export enum EModel {
+
+   kSmall = "Small", 
+   kLarge = "Large"  
+};
+
+/**
+ * Represents an interface for a model with deployment information.
+ * @interface
+ */
+export interface IModel {
+
+   deploymentName : string;
+   embeddingDeploymentName: string;
+   contextWindowSize : number;
+   fitsInContext(text: string): boolean;
+   chunkText (text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string>;
+   estimateTokens (text: string): number;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\IModelFactory.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+// Internal imports
+import {EModel, IModel} from './IModel';
+import {GPT4} from './Model';
+
+/**
+ * Returns the default model which is an instance of GPT4oMini.
+ * @returns {IModel} The default model.
+ */
+export function getDefaultModel () : IModel  {
+
+   return new GPT4();   
+}
+
+/**
+ * Returns an instance of IModel based on the provided EModel type.
+ * 
+ * @param model - The EModel type to determine the model.
+ * @returns An instance of IModel corresponding to the specified EModel type.
+ */
+export function getModel (model: EModel) : IModel  {
+
+   switch (model) {
+      default:
+         return new GPT4();
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\IStorable.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * Enum representing application names
+ * 
+ * @enum {string}
+ */
+export enum EStorableApplicationIds {
+
+   kBoxer = "Boxer", 
+   kWaterfall = "Waterfall"  
+};
+
+/**
+ * Represents an interface for objects that can be stored.
+ * 
+ * Contains properties:
+ * - id: string - the primary key of the stored object
+ * - applicationId: string - identifies the application - one of the Enums above. 
+ * - contextId: string - identifies the context, e.g., a conversation in Boxer
+ * - userId: string | undefined - identifies the user; undefined if no direct user
+ * - functionalSearchKey: string | undefined - used if the app needs to searcg by an attribute other than primary key
+ * - created: Date - timestamp of creation
+ * - amended: Date - timestamp of amendment
+ * - className: string - class name; further fields are class-specific
+ * - schemaVersion: string - allows versioning on the schema* 
+ */
+export interface IStorable {
+                       
+   id : string | undefined;  // id of the object that is stored - primary key. Can be undefined before the object is stored. 
+   applicationId: string;    // Name of the application that generated and uses the chunk
+   contextId: string | undefined;  // id to identify context - such as a conversation in Boxer. Undefined if application has no multi-tenanting. 
+   functionalSearchKey: string | undefined; // Used if the app needs to searcg by an attribute other than primary key
+   userId: string | undefined;     // id to identify the user. Undefined if there is no direct user. 
+   created: string;      // creation timestamp as ISO date string
+   amended: string;      // amend timestamp as ISO date string  
+   className: string;  // className - all further fields are specific to the class
+   schemaVersion: string;  // Allow versioning on the schema       
+}
+
+/**
+ * Defines the structure of a query specification for searching for multiple records.
+ * Includes the limit of records to return and the class name of the records to be stored / retrieved.
+ */
+export interface IStorableMultiQuerySpec {
+
+   limit : number;          // limit of records to return
+   className: string;       // what sort of records to return
+}
+
+/**
+ * Defines the structure of a query specification for searching for a single record.
+ * Includes the id (primary key) of the record. 
+ */
+export interface IStorableQuerySpec {
+
+   id : string | undefined;  // id of the object that is stored - primary key.  
+   functionalSearchKey: string | undefined; // If the id is unefined, this is used for the search
+}
+
+/**
+ * Defines the structure of a query specification for searching for a single record.
+ * Includes the id (primary key) of the record. 
+ */
+export interface IStorableOperationResult {
+
+   ok :boolean;  // True if operation succeeeded
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Logging.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * Logs a core error with the provided description and details.
+ * 
+ * @param description - A brief description of the core error.
+ * @param details - Additional details related to the core error.
+ * @returns void
+ */
+export function logCoreError (description: string, details: any) : void {
+
+   console.error ("Core error:" + description + "Details:" + details.toString());
+}
+
+/**
+ * Logs a database error with the provided description and details.
+ * 
+ * @param description - A brief description of the error.
+ * @param details - Additional details about the error.
+ * @returns void
+ */
+export function logDbError (description: string, details: any) : void {
+
+   console.error ("Database error:" + description + "Details:" + details.toString());
+}
+
+/**
+ * Logs an API error with the provided description and details.
+ * 
+ * @param description A brief description of the API error.
+ * @param details Additional details related to the API error.
+ * @returns void
+ */
+export function logApiError (description: string, details: any) : void {
+
+   console.error ("Api error:" + description + "Details:" + details.toString());
+}
+
+/**
+ * Logs API information.
+ * 
+ * @param description - A brief description of the API information.
+ * @param details - Additional details about the API information.
+ * @returns void
+ */
+export function logApiInfo (description: string, details: any) : void {
+
+   console.log ("Api Info:" + description + "Details:" + details.toString());
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\LoginApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+
+/**
+ * Represents a class for handling login operations.
+ * @constructor
+ * @param environment_ - The environment settings for the login operations.
+ * @param sessionKey_ - The session key for the current login session.
+ * @returns A Promise that resolves to a string indicating the login status.
+ */
+export class LoginApi extends Api {
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+   /**
+    * Asynchronously logs in using LinkedIn API.
+    * 
+    * @returns A Promise that resolves to a string indicating the status after attempting to log in.
+    */
+   async login () : Promise<string> {
+
+      let apiUrl = this.environment.loginWithLinkedInApi() + "?session=" + this.sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, {
+         });
+
+         if (response.status === 200) {
+            return "Redirecting...";
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return "";
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return "";       
+      }          
+   }
+   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\Model.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import { InvalidParameterError } from './Errors';
+import { IModel } from './IModel';
+import GPT4Tokenizer from 'gpt4-tokenizer';
+
+const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
+
+
+/**
+ * GPTM class implementing IModel interface.
+ * Represents a model with specific deployment settings and context window sizes.
+ */
+export class GPT4 implements IModel {
+
+   deploymentName: string;
+   embeddingDeploymentName: string;
+   contextWindowSize: number;
+   contextWindowSizeWithBuffer: number;
+
+   public constructor() {
+      this.deploymentName = "BraidLarge";
+      this.embeddingDeploymentName = "BraidLargeEmbedding";
+      this.contextWindowSize = 8192;
+      this.contextWindowSizeWithBuffer = (8192 - 256)
+   }
+
+   /**
+    * Checks if the given text fits within the context window size with buffer.
+    * 
+    * @param text The text to check if it fits within the context window size with buffer.
+    * @returns True if the text fits within the context window size with buffer, false otherwise.
+    */
+   fitsInContext(text: string): boolean {
+
+      let estimatedTokens = tokenizer.estimateTokenCount(text);
+
+      if (estimatedTokens < this.contextWindowSizeWithBuffer)
+         return true;
+      return false;
+   }
+
+   /**
+    * Splits the input text into chunks based on the specified overlap of words.
+    * 
+    * @param text The text to be chunked.
+    * @param overlapWords The number of overlapping words between consecutive chunks. If undefined, we chunk with no obverlap. 
+    * @returns An array of strings representing the chunked text.
+    */
+   chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
+
+      let effectiveChunkSize = chunkSize
+         ? Math.min(this.contextWindowSizeWithBuffer, chunkSize)
+         : this.contextWindowSizeWithBuffer;
+
+      if (overlapWords) {
+
+         if (overlapWords > effectiveChunkSize)
+            throw new InvalidParameterError ("Overlap window size cannot be bigger than chunk size")
+
+         // If the users requests overlapping chunks, we divide the text into pieces the size of the overlap, then glue them back
+         // together until we fill a buffer. 
+         let chunked = tokenizer.chunkText(text, Math.floor(overlapWords * 2));
+         let chunks = new Array<string>();
+
+         let workingBufferText = "";
+         let workingBufferTokens = 0;
+         let lastChunkText = "";
+         let lastChunkTokens = 0;
+
+         for (let i = 0; i < chunked.length; i++) {
+
+            let thisChunkText = chunked[i].text;
+            let thisChunkTokens = tokenizer.estimateTokenCount(thisChunkText);
+
+            if (workingBufferTokens + thisChunkTokens < effectiveChunkSize) {
+               // If we are within buffer size, we just accumulate
+               workingBufferText = workingBufferText + thisChunkText;
+               workingBufferTokens = workingBufferTokens + thisChunkTokens;
+            }
+            else {
+               // If we are outside buffer, we save the current chunk and build the start of the next one
+               chunks.push(workingBufferText);
+
+               workingBufferText = lastChunkText + thisChunkText
+               workingBufferTokens = lastChunkTokens + thisChunkTokens;
+            }
+
+            // If we have reached the last chunk, we have to save it. 
+            if (i === chunked.length - 1) {
+               chunks.push(workingBufferText);
+            }
+
+            lastChunkTokens = thisChunkTokens;
+            lastChunkText = thisChunkText;
+         }
+         return chunks;
+      }
+      else {
+         let chunked = tokenizer.chunkText(text, effectiveChunkSize);
+
+         let chunks = new Array<string>();
+
+         for (let i = 0; i < chunked.length; i++) {
+            chunks.push(chunked[i].text);
+         }
+         return chunks;
+      }
+   }
+
+   /**
+    * Estimates the number of tokens in the provided text using the tokenizer.
+    * 
+    * @param text The text for which to estimate the number of tokens.
+    * @returns The estimated number of tokens in the text.
+    */
+   estimateTokens(text: string): number {
+
+      return tokenizer.estimateTokenCount(text);
+   }
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\PageRepositoryApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IStorable} from "./IStorable";
+import { StorableRepostoryApi, IStorablePageRepostoryApiWrapper} from './StorableRepositoryApi';
+import { compressString, decompressString } from './Compress';
+/**
+ * Represents an API for the Page repository
+ * 
+ * @param {EEnvironment} environment_ - The environment to use for saving Pages.
+ * @param {string} sessionKey_ - The session key for authentication.
+ * 
+ * @method save - Saves a record to the Page API.
+ * Does not provide a 'load' as Pages are loaded directly into the browser
+ */
+export class PageRepostoryApi extends Api implements IStorablePageRepostoryApiWrapper {
+   
+   private storableApi: StorableRepostoryApi;
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+
+      this.storableApi = new StorableRepostoryApi();      
+   }  
+
+   /**
+    * Asynchronously saves a record to the page repository API.
+    * 
+    * @param record - The record to be saved, must implement the IStoredPage interface.
+    * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
+    */
+   async save (record: IStorable) : Promise<boolean> {
+
+      let apiUrl = this.environment.savePageApi() + "?session=" + this.sessionKey.toString();
+      return this.storableApi.save (record, apiUrl);             
+   }  
+
+   /**
+    * Compresses a string using deflate algorithm
+    * @param input The string to compress
+    * @returns Base64 encoded compressed string
+    */
+   public compressString(input: string): string {
+      return compressString(input);
+   }
+
+   /**
+    * Decompresses a string that was compressed using compressString
+    * @param input Base64 encoded compressed string
+    * @returns Original decompressed string
+    */
+   public decompressString(input: string): string {
+      return decompressString(input);
+   }
+
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\PageRepositoryApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the PageRepository API
+
+import { IStorable, IStorableQuerySpec} from "./IStorable";
+
+/**
+ * Interface representing a web page Chunk.
+ * 
+ * Core data for a Page:
+ * - html: HTML content
+ */
+export interface IStoredPage extends IStorable {
+
+   html: string;       // HTML content
+}
+
+// We have an explicit type for the input so code generators can identify it to generate test code
+export interface IStoredPageRequest extends IStorableQuerySpec {
+
+}
+
+// We have an explicit type for the output so code generators can identify it to generate test code
+export interface IStoredPageResponse extends IStoredPage {
+
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\PageRepositoryApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from PageRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: PageRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\PageRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+components:
+  schemas:
+    IStoredPage:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    IStoredPageRequest:
+      additionalProperties: false
+      title: IStoredPageRequest
+      type: object
+    IStoredPageResponse:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPageResponse, IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    StoredPageApi:
+      title: StoredPageApi
+    paths:
+      /functions:
+        get:
+          operationId: get_page
+          summary: Returns a page. 
+          description: Returns a page. 
+          parameters:
+            - request: request
+              in: query
+              description: A spec for a Page
+              schema:
+                type: IStoredPageRequest
+              required: true
+          responses:
+            '200':
+              description: A Page
+              content:
+                application/json:
+                  schema:
+                    type: IStoredPageResponse    
+            '400':
+              description: An error 
+              content:
+                application/json:
+                  schema:
+                    type: string
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\QueryModelApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from './EnrichedQuery';
+
+/**
+ * Represents a QueryModelApi class that interacts with the specified environment to query models with enrichment and generate questions.
+ * @constructor
+ * @param environment_ - The environment to interact with.
+ * @param sessionKey_ - The session key for authentication.
+ */
+export class QueryModelApi extends Api {
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+   /**
+    * Asynchronously queries the model with enrichment data.
+    * 
+    * @param query - The enriched query data to be sent.
+    * @returns A promise that resolves to the enriched response data, or undefined if an error occurs.
+    */
+   async queryModelWithEnrichment (query: IEnrichedQuery) : Promise<IEnrichedResponse | undefined> {
+
+      let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
+      var response: any;
+      let empty = undefined;
+
+      try {
+         response = await axios.post(apiUrl, {
+            data: query
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;      
+      }          
+   }
+
+   /**
+    * Asynchronously generates a question based on the provided query data.
+    * 
+    * @param query - The data containing persona prompt, question generation prompt, and summary.
+    * @returns A promise that resolves to the generated question response, or undefined if an error occurs.
+    */
+   async generateQuestion (query: IGenerateQuestionQuery) : Promise<IQuestionGenerationResponse | undefined> {
+
+      let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
+      var response: any;
+      let empty = undefined;
+
+      try {
+         response = await axios.post(apiUrl, {
+            data: query
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return empty;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return empty;      
+      }          
+   }   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\SessionApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { Api } from './Api';
+import { IEnvironment } from "./IEnvironment";
+
+
+export class SessionApi extends Api {
+
+   /**
+    * Initializes a new instance of the class with the provided environment and session key.
+    * 
+    * @param environment_ The environment settings to be used.
+    * @param sessionKey_ The session key for authentication.
+    */
+   public constructor(environment_: IEnvironment, sessionKey_: string) {
+      super (environment_, sessionKey_);
+   }  
+
+   /**
+    * Asynchronously checks the validity of a session key by sending a POST request to the session API endpoint.
+    * 
+    * @returns A Promise that resolves to a boolean value indicating the validity of the session key.
+    */
+   async checkSessionKey () : Promise<string> {
+
+      let apiUrl = this.environment.checkSessionApi() + "?session=" + this.sessionKey.toString();
+      var response: any;
+
+      try {
+         response = await axios.post(apiUrl, {
+         });
+
+         if (response.status === 200) {
+            return response.data;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return "";
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return "";       
+      }          
+   }
+   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\StorableRepositoryApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+import axios from 'axios';
+
+import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
+
+/**
+ * Represents a wrapper for interacting with a repository of storable objects.
+ * Provides methods to save storable records.
+ */
+export interface IStorablePageRepostoryApiWrapper {
+   
+   save (record: IStorable) : Promise<boolean>;  
+};
+
+/**
+ * Represents a wrapper for interacting with a repository of storable objects.
+ * Provides methods to save, remove, and load storable records.
+ */
+export interface IStorableRepostoryApiWrapper extends IStorablePageRepostoryApiWrapper{
+   
+   remove (recordId: string) : Promise<boolean>;
+   load (recordId: string) : Promise<IStorable | undefined>;
+   find (functionalSearchKey: string) : Promise<IStorable | undefined>;  
+   recent (querySpec: IStorablesQuerySpec, url: string) : Promise<Array<IStorable>>;
+};
+
+/**
+ * Represents an API for Storables.
+ * 
+ * @param {EEnvironment} environment_ - The environment to use for saving Storables.
+ * @param {string} sessionKey_ - The session key for authentication.
+ * 
+ * @method save - Saves a record to the Storables API.
+ * @method remove - removes a record
+ * @method recent - return a list of recent Storables
+ */
+export class StorableRepostoryApi {
+
+   /**
+    * Initializes a new instance of the class 
+    */
+   public constructor() {
+   }  
+
+   /**
+    * Asynchronously saves a record to the Storables repository API.
+    * 
+    * @param record - The record to be saved, must implement the IStorable interface.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
+    */
+   async save (record: IStorable, url: string) : Promise<boolean> {
+
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: record});
+
+         if (response && response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response?.status);               
+            return false;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return false;       
+      }          
+   }
+
+   /**
+    * Asynchronously removes a record from the Storables repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
+    */
+   async remove (recordId: string, url: string) : Promise<boolean> {
+
+      let query: IStorableQuerySpec = {
+         id: recordId,
+         functionalSearchKey: undefined         
+      }
+      
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: query});
+
+         if (response && response.status === 200) {
+            return true;
+         }
+         else {
+            console.error ("Error, status: " + response?.status);               
+            return false;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return false;       
+      }          
+   }
+
+   /**
+    * Asynchronously loads a record from the Storable repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async load (recordId: string, url: string) : Promise<IStorable | undefined> {
+
+      let query: IStorableQuerySpec = {
+         id: recordId,
+         functionalSearchKey: undefined
+      }
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: query});
+
+         if (response && response.status === 200) {       
+            return (response.data as IStorable);
+         }
+         else {
+            console.error ("Error, status: " + response?.status);               
+            return undefined;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return undefined;       
+      } 
+   }
+
+   /**
+    * Asynchronously finds a record from the Storable repository API.
+    * 
+    * @param recordId - The ID of the record to be removed.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
+    */
+   async find (functionalSearchKey: string, url: string) : Promise<IStorable | undefined> {
+
+      let query: IStorableQuerySpec = {
+         id: undefined,
+         functionalSearchKey: functionalSearchKey
+      }
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: query});
+
+         if (response.status === 200) {          
+            return (response.data as IStorable);
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return undefined;
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return undefined;       
+      } 
+   }
+
+   /**
+    * Asynchronously retrieves recent records from the Storables repository API based on the provided query specifications.
+    * 
+    * @param querySpec - The query specifications including the limit and storeClassName to filter the records.
+    * @param url - fully factored URL to the API to call
+    * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
+    */
+   async recent (querySpec: IStorablesQuerySpec, url: string) : Promise<Array<IStorable>> {
+
+      var response: any;
+
+      try {
+         response = await axios.post(url, {request: querySpec});
+
+         if (response.status === 200) {
+
+            let responseRecords = response.data;
+            let storedRecords = new Array<IStorable>()
+
+            for (let i = 0; i < responseRecords.length; i++) {
+               storedRecords.push (responseRecords[i]);
+            }
+
+            return storedRecords;
+         }
+         else {
+            console.error ("Error, status: " + response.status);               
+            return new Array<IStorable>();
+         }
+      } catch (e: any) {       
+
+         console.error ("Error: " + e?.response?.data);   
+         return new Array<IStorable>();       
+      }          
+   }   
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\StudioApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Studio API
+
+/**
+ * Interface for the StudioBoxer request object.
+ */
+export interface IStudioBoxerRequest {
+
+   question: string;
+}
+
+/**
+ * Interface for the IStudioBoxerResponseEnrichment response object.
+ */
+export interface IStudioBoxerResponseEnrichment {
+
+   id: string,
+   summary: string;    
+   title: string | undefined;
+   url: string | undefined;  
+   iconUrl: string | undefined;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\StudioApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from StudioApi.Types.yaml with typeconv
+  version: '1'
+  x-id: StudioApi.Types.yaml
+  x-comment: >-
+    Generated from src\StudioApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IStudioBoxerRequest:
+      properties:
+        question:
+          title: IStudioBoxerRequest.question
+          type: string
+      required:
+        - question
+      additionalProperties: false
+      title: IStudioBoxerRequest
+      description: Interface for the StudioBoxer request object.
+      type: object
+    IStudioBoxerResponseEnrichment:
+      properties:
+        id:
+          title: IStudioBoxerResponseEnrichment.id
+          type: string
+        summary:
+          title: IStudioBoxerResponseEnrichment.summary
+          type: string
+        title:
+          title: IStudioBoxerResponseEnrichment.title
+          type: string
+        url:
+          title: IStudioBoxerResponseEnrichment.url
+          type: string
+        iconUrl:
+          title: IStudioBoxerResponseEnrichment.iconUrl
+          type: string
+      required:
+        - id
+        - summary
+        - title
+        - url
+        - iconUrl
+      additionalProperties: false
+      title: IStudioBoxerResponseEnrichment
+      description: Interface for the IStudioBoxerResponseEnrichment response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\SummariseApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the Summarise API
+
+/**
+ * Defines the structure of a summarise request object.
+ */
+export interface ISummariseRequest{
+
+   text: string;
+   lengthInWords?: number | undefined;
+}
+
+/**
+ * Defines the structure of a summarise response object.
+ */
+export interface ISummariseResponse {
+
+   summary: string;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\SummariseApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from SummariseApi.Types.yaml with typeconv
+  version: '1'
+  x-id: SummariseApi.Types.yaml
+  x-comment: >-
+    Generated from src\SummariseApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    ISummariseRequest:
+      properties:
+        text:
+          title: ISummariseRequest.text
+          type: string
+        lengthInWords:
+          title: ISummariseRequest.lengthInWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: ISummariseRequest
+      description: Defines the structure of a summarise request object.
+      type: object
+    ISummariseResponse:
+      properties:
+        summary:
+          title: ISummariseResponse.summary
+          type: string
+      required:
+        - summary
+      additionalProperties: false
+      title: ISummariseResponse
+      description: Defines the structure of a summarise response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\SuppressSummariseFailApi.Types.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the SuppressSummariseFail API
+
+/**
+ * Defines the structure of a summarise request object.
+ */
+export interface ISuppressSummariseFailRequest{
+
+   text: string;
+   lengthInWords?: number | undefined;
+}
+
+export enum ESuppressSummariseFail {
+   kYes = "Yes",
+   kNo = "No"
+}
+
+/**
+ * Defines the structure of a summarise response object.
+ */
+export interface ISuppressSummariseFailResponse {
+
+   isValidSummary: ESuppressSummariseFail;
+}
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\SuppressSummariseFailApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from SuppressSummariseFailApi.Types.yaml with typeconv
+  version: '1'
+  x-id: SuppressSummariseFailApi.Types.yaml
+  x-comment: >-
+    Generated from src\SuppressSummariseFailApi.Types.ts by
+    core-types-json-schema (https://github.com/grantila/core-types-json-schema)
+    on behalf of typeconv (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    ISuppressSummariseFailRequest:
+      properties:
+        text:
+          title: ISuppressSummariseFailRequest.text
+          type: string
+        lengthInWords:
+          title: ISuppressSummariseFailRequest.lengthInWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: ISuppressSummariseFailRequest
+      description: Defines the structure of a summarise request object.
+      type: object
+    ISuppressSummariseFailResponse:
+      properties:
+        isValidSummary:
+          title: ISuppressSummariseFailResponse.isValidSummary
+      required:
+        - isValidSummary
+      additionalProperties: false
+      title: ISuppressSummariseFailResponse
+      description: Defines the structure of a summarise response object.
+      type: object
+****************************************
+
+****************************************
+WaterfallBrowser\src\CommonTs\src\ThemeApi.ts
+****************************************
+// Copyright (c) 2024 Braid Technologies Ltd
+// Definitions for the data elements of the FindTheme API
+
+/**
+ * Interface for specifying the criteria to find a theme.
+ * @interface
+ */
+export interface IFindThemeRequest{
+
+   text: string;
+   length : number;
+}
+****************************************
