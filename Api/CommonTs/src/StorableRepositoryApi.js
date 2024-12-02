@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StorableRepostoryApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
-const axios_1 = require("axios");
+const axios_1 = __importDefault(require("axios"));
+;
 ;
 /**
  * Represents an API for Storables.
@@ -42,11 +46,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: record });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -73,11 +77,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: query });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return true;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return false;
                 }
             }
@@ -104,11 +108,11 @@ class StorableRepostoryApi {
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: query });
-                if (response.status === 200) {
+                if (response && response.status === 200) {
                     return response.data;
                 }
                 else {
-                    console.error("Error, status: " + response.status);
+                    console.error("Error, status: " + (response === null || response === void 0 ? void 0 : response.status));
                     return undefined;
                 }
             }

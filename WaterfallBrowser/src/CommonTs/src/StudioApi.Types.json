@@ -1,0 +1,56 @@
+{
+  "definitions": {
+    "IStudioBoxerRequest": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "title": "IStudioBoxerRequest.question"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "additionalProperties": false,
+      "title": "IStudioBoxerRequest",
+      "description": "Interface for the StudioBoxer request object."
+    },
+    "IStudioBoxerResponseEnrichment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.id"
+        },
+        "summary": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.summary"
+        },
+        "title": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.title"
+        },
+        "url": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.url"
+        },
+        "iconUrl": {
+          "type": "string",
+          "title": "IStudioBoxerResponseEnrichment.iconUrl"
+        }
+      },
+      "required": [
+        "id",
+        "summary",
+        "title",
+        "url",
+        "iconUrl"
+      ],
+      "additionalProperties": false,
+      "title": "IStudioBoxerResponseEnrichment",
+      "description": "Interface for the IStudioBoxerResponseEnrichment response object."
+    }
+  },
+  "$id": "StudioApi.Types.json",
+  "$comment": "Generated from src\\StudioApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

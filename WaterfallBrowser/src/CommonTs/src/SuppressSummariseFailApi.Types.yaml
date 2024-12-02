@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Converted from SuppressSummariseFailApi.Types.yaml with typeconv
+  version: '1'
+  x-id: SuppressSummariseFailApi.Types.yaml
+  x-comment: >-
+    Generated from src\SuppressSummariseFailApi.Types.ts by
+    core-types-json-schema (https://github.com/grantila/core-types-json-schema)
+    on behalf of typeconv (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    ISuppressSummariseFailRequest:
+      properties:
+        text:
+          title: ISuppressSummariseFailRequest.text
+          type: string
+        lengthInWords:
+          title: ISuppressSummariseFailRequest.lengthInWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: ISuppressSummariseFailRequest
+      description: Defines the structure of a summarise request object.
+      type: object
+    ISuppressSummariseFailResponse:
+      properties:
+        isValidSummary:
+          title: ISuppressSummariseFailResponse.isValidSummary
+      required:
+        - isValidSummary
+      additionalProperties: false
+      title: ISuppressSummariseFailResponse
+      description: Defines the structure of a summarise response object.
+      type: object

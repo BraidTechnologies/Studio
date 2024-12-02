@@ -12,9 +12,16 @@ from CommonPy.src.chunk_repository_api import (ChunkRepository,
                                                waterfall_application_name)
 from CommonPy.src.chunk_repository_api_types import (IStoredChunk, create_text_rendering)
 
+from CommonPy.src.page_repository_api import (PageRepository,
+                                              page_class_name,
+                                              page_schema_version,
+                                              make_page_from_file)
+from CommonPy.src.page_repository_api_types import (IStoredPage)
+
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
 from src.waterfall_pipeline_report_common import write_chart
 from src.db_repository import DbRepository
+
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.ERROR,
@@ -152,7 +159,20 @@ def save_chunks(output_location: str,
                                                                chunk_repository.default_model)
 
     # Save the Theme
-    # TODO sumary URL for master theme points to chart HTML
+    master_theme.url = "https://braid-api.azurewebsites.net/api/GetPage?id=" + str(master_theme.id)
     chunk_repository.save (master_theme)
+
+    # Save the Page - use functional search key and id from the parent theme
+    page_repository = PageRepository()
+
+    page : IStoredPage= make_page_from_file (waterfall_application_name,
+                                spec.description,
+                                master_theme.functionalSearchKey,
+                                page_class_name,
+                                page_schema_version,
+                                master_theme.id,
+                                output_location,
+                                spec.output_chart_name)
+    page_repository.save (page)
 
     return

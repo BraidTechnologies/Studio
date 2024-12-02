@@ -1,1 +1,0 @@
-"Nationwide Building Society will transition its core computing from mainframe to SAP servers in a £300 million project with IBM and CapGemini, aiming to modernize operations. This initiative, comparable to \"replacing a jet engine mid-flight,\" seeks to enhance performance, improve turnaround, and support real-time transactions, despite potential risks and challenges."

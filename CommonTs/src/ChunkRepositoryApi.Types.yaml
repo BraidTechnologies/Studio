@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Converted from ChunkRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IStoredEmbedding:
+      properties:
+        modelId:
+          title: IStoredEmbedding.modelId
+          type: string
+        embedding:
+          items:
+            type: number
+          title: IStoredEmbedding.embedding
+          type: array
+      required:
+        - modelId
+        - embedding
+      additionalProperties: false
+      title: IStoredEmbedding
+      description: >-
+        Represents an interface for storing embeddings with a model ID and an
+        array of numbers representing the embedding.
+      type: object
+    IStoredTextRendering:
+      properties:
+        modelId:
+          title: IStoredTextRendering.modelId
+          type: string
+        text:
+          title: IStoredTextRendering.text
+          type: string
+      required:
+        - modelId
+        - text
+      additionalProperties: false
+      title: IStoredTextRendering
+      description: Defines the structure of a stored text rendering object.
+      type: object
+    IStoredChunk:
+      properties:
+        parentChunkId:
+          title: IStoredChunk.parentChunkId
+          type: string
+        originalText:
+          title: IStoredChunk.originalText
+          type: string
+        url:
+          title: IStoredChunk.url
+          type: string
+        storedEmbedding:
+          $ref: '#/components/schemas/IStoredEmbedding'
+          title: IStoredChunk.storedEmbedding
+        storedSummary:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedSummary
+        storedTitle:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedTitle
+        relatedChunks:
+          items:
+            type: string
+          title: IStoredChunk.relatedChunks
+          type: array
+      required:
+        - parentChunkId
+        - originalText
+        - url
+        - storedEmbedding
+        - storedSummary
+        - storedTitle
+        - relatedChunks
+      additionalProperties: false
+      title: IStoredChunk
+      description: "Interface representing a chunk of data.\r\n\r\nCore data for a chunk:\r\n- parentChunkId: Primary key to parent document\r\n- originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)\r\n- url: string | undefined;                 // url to external resource, can be null  \r\n- storedEmbedding: Embedding of the original text\r\n- storedSummary: Summary of the original text - generated with application-specific prompt \r\n- storedTitle: A generated of the original text - generated with application-specific prompt\r\n- related: Array of IDs to related chunks"
+      type: object

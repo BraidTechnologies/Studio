@@ -1,1 +1,0 @@
-"Nationwide Building Society is migrating its payment systems to a cloud-based platform, marking its latest major technological transformation. This is aimed at improving resilience and addressing issues experienced with its legacy systems. The project, in collaboration with Accenture and Form3, aims for a phased migration with a strong focus on stability and security."
