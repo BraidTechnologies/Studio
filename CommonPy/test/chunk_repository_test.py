@@ -53,10 +53,11 @@ master_chunk.storedSummary = summary
 master_chunk.storedTitle = title
 master_chunk.relatedChunks = [str(uuid.uuid4()), str(uuid.uuid4())]
 
+
 def test_basic():
     ''' Test construction '''
     repository = ChunkRepository()
-    assert repository #If we get here without exceptions we are ok
+    assert repository  # If we get here without exceptions we are ok
 
 
 def test_does_not_exist():
@@ -86,7 +87,7 @@ def test_save_exists():
 
     exists = False
 
-    if (saved):
+    if saved:
         exists = repository.exists(master_chunk.functionalSearchKey)
 
     assert saved
@@ -108,5 +109,3 @@ def test_save_find():
     assert loaded
     assert loaded.storedEmbedding.embedding == master_chunk.storedEmbedding.embedding
     assert loaded.storedSummary.text == master_chunk.storedSummary.text
-
-

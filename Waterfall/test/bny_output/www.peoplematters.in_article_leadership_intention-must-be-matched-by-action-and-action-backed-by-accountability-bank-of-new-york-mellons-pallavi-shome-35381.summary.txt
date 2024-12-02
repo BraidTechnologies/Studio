@@ -1,1 +1,0 @@
-"A site named \"People Matters\" has an interstitial page asking visitors to wait for 5 seconds before continuing to the main content."

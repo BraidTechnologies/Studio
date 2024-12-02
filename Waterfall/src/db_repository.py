@@ -80,6 +80,7 @@ class DbRepository:
         chunk.storedSummary = summary
         chunk.storedTitle = None
         chunk.relatedChunks = None
+        chunk.url = item.path
 
         return self.chunk_repository.save(chunk)
 
@@ -105,7 +106,7 @@ class DbRepository:
             item = PipelineItem()
             item.id = chunk.id
             item.parent_id = chunk.parentChunkId
-            item.path = path
+            item.path = chunk.url
             item.text = chunk.originalText
             if chunk.storedSummary:
                 item.summary = chunk.storedSummary.text

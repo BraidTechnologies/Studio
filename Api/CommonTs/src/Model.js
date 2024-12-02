@@ -1,9 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GPT4 = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const Errors_1 = require("./Errors");
-const gpt4_tokenizer_1 = require("gpt4-tokenizer");
+const gpt4_tokenizer_1 = __importDefault(require("gpt4-tokenizer"));
 const tokenizer = new gpt4_tokenizer_1.default({ type: 'gpt3' });
 /**
  * GPTM class implementing IModel interface.

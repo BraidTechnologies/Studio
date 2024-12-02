@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/**/*suppress*.test.ts"
+           "${workspaceFolder}/test/pagestore.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

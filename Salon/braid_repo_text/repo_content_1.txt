@@ -1,0 +1,4223 @@
+****************************************
+BraidApi.code-workspace
+****************************************
+{
+	"folders": [
+		{
+			"path": "BraidApi"
+		},
+		{
+			"path": "."
+		}
+	],
+   "settings": {
+      "debug.internalConsoleOptions": "neverOpen"
+   }
+}
+****************************************
+
+****************************************
+LICENSE
+****************************************
+                    GNU AFFERO GENERAL PUBLIC LICENSE
+                       Version 3, 19 November 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+                            Preamble
+
+  The GNU Affero General Public License is a free, copyleft license for
+software and other kinds of works, specifically designed to ensure
+cooperation with the community in the case of network server software.
+
+  The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+our General Public Licenses are intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.
+
+  When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+them if you wish), that you receive source code or can get it if you
+want it, that you can change the software or use pieces of it in new
+free programs, and that you know you can do these things.
+
+  Developers that use our General Public Licenses protect your rights
+with two steps: (1) assert copyright on the software, and (2) offer
+you this License which gives you legal permission to copy, distribute
+and/or modify the software.
+
+  A secondary benefit of defending all users' freedom is that
+improvements made in alternate versions of the program, if they
+receive widespread use, become available for other developers to
+incorporate.  Many developers of free software are heartened and
+encouraged by the resulting cooperation.  However, in the case of
+software used on network servers, this result may fail to come about.
+The GNU General Public License permits making a modified version and
+letting the public access it on a server without ever releasing its
+source code to the public.
+
+  The GNU Affero General Public License is designed specifically to
+ensure that, in such cases, the modified source code becomes available
+to the community.  It requires the operator of a network server to
+provide the source code of the modified version running there to the
+users of that server.  Therefore, public use of a modified version, on
+a publicly accessible server, gives the public access to the source
+code of the modified version.
+
+  An older license, called the Affero General Public License and
+published by Affero, was designed to accomplish similar goals.  This is
+a different license, not a version of the Affero GPL, but Affero has
+released a new version of the Affero GPL which permits relicensing under
+this license.
+
+  The precise terms and conditions for copying, distribution and
+modification follow.
+
+                       TERMS AND CONDITIONS
+
+  0. Definitions.
+
+  "This License" refers to version 3 of the GNU Affero General Public License.
+
+  "Copyright" also means copyright-like laws that apply to other kinds of
+works, such as semiconductor masks.
+
+  "The Program" refers to any copyrightable work licensed under this
+License.  Each licensee is addressed as "you".  "Licensees" and
+"recipients" may be individuals or organizations.
+
+  To "modify" a work means to copy from or adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+  A "covered work" means either the unmodified Program or a work based
+on the Program.
+
+  To "propagate" a work means to do anything with it that, without
+permission, would make you directly or secondarily liable for
+infringement under applicable copyright law, except executing it on a
+computer or modifying a private copy.  Propagation includes copying,
+distribution (with or without modification), making available to the
+public, and in some countries other activities as well.
+
+  To "convey" a work means any kind of propagation that enables other
+parties to make or receive copies.  Mere interaction with a user through
+a computer network, with no transfer of a copy, is not conveying.
+
+  An interactive user interface displays "Appropriate Legal Notices"
+to the extent that it includes a convenient and prominently visible
+feature that (1) displays an appropriate copyright notice, and (2)
+tells the user that there is no warranty for the work (except to the
+extent that warranties are provided), that licensees may convey the
+work under this License, and how to view a copy of this License.  If
+the interface presents a list of user commands or options, such as a
+menu, a prominent item in the list meets this criterion.
+
+  1. Source Code.
+
+  The "source code" for a work means the preferred form of the work
+for making modifications to it.  "Object code" means any non-source
+form of a work.
+
+  A "Standard Interface" means an interface that either is an official
+standard defined by a recognized standards body, or, in the case of
+interfaces specified for a particular programming language, one that
+is widely used among developers working in that language.
+
+  The "System Libraries" of an executable work include anything, other
+than the work as a whole, that (a) is included in the normal form of
+packaging a Major Component, but which is not part of that Major
+Component, and (b) serves only to enable use of the work with that
+Major Component, or to implement a Standard Interface for which an
+implementation is available to the public in source code form.  A
+"Major Component", in this context, means a major essential component
+(kernel, window system, and so on) of the specific operating system
+(if any) on which the executable work runs, or a compiler used to
+produce the work, or an object code interpreter used to run it.
+
+  The "Corresponding Source" for a work in object code form means all
+the source code needed to generate, install, and (for an executable
+work) run the object code and to modify the work, including scripts to
+control those activities.  However, it does not include the work's
+System Libraries, or general-purpose tools or generally available free
+programs which are used unmodified in performing those activities but
+which are not part of the work.  For example, Corresponding Source
+includes interface definition files associated with source files for
+the work, and the source code for shared libraries and dynamically
+linked subprograms that the work is specifically designed to require,
+such as by intimate data communication or control flow between those
+subprograms and other parts of the work.
+
+  The Corresponding Source need not include anything that users
+can regenerate automatically from other parts of the Corresponding
+Source.
+
+  The Corresponding Source for a work in source code form is that
+same work.
+
+  2. Basic Permissions.
+
+  All rights granted under this License are granted for the term of
+copyright on the Program, and are irrevocable provided the stated
+conditions are met.  This License explicitly affirms your unlimited
+permission to run the unmodified Program.  The output from running a
+covered work is covered by this License only if the output, given its
+content, constitutes a covered work.  This License acknowledges your
+rights of fair use or other equivalent, as provided by copyright law.
+
+  You may make, run and propagate covered works that you do not
+convey, without conditions so long as your license otherwise remains
+in force.  You may convey covered works to others for the sole purpose
+of having them make modifications exclusively for you, or provide you
+with facilities for running those works, provided that you comply with
+the terms of this License in conveying all material for which you do
+not control copyright.  Those thus making or running the covered works
+for you must do so exclusively on your behalf, under your direction
+and control, on terms that prohibit them from making any copies of
+your copyrighted material outside their relationship with you.
+
+  Conveying under any other circumstances is permitted solely under
+the conditions stated below.  Sublicensing is not allowed; section 10
+makes it unnecessary.
+
+  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+
+  No covered work shall be deemed part of an effective technological
+measure under any applicable law fulfilling obligations under article
+11 of the WIPO copyright treaty adopted on 20 December 1996, or
+similar laws prohibiting or restricting circumvention of such
+measures.
+
+  When you convey a covered work, you waive any legal power to forbid
+circumvention of technological measures to the extent such circumvention
+is effected by exercising rights under this License with respect to
+the covered work, and you disclaim any intention to limit operation or
+modification of the work as a means of enforcing, against the work's
+users, your or third parties' legal rights to forbid circumvention of
+technological measures.
+
+  4. Conveying Verbatim Copies.
+
+  You may convey verbatim copies of the Program's source code as you
+receive it, in any medium, provided that you conspicuously and
+appropriately publish on each copy an appropriate copyright notice;
+keep intact all notices stating that this License and any
+non-permissive terms added in accord with section 7 apply to the code;
+keep intact all notices of the absence of any warranty; and give all
+recipients a copy of this License along with the Program.
+
+  You may charge any price or no price for each copy that you convey,
+and you may offer support or warranty protection for a fee.
+
+  5. Conveying Modified Source Versions.
+
+  You may convey a work based on the Program, or the modifications to
+produce it from the Program, in the form of source code under the
+terms of section 4, provided that you also meet all of these conditions:
+
+    a) The work must carry prominent notices stating that you modified
+    it, and giving a relevant date.
+
+    b) The work must carry prominent notices stating that it is
+    released under this License and any conditions added under section
+    7.  This requirement modifies the requirement in section 4 to
+    "keep intact all notices".
+
+    c) You must license the entire work, as a whole, under this
+    License to anyone who comes into possession of a copy.  This
+    License will therefore apply, along with any applicable section 7
+    additional terms, to the whole of the work, and all its parts,
+    regardless of how they are packaged.  This License gives no
+    permission to license the work in any other way, but it does not
+    invalidate such permission if you have separately received it.
+
+    d) If the work has interactive user interfaces, each must display
+    Appropriate Legal Notices; however, if the Program has interactive
+    interfaces that do not display Appropriate Legal Notices, your
+    work need not make them do so.
+
+  A compilation of a covered work with other separate and independent
+works, which are not by their nature extensions of the covered work,
+and which are not combined with it such as to form a larger program,
+in or on a volume of a storage or distribution medium, is called an
+"aggregate" if the compilation and its resulting copyright are not
+used to limit the access or legal rights of the compilation's users
+beyond what the individual works permit.  Inclusion of a covered work
+in an aggregate does not cause this License to apply to the other
+parts of the aggregate.
+
+  6. Conveying Non-Source Forms.
+
+  You may convey a covered work in object code form under the terms
+of sections 4 and 5, provided that you also convey the
+machine-readable Corresponding Source under the terms of this License,
+in one of these ways:
+
+    a) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by the
+    Corresponding Source fixed on a durable physical medium
+    customarily used for software interchange.
+
+    b) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by a
+    written offer, valid for at least three years and valid for as
+    long as you offer spare parts or customer support for that product
+    model, to give anyone who possesses the object code either (1) a
+    copy of the Corresponding Source for all the software in the
+    product that is covered by this License, on a durable physical
+    medium customarily used for software interchange, for a price no
+    more than your reasonable cost of physically performing this
+    conveying of source, or (2) access to copy the
+    Corresponding Source from a network server at no charge.
+
+    c) Convey individual copies of the object code with a copy of the
+    written offer to provide the Corresponding Source.  This
+    alternative is allowed only occasionally and noncommercially, and
+    only if you received the object code with such an offer, in accord
+    with subsection 6b.
+
+    d) Convey the object code by offering access from a designated
+    place (gratis or for a charge), and offer equivalent access to the
+    Corresponding Source in the same way through the same place at no
+    further charge.  You need not require recipients to copy the
+    Corresponding Source along with the object code.  If the place to
+    copy the object code is a network server, the Corresponding Source
+    may be on a different server (operated by you or a third party)
+    that supports equivalent copying facilities, provided you maintain
+    clear directions next to the object code saying where to find the
+    Corresponding Source.  Regardless of what server hosts the
+    Corresponding Source, you remain obligated to ensure that it is
+    available for as long as needed to satisfy these requirements.
+
+    e) Convey the object code using peer-to-peer transmission, provided
+    you inform other peers where the object code and Corresponding
+    Source of the work are being offered to the general public at no
+    charge under subsection 6d.
+
+  A separable portion of the object code, whose source code is excluded
+from the Corresponding Source as a System Library, need not be
+included in conveying the object code work.
+
+  A "User Product" is either (1) a "consumer product", which means any
+tangible personal property which is normally used for personal, family,
+or household purposes, or (2) anything designed or sold for incorporation
+into a dwelling.  In determining whether a product is a consumer product,
+doubtful cases shall be resolved in favor of coverage.  For a particular
+product received by a particular user, "normally used" refers to a
+typical or common use of that class of product, regardless of the status
+of the particular user or of the way in which the particular user
+actually uses, or expects or is expected to use, the product.  A product
+is a consumer product regardless of whether the product has substantial
+commercial, industrial or non-consumer uses, unless such uses represent
+the only significant mode of use of the product.
+
+  "Installation Information" for a User Product means any methods,
+procedures, authorization keys, or other information required to install
+and execute modified versions of a covered work in that User Product from
+a modified version of its Corresponding Source.  The information must
+suffice to ensure that the continued functioning of the modified object
+code is in no case prevented or interfered with solely because
+modification has been made.
+
+  If you convey an object code work under this section in, or with, or
+specifically for use in, a User Product, and the conveying occurs as
+part of a transaction in which the right of possession and use of the
+User Product is transferred to the recipient in perpetuity or for a
+fixed term (regardless of how the transaction is characterized), the
+Corresponding Source conveyed under this section must be accompanied
+by the Installation Information.  But this requirement does not apply
+if neither you nor any third party retains the ability to install
+modified object code on the User Product (for example, the work has
+been installed in ROM).
+
+  The requirement to provide Installation Information does not include a
+requirement to continue to provide support service, warranty, or updates
+for a work that has been modified or installed by the recipient, or for
+the User Product in which it has been modified or installed.  Access to a
+network may be denied when the modification itself materially and
+adversely affects the operation of the network or violates the rules and
+protocols for communication across the network.
+
+  Corresponding Source conveyed, and Installation Information provided,
+in accord with this section must be in a format that is publicly
+documented (and with an implementation available to the public in
+source code form), and must require no special password or key for
+unpacking, reading or copying.
+
+  7. Additional Terms.
+
+  "Additional permissions" are terms that supplement the terms of this
+License by making exceptions from one or more of its conditions.
+Additional permissions that are applicable to the entire Program shall
+be treated as though they were included in this License, to the extent
+that they are valid under applicable law.  If additional permissions
+apply only to part of the Program, that part may be used separately
+under those permissions, but the entire Program remains governed by
+this License without regard to the additional permissions.
+
+  When you convey a copy of a covered work, you may at your option
+remove any additional permissions from that copy, or from any part of
+it.  (Additional permissions may be written to require their own
+removal in certain cases when you modify the work.)  You may place
+additional permissions on material, added by you to a covered work,
+for which you have or can give appropriate copyright permission.
+
+  Notwithstanding any other provision of this License, for material you
+add to a covered work, you may (if authorized by the copyright holders of
+that material) supplement the terms of this License with terms:
+
+    a) Disclaiming warranty or limiting liability differently from the
+    terms of sections 15 and 16 of this License; or
+
+    b) Requiring preservation of specified reasonable legal notices or
+    author attributions in that material or in the Appropriate Legal
+    Notices displayed by works containing it; or
+
+    c) Prohibiting misrepresentation of the origin of that material, or
+    requiring that modified versions of such material be marked in
+    reasonable ways as different from the original version; or
+
+    d) Limiting the use for publicity purposes of names of licensors or
+    authors of the material; or
+
+    e) Declining to grant rights under trademark law for use of some
+    trade names, trademarks, or service marks; or
+
+    f) Requiring indemnification of licensors and authors of that
+    material by anyone who conveys the material (or modified versions of
+    it) with contractual assumptions of liability to the recipient, for
+    any liability that these contractual assumptions directly impose on
+    those licensors and authors.
+
+  All other non-permissive additional terms are considered "further
+restrictions" within the meaning of section 10.  If the Program as you
+received it, or any part of it, contains a notice stating that it is
+governed by this License along with a term that is a further
+restriction, you may remove that term.  If a license document contains
+a further restriction but permits relicensing or conveying under this
+License, you may add to a covered work material governed by the terms
+of that license document, provided that the further restriction does
+not survive such relicensing or conveying.
+
+  If you add terms to a covered work in accord with this section, you
+must place, in the relevant source files, a statement of the
+additional terms that apply to those files, or a notice indicating
+where to find the applicable terms.
+
+  Additional terms, permissive or non-permissive, may be stated in the
+form of a separately written license, or stated as exceptions;
+the above requirements apply either way.
+
+  8. Termination.
+
+  You may not propagate or modify a covered work except as expressly
+provided under this License.  Any attempt otherwise to propagate or
+modify it is void, and will automatically terminate your rights under
+this License (including any patent licenses granted under the third
+paragraph of section 11).
+
+  However, if you cease all violation of this License, then your
+license from a particular copyright holder is reinstated (a)
+provisionally, unless and until the copyright holder explicitly and
+finally terminates your license, and (b) permanently, if the copyright
+holder fails to notify you of the violation by some reasonable means
+prior to 60 days after the cessation.
+
+  Moreover, your license from a particular copyright holder is
+reinstated permanently if the copyright holder notifies you of the
+violation by some reasonable means, this is the first time you have
+received notice of violation of this License (for any work) from that
+copyright holder, and you cure the violation prior to 30 days after
+your receipt of the notice.
+
+  Termination of your rights under this section does not terminate the
+licenses of parties who have received copies or rights from you under
+this License.  If your rights have been terminated and not permanently
+reinstated, you do not qualify to receive new licenses for the same
+material under section 10.
+
+  9. Acceptance Not Required for Having Copies.
+
+  You are not required to accept this License in order to receive or
+run a copy of the Program.  Ancillary propagation of a covered work
+occurring solely as a consequence of using peer-to-peer transmission
+to receive a copy likewise does not require acceptance.  However,
+nothing other than this License grants you permission to propagate or
+modify any covered work.  These actions infringe copyright if you do
+not accept this License.  Therefore, by modifying or propagating a
+covered work, you indicate your acceptance of this License to do so.
+
+  10. Automatic Licensing of Downstream Recipients.
+
+  Each time you convey a covered work, the recipient automatically
+receives a license from the original licensors, to run, modify and
+propagate that work, subject to this License.  You are not responsible
+for enforcing compliance by third parties with this License.
+
+  An "entity transaction" is a transaction transferring control of an
+organization, or substantially all assets of one, or subdividing an
+organization, or merging organizations.  If propagation of a covered
+work results from an entity transaction, each party to that
+transaction who receives a copy of the work also receives whatever
+licenses to the work the party's predecessor in interest had or could
+give under the previous paragraph, plus a right to possession of the
+Corresponding Source of the work from the predecessor in interest, if
+the predecessor has it or can get it with reasonable efforts.
+
+  You may not impose any further restrictions on the exercise of the
+rights granted or affirmed under this License.  For example, you may
+not impose a license fee, royalty, or other charge for exercise of
+rights granted under this License, and you may not initiate litigation
+(including a cross-claim or counterclaim in a lawsuit) alleging that
+any patent claim is infringed by making, using, selling, offering for
+sale, or importing the Program or any portion of it.
+
+  11. Patents.
+
+  A "contributor" is a copyright holder who authorizes use under this
+License of the Program or a work on which the Program is based.  The
+work thus licensed is called the contributor's "contributor version".
+
+  A contributor's "essential patent claims" are all patent claims
+owned or controlled by the contributor, whether already acquired or
+hereafter acquired, that would be infringed by some manner, permitted
+by this License, of making, using, or selling its contributor version,
+but do not include claims that would be infringed only as a
+consequence of further modification of the contributor version.  For
+purposes of this definition, "control" includes the right to grant
+patent sublicenses in a manner consistent with the requirements of
+this License.
+
+  Each contributor grants you a non-exclusive, worldwide, royalty-free
+patent license under the contributor's essential patent claims, to
+make, use, sell, offer for sale, import and otherwise run, modify and
+propagate the contents of its contributor version.
+
+  In the following three paragraphs, a "patent license" is any express
+agreement or commitment, however denominated, not to enforce a patent
+(such as an express permission to practice a patent or covenant not to
+sue for patent infringement).  To "grant" such a patent license to a
+party means to make such an agreement or commitment not to enforce a
+patent against the party.
+
+  If you convey a covered work, knowingly relying on a patent license,
+and the Corresponding Source of the work is not available for anyone
+to copy, free of charge and under the terms of this License, through a
+publicly available network server or other readily accessible means,
+then you must either (1) cause the Corresponding Source to be so
+available, or (2) arrange to deprive yourself of the benefit of the
+patent license for this particular work, or (3) arrange, in a manner
+consistent with the requirements of this License, to extend the patent
+license to downstream recipients.  "Knowingly relying" means you have
+actual knowledge that, but for the patent license, your conveying the
+covered work in a country, or your recipient's use of the covered work
+in a country, would infringe one or more identifiable patents in that
+country that you have reason to believe are valid.
+
+  If, pursuant to or in connection with a single transaction or
+arrangement, you convey, or propagate by procuring conveyance of, a
+covered work, and grant a patent license to some of the parties
+receiving the covered work authorizing them to use, propagate, modify
+or convey a specific copy of the covered work, then the patent license
+you grant is automatically extended to all recipients of the covered
+work and works based on it.
+
+  A patent license is "discriminatory" if it does not include within
+the scope of its coverage, prohibits the exercise of, or is
+conditioned on the non-exercise of one or more of the rights that are
+specifically granted under this License.  You may not convey a covered
+work if you are a party to an arrangement with a third party that is
+in the business of distributing software, under which you make payment
+to the third party based on the extent of your activity of conveying
+the work, and under which the third party grants, to any of the
+parties who would receive the covered work from you, a discriminatory
+patent license (a) in connection with copies of the covered work
+conveyed by you (or copies made from those copies), or (b) primarily
+for and in connection with specific products or compilations that
+contain the covered work, unless you entered into that arrangement,
+or that patent license was granted, prior to 28 March 2007.
+
+  Nothing in this License shall be construed as excluding or limiting
+any implied license or other defenses to infringement that may
+otherwise be available to you under applicable patent law.
+
+  12. No Surrender of Others' Freedom.
+
+  If conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot convey a
+covered work so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you may
+not convey it at all.  For example, if you agree to terms that obligate you
+to collect a royalty for further conveying from those to whom you convey
+the Program, the only way you could satisfy both those terms and this
+License would be to refrain entirely from conveying the Program.
+
+  13. Remote Network Interaction; Use with the GNU General Public License.
+
+  Notwithstanding any other provision of this License, if you modify the
+Program, your modified version must prominently offer all users
+interacting with it remotely through a computer network (if your version
+supports such interaction) an opportunity to receive the Corresponding
+Source of your version by providing access to the Corresponding Source
+from a network server at no charge, through some standard or customary
+means of facilitating copying of software.  This Corresponding Source
+shall include the Corresponding Source for any work covered by version 3
+of the GNU General Public License that is incorporated pursuant to the
+following paragraph.
+
+  Notwithstanding any other provision of this License, you have
+permission to link or combine any covered work with a work licensed
+under version 3 of the GNU General Public License into a single
+combined work, and to convey the resulting work.  The terms of this
+License will continue to apply to the part which is the covered work,
+but the work with which it is combined will remain governed by version
+3 of the GNU General Public License.
+
+  14. Revised Versions of this License.
+
+  The Free Software Foundation may publish revised and/or new versions of
+the GNU Affero General Public License from time to time.  Such new versions
+will be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+
+  Each version is given a distinguishing version number.  If the
+Program specifies that a certain numbered version of the GNU Affero General
+Public License "or any later version" applies to it, you have the
+option of following the terms and conditions either of that numbered
+version or of any later version published by the Free Software
+Foundation.  If the Program does not specify a version number of the
+GNU Affero General Public License, you may choose any version ever published
+by the Free Software Foundation.
+
+  If the Program specifies that a proxy can decide which future
+versions of the GNU Affero General Public License can be used, that proxy's
+public statement of acceptance of a version permanently authorizes you
+to choose that version for the Program.
+
+  Later license versions may give you additional or different
+permissions.  However, no additional obligations are imposed on any
+author or copyright holder as a result of your choosing to follow a
+later version.
+
+  15. Disclaimer of Warranty.
+
+  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  16. Limitation of Liability.
+
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+  17. Interpretation of Sections 15 and 16.
+
+  If the disclaimer of warranty and limitation of liability provided
+above cannot be given local legal effect according to their terms,
+reviewing courts shall apply local law that most closely approximates
+an absolute waiver of all civil liability in connection with the
+Program, unless a warranty or assumption of liability accompanies a
+copy of the Program in return for a fee.
+
+                     END OF TERMS AND CONDITIONS
+
+            How to Apply These Terms to Your New Programs
+
+  If you develop a new program, and you want it to be of the greatest
+possible use to the public, the best way to achieve this is to make it
+free software which everyone can redistribute and change under these terms.
+
+  To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+state the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found.
+
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Also add information on how to contact you by electronic and paper mail.
+
+  If your software can interact with users remotely through a computer
+network, you should also make sure that it provides a way for users to
+get its source.  For example, if your program is a web application, its
+interface could display a "Source" link that leads users to an archive
+of the code.  There are many ways you could offer source, and different
+solutions will be better for different programs; see section 13 for the
+specific requirements.
+
+  You should also get your employer (if you work as a programmer) or school,
+if any, to sign a "copyright disclaimer" for the program, if necessary.
+For more information on this, and how to apply and follow the GNU AGPL, see
+<https://www.gnu.org/licenses/>.
+****************************************
+
+****************************************
+pylintrc
+****************************************
+# This Pylint rcfile contains a best-effort configuration to uphold the
+# best-practices and style described in the Google Python style guide:
+#   https://google.github.io/styleguide/pyguide.html
+#
+# Its canonical open-source location is:
+#   https://google.github.io/styleguide/pylintrc
+
+[MAIN]
+
+# Files or directories to be skipped. They should be base names, not paths.
+ignore=third_party
+
+# Files or directories matching the regex patterns are skipped. The regex
+# matches against base names, not paths.
+ignore-patterns=
+
+# Pickle collected data for later comparisons.
+persistent=no
+
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+
+# Use multiple processes to speed up Pylint.
+jobs=4
+
+# Allow loading of arbitrary C extensions. Extensions are imported into the
+# active Python interpreter and may run arbitrary code.
+unsafe-load-any-extension=no
+
+
+[MESSAGES CONTROL]
+
+# Only show warnings with the listed confidence levels. Leave empty to show
+# all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED
+confidence=
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where
+# it should appear only once). See also the "--disable" option for examples.
+#enable=
+
+# Disable the message, report, category or checker with the given id(s). You
+# can either give multiple identifiers separated by comma (,) or put this
+# option multiple times (only on the command line, not in the configuration
+# file where it should appear only once).You can also use "--disable=all" to
+# disable everything first and then reenable specific checks. For example, if
+# you want to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use"--disable=all --enable=classes
+# --disable=W"
+disable=R,
+        abstract-method,
+        apply-builtin,
+        arguments-differ,
+        attribute-defined-outside-init,
+        backtick,
+        bad-option-value,
+        basestring-builtin,
+        buffer-builtin,
+        c-extension-no-member,
+        consider-using-enumerate,
+        cmp-builtin,
+        cmp-method,
+        coerce-builtin,
+        coerce-method,
+        delslice-method,
+        div-method,
+        eq-without-hash,
+        execfile-builtin,
+        file-builtin,
+        filter-builtin-not-iterating,
+        fixme,
+        getslice-method,
+        global-statement,
+        hex-method,
+        idiv-method,
+        implicit-str-concat,
+        import-error,
+        import-self,
+        import-star-module-level,
+        input-builtin,
+        intern-builtin,
+        invalid-str-codec,
+        locally-disabled,
+        long-builtin,
+        long-suffix,
+        map-builtin-not-iterating,
+        misplaced-comparison-constant,
+        missing-function-docstring,
+        metaclass-assignment,
+        next-method-called,
+        next-method-defined,
+        no-absolute-import,
+        no-init,  # added
+        no-member,
+        no-name-in-module,
+        no-self-use,
+        nonzero-method,
+        oct-method,
+        old-division,
+        old-ne-operator,
+        old-octal-literal,
+        old-raise-syntax,
+        parameter-unpacking,
+        print-statement,
+        raising-string,
+        range-builtin-not-iterating,
+        raw_input-builtin,
+        rdiv-method,
+        reduce-builtin,
+        relative-import,
+        reload-builtin,
+        round-builtin,
+        setslice-method,
+        signature-differs,
+        standarderror-builtin,
+        suppressed-message,
+        sys-max-int,
+        trailing-newlines,
+        unichr-builtin,
+        unicode-builtin,
+        unnecessary-pass,
+        unpacking-in-except,
+        useless-else-on-loop,
+        useless-suppression,
+        using-cmp-argument,
+        wrong-import-order,
+        xrange-builtin,
+        zip-builtin-not-iterating,
+
+
+[REPORTS]
+
+# Set the output format. Available formats are text, parseable, colorized, msvs
+# (visual studio) and html. You can also give a reporter class, eg
+# mypackage.mymodule.MyReporterClass.
+output-format=text
+
+# Tells whether to display a full report or only the messages
+reports=no
+
+# Python expression which should return a note less than 10 (10 is the highest
+# note). You have access to the variables errors warning, statement which
+# respectively contain the number of errors / warnings messages and the total
+# number of statements analyzed. This is used by the global evaluation report
+# (RP0004).
+evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+# Template used to display messages. This is a python new-style format string
+# used to format the message information. See doc for all details
+#msg-template=
+
+
+[BASIC]
+
+# Good variable names which should always be accepted, separated by a comma
+good-names=main,_
+
+# Bad variable names which should always be refused, separated by a comma
+bad-names=
+
+# Colon-delimited sets of names that determine each other's naming style when
+# the name regexes allow several styles.
+name-group=
+
+# Include a hint for the correct naming format with invalid-name
+include-naming-hint=no
+
+# List of decorators that produce properties, such as abc.abstractproperty. Add
+# to this list to register other decorators that produce valid properties.
+property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
+
+# Regular expression matching correct function names
+function-rgx=^(?:(?P<exempt>setUp|tearDown|setUpModule|tearDownModule)|(?P<camel_case>_?[A-Z][a-zA-Z0-9]*)|(?P<snake_case>_?[a-z][a-z0-9_]*)||(?P<pascal_case>_?[a-z][a-z0-9_]*))$
+
+# Regular expression matching correct variable names
+variable-rgx=^[a-z][a-z0-9_]*$
+
+# Regular expression matching correct constant names
+const-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$
+
+# Regular expression matching correct attribute names
+attr-rgx=^_{0,2}[a-z][a-z0-9_]*$
+
+# Regular expression matching correct argument names
+argument-rgx=^[a-z][a-z0-9_]*$
+
+# Regular expression matching correct class attribute names
+class-attribute-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$
+
+# Regular expression matching correct inline iteration names
+inlinevar-rgx=^[a-z][a-z0-9_]*$
+
+# Regular expression matching correct class names
+class-rgx=^_?[A-Z][a-zA-Z0-9]*$
+
+# Regular expression matching correct module names
+module-rgx=^(_?[a-z][a-z0-9_]*|__init__)$
+
+# Regular expression matching correct method names
+method-rgx=(?x)^(?:(?P<exempt>_[a-z0-9_]+__|runTest|setUp|tearDown|setUpTestCase|tearDownTestCase|setupSelf|tearDownClass|setUpClass|(test|assert)_*[A-Z0-9][a-zA-Z0-9_]*|next)|(?P<camel_case>_{0,2}[A-Z][a-zA-Z0-9_]*)|(?P<snake_case>_{0,2}[a-z][a-z0-9_]*))$
+
+# Regular expression which should only match function or class names that do
+# not require a docstring.
+no-docstring-rgx=(__.*__|main|test.*|.*test|.*Test)$
+
+# Minimum line length for functions/classes that require docstrings, shorter
+# ones are exempt.
+docstring-min-length=12
+
+
+[TYPECHECK]
+
+# List of decorators that produce context managers, such as
+# contextlib.contextmanager. Add to this list to register other decorators that
+# produce valid context managers.
+contextmanager-decorators=contextlib.contextmanager,contextlib2.contextmanager
+
+# List of module names for which member attributes should not be checked
+# (useful for modules/projects where namespaces are manipulated during runtime
+# and thus existing member attributes cannot be deduced by static analysis. It
+# supports qualified module names, as well as Unix pattern matching.
+ignored-modules=
+
+# List of class names for which member attributes should not be checked (useful
+# for classes with dynamically set attributes). This supports the use of
+# qualified names.
+ignored-classes=optparse.Values,thread._local,_thread._local
+
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E1101 when accessed. Python regular
+# expressions are accepted.
+generated-members=
+
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=200
+
+# TODO(https://github.com/pylint-dev/pylint/issues/3352): Direct pylint to exempt
+# lines made too long by directives to pytype.
+
+# Regexp for a line that is allowed to be longer than the limit.
+ignore-long-lines=(?x)(
+  ^\s*(\#\ )?<?https?://\S+>?$|
+  ^\s*(from\s+\S+\s+)?import\s+.+$)
+
+# Allow the body of an if to be on the same line as the test if there is no
+# else.
+single-line-if-stmt=yes
+
+# Maximum number of lines in a module
+max-module-lines=99999
+
+# String used as indentation unit.  The internal Google style guide mandates 2
+# spaces.  Google's externaly-published style guide says 4, consistent with
+# PEP 8.  Here, we use 4 spaces, for conformity with many open-sourced Google
+# projects (like TensorFlow).
+indent-string='    '
+
+# Number of spaces of indent required inside a hanging  or continued line.
+indent-after-paren=4
+
+# Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
+expected-line-ending-format=
+
+
+[MISCELLANEOUS]
+
+# List of note tags to take in consideration, separated by a comma.
+notes=TODO
+
+
+[STRING]
+
+# This flag controls whether inconsistent-quotes generates a warning when the
+# character used as a quote delimiter is used inconsistently within a module.
+check-quote-consistency=yes
+
+
+[VARIABLES]
+
+# Tells whether we should check for unused import in __init__ files.
+init-import=no
+
+# A regular expression matching the name of dummy variables (i.e. expectedly
+# not used).
+dummy-variables-rgx=^\*{0,2}(_$|unused_|dummy_)
+
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+additional-builtins=
+
+# List of strings which can identify a callback function by name. A callback
+# name must start or end with one of those strings.
+callbacks=cb_,_cb
+
+# List of qualified module names which can have objects that can redefine
+# builtins.
+redefining-builtins-modules=six,six.moves,past.builtins,future.builtins,functools
+
+
+[LOGGING]
+
+# Logging modules to check that the string format arguments are in logging
+# function parameter format
+logging-modules=logging,absl.logging,tensorflow.io.logging
+
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=no
+
+
+[SPELLING]
+
+# Spelling dictionary name. Available dictionaries: none. To make it working
+# install python-enchant package.
+spelling-dict=
+
+# List of comma separated words that should not be checked.
+spelling-ignore-words=
+
+# A path to a file that contains private dictionary; one word per line.
+spelling-private-dict-file=
+
+# Tells whether to store unknown words to indicated private dictionary in
+# --spelling-private-dict-file option instead of raising a message.
+spelling-store-unknown-words=no
+
+
+[IMPORTS]
+
+# Deprecated modules which should not be used, separated by a comma
+deprecated-modules=regsub,
+                   TERMIOS,
+                   Bastion,
+                   rexec,
+                   sets
+
+# Create a graph of every (i.e. internal and external) dependencies in the
+# given file (report RP0402 must not be disabled)
+import-graph=
+
+# Create a graph of external dependencies in the given file (report RP0402 must
+# not be disabled)
+ext-import-graph=
+
+# Create a graph of internal dependencies in the given file (report RP0402 must
+# not be disabled)
+int-import-graph=
+
+# Force import order to recognize a module as part of the standard
+# compatibility libraries.
+known-standard-library=
+
+# Force import order to recognize a module as part of a third party library.
+known-third-party=enchant, absl
+
+# Analyse import fallback blocks. This can be used to support both Python 2 and
+# 3 compatible code, which means that the block might have code that exists
+# only in one or another interpreter, leading to false positives when analysed.
+analyse-fallback-blocks=no
+
+
+[CLASSES]
+
+# List of method names used to declare (i.e. assign) instance attributes.
+defining-attr-methods=__init__,
+                      __new__,
+                      setUp
+
+# List of member names, which should be excluded from the protected access
+# warning.
+exclude-protected=_asdict,
+                  _fields,
+                  _replace,
+                  _source,
+                  _make
+
+# List of valid names for the first argument in a class method.
+valid-classmethod-first-arg=cls,
+                            class_
+
+# List of valid names for the first argument in a metaclass class method.
+valid-metaclass-classmethod-first-arg=mcs
+
+[MASTER]
+init-hook='import sys; sys.path.append("/Code/Braid/CommonPy")'
+****************************************
+
+****************************************
+README.md
+****************************************
+# Braid Technologies Studio
+- [General Information](#general-information)
+- [Technologies](#technologies)
+- [Key Components](#key-components)
+- [Practices](#practices)
+- [License](#license)
+
+## General Information
+
+This repo contains Braid's pattern applications, for use by Braid's clients. 
+
+The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier, build to illustrate a possible ticket-classification system for Braid's clients. It illustrates the following:
+
+- **Cascade** (a small waterfall) - an Edge plug in, that scrapes the current web page test, summarises it, and then classifies the text into one of Business, Technology, Sport, Health, or Politics. This is the 'Cascade' directory. Cascade is written in typescript/javascript. 
+
+- **Waterfall** - a data analysis back end pipeline. This illustrates a date pipline to download web pages, summarise them, and then use cluster analysis to find the most common topics. This is the 'Waterfall' directory. Waterfall is written in Python. 
+
+'**Api**' contains Azure functions that make calls to an Azure hosted OpenAI model to summrise and classify text. Waterfall, Cascade, and Boxer all call Braid Apis for any function requiring server side keys (database or AI model access).
+
+'**ApiTest**' - code generated by Salon to test the Apis from Python classes.
+
+'**CommonTs**' contains typescript utility classes used across both clients & server - especially API definitions and Types used to generate test scripts. Both subsystems are written in Typescript. Both Cascade and Waterfall make calls to the Apis.
+
+'**CommonPy**' contains Python utility classes used to access the typescript server Apis and to hold common code used in multiple apps.
+
+'**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
+
+'**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly.  It is a full web front end that passes questions to an LLM, and then enriches them with links to relevant document chunks found in its database of useful material - the A16Z AI Cannon. 
+
+'**Teams**' contains a Teams plug-in that brings Boxer & Waterfall into the teams environment.
+
+'**BoxerEval**' - evals for Boxer  
+
+## **Technologies**
+
+For front end development Braid uses Typescript (https://www.typescriptlang.org/), using the Microsoft Fluent UI framework (https://react.fluentui.dev/). Tests are written in Mocha (https://mochajs.org/).
+
+For data processing and AI evaluation, Braid uses Python (https://www.python.org/). Tests are written in Pytest (https://docs.pytest.org/en/stable/).
+
+Braid uses Azure for all processing. 
+
+## **Key Components**
+
+1. Document Processing Pipeline:
+    - Web scraping (using Beautiful Soup)
+    - Text summarization
+    - Embedding generation
+    - Cluster analysis
+
+2. API Layer:
+    - Summarization endpoints
+    - Classification services
+    - Embedding generation
+    - RESTful architecture
+
+3. Testing Framework:
+    - Mocha for TypeScript/JavaScript
+    - pytest for Python components
+    - Automated test generation through Salon
+
+## **Practices**
+   
+1. Code Organization
+    - Core online functionality in TypeScript
+    - Use Python for data processing 
+    - Maintain clear separation between UI and core logic
+
+2. Testing
+    - Write tests for all new features
+    - Maintain test coverage above 90%
+    - Use appropriate testing frameworks (Mocha for TypeScript, pytest for Python)
+
+3. Documentation
+    - Document all public APIs
+    - Keep README files updated
+    - Include code comments for complex logic
+
+4. Version Control
+    - Follow Git branching strategy
+    - Write meaningful commit messages
+    - Keep PRs focused and manageable
+
+## **Licence**
+GNU AFFERO GENERAL PUBLIC LICENSE.
+
+This is intentionally a restrictive licence. The source is  available for non-commercial use (subject to the licence terms as listed, which enable use for learning, self study etc). Commercial use either must abide by the licence terms, which are strong, or a separate licence that enables more normal commercial use & distribution is available from Braid. Contact us for more details mailto:info@braidtechnologies.io.
+****************************************
+
+****************************************
+Teams.code-workspace
+****************************************
+{
+	"folders": [
+		{
+			"path": "Teams"
+		},
+		{
+			"path": "."
+		}
+	],
+   "settings": {
+      "debug.onTaskErrors": "abort",
+      "azureFunctions.stopFuncTaskPostDebug": false,
+      "azureFunctions.showProjectWarning": false
+   }
+}
+****************************************
+
+****************************************
+Api\.funcignore
+****************************************
+*.js.map
+*.ts
+.git*
+.vscode
+local.settings.json
+test
+getting_started.md
+node_modules/@types/
+node_modules/azure-functions-core-tools/
+node_modules/typescript/
+****************************************
+
+****************************************
+Api\README.md
+****************************************
+**BraidApi** is a set of Azure-hosted functions. All calls to OpenAI and to the CosmoDB database are made via this layer, which includes logging, and allows us to centralize key management. 
+
+Requires the following environment variables:
+
+AzureAiKey
+ConversationKey
+SessionKey
+SessionKey2
+LinkedInAppId
+LinkedInSecret
+CosmosApiKey
+****************************************
+
+****************************************
+ApiTest\pytest.ini
+****************************************
+[pytest]
+log_cli = 1
+****************************************
+
+****************************************
+ApiTest\README.md
+****************************************
+**BraidApiTest** is generated source code to test BraidApis. The **Salon** application was used to generate the source.
+****************************************
+
+****************************************
+Boxer\LICENSE
+****************************************
+                    GNU AFFERO GENERAL PUBLIC LICENSE
+                       Version 3, 19 November 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+                            Preamble
+
+  The GNU Affero General Public License is a free, copyleft license for
+software and other kinds of works, specifically designed to ensure
+cooperation with the community in the case of network server software.
+
+  The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+our General Public Licenses are intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.
+
+  When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+them if you wish), that you receive source code or can get it if you
+want it, that you can change the software or use pieces of it in new
+free programs, and that you know you can do these things.
+
+  Developers that use our General Public Licenses protect your rights
+with two steps: (1) assert copyright on the software, and (2) offer
+you this License which gives you legal permission to copy, distribute
+and/or modify the software.
+
+  A secondary benefit of defending all users' freedom is that
+improvements made in alternate versions of the program, if they
+receive widespread use, become available for other developers to
+incorporate.  Many developers of free software are heartened and
+encouraged by the resulting cooperation.  However, in the case of
+software used on network servers, this result may fail to come about.
+The GNU General Public License permits making a modified version and
+letting the public access it on a server without ever releasing its
+source code to the public.
+
+  The GNU Affero General Public License is designed specifically to
+ensure that, in such cases, the modified source code becomes available
+to the community.  It requires the operator of a network server to
+provide the source code of the modified version running there to the
+users of that server.  Therefore, public use of a modified version, on
+a publicly accessible server, gives the public access to the source
+code of the modified version.
+
+  An older license, called the Affero General Public License and
+published by Affero, was designed to accomplish similar goals.  This is
+a different license, not a version of the Affero GPL, but Affero has
+released a new version of the Affero GPL which permits relicensing under
+this license.
+
+  The precise terms and conditions for copying, distribution and
+modification follow.
+
+                       TERMS AND CONDITIONS
+
+  0. Definitions.
+
+  "This License" refers to version 3 of the GNU Affero General Public License.
+
+  "Copyright" also means copyright-like laws that apply to other kinds of
+works, such as semiconductor masks.
+
+  "The Program" refers to any copyrightable work licensed under this
+License.  Each licensee is addressed as "you".  "Licensees" and
+"recipients" may be individuals or organizations.
+
+  To "modify" a work means to copy from or adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+  A "covered work" means either the unmodified Program or a work based
+on the Program.
+
+  To "propagate" a work means to do anything with it that, without
+permission, would make you directly or secondarily liable for
+infringement under applicable copyright law, except executing it on a
+computer or modifying a private copy.  Propagation includes copying,
+distribution (with or without modification), making available to the
+public, and in some countries other activities as well.
+
+  To "convey" a work means any kind of propagation that enables other
+parties to make or receive copies.  Mere interaction with a user through
+a computer network, with no transfer of a copy, is not conveying.
+
+  An interactive user interface displays "Appropriate Legal Notices"
+to the extent that it includes a convenient and prominently visible
+feature that (1) displays an appropriate copyright notice, and (2)
+tells the user that there is no warranty for the work (except to the
+extent that warranties are provided), that licensees may convey the
+work under this License, and how to view a copy of this License.  If
+the interface presents a list of user commands or options, such as a
+menu, a prominent item in the list meets this criterion.
+
+  1. Source Code.
+
+  The "source code" for a work means the preferred form of the work
+for making modifications to it.  "Object code" means any non-source
+form of a work.
+
+  A "Standard Interface" means an interface that either is an official
+standard defined by a recognized standards body, or, in the case of
+interfaces specified for a particular programming language, one that
+is widely used among developers working in that language.
+
+  The "System Libraries" of an executable work include anything, other
+than the work as a whole, that (a) is included in the normal form of
+packaging a Major Component, but which is not part of that Major
+Component, and (b) serves only to enable use of the work with that
+Major Component, or to implement a Standard Interface for which an
+implementation is available to the public in source code form.  A
+"Major Component", in this context, means a major essential component
+(kernel, window system, and so on) of the specific operating system
+(if any) on which the executable work runs, or a compiler used to
+produce the work, or an object code interpreter used to run it.
+
+  The "Corresponding Source" for a work in object code form means all
+the source code needed to generate, install, and (for an executable
+work) run the object code and to modify the work, including scripts to
+control those activities.  However, it does not include the work's
+System Libraries, or general-purpose tools or generally available free
+programs which are used unmodified in performing those activities but
+which are not part of the work.  For example, Corresponding Source
+includes interface definition files associated with source files for
+the work, and the source code for shared libraries and dynamically
+linked subprograms that the work is specifically designed to require,
+such as by intimate data communication or control flow between those
+subprograms and other parts of the work.
+
+  The Corresponding Source need not include anything that users
+can regenerate automatically from other parts of the Corresponding
+Source.
+
+  The Corresponding Source for a work in source code form is that
+same work.
+
+  2. Basic Permissions.
+
+  All rights granted under this License are granted for the term of
+copyright on the Program, and are irrevocable provided the stated
+conditions are met.  This License explicitly affirms your unlimited
+permission to run the unmodified Program.  The output from running a
+covered work is covered by this License only if the output, given its
+content, constitutes a covered work.  This License acknowledges your
+rights of fair use or other equivalent, as provided by copyright law.
+
+  You may make, run and propagate covered works that you do not
+convey, without conditions so long as your license otherwise remains
+in force.  You may convey covered works to others for the sole purpose
+of having them make modifications exclusively for you, or provide you
+with facilities for running those works, provided that you comply with
+the terms of this License in conveying all material for which you do
+not control copyright.  Those thus making or running the covered works
+for you must do so exclusively on your behalf, under your direction
+and control, on terms that prohibit them from making any copies of
+your copyrighted material outside their relationship with you.
+
+  Conveying under any other circumstances is permitted solely under
+the conditions stated below.  Sublicensing is not allowed; section 10
+makes it unnecessary.
+
+  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+
+  No covered work shall be deemed part of an effective technological
+measure under any applicable law fulfilling obligations under article
+11 of the WIPO copyright treaty adopted on 20 December 1996, or
+similar laws prohibiting or restricting circumvention of such
+measures.
+
+  When you convey a covered work, you waive any legal power to forbid
+circumvention of technological measures to the extent such circumvention
+is effected by exercising rights under this License with respect to
+the covered work, and you disclaim any intention to limit operation or
+modification of the work as a means of enforcing, against the work's
+users, your or third parties' legal rights to forbid circumvention of
+technological measures.
+
+  4. Conveying Verbatim Copies.
+
+  You may convey verbatim copies of the Program's source code as you
+receive it, in any medium, provided that you conspicuously and
+appropriately publish on each copy an appropriate copyright notice;
+keep intact all notices stating that this License and any
+non-permissive terms added in accord with section 7 apply to the code;
+keep intact all notices of the absence of any warranty; and give all
+recipients a copy of this License along with the Program.
+
+  You may charge any price or no price for each copy that you convey,
+and you may offer support or warranty protection for a fee.
+
+  5. Conveying Modified Source Versions.
+
+  You may convey a work based on the Program, or the modifications to
+produce it from the Program, in the form of source code under the
+terms of section 4, provided that you also meet all of these conditions:
+
+    a) The work must carry prominent notices stating that you modified
+    it, and giving a relevant date.
+
+    b) The work must carry prominent notices stating that it is
+    released under this License and any conditions added under section
+    7.  This requirement modifies the requirement in section 4 to
+    "keep intact all notices".
+
+    c) You must license the entire work, as a whole, under this
+    License to anyone who comes into possession of a copy.  This
+    License will therefore apply, along with any applicable section 7
+    additional terms, to the whole of the work, and all its parts,
+    regardless of how they are packaged.  This License gives no
+    permission to license the work in any other way, but it does not
+    invalidate such permission if you have separately received it.
+
+    d) If the work has interactive user interfaces, each must display
+    Appropriate Legal Notices; however, if the Program has interactive
+    interfaces that do not display Appropriate Legal Notices, your
+    work need not make them do so.
+
+  A compilation of a covered work with other separate and independent
+works, which are not by their nature extensions of the covered work,
+and which are not combined with it such as to form a larger program,
+in or on a volume of a storage or distribution medium, is called an
+"aggregate" if the compilation and its resulting copyright are not
+used to limit the access or legal rights of the compilation's users
+beyond what the individual works permit.  Inclusion of a covered work
+in an aggregate does not cause this License to apply to the other
+parts of the aggregate.
+
+  6. Conveying Non-Source Forms.
+
+  You may convey a covered work in object code form under the terms
+of sections 4 and 5, provided that you also convey the
+machine-readable Corresponding Source under the terms of this License,
+in one of these ways:
+
+    a) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by the
+    Corresponding Source fixed on a durable physical medium
+    customarily used for software interchange.
+
+    b) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by a
+    written offer, valid for at least three years and valid for as
+    long as you offer spare parts or customer support for that product
+    model, to give anyone who possesses the object code either (1) a
+    copy of the Corresponding Source for all the software in the
+    product that is covered by this License, on a durable physical
+    medium customarily used for software interchange, for a price no
+    more than your reasonable cost of physically performing this
+    conveying of source, or (2) access to copy the
+    Corresponding Source from a network server at no charge.
+
+    c) Convey individual copies of the object code with a copy of the
+    written offer to provide the Corresponding Source.  This
+    alternative is allowed only occasionally and noncommercially, and
+    only if you received the object code with such an offer, in accord
+    with subsection 6b.
+
+    d) Convey the object code by offering access from a designated
+    place (gratis or for a charge), and offer equivalent access to the
+    Corresponding Source in the same way through the same place at no
+    further charge.  You need not require recipients to copy the
+    Corresponding Source along with the object code.  If the place to
+    copy the object code is a network server, the Corresponding Source
+    may be on a different server (operated by you or a third party)
+    that supports equivalent copying facilities, provided you maintain
+    clear directions next to the object code saying where to find the
+    Corresponding Source.  Regardless of what server hosts the
+    Corresponding Source, you remain obligated to ensure that it is
+    available for as long as needed to satisfy these requirements.
+
+    e) Convey the object code using peer-to-peer transmission, provided
+    you inform other peers where the object code and Corresponding
+    Source of the work are being offered to the general public at no
+    charge under subsection 6d.
+
+  A separable portion of the object code, whose source code is excluded
+from the Corresponding Source as a System Library, need not be
+included in conveying the object code work.
+
+  A "User Product" is either (1) a "consumer product", which means any
+tangible personal property which is normally used for personal, family,
+or household purposes, or (2) anything designed or sold for incorporation
+into a dwelling.  In determining whether a product is a consumer product,
+doubtful cases shall be resolved in favor of coverage.  For a particular
+product received by a particular user, "normally used" refers to a
+typical or common use of that class of product, regardless of the status
+of the particular user or of the way in which the particular user
+actually uses, or expects or is expected to use, the product.  A product
+is a consumer product regardless of whether the product has substantial
+commercial, industrial or non-consumer uses, unless such uses represent
+the only significant mode of use of the product.
+
+  "Installation Information" for a User Product means any methods,
+procedures, authorization keys, or other information required to install
+and execute modified versions of a covered work in that User Product from
+a modified version of its Corresponding Source.  The information must
+suffice to ensure that the continued functioning of the modified object
+code is in no case prevented or interfered with solely because
+modification has been made.
+
+  If you convey an object code work under this section in, or with, or
+specifically for use in, a User Product, and the conveying occurs as
+part of a transaction in which the right of possession and use of the
+User Product is transferred to the recipient in perpetuity or for a
+fixed term (regardless of how the transaction is characterized), the
+Corresponding Source conveyed under this section must be accompanied
+by the Installation Information.  But this requirement does not apply
+if neither you nor any third party retains the ability to install
+modified object code on the User Product (for example, the work has
+been installed in ROM).
+
+  The requirement to provide Installation Information does not include a
+requirement to continue to provide support service, warranty, or updates
+for a work that has been modified or installed by the recipient, or for
+the User Product in which it has been modified or installed.  Access to a
+network may be denied when the modification itself materially and
+adversely affects the operation of the network or violates the rules and
+protocols for communication across the network.
+
+  Corresponding Source conveyed, and Installation Information provided,
+in accord with this section must be in a format that is publicly
+documented (and with an implementation available to the public in
+source code form), and must require no special password or key for
+unpacking, reading or copying.
+
+  7. Additional Terms.
+
+  "Additional permissions" are terms that supplement the terms of this
+License by making exceptions from one or more of its conditions.
+Additional permissions that are applicable to the entire Program shall
+be treated as though they were included in this License, to the extent
+that they are valid under applicable law.  If additional permissions
+apply only to part of the Program, that part may be used separately
+under those permissions, but the entire Program remains governed by
+this License without regard to the additional permissions.
+
+  When you convey a copy of a covered work, you may at your option
+remove any additional permissions from that copy, or from any part of
+it.  (Additional permissions may be written to require their own
+removal in certain cases when you modify the work.)  You may place
+additional permissions on material, added by you to a covered work,
+for which you have or can give appropriate copyright permission.
+
+  Notwithstanding any other provision of this License, for material you
+add to a covered work, you may (if authorized by the copyright holders of
+that material) supplement the terms of this License with terms:
+
+    a) Disclaiming warranty or limiting liability differently from the
+    terms of sections 15 and 16 of this License; or
+
+    b) Requiring preservation of specified reasonable legal notices or
+    author attributions in that material or in the Appropriate Legal
+    Notices displayed by works containing it; or
+
+    c) Prohibiting misrepresentation of the origin of that material, or
+    requiring that modified versions of such material be marked in
+    reasonable ways as different from the original version; or
+
+    d) Limiting the use for publicity purposes of names of licensors or
+    authors of the material; or
+
+    e) Declining to grant rights under trademark law for use of some
+    trade names, trademarks, or service marks; or
+
+    f) Requiring indemnification of licensors and authors of that
+    material by anyone who conveys the material (or modified versions of
+    it) with contractual assumptions of liability to the recipient, for
+    any liability that these contractual assumptions directly impose on
+    those licensors and authors.
+
+  All other non-permissive additional terms are considered "further
+restrictions" within the meaning of section 10.  If the Program as you
+received it, or any part of it, contains a notice stating that it is
+governed by this License along with a term that is a further
+restriction, you may remove that term.  If a license document contains
+a further restriction but permits relicensing or conveying under this
+License, you may add to a covered work material governed by the terms
+of that license document, provided that the further restriction does
+not survive such relicensing or conveying.
+
+  If you add terms to a covered work in accord with this section, you
+must place, in the relevant source files, a statement of the
+additional terms that apply to those files, or a notice indicating
+where to find the applicable terms.
+
+  Additional terms, permissive or non-permissive, may be stated in the
+form of a separately written license, or stated as exceptions;
+the above requirements apply either way.
+
+  8. Termination.
+
+  You may not propagate or modify a covered work except as expressly
+provided under this License.  Any attempt otherwise to propagate or
+modify it is void, and will automatically terminate your rights under
+this License (including any patent licenses granted under the third
+paragraph of section 11).
+
+  However, if you cease all violation of this License, then your
+license from a particular copyright holder is reinstated (a)
+provisionally, unless and until the copyright holder explicitly and
+finally terminates your license, and (b) permanently, if the copyright
+holder fails to notify you of the violation by some reasonable means
+prior to 60 days after the cessation.
+
+  Moreover, your license from a particular copyright holder is
+reinstated permanently if the copyright holder notifies you of the
+violation by some reasonable means, this is the first time you have
+received notice of violation of this License (for any work) from that
+copyright holder, and you cure the violation prior to 30 days after
+your receipt of the notice.
+
+  Termination of your rights under this section does not terminate the
+licenses of parties who have received copies or rights from you under
+this License.  If your rights have been terminated and not permanently
+reinstated, you do not qualify to receive new licenses for the same
+material under section 10.
+
+  9. Acceptance Not Required for Having Copies.
+
+  You are not required to accept this License in order to receive or
+run a copy of the Program.  Ancillary propagation of a covered work
+occurring solely as a consequence of using peer-to-peer transmission
+to receive a copy likewise does not require acceptance.  However,
+nothing other than this License grants you permission to propagate or
+modify any covered work.  These actions infringe copyright if you do
+not accept this License.  Therefore, by modifying or propagating a
+covered work, you indicate your acceptance of this License to do so.
+
+  10. Automatic Licensing of Downstream Recipients.
+
+  Each time you convey a covered work, the recipient automatically
+receives a license from the original licensors, to run, modify and
+propagate that work, subject to this License.  You are not responsible
+for enforcing compliance by third parties with this License.
+
+  An "entity transaction" is a transaction transferring control of an
+organization, or substantially all assets of one, or subdividing an
+organization, or merging organizations.  If propagation of a covered
+work results from an entity transaction, each party to that
+transaction who receives a copy of the work also receives whatever
+licenses to the work the party's predecessor in interest had or could
+give under the previous paragraph, plus a right to possession of the
+Corresponding Source of the work from the predecessor in interest, if
+the predecessor has it or can get it with reasonable efforts.
+
+  You may not impose any further restrictions on the exercise of the
+rights granted or affirmed under this License.  For example, you may
+not impose a license fee, royalty, or other charge for exercise of
+rights granted under this License, and you may not initiate litigation
+(including a cross-claim or counterclaim in a lawsuit) alleging that
+any patent claim is infringed by making, using, selling, offering for
+sale, or importing the Program or any portion of it.
+
+  11. Patents.
+
+  A "contributor" is a copyright holder who authorizes use under this
+License of the Program or a work on which the Program is based.  The
+work thus licensed is called the contributor's "contributor version".
+
+  A contributor's "essential patent claims" are all patent claims
+owned or controlled by the contributor, whether already acquired or
+hereafter acquired, that would be infringed by some manner, permitted
+by this License, of making, using, or selling its contributor version,
+but do not include claims that would be infringed only as a
+consequence of further modification of the contributor version.  For
+purposes of this definition, "control" includes the right to grant
+patent sublicenses in a manner consistent with the requirements of
+this License.
+
+  Each contributor grants you a non-exclusive, worldwide, royalty-free
+patent license under the contributor's essential patent claims, to
+make, use, sell, offer for sale, import and otherwise run, modify and
+propagate the contents of its contributor version.
+
+  In the following three paragraphs, a "patent license" is any express
+agreement or commitment, however denominated, not to enforce a patent
+(such as an express permission to practice a patent or covenant not to
+sue for patent infringement).  To "grant" such a patent license to a
+party means to make such an agreement or commitment not to enforce a
+patent against the party.
+
+  If you convey a covered work, knowingly relying on a patent license,
+and the Corresponding Source of the work is not available for anyone
+to copy, free of charge and under the terms of this License, through a
+publicly available network server or other readily accessible means,
+then you must either (1) cause the Corresponding Source to be so
+available, or (2) arrange to deprive yourself of the benefit of the
+patent license for this particular work, or (3) arrange, in a manner
+consistent with the requirements of this License, to extend the patent
+license to downstream recipients.  "Knowingly relying" means you have
+actual knowledge that, but for the patent license, your conveying the
+covered work in a country, or your recipient's use of the covered work
+in a country, would infringe one or more identifiable patents in that
+country that you have reason to believe are valid.
+
+  If, pursuant to or in connection with a single transaction or
+arrangement, you convey, or propagate by procuring conveyance of, a
+covered work, and grant a patent license to some of the parties
+receiving the covered work authorizing them to use, propagate, modify
+or convey a specific copy of the covered work, then the patent license
+you grant is automatically extended to all recipients of the covered
+work and works based on it.
+
+  A patent license is "discriminatory" if it does not include within
+the scope of its coverage, prohibits the exercise of, or is
+conditioned on the non-exercise of one or more of the rights that are
+specifically granted under this License.  You may not convey a covered
+work if you are a party to an arrangement with a third party that is
+in the business of distributing software, under which you make payment
+to the third party based on the extent of your activity of conveying
+the work, and under which the third party grants, to any of the
+parties who would receive the covered work from you, a discriminatory
+patent license (a) in connection with copies of the covered work
+conveyed by you (or copies made from those copies), or (b) primarily
+for and in connection with specific products or compilations that
+contain the covered work, unless you entered into that arrangement,
+or that patent license was granted, prior to 28 March 2007.
+
+  Nothing in this License shall be construed as excluding or limiting
+any implied license or other defenses to infringement that may
+otherwise be available to you under applicable patent law.
+
+  12. No Surrender of Others' Freedom.
+
+  If conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot convey a
+covered work so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you may
+not convey it at all.  For example, if you agree to terms that obligate you
+to collect a royalty for further conveying from those to whom you convey
+the Program, the only way you could satisfy both those terms and this
+License would be to refrain entirely from conveying the Program.
+
+  13. Remote Network Interaction; Use with the GNU General Public License.
+
+  Notwithstanding any other provision of this License, if you modify the
+Program, your modified version must prominently offer all users
+interacting with it remotely through a computer network (if your version
+supports such interaction) an opportunity to receive the Corresponding
+Source of your version by providing access to the Corresponding Source
+from a network server at no charge, through some standard or customary
+means of facilitating copying of software.  This Corresponding Source
+shall include the Corresponding Source for any work covered by version 3
+of the GNU General Public License that is incorporated pursuant to the
+following paragraph.
+
+  Notwithstanding any other provision of this License, you have
+permission to link or combine any covered work with a work licensed
+under version 3 of the GNU General Public License into a single
+combined work, and to convey the resulting work.  The terms of this
+License will continue to apply to the part which is the covered work,
+but the work with which it is combined will remain governed by version
+3 of the GNU General Public License.
+
+  14. Revised Versions of this License.
+
+  The Free Software Foundation may publish revised and/or new versions of
+the GNU Affero General Public License from time to time.  Such new versions
+will be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+
+  Each version is given a distinguishing version number.  If the
+Program specifies that a certain numbered version of the GNU Affero General
+Public License "or any later version" applies to it, you have the
+option of following the terms and conditions either of that numbered
+version or of any later version published by the Free Software
+Foundation.  If the Program does not specify a version number of the
+GNU Affero General Public License, you may choose any version ever published
+by the Free Software Foundation.
+
+  If the Program specifies that a proxy can decide which future
+versions of the GNU Affero General Public License can be used, that proxy's
+public statement of acceptance of a version permanently authorizes you
+to choose that version for the Program.
+
+  Later license versions may give you additional or different
+permissions.  However, no additional obligations are imposed on any
+author or copyright holder as a result of your choosing to follow a
+later version.
+
+  15. Disclaimer of Warranty.
+
+  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  16. Limitation of Liability.
+
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+  17. Interpretation of Sections 15 and 16.
+
+  If the disclaimer of warranty and limitation of liability provided
+above cannot be given local legal effect according to their terms,
+reviewing courts shall apply local law that most closely approximates
+an absolute waiver of all civil liability in connection with the
+Program, unless a warranty or assumption of liability accompanies a
+copy of the Program in return for a fee.
+
+                     END OF TERMS AND CONDITIONS
+
+            How to Apply These Terms to Your New Programs
+
+  If you develop a new program, and you want it to be of the greatest
+possible use to the public, the best way to achieve this is to make it
+free software which everyone can redistribute and change under these terms.
+
+  To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+state the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found.
+
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Also add information on how to contact you by electronic and paper mail.
+
+  If your software can interact with users remotely through a computer
+network, you should also make sure that it provides a way for users to
+get its source.  For example, if your program is a web application, its
+interface could display a "Source" link that leads users to an archive
+of the code.  There are many ways you could offer source, and different
+solutions will be better for different programs; see section 13 for the
+specific requirements.
+
+  You should also get your employer (if you work as a programmer) or school,
+if any, to sign a "copyright disclaimer" for the program, if necessary.
+For more information on this, and how to apply and follow the GNU AGPL, see
+<https://www.gnu.org/licenses/>.
+****************************************
+
+****************************************
+Boxer\Procfile
+****************************************
+web:npm start
+****************************************
+
+****************************************
+Boxer\README.md
+****************************************
+# Boxer
+
+## Table of Contents
+
+- [General Information](#general-information)
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [License](#license)
+
+## General Information
+
+Boxer is an AI-enabled Learning Management System (LMS). The objective is to be able to build a curriculum of content by processing open-source documents from the web (YouTube videos, GitHub repositories, and plan HTML text) and loading AI generated summaries into a document store. A simple front end then enables students to ask questions which the model can answer based on the embedded content. The model can also make suggestions based on content the students have interacted with.
+
+The specific domain is to teach students how to build AI applications using modern Large Language Model (LLM) technology, and the current approaches to this - Retrieval Assisted Generation (RAG), and multi-step workflows using the LLM to generate summaries and process questions.
+
+The benefits of this approach are:
+
+- It is simple to maintain content, given that the field is moving so rapidly. Traditional approaches of generating bespoke new content are often obsolete by the time they are ready.
+- Students get a flavour of what is possible with modern AI by using the tools.
+
+### Benefits
+
+- **Ease of Content Maintenance:** The system adapts to rapidly evolving AI fields by processing and summarizing current content.
+- **Hands-on AI Experience:** Students explore AI capabilities firsthand through interactive tools.
+
+## Technologies
+
+The front end is written in Typescript, using the Microsoft Fluent UI framework: https://react.fluentui.dev/.
+
+The messaging code uses the Microsoft Fluent Framework: [Fluid Framework Documentation](https://fluidframework.com/docs/).
+
+There is a simple set of Node.js APIs, written to run on the Azure stack. The engine currently uses GPT-4, and the document database is created by hand-cranked Python code, using Beautiful Soup for web scraping & Google APIs for video transcripts. 
+
+- **Frontend:** TypeScript, Microsoft Fluent UI framework ([React Fluent UI](https://react.fluentui.dev/))
+- **Messaging:** Microsoft Fluent Framework ([Fluid Framework Documentation](https://fluidframework.com/docs/))
+- **Backend APIs:** Node.js APIs on Azure stack
+- **AI Model:** GPT-4 on Azure. 
+- **Document Database:** Python with custom scripts
+- **Testing:**
+  -Mocha ([Mocha Documentation](https://mochajs.org/))
+  -Python: pytest framework ([pytest Documentation](https://docs.pytest.org/)
+- **Web Scraping:** Python, Beautiful Soup ([Python](https://www.python.org/), [Beautiful Soup Documentation](https://beautiful-soup-4.readthedocs.io/))
+
+The key directories are:
+
+- core – most code is here, written in plan typescript. Core has no external dependencies.
+- UI – REACT UI code – written in typescript /tsx. UI depends on core.
+- test – test code. Test depends on core.
+- scripts - python code to download build the document database.
+- data - the document database is generated into here.
+
+By design, the app builds to a single .JS file using webpack. The JS file is then included in the production website where the app is hosted. This is currently another repo, ‘BraidWeb’.
+
+## Installation
+
+Follow these steps to set up your development environment for the project:
+
+1. **Install Python 3.12.4:**
+
+   - Download and install Python 3.12.4 from [https://www.python.org/downloads/release/python-3124/](https://www.python.org/downloads/release/python-3124/)
+   - Make sure to add Python to your PATH during installation
+
+2. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/jonverrier/BraidEng.git
+   cd BraidEng
+   ```
+
+3. **Set up the upstream remote:**
+
+   ```bash
+   git remote add upstream https://github.com/jonverrier/BraidEng.git
+   ```
+
+4. **Verify the upstream remote:**
+
+   ```bash
+   git remote -v
+   ```
+
+   You should see both your origin (your fork) and the upstream repository listed:
+
+   ```
+   origin    https://github.com/YOUR_USERNAME/BraidEng.git (fetch)
+   origin    https://github.com/YOUR_USERNAME/BraidEng.git (push)
+   upstream  https://github.com/jonverrier/BraidEng.git (fetch)
+   upstream  https://github.com/jonverrier/BraidEng.git (push)
+   ```
+
+5. **Install Visual Studio Code:**
+
+   - Download and install VS Code from [https://code.visualstudio.com/](https://code.visualstudio.com/)
+   - Open VS Code and install the following extensions:
+     - Python
+     - TypeScript and JavaScript Language Features
+     - ESLint
+     - Prettier
+
+6. **Set up the Python virtual environment:**
+
+   ```bash
+   python -m venv venv
+   ```
+
+   Activate the virtual environment:
+
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+
+7. **Install Python dependencies:**
+
+   ```bash
+   pip install -r scripts/requirements.txt
+   ```
+
+8. **Install Node.js and npm:**
+
+   - Download and install Node.js from [https://nodejs.org/](https://nodejs.org/)
+   - npm comes bundled with Node.js
+
+9. **Install JavaScript dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+10. **Set up environment variables:**
+
+    - Create a `.env` file in the root directory
+    - Add the following environment variables:
+      ```
+      GOOGLE_DEVELOPER_API_KEY=your_google_api_key_here
+      AZURE_OPENAI_API_KEY=your_azure_openai_api_key_here
+      ```
+
+11. **Open the project in VS Code:**
+
+    ```bash
+    code .
+    ```
+
+12. **Configure VS Code settings:**
+    - Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P)
+    - Type "Python: Select Interpreter" and choose the interpreter from your virtual environment
+
+Now your development environment is set up and ready. Remember to keep your fork updated with the upstream repository:
+
+```bash
+git fetch upstream
+git merge upstream/main
+```
+
+For more detailed information on using Git with GitHub, refer to the [GitHub documentation](https://docs.github.com/en/get-started/quickstart/set-up-git).
+
+## Licence
+
+GNU AFFERO GENERAL PUBLIC LICENSE.
+
+This is intentionally a restrictive licence. The source is effectively available for non-commercial use (subject to the licence terms as listed, which enable use for learning, self study etc). Commercial use either must abide by the licence terms, which are strong, or a separate licence that enables more normal commercial use & distribution is available from Braid. Contact us for more details mailto:info@braidtechnologies.io.
+****************************************
+
+****************************************
+BoxerEval\README.md
+****************************************
+**BoxerTest** is a framework for evaluation of the 'Boxer' application. 
+
+BoxerTest is all Python, an runs locally. It uses the following eval approaches:
+- Generation of a list of questions about Generative AI. This is a static list, used to measure basic coverage of the Boxer knowledge base.
+- Generation of more questions, this time from a specific 'persona' - a Developer, a tesetr, and an Analyst.
+- Use of a second model ('Gemini') to score the summaries in terms of their ability to answer th question.
+- [in progress] a technical evaluation of summary quality, which would be used over time to check that as the database evaolves the relevance of summaries is not declining.
+****************************************
+
+****************************************
+Cascade\README.md
+****************************************
+**Cascade** is an Edge plug in that uses simple BraidApi calls to summarise and classify the current page of the browser. This is intended as a technology demonstrator for enterprise use cases like a ticket summariser - you can imagine a front end in a ticketing system where you first summarise status then close the ticket. Cascade also shows multi-language processesing - summaries are shown in English, granslated from the source language.
+****************************************
+
+****************************************
+CommonPy\__init__.py
+****************************************
+
+****************************************
+
+****************************************
+CommonTs\README.md
+****************************************
+**BraidCommon** contains typescript compoents that are used by both front end (Browser, Mocha test) and back end (BraidApi) components. It also contains types that define the contract between client and server for APIS, which are used by the 'Salon' component to generate test code.
+****************************************
+
+****************************************
+Salon\config.yaml
+****************************************
+skip_dirs:
+    - "__pycache__"
+    - "node_modules"
+    - "venv"
+    - ".idea"
+    - ".vscode"
+    - "data"    
+        
+skip_patterns:
+    - "*.pyc"
+    - "*.pyo"
+    - "*.so"
+    - "*.o"
+    - "*.jpg"
+    - "*.jpeg"
+    - "*.png"
+    - "*.gif"
+    - "*.pdf"
+    - "*.bin"
+    - "*.exe"
+    - "*.dll"
+    - "*.class"
+    - ".DS_Store"
+    - ".gitignore"
+    - "*.pkl"
+    - "*.pyd"
+    - "*.dylib"
+    - "*.json"    
+    - "*.gitignore"
+    - "*.log"
+    - "*.js"
+    - "*.map"
+    - "*.txt"    
+    - "*.mdd"       
+    - "*.vtt"
+****************************************
+
+****************************************
+Salon\README.md
+****************************************
+**Salon** is a technology demonstrator for automated software development tools using LLMs. 
+
+**api_to_test_code** takes an input file in a JSON format or in YAML format that has been generated from an API. It generates Python source code to test the API. In the case of Braid, post-processed code is used in **ApiTest** to demonstate how this achieves excellent test coverage for low input effort. 
+
+**repo_to_text** processes a directory of source code and concatenates the source into a set of text files. These text files can be uploaded into an LLM, which can then be used to anwer questions about the code. 
+
+The code is copied (with some amendments to make it work on a large mono-repo) from the following blog post:
+https://jmlbeaujour.medium.com/introducing-notebooklm-as-a-solution-for-interactive-code-exploration-704a44e690a6
+****************************************
+
+****************************************
+Teams\.funcignore
+****************************************
+.funcignore
+*.js.map
+*.ts
+.git*
+.localConfigs
+.vscode
+local.settings.json
+test
+tsconfig.json
+.DS_Store
+.deployment
+node_modules/.bin
+node_modules/azure-functions-core-tools
+README.md
+tsconfig.json
+teamsapp.yml
+teamsapp.*.yml
+/env/
+/appPackage/
+/infra/
+/devTools/
+****************************************
+
+****************************************
+Teams\README.md
+****************************************
+# Overview of Custom Search Results app template
+
+## Build a message extension from a new API with Azure Functions
+
+This app template allows Teams to interact directly with third-party data, apps, and services, enhancing its capabilities and broadening its range of capabilities. It allows Teams to:
+
+- Retrieve real-time information, for example, latest news coverage on a product launch.
+- Retrieve knowledge-based information, for example, my team’s design files in Figma.
+
+## Get started with the template
+
+> **Prerequisites**
+>
+> To run this app template in your local dev machine, you will need:
+>
+> - [Node.js](https://nodejs.org/), supported versions: 18, 20
+> - A [Microsoft 365 account for development](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts)
+> - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [Teams Toolkit CLI](https://aka.ms/teamsfx-toolkit-cli)
+
+1. First, select the Teams Toolkit icon on the left in the VS Code toolbar.
+2. In the Account section, sign in with your [Microsoft 365 account](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts) if you haven't already.
+3. Select `Debug in Teams (Edge)` or `Debug in Teams (Chrome)` from the launch configuration dropdown.
+4. To trigger the Message Extension, you can click the `+` under compose message area to find your message extension.
+   > Note: Please make sure to switch to New Teams when Teams web client has launched
+
+## What's included in the template
+
+| Folder       | Contents                                                                                                    |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| `.vscode`    | VSCode files for debugging                                                                                  |
+| `appPackage` | Templates for the Teams application manifest, the API specification and response template for API responses |
+| `env`        | Environment files                                                                                           |
+| `infra`      | Templates for provisioning Azure resources                                                                  |
+| `src`        | The source code for the boxer API                                                                          |
+
+The following files can be customized and demonstrate an example implementation to get you started.
+
+| File                                         | Contents                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| `src/functions/boxer.ts`                    | The main file of a function in Azure Functions.                     |
+| `src/repairsData.json`                       | The data source for the boxer API.                                 |
+| `appPackage/apiSpecificationFile/boxer.yml` | A file that describes the structure and behavior of the boxer API. |
+| `appPackage/responseTemplates/boxer.json`   | A generated Adaptive Card that used to render API response.         |
+
+The following are Teams Toolkit specific project files. You can [visit a complete guide on Github](https://github.com/OfficeDev/TeamsFx/wiki/Teams-Toolkit-Visual-Studio-Code-v5-Guide#overview) to understand how Teams Toolkit works.
+
+| File                 | Contents                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `teamsapp.yml`       | This is the main Teams Toolkit project file. The project file defines two primary things: Properties and configuration Stage definitions. |
+| `teamsapp.local.yml` | This overrides `teamsapp.yml` with actions that enable local execution and debugging.                                                     |
+
+## Addition information and references
+
+- [Extend Teams platform with APIs](https://aka.ms/teamsfx-api-plugin)
+****************************************
+
+****************************************
+Teams\teamsapp.local.yml
+****************************************
+# yaml-language-server: $schema=https://aka.ms/teams-toolkit/v1.7/yaml.schema.json
+# Visit https://aka.ms/teamsfx-v5.0-guide for details on this file
+# Visit https://aka.ms/teamsfx-actions for details on actions
+version: v1.7
+
+provision:
+  # Creates a Teams app
+  - uses: teamsApp/create
+    with:
+      # Teams app name
+      name: bsft${{APP_NAME_SUFFIX}}
+    # Write the information of created resources into environment file for
+    # the specified environment variable(s).
+    writeToEnvironmentFile:
+      teamsAppId: TEAMS_APP_ID
+
+  # Set required variables for local launch
+  - uses: script
+    with:
+      run:
+        echo "::set-teamsfx-env FUNC_NAME=boxer";
+        echo "::set-teamsfx-env FUNC_ENDPOINT=http://localhost:7071";
+
+  # Validate using manifest schema
+  - uses: teamsApp/validateManifest
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+
+  # Build Teams app package with latest env value
+  - uses: teamsApp/zipAppPackage
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+      outputZipPath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+      outputFolder: ./appPackage/build
+
+  # Validate app package using validation rules
+  - uses: teamsApp/validateAppPackage
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+
+  # Apply the Teams app manifest to an existing Teams app in
+  # Teams Developer Portal.
+  # Will use the app id in manifest file to determine which Teams app to update.
+  - uses: teamsApp/update
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+
+  # Extend your Teams app to Outlook and the Microsoft 365 app
+  - uses: teamsApp/extendToM365
+    with:
+      # Relative path to the build app package.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+    # Write the information of created resources into environment file for
+    # the specified environment variable(s).
+    writeToEnvironmentFile:
+      titleId: M365_TITLE_ID
+      appId: M365_APP_ID
+
+deploy:
+  # Install development tool(s)
+  - uses: devTool/install
+    with:
+      func:
+        version: ~4.0.5455
+        symlinkDir: ./devTools/func
+    # Write the information of installed development tool(s) into environment
+    # file for the specified environment variable(s).
+    writeToEnvironmentFile:
+      funcPath: FUNC_PATH
+
+  # Run npm command
+  - uses: cli/runNpmCommand
+    name: install dependencies
+    with:
+      args: install --no-audit
+****************************************
+
+****************************************
+Teams\teamsapp.yml
+****************************************
+# yaml-language-server: $schema=https://aka.ms/teams-toolkit/v1.7/yaml.schema.json
+# Visit https://aka.ms/teamsfx-v5.0-guide for details on this file
+# Visit https://aka.ms/teamsfx-actions for details on actions
+version: v1.7
+
+environmentFolderPath: ./env
+
+# Triggered when 'teamsapp provision' is executed
+provision:
+  # Creates a Teams app
+  - uses: teamsApp/create
+    with:
+      # Teams app name
+      name: bsft${{APP_NAME_SUFFIX}}
+    # Write the information of created resources into environment file for
+    # the specified environment variable(s).
+    writeToEnvironmentFile:
+      teamsAppId: TEAMS_APP_ID
+
+  - uses: arm/deploy # Deploy given ARM templates parallelly.
+    with:
+      # AZURE_SUBSCRIPTION_ID is a built-in environment variable,
+      # if its value is empty, TeamsFx will prompt you to select a subscription.
+      # Referencing other environment variables with empty values
+      # will skip the subscription selection prompt.
+      subscriptionId: ${{AZURE_SUBSCRIPTION_ID}}
+      # AZURE_RESOURCE_GROUP_NAME is a built-in environment variable,
+      # if its value is empty, TeamsFx will prompt you to select or create one
+      # resource group.
+      # Referencing other environment variables with empty values
+      # will skip the resource group selection prompt.
+      resourceGroupName: ${{AZURE_RESOURCE_GROUP_NAME}}
+      templates:
+        - path: ./infra/azure.bicep # Relative path to this file
+          # Relative path to this yaml file.
+          # Placeholders will be replaced with corresponding environment
+          # variable before ARM deployment.
+          parameters: ./infra/azure.parameters.json
+          # Required when deploying ARM template
+          deploymentName: Create-resources-for-sme
+      # Teams Toolkit will download this bicep CLI version from github for you,
+      # will use bicep CLI in PATH if you remove this config.
+      bicepCliVersion: v0.9.1
+
+  # Validate using manifest schema
+  - uses: teamsApp/validateManifest
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+
+  # Build Teams app package with latest env value
+  - uses: teamsApp/zipAppPackage
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+      outputZipPath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+      outputFolder: ./appPackage/build
+
+  # Validate app package using validation rules
+  - uses: teamsApp/validateAppPackage
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+
+  # Apply the Teams app manifest to an existing Teams app in
+  # Teams Developer Portal.
+  # Will use the app id in manifest file to determine which Teams app to update.
+  - uses: teamsApp/update
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+
+  # Extend your Teams app to Outlook and the Microsoft 365 app
+  - uses: teamsApp/extendToM365
+    with:
+      # Relative path to the build app package.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+    # Write the information of created resources into environment file for
+    # the specified environment variable(s).
+    writeToEnvironmentFile:
+      titleId: M365_TITLE_ID
+      appId: M365_APP_ID
+
+# Triggered when 'teamsapp deploy' is executed
+deploy:
+  # Run npm command
+  - uses: cli/runNpmCommand
+    name: install dependencies
+    with:
+      args: install
+
+  - uses: cli/runNpmCommand
+    name: build app
+    with:
+      args: run build --if-present
+
+  # Deploy your application to Azure Functions using the zip deploy feature.
+  # For additional details, see at https://aka.ms/zip-deploy-to-azure-functions
+  - uses: azureFunctions/zipDeploy
+    with:
+      # deploy base folder
+      artifactFolder: .
+      # Ignore file location, leave blank will ignore nothing
+      ignoreFile: .funcignore
+      # The resource id of the cloud resource to be deployed to.
+      # This key will be generated by arm/deploy action automatically.
+      # You can replace it with your existing Azure Resource id
+      # or add it to your environment variable file.
+      resourceId: ${{API_FUNCTION_RESOURCE_ID}}
+
+# Triggered when 'teamsapp publish' is executed
+publish:
+  # Validate using manifest schema
+  - uses: teamsApp/validateManifest
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+  # Build Teams app package with latest env value
+  - uses: teamsApp/zipAppPackage
+    with:
+      # Path to manifest template
+      manifestPath: ./appPackage/manifest.json
+      outputZipPath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+      outputFolder: ./appPackage/build
+  # Validate app package using validation rules
+  - uses: teamsApp/validateAppPackage
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+  # Apply the Teams app manifest to an existing Teams app in
+  # Teams Developer Portal.
+  # Will use the app id in manifest file to determine which Teams app to update.
+  - uses: teamsApp/update
+    with:
+      # Relative path to this file. This is the path for built zip file.
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+  # Publish the app to
+  # Teams Admin Center (https://admin.teams.microsoft.com/policies/manage-apps)
+  # for review and approval
+  - uses: teamsApp/publishAppPackage
+    with:
+      appPackagePath: ./appPackage/build/appPackage.${{TEAMSFX_ENV}}.zip
+    # Write the information of created resources into environment file for
+    # the specified environment variable(s).
+    writeToEnvironmentFile:
+      publishedAppId: TEAMS_APP_PUBLISHED_APP_ID
+projectId: c64e8ace-e99d-444b-bd99-6373ca681243
+****************************************
+
+****************************************
+Waterfall\classes.html
+****************************************
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class ClusterAnalyser {
+            clusters : int
+            analyse(items: list[PipelineItem]) list[PipelineItem]
+          }
+          class Embedder {
+            embed(pipeline_item: PipelineItem) PipelineItem
+            test_to_float(embedding: str) list[float]
+          }
+          class EmbeddingFinder {
+            embeddings : list[float]
+            output_location : str
+            find_nearest(target_text: str) list[float]
+          }
+          class EmbeddingRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            list() list[str]
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class FileRespository {
+            output_location : str
+            exists(path: str, extension: str) bool
+            load(path: str, extension: str) str
+            save(path: str, extension: str, text: str) None
+          }
+          class Freezable {
+          }
+          class HtmlFileDownloader {
+            download(pipeline_item: PipelineItem) PipelineItem
+          }
+          class HtmlLinkCrawler {
+            max_depth : int
+            crawl(pipeline_item: PipelineItem) list[PipelineItem]
+            crawl_links_recursively(path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int)
+          }
+          class PipelineItem {
+            cluster : NoneType
+            embedding : NoneType
+            path : NoneType
+            summary : NoneType
+            text : NoneType
+          }
+          class PipelineSpec {
+            clusters : int
+            clusters_in_summary : int
+            description : NoneType
+            output_chart_name : NoneType
+            output_data_name : NoneType
+            pages : int
+            search_key : NoneType
+            themes : NoneType
+          }
+          class PipelineStep {
+            output_location : str
+          }
+          class Summariser {
+            summarise(pipeline_item: PipelineItem) PipelineItem
+          }
+          class SummaryRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class TextRespositoryFacade {
+            extension : str
+            file__repository
+            output_location : str
+            exists(path: str) bool
+            load(path: str) str
+            save(path: str, text: str) None
+            spec() str
+          }
+          class Theme {
+            example_pipeline_items : NoneType
+            long_description : NoneType
+            member_pipeline_items : NoneType
+            short_description : NoneType
+          }
+          class ThemeFinder {
+            find_theme(text: str, length: int) str
+          }
+          class WaterfallDataPipeline {
+            output_location : str
+            create_report(items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) list[Theme]
+            create_themes(items: list[PipelineItem], spec: PipelineSpec) list[Theme]
+            search(spec: PipelineSpec) list[Theme]
+            search_and_cluster(spec: PipelineSpec) list[PipelineItem]
+          }
+          class WebSearcher {
+            output_location : str
+            search(pipeline: PipelineSpec) list[PipelineItem]
+          }
+          PipelineItem --|> Freezable
+          PipelineSpec --|> Freezable
+          Theme --|> Freezable
+  
+       </div>
+  </body>
+</html>
+****************************************
+
+****************************************
+Waterfall\classes.mmd
+****************************************
+classDiagram
+  class ClusterAnalyser {
+    clusters : int
+    analyse(items: list[PipelineItem]) list[PipelineItem]
+  }
+  class Embedder {
+    embed(pipeline_item: PipelineItem) PipelineItem
+    test_to_float(embedding: str) list[float]
+  }
+  class EmbeddingFinder {
+    embeddings : list[float]
+    output_location : str
+    find_nearest(target_text: str) list[float]
+  }
+  class EmbeddingRespositoryFacade {
+    extension : str
+    file__repository
+    output_location : str
+    exists(path: str) bool
+    list() list[str]
+    load(path: str) str
+    save(path: str, text: str) None
+    spec() str
+  }
+  class FileRespository {
+    output_location : str
+    exists(path: str, extension: str) bool
+    load(path: str, extension: str) str
+    save(path: str, extension: str, text: str) None
+  }
+  class Freezable {
+  }
+  class HtmlFileDownloader {
+    download(pipeline_item: PipelineItem) PipelineItem
+  }
+  class HtmlLinkCrawler {
+    max_depth : int
+    crawl(pipeline_item: PipelineItem) list[PipelineItem]
+    crawl_links_recursively(path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int)
+  }
+  class PipelineItem {
+    cluster : NoneType
+    embedding : NoneType
+    path : NoneType
+    summary : NoneType
+    text : NoneType
+  }
+  class PipelineSpec {
+    clusters : int
+    clusters_in_summary : int
+    description : NoneType
+    output_chart_name : NoneType
+    output_data_name : NoneType
+    pages : int
+    search_key : NoneType
+    themes : NoneType
+  }
+  class PipelineStep {
+    output_location : str
+  }
+  class Summariser {
+    summarise(pipeline_item: PipelineItem) PipelineItem
+  }
+  class SummaryRespositoryFacade {
+    extension : str
+    file__repository
+    output_location : str
+    exists(path: str) bool
+    load(path: str) str
+    save(path: str, text: str) None
+    spec() str
+  }
+  class TextRespositoryFacade {
+    extension : str
+    file__repository
+    output_location : str
+    exists(path: str) bool
+    load(path: str) str
+    save(path: str, text: str) None
+    spec() str
+  }
+  class Theme {
+    example_pipeline_items : NoneType
+    long_description : NoneType
+    member_pipeline_items : NoneType
+    short_description : NoneType
+  }
+  class ThemeFinder {
+    find_theme(text: str, length: int) str
+  }
+  class WaterfallDataPipeline {
+    output_location : str
+    create_report(items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) list[Theme]
+    create_themes(items: list[PipelineItem], spec: PipelineSpec) list[Theme]
+    search(spec: PipelineSpec) list[Theme]
+    search_and_cluster(spec: PipelineSpec) list[PipelineItem]
+  }
+  class WebSearcher {
+    output_location : str
+    search(pipeline: PipelineSpec) list[PipelineItem]
+  }
+  PipelineItem --|> Freezable
+  PipelineSpec --|> Freezable
+  Theme --|> Freezable
+****************************************
+
+****************************************
+Waterfall\packages.html
+****************************************
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class src {
+          }
+          class cluster_analyser {
+          }
+          class embedder {
+          }
+          class embedder_repository_facade {
+          }
+          class embedding_finder {
+          }
+          class file_repository {
+          }
+          class html_file_downloader {
+          }
+          class html_link_crawler {
+          }
+          class make_local_file_path {
+          }
+          class search_pipeline {
+          }
+          class summariser {
+          }
+          class summary_repository_facade {
+          }
+          class text_repository_facade {
+          }
+          class theme_finder {
+          }
+          class web_searcher {
+          }
+          class workflow {
+          }
+          cluster_analyser --> workflow
+          embedder --> embedder_repository_facade
+          embedder --> workflow
+          embedder_repository_facade --> file_repository
+          embedding_finder --> embedder
+          embedding_finder --> workflow
+          file_repository --> make_local_file_path
+          html_file_downloader --> text_repository_facade
+          html_file_downloader --> workflow
+          html_link_crawler --> workflow
+          search_pipeline --> cluster_analyser
+          search_pipeline --> embedder
+          search_pipeline --> embedding_finder
+          search_pipeline --> html_file_downloader
+          search_pipeline --> summariser
+          search_pipeline --> theme_finder
+          search_pipeline --> web_searcher
+          search_pipeline --> workflow
+          summariser --> summary_repository_facade
+          summariser --> workflow
+          summary_repository_facade --> file_repository
+          text_repository_facade --> file_repository
+          web_searcher --> workflow
+  
+       </div>
+  </body>
+</html>
+****************************************
+
+****************************************
+Waterfall\packages.mmd
+****************************************
+classDiagram
+  class src {
+  }
+  class cluster_analyser {
+  }
+  class embedder {
+  }
+  class embedder_repository_facade {
+  }
+  class embedding_finder {
+  }
+  class file_repository {
+  }
+  class html_file_downloader {
+  }
+  class html_link_crawler {
+  }
+  class make_local_file_path {
+  }
+  class search_pipeline {
+  }
+  class summariser {
+  }
+  class summary_repository_facade {
+  }
+  class text_repository_facade {
+  }
+  class theme_finder {
+  }
+  class web_searcher {
+  }
+  class workflow {
+  }
+  cluster_analyser --> workflow
+  embedder --> embedder_repository_facade
+  embedder --> workflow
+  embedder_repository_facade --> file_repository
+  embedding_finder --> embedder
+  embedding_finder --> workflow
+  file_repository --> make_local_file_path
+  html_file_downloader --> text_repository_facade
+  html_file_downloader --> workflow
+  html_link_crawler --> workflow
+  search_pipeline --> cluster_analyser
+  search_pipeline --> embedder
+  search_pipeline --> embedding_finder
+  search_pipeline --> html_file_downloader
+  search_pipeline --> summariser
+  search_pipeline --> theme_finder
+  search_pipeline --> web_searcher
+  search_pipeline --> workflow
+  summariser --> summary_repository_facade
+  summariser --> workflow
+  summary_repository_facade --> file_repository
+  text_repository_facade --> file_repository
+  web_searcher --> workflow
+****************************************
+
+****************************************
+Waterfall\pytest.ini
+****************************************
+[pytest]
+log_cli = 1
+****************************************
+
+****************************************
+Waterfall\README.md
+****************************************
+**Waterfall** is a Python framework for processing documents through an AI enrichment pipeline. 
+
+There are two main pipelines:
+
+1. **Waterfall** itself - Waterfall calls a Google search API for a given set of sources, then summarises the documents, calculates an embedding, and uses the embeddings to find clusters. It then generates an interactive report and a mail summary on the clusters, which it send to Braid leadership.
+2. **Boxer** - Waterfall generates the back end database used by Boxer - it downloads a tree from a set of web URLs, and it downloads a set of transcripts from YouTube playlists, then it chunks, summarises, and calculates embeddings for the documents. The embeddings are then used to enriched search in Boxer.
+****************************************
+
+****************************************
+WaterfallBrowser\README.md
+****************************************
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+****************************************
+
+****************************************
+WaterfallBrowser\tsconfig.tsbuildinfo
+****************************************
+{"root":["./src/app.tsx","./src/chunkretriever.test.tsx","./src/chunkretriever.tsx","./src/chunktesthelpers.tsx","./src/chunkview.test.tsx","./src/chunkview.tsx","./src/chunkviewerror.tsx","./src/index.tsx","./src/uistring.ts","./src/react-app-env.d.ts","./src/reportwebvitals.ts","./src/setuptests.ts","../commonts/src/activityrepositoryapi.ts","../commonts/src/api.ts","../commonts/src/asserts.ts","../commonts/src/chunkapi.types.ts","../commonts/src/chunkrepositoryapi.types.ts","../commonts/src/chunkrepositoryapi.ts","../commonts/src/classifyapi.types.ts","../commonts/src/embedapi.types.ts","../commonts/src/enrichedchunk.ts","../commonts/src/enrichedquery.ts","../commonts/src/enumeratemodelsapi.types.ts","../commonts/src/environment.ts","../commonts/src/errors.ts","../commonts/src/findenrichedchunkapi.ts","../commonts/src/findthemeapi.types.ts","../commonts/src/fluid.ts","../commonts/src/fluidapi.ts","../commonts/src/fluidtokenprovider.ts","../commonts/src/ienvironment.ts","../commonts/src/ienvironmentfactory.ts","../commonts/src/imodel.ts","../commonts/src/imodelfactory.ts","../commonts/src/istorable.ts","../commonts/src/logging.ts","../commonts/src/loginapi.ts","../commonts/src/model.ts","../commonts/src/querymodelapi.ts","../commonts/src/sessionapi.ts","../commonts/src/storablerepositoryapi.ts","../commonts/src/studioapi.types.ts","../commonts/src/summariseapi.types.ts","../commonts/src/suppresssummarisefailapi.types.ts","../commonts/src/themeapi.ts"],"version":"5.6.3"}
+****************************************
+
+****************************************
+Api\dist\tsconfig.tsbuildinfo
+****************************************
+{"root":["../src/functions/azurestorableapi.ts","../src/functions/checksession.ts","../src/functions/chunk.ts","../src/functions/classify.ts","../src/functions/cosmosrepositoryapi.ts","../src/functions/cosmosstorableapi.ts","../src/functions/embed.ts","../src/functions/enrichedchunkrepositoryfactory.ts","../src/functions/enrichedchunkrepositoryfile.ts","../src/functions/enumeratemodels.ts","../src/functions/enumeraterepositories.ts","../src/functions/findenrichedchunks.ts","../src/functions/findtheme.ts","../src/functions/generatefluidtoken.ts","../src/functions/generatequestion.ts","../src/functions/ienrichedchunkrepository.ts","../src/functions/loginwithlinkedin.ts","../src/functions/querymodelwithenrichment.ts","../src/functions/storableactivity.ts","../src/functions/storablechunk.ts","../src/functions/storablepage.ts","../src/functions/studioforteams.ts","../src/functions/summarize.ts","../src/functions/suppresssummarisefail.ts","../src/functions/utility.ts","../../commonts/src/activityrepositoryapi.ts","../../commonts/src/api.ts","../../commonts/src/asserts.ts","../../commonts/src/chunkapi.types.ts","../../commonts/src/chunkrepositoryapi.types.ts","../../commonts/src/chunkrepositoryapi.ts","../../commonts/src/classifyapi.types.ts","../../commonts/src/compress.ts","../../commonts/src/embedapi.types.ts","../../commonts/src/enrichedchunk.ts","../../commonts/src/enrichedquery.ts","../../commonts/src/enumeratemodelsapi.types.ts","../../commonts/src/environment.ts","../../commonts/src/errors.ts","../../commonts/src/findenrichedchunkapi.ts","../../commonts/src/findthemeapi.types.ts","../../commonts/src/fluid.ts","../../commonts/src/fluidapi.ts","../../commonts/src/fluidtokenprovider.ts","../../commonts/src/ienvironment.ts","../../commonts/src/ienvironmentfactory.ts","../../commonts/src/imodel.ts","../../commonts/src/imodelfactory.ts","../../commonts/src/istorable.ts","../../commonts/src/logging.ts","../../commonts/src/loginapi.ts","../../commonts/src/model.ts","../../commonts/src/pagerepositoryapi.types.ts","../../commonts/src/pagerepositoryapi.ts","../../commonts/src/querymodelapi.ts","../../commonts/src/sessionapi.ts","../../commonts/src/storablerepositoryapi.ts","../../commonts/src/studioapi.types.ts","../../commonts/src/summariseapi.types.ts","../../commonts/src/suppresssummarisefailapi.types.ts","../../commonts/src/themeapi.ts"],"version":"5.6.2"}
+****************************************
+
+****************************************
+Api\test\activitystore.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { ActivityRepostoryApi } from '../../CommonTs/src/ActivityRepositoryApi';
+import { randomKey, saveLoadRemove, failSave } from './storable';
+import { IStorable, IStorableMultiQuerySpec } from '../../CommonTs/src/IStorable';
+
+declare var process: any;
+
+describe("StorableActivity", async function () {
+
+   let now = new Date().toUTCString();
+   let record : IStorable = {
+      id: randomKey(),
+      applicationId: "Test",
+      schemaVersion: "1",
+      created: now,
+      amended: now,      
+      contextId: "madeupId",
+      functionalSearchKey: undefined,
+      userId: "madeeupId",
+      className: "madeUpClass"      
+   }
+
+   let env = getEnvironment (EEnvironment.kLocal);
+   let api = new ActivityRepostoryApi (env, process.env.SessionKey.toString());
+
+   it("Needs to succeed with valid key", async function () {
+      
+      let myRecord = { ...record };
+      myRecord.id = randomKey();   
+
+      let ok = await saveLoadRemove (api, myRecord); 
+
+      expect (ok).toBe (true) ;         
+
+   }).timeout(20000);
+
+   it("Needs to fail with invalid key", async function () {
+      
+      let apiFail = new ActivityRepostoryApi (env, "thiswillfail");      
+      let myRecord = { ...record };
+      myRecord.id = randomKey();   
+
+      let ok = await failSave (apiFail, myRecord); 
+
+      expect (ok).toBe (true) ;         
+
+  }).timeout(20000);   
+
+   it("Needs to pull multiple records with valid key", async function () {
+   
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+      let ok = await api.save (myRecord); 
+
+      let myRecord2 = { ...record };
+      myRecord2.id = randomKey();      
+      ok = await api.save (myRecord2); 
+
+      let mySpec : IStorableMultiQuerySpec = { className: "madeUpClass", limit: 2};
+
+      let stored = await api.recent (mySpec);
+
+      api.remove (myRecord.id);
+      api.remove (myRecord2.id);      
+
+      expect (stored.length).toBe (2) ;         
+
+   }).timeout(20000);   
+
+});
+****************************************
+
+****************************************
+Api\test\checksession.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+declare var process: any;
+
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { SessionApi } from "../../CommonTs/src/SessionApi";
+
+describe("CheckSession", async function () {
+
+   it("Needs to succeed with valid key in local environment", async function () {
+      
+      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      let session = await api.checkSessionKey ();
+
+      expect (session && session?.length > 0).toBe (true) ;         
+
+   }).timeout(20000);
+
+   it("Needs to succeed with valid key in production environment", async function () {
+      
+      let api = new SessionApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
+
+      let session = await api.checkSessionKey ();
+
+      expect (session && session?.length > 0).toBe (true) ;   
+
+   }).timeout(20000);
+
+   it("Needs to fail with invalid key.", async function () {
+
+      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
+
+      let session = await api.checkSessionKey ();
+      
+      expect (session).toEqual ("") ;         
+
+  }).timeout(20000);
+
+  it("Needs to fail with invalid key in production environment.", async function () {
+
+     let api = new SessionApi (getEnvironment (EEnvironment.kProduction), "thiswillfail");
+
+     let session = await api.checkSessionKey ();
+   
+     expect (session).toEqual ("") ;              
+
+   }).timeout(20000);
+
+});
+****************************************
+
+****************************************
+Api\test\chunk.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+import axios from 'axios';
+
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { IChunkRequest, IChunkResponse } from '../../CommonTs/src/ChunkApi.Types';
+
+declare var process: any;
+
+describe("Chunk", async function () {
+
+   async function validChunkCall(apiUrl: string, text: string): Promise<IChunkResponse | undefined> {
+
+      let chunkRequest: IChunkRequest = {
+         text: text
+      };
+      let responseData: IChunkResponse | undefined = undefined;
+
+      try {
+         let response = await axios.post(apiUrl, {
+            request: chunkRequest,
+            headers: {
+               'Content-Type': 'application/json'
+            }
+         });
+
+         responseData = (response.data as IChunkResponse);
+
+      } catch (e: any) {
+
+         console.error(e);
+      }
+
+      return responseData;
+   }
+
+   async function invalidChunkCall(apiUrl: string, text: string): Promise<Boolean> {
+
+      var response: any;
+      let caught = false;
+
+      try {
+         response = await axios.get(apiUrl, {
+         });
+
+      } catch (e: any) {
+         caught = true;
+      }
+
+      return caught;
+   }
+
+   it("Needs to fail if session key is incorrect", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.chunkApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidChunkCall(apiUrl, sampleText);
+
+      expect(caught).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to chunk a short message", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
+
+      let chunkResponse = await validChunkCall(apiUrl, sampleText);
+
+      expect(chunkResponse && chunkResponse?.chunks.length === 1).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to chunk a long message", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+      for (let i = 0; i < 15; i++)
+         sampleText = sampleText + sampleText;
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
+
+      let chunkResponse = await validChunkCall(apiUrl, sampleText);
+
+      expect(chunkResponse && chunkResponse?.chunks.length > 1).toBe(true);
+
+   }).timeout(20000);
+
+});
+****************************************
+
+****************************************
+Api\test\chunkstore.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { failSave, randomKey, saveLoadRemove, saveFindRemove } from './storable';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { ChunkRepostoryApi } from '../../CommonTs/src/ChunkRepositoryApi'
+import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
+import { IStorableMultiQuerySpec } from '../../CommonTs/src/IStorable';
+
+declare var process: any;
+
+describe("StorableChunk", async function () {
+
+   let now = new Date().toUTCString();
+
+   let record: IStoredChunk = {
+      id: randomKey(),
+      applicationId: "Test",
+      schemaVersion: "1",
+      created: now,
+      amended: now,
+      contextId: "madeupId",
+      userId: "madeeupId",
+      className: "madeUpClass",
+      functionalSearchKey: "1234",
+      parentChunkId: undefined,
+      originalText: undefined,
+      url: undefined,
+      storedEmbedding: undefined,
+      storedSummary: undefined,
+      storedTitle: undefined,
+      relatedChunks: undefined
+   }
+
+   let env = getEnvironment(EEnvironment.kLocal);
+   let api = new ChunkRepostoryApi(env, process.env.SessionKey.toString());
+
+   // Clean up temp objects we created
+   afterEach (async function () {
+      let spec: IStorableMultiQuerySpec = {
+         className: "madeUpClass",
+         limit: 10
+      }
+      let recent = await api.recent (spec);
+      for (let i = 0; i < recent.length; i++) {
+         if (recent[i].id)
+            api.remove (recent[i].id as string);
+      }
+   }); 
+
+   it("Needs to succeed with saveLoadRemove & valid key in local environment", async function () {
+
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+
+      let ok = await saveLoadRemove(api, myRecord);
+
+      expect(ok).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to succeed with find & valid key in local environment", async function () {
+
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+
+      let ok = await saveFindRemove(api, myRecord);
+
+      expect(ok).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to fail with invalid key", async function () {
+
+      let apiFail = new ChunkRepostoryApi(env, "thiswillfail");
+      let myRecord = { ...record };
+      myRecord.id = randomKey();
+
+      let ok = await failSave(apiFail, myRecord);
+
+      expect(ok).toBe(true);
+
+   }).timeout(20000);
+
+});
+****************************************
+
+****************************************
+Api\test\classify.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+import axios from 'axios';
+
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { IClassifyRequest, IClassifyResponse } from '../../CommonTs/src/ClassifyApi.Types';
+
+declare var process: any;
+
+describe("Classify", async function () {
+
+   async function validClassifyCall(apiUrl: string, text: string): Promise<string | undefined> {
+
+      let classifications = ["Business", "Technology", "Politics", "Health", "Sport"];
+      let classificationRequest: IClassifyRequest = {
+         text: text,
+         classifications: classifications
+      };
+      let classificationResponse: IClassifyResponse | undefined = undefined;
+
+
+      try {
+         let response = await axios.post(apiUrl, {
+            request: classificationRequest,
+            headers: {
+               'Content-Type': 'application/json'
+            }
+         });
+
+         classificationResponse = (response.data as IClassifyResponse);
+         console.log(classificationResponse);
+
+      } catch (e: any) {
+
+         console.error(e);
+      }
+
+      return classificationResponse?.classification;
+   }
+
+   async function invalidClassifyCall(apiUrl: string, text: string): Promise<Boolean> {
+
+      var response: any;
+      let caught = false;
+
+      try {
+         response = await axios.get(apiUrl, {
+         });
+
+      } catch (e: any) {
+         caught = true;
+      }
+
+      return caught;
+   }
+
+   it("Needs to fail if session key is incorrect", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.classifyApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidClassifyCall(apiUrl, sampleText);
+
+      expect(caught).toBe(true);
+
+   }).timeout(20000);
+
+
+   it("Needs to fail if session key is incorrect against production", async function () {
+
+      let sampleText = "OpenAI have released a new large language model aimed at coding.";
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.classifyApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidClassifyCall(apiUrl, sampleText);
+
+      expect(caught).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to summarise a simple message against Production", async function () {
+
+      let sampleText = "OpenAI have release a new large language model aimed at coding.";
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validClassifyCall(apiUrl, sampleText);
+
+      expect(summary && summary?.length > 0).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to summarise a simple message about Technology", async function () {
+
+      let sampleText = "OpenAI have released a new large language model aimed at coding.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validClassifyCall(apiUrl, sampleText);
+
+      expect(summary && summary?.length > 0).toBe(true);
+      expect(summary?.includes("Technology")).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to summarise a simple message about Business", async function () {
+
+      let sampleText = "The Coca-cola company has made a take-over bid for Pepsi.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validClassifyCall(apiUrl, sampleText);
+
+      expect(summary && summary?.length > 0).toBe(true);
+      expect(summary?.includes("Business")).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to summarise a simple message about Politics", async function () {
+
+      let sampleText = "The President is heading to emergecy talks with the German chancellor.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validClassifyCall(apiUrl, sampleText);
+
+      expect(summary && summary?.length > 0).toBe(true);
+      expect(summary?.includes("Politics")).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to summarise a simple message about Health", async function () {
+
+      let sampleText = "Taking a small dose of aspirin each day has been shown to reduce the chances of heart desease.";
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validClassifyCall(apiUrl, sampleText);
+
+      expect(summary && summary?.length > 0).toBe(true);
+      expect(summary?.includes("Health")).toBe(true);
+
+   }).timeout(20000);
+
+   /* 
+    it("Needs to summarise a simple message against production", async function () {
+ 
+       let sampleText = "OpenAI have release a new large language model aimed at coding." ;      
+       let environment = getEnvironment(EEnvironment.kProduction);
+ 
+       let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+ 
+       let summary = await validClassifyCall (apiUrl, sampleText);
+ 
+       expect (summary && summary?.length > 0).toBe (true) ;     
+ 
+    }).timeout(20000);
+ */
+
+
+});
+****************************************
+
+****************************************
+Api\test\embed.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+import axios from 'axios';
+
+import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { IEmbedRequest, IEmbedResponse } from "../../CommonTs/src/EmbedApi.Types";
+
+declare var process: any;
+
+describe("Embed", async function () {
+
+   async function validEmbedCall (apiUrl: string, text: string) : Promise<Array<number> | undefined> {
+
+      let embedding: Array<number> | undefined = undefined;
+      let embeddingRequest: IEmbedRequest = {
+         text: text
+      }
+
+      try {
+         let response = await axios.post(apiUrl, {
+           request: embeddingRequest,
+           headers: {
+              'Content-Type': 'application/json'
+           }
+         });
+
+         let embeddingResponse = (response.data as IEmbedResponse);
+         embedding = embeddingResponse.embedding;
+         console.log (embeddingResponse);
+  
+      } catch (e: any) {       
+
+         console.error (e);           
+      }   
+      
+      return embedding;
+   }
+
+   async function invalidEmbedCall (apiUrl: string, text: string) : Promise <Boolean> {
+   
+      var response: any;
+      let caught = false;
+
+      try {
+         response = await axios.get(apiUrl, {
+         });
+
+      } catch (e: any) {       
+         caught = true;
+      }     
+
+      return caught;
+   }   
+
+   it("Needs to fail if session key is incorrect", async function () {
+
+      let sampleText : string | undefined = "My name is Jon and I am founding an AI project acceleration company." ;      
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.embedApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidEmbedCall (apiUrl, sampleText);
+
+      expect (caught).toBe (true) ;     
+
+   }).timeout(20000);
+
+   it("Needs to fail if session key is incorrect against production", async function () {
+
+      let sampleText : string | undefined = "My name is Jon and I am founding an AI project acceleration company." ;      
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.embedApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidEmbedCall (apiUrl, sampleText);
+
+      expect (caught).toBe (true) ;     
+
+   }).timeout(20000);
+
+   it("Needs to embed a simple message", async function () {
+
+      let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+
+      let embedding = await validEmbedCall (apiUrl, sampleText);
+
+      expect (embedding && embedding?.length > 0).toBe (true) ;     
+
+   }).timeout(20000); 
+
+   it("Needs to embed a simple message against production", async function () {
+
+      let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+
+      let embedding = await validEmbedCall (apiUrl, sampleText);
+
+      expect (embedding && embedding?.length > 0).toBe (true) ;     
+
+   }).timeout(20000); 
+
+   it("Needs to embed a long message", async function () {
+
+      let baseText = "My name is Jon and I am founding an AI project acceleration company." ;  
+      let sampleText = baseText;  
+      for (var i = 0; i < 1000; i++)  {
+         sampleText = sampleText + " " + baseText;
+      }
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validEmbedCall (apiUrl, sampleText);
+
+      expect (summary && summary?.length > 0).toBe (true) ;     
+
+   }).timeout(20000);     
+
+});
+****************************************
+
+****************************************
+Api\test\environment.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment, getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+
+describe("Environment", async function () {
+
+   it("Should be local in Mocha", async function () {
+      
+      let def = getDefaultEnvironment();
+      let local = getEnvironment (EEnvironment.kLocal);
+
+      expect (def.name === local.name).toBe (true);         
+   });
+});
+****************************************
+
+****************************************
+Api\test\findenrichedchunks.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+declare var process: any;
+
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
+import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
+
+let urls = ["https://www.youtube.com/watch?v=roEKOzxilq4&t=00m",
+   "https://karpathy.medium.com/software-2-0-a64152b37c35"];
+
+let summaries = [
+   "User experience is a very important aspect of building apps. Users need to be able to use your app in an efficient way to perform tasks. Being efficient is one thing but you also need to design apps so that they can be used by everyone, to make them accessible. This chapter will focus on this area so you hopefully end up designing an app that people can and want to use. Introduction User experience is how a user interacts with and uses a specific product or service be it a system, tool",
+   "The State of Open Source AI Book discusses the role of hardware in machine learning, specifically GPUs. GPUs are well-suited for AI computations due to their parallelization capabilities and specialized hardware for deep learning operations.",
+   "The video discusses the patterns for augmenting language models with external context, including retrieval augmentation, chaining, and tool use. It explores the limitations of language models and the need for additional data and tools to enhance their performance. The video provides an overview of information retrieval techniques and explains how to make the most of the limited context window of language models.",
+   "Learn to Spell: Prompt Engineering (LLM Bootcamp) is a new course announcement for an in-person bootcamp in the SF Bay Area on November 14, 2023. The video provides high-level intuitions and a default playbook for prompting language models, covering techniques like decomposition, reasoning, and reflection."
+];
+
+
+describe("FindEnrichedChunks", async function () {
+
+   it("Needs to find relevant chunks from a matching Summary.", async function () {
+
+      for (let i = 0; i < summaries.length; i++) {
+
+         let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+         let urlQuery = {
+            maxCount: 2,
+            repositoryId: EChunkRepository.kBoxer,
+            summary: summaries[i],
+            similarityThreshold: 0.15
+         };
+
+         let response = await api.findRelevantChunksFromSummary(urlQuery);
+         console.log ("\nLooking for:" + urlQuery.summary);      
+         for (let i = 0; i < response.length; i++) {
+            console.log (response[i].chunk.summary);
+            console.log (response[i].relevance.toString());
+         }
+         console.log ("\n");
+         expect(response.length > 0).toBe(true);
+      }
+
+   }).timeout(20000);
+
+   it("Needs to find relevant chunks from a matching URL.", async function () {
+
+      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      for (let i = 0; i < urls.length; i++) {
+         let urlQuery = {
+            maxCount: 2,
+            repositoryId: EChunkRepository.kBoxer,
+            url: urls[i],
+            similarityThreshold: 0.15
+         };
+
+         let response = await api.findRelevantChunksFromUrl(urlQuery);
+         console.log ("Looking for:" + urlQuery.url);
+         for (let i = 0; i < response.length; i++)
+            console.log (response[i].chunk.url);
+
+         expect(response.length > 0).toBe(true);
+      }
+
+   }).timeout(20000);
+
+   
+   it("Needs to find same chunks from a matching URL.", async function () {
+
+      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      for (let i = 0; i < urls.length; i++) {
+         let urlQuery = {
+            maxCount: 2,
+            repositoryId: EChunkRepository.kBoxer,
+            url: urls[i],
+            similarityThreshold: 0.75
+         };
+
+         let response = await api.findChunkFromUrl(urlQuery);
+
+         expect(response !== undefined).toBe(true);
+      }
+
+   }).timeout(20000);
+
+
+});
+****************************************
+
+****************************************
+Api\test\findtheme.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+import axios from 'axios';
+
+import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+
+declare var process: any;
+
+let themedText = "Surfing is a surface water sport in which an individual, a surfer (or two in tandem surfing), uses a board to ride on the forward section, or face, of a moving wave of water, which usually carries the surfer towards the shore. Waves suitable for surfing are primarily found on ocean shores, but can also be found as standing waves in the open ocean, in lakes, in rivers in the form of a tidal bore, or in wave pools." 
++ "\n\n"
++ "The term surfing refers to a person riding a wave using a board, regardless of the stance. There are several types of boards. The Moche of Peru would often surf on reed craft, while the native peoples of the Pacific surfed waves on alaia, paipo, and other such water craft. Ancient cultures often surfed on their belly and knees, while the modern-day definition of surfing most often refers to a surfer riding a wave standing on a surfboard; this is also referred to as stand-up surfing."
+
+import { IFindThemeRequest, IFindThemeResponse } from "../../CommonTs/src/FindThemeApi.Types";
+
+describe("FindTheme", async function () {
+
+   async function validThemeCall (apiUrl: string, text: string, length: number) : Promise<string | undefined> {
+
+      let theme: string | undefined = undefined;
+      let findThemeRequest: IFindThemeRequest = {
+         text: text,
+         length: length
+      }
+
+      try {
+         let response = await axios.post(apiUrl, {
+           request: findThemeRequest,
+           headers: {
+              'Content-Type': 'application/json'
+           }
+         });
+
+         theme = (response.data as IFindThemeResponse).theme;
+         console.log (theme);
+  
+      } catch (e: any) {       
+
+         console.error (e);           
+      }   
+      
+      return theme;
+   }
+
+   async function invalidThemeCall (apiUrl: string, text: string) : Promise <Boolean> {
+   
+      var response: any;
+      let caught = false;
+
+      try {
+         response = await axios.get(apiUrl, {
+         });
+
+      } catch (e: any) {       
+         caught = true;
+      }     
+
+      return caught;
+   }   
+
+   it("Needs to fail if session key is incorrect", async function () {
+
+      let sampleText : string | undefined = themedText ;      
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.findThemeApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidThemeCall (apiUrl, sampleText);
+
+      expect (caught).toBe (true) ;     
+
+   }).timeout(20000);
+
+   it("Needs to find theme of a simple message", async function () {
+
+      let sampleText = themedText ;      
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validThemeCall (apiUrl, sampleText, 10);
+
+      expect (summary && summary?.length > 0).toBe (true) ;     
+
+   }).timeout(20000);
+
+   
+   it("Needs to fail if session key is incorrect against production", async function () {
+
+      let sampleText : string | undefined = themedText;      
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.findThemeApi() + "?session=" + "thiswillfail";
+
+      let caught = await invalidThemeCall (apiUrl, sampleText);
+
+      expect (caught).toBe (true) ;     
+
+   }).timeout(20000);   
+   
+   it("Needs to find theme of a simple message against production", async function () {
+
+      let sampleText = themedText;      
+      let environment = getEnvironment(EEnvironment.kProduction);
+
+      let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
+
+      let summary = await validThemeCall (apiUrl, sampleText, 10);
+
+      expect (summary && summary?.length > 0).toBe (true) ;     
+
+   }).timeout(20000);
+
+});
+****************************************
+
+****************************************
+Api\test\generatefluidtoken.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { AzureClient } from "@fluidframework/azure-client";
+import { ContainerSchema } from "fluid-framework";
+import { SharedString } from "fluid-framework/legacy";
+
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { FluidApi } from '../../CommonTs/src/FluidApi'
+import { IFluidTokenRequest } from '../../CommonTs/src/Fluid';
+import { FluidClientProps } from '../../CommonTs/src/FluidTokenProvider'
+
+declare var process: any;
+
+const schema : ContainerSchema = {
+   initialObjects: {
+      test: SharedString
+   }
+};
+
+let documentUuid = "b03724b3-4be0-4491-b0fa-43b01ab80d50";
+
+async function sleep(ms: number): Promise<void> {
+   return new Promise(
+       (resolve) => setTimeout(resolve, ms));
+}
+
+describe("Generate Fluid Token", async function () {
+
+   it("Needs to fail if session key is incorrect", async function () {
+  
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let request: IFluidTokenRequest = {
+         local: true,         
+         documentId: "madeupdocument",
+         userId: "madeup user Id",
+         userName: "User"
+      }
+
+      let fluidApi = new FluidApi (environment, "thiswillfail");
+
+      let token = await fluidApi.generateToken(request);      
+
+      expect (typeof token).toBe ('undefined') ;     
+
+   }).timeout(20000);
+
+
+   it("Needs to return a valid token if session key is correct", async function () {
+  
+      let environment = getEnvironment(EEnvironment.kLocal);
+      let token : string | undefined = "";
+
+      let request: IFluidTokenRequest = {
+         local: true,         
+         userId: "madeup user Id",
+         userName: "User",
+         documentId: documentUuid         
+      }
+
+      let fluidApi = new FluidApi (environment, process.env.SessionKey.toString());
+
+      token = await fluidApi.generateToken(request);
+  
+      expect (token && token.length > 0).toBe (true);    
+
+   }).timeout(20000);
+
+   it("Needs to return a valid token from production if session key is correct", async function () {
+  
+      let environment = getEnvironment(EEnvironment.kProduction);
+      let token : string | undefined = "";
+
+      let request: IFluidTokenRequest = {
+         local: false,         
+         userId: "madeup user Id",
+         userName: "User",
+         documentId: documentUuid         
+      }
+
+      let fluidApi = new FluidApi (environment, process.env.SessionKey.toString());
+
+      token = await fluidApi.generateToken(request);
+  
+      expect (token && token.length > 0).toBe (true);    
+
+   }).timeout(20000);   
+
+   it("Needs to connect to a Fluid container.", async function () {
+
+      let session = process.env.SessionKey.toString();
+
+      let user: IFluidTokenRequest = {
+         local: true,
+         userId: "madeup user Id",
+         userName: "User",
+         documentId: documentUuid
+      }
+
+      let clientProps: FluidClientProps = new FluidClientProps(session, user, false);
+      let client = new AzureClient(clientProps);   
+
+      const { container: containerNew, services: servicesNew } = await client.createContainer(schema as any, "2");
+
+      // Attach container to service and return assigned ID
+      const containerId = await containerNew.attach();
+
+      containerNew.initialObjects.test = "Hello";
+
+      await sleep (2500);
+      
+      const { container: containerExisting, services: servicesExisting } = await client.getContainer(containerId, schema as any, "2");
+
+      await sleep (2500);
+
+      let read = (containerExisting.initialObjects.test as SharedString).getText();
+
+      containerExisting.initialObjects.test = "Goodbye";
+
+      containerNew.dispose();
+      containerExisting.dispose();  
+
+
+   }).timeout(20000);
+ 
+
+});
+****************************************
+
+****************************************
+Api\test\login.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+declare var process: any;
+
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { LoginApi } from "../../CommonTs/src/LoginApi"
+
+describe("Login", async function () {
+
+   it("Needs to succeed with valid key in local environment", async function () {
+      
+      let api = new LoginApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+
+      let session = await api.login ();
+
+      expect (session && session?.length > 0).toBe (true) ;         
+
+   }).timeout(20000);
+
+
+   it("Needs to fail with invalid key.", async function () {
+
+      let api = new LoginApi (getEnvironment (EEnvironment.kLocal), "thiswillfail");
+
+      let session = await api.login ();
+      
+      expect (session).toEqual ("") ;         
+
+  }).timeout(20000);
+
+  it("Needs to succeed with valid key in production environment", async function () {
+      
+   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
+
+   let session = await api.login ();
+
+   expect (session && session?.length > 0).toBe (true) ;         
+
+}).timeout(20000);
+
+
+it("Needs to fail with invalid key in production environment.", async function () {
+
+   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), "thiswillfail");
+
+   let session = await api.login ();
+   
+   expect (session).toEqual ("") ;         
+
+}).timeout(20000);  
+
+
+});
+****************************************
+
+****************************************
+Api\test\model.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { EModel } from '../../CommonTs/src/IModel';
+import { getDefaultModel, getModel } from '../../CommonTs/src/IModelFactory';
+
+describe("Model", async function () {
+
+   it("Needs to provide default model", async function () {
+      
+      let model = getDefaultModel();
+
+      expect (model.deploymentName.length > 0).toBe (true) ;   
+      expect (model.contextWindowSize > 0).toBe (true) ;             
+
+   });
+
+   it("Needs to provide specific model", async function () {
+      
+      let model = getModel(EModel.kSmall);
+
+      expect (model.deploymentName.length > 0).toBe (true) ;   
+      expect (model.contextWindowSize > 0).toBe (true) ;   
+
+   });
+
+   it("Needs to judge small text", async function () {
+      
+      let model = getModel(EModel.kSmall);
+      let text = "small text";
+
+      expect (model.fitsInContext(text)).toBe (true) ;     
+
+   });   
+
+   it("Needs to judge large text", async function () {
+      
+      let model = getModel(EModel.kSmall);
+
+      let text = "small text";
+      for (let i = 0; i < 12; i++)
+          text = text + text;
+
+      expect (model.fitsInContext(text)).toBe (false) ;   
+
+   });  
+
+   it("Needs to chunk small text", async function () {
+      
+      let model = getModel(EModel.kSmall);
+      let text = "small text";
+
+      expect (model.chunkText(text, undefined, undefined).length).toBe (1);
+
+   });   
+
+   it("Needs to chunk large text", async function () {
+      
+      let model = getModel(EModel.kSmall);
+
+      let text = "small text ";
+      for (let i = 0; i < 12; i++)
+          text = text + text;
+
+      expect (model.chunkText(text, undefined, undefined).length > 1).toBe (true) ;   
+   });  
+
+   it("Needs to chunk large text with overlaps", async function () {
+      
+      let model = getModel(EModel.kSmall);
+
+      let text = "small text ";
+      for (let i = 0; i < 12; i++)
+          text = text + text;
+
+      let baseLength = model.chunkText(text, undefined, undefined).length;
+      let overlappedLength = model.chunkText(text, undefined, 2048).length;
+
+      expect (overlappedLength > baseLength).toBe (true) ;   
+   });  
+
+});
+****************************************
+
+****************************************
+Api\test\pagestore.test.ts
+****************************************
+'use strict';
+// Copyright Braid Technologies Ltd, 2024
+
+import axios from 'axios';
+import { expect } from 'expect';
+import { describe, it } from 'mocha';
+
+import { randomKey } from './storable';
+import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { PageRepostoryApi } from '../../CommonTs/src/PageRepositoryApi'
+import { IStoredPage } from '../../CommonTs/src/PageRepositoryApi.Types';
+
+declare var process: any;
+
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+/**
+ * Loads HTML content from a file in the filesystem
+ * 
+ * @param fileName - The name of the HTML file to load
+ * @returns The HTML content as a string
+ * @throws Error if file cannot be read or does not exist
+ */
+function loadHtmlFromFile(fileName: string): string {
+    try {
+        // Read the file synchronously using absolute path
+        const filePath = join(process.cwd(), fileName);
+        const htmlContent = readFileSync(filePath, 'utf-8');
+        return htmlContent;
+    } catch (error: any) {
+        throw new Error(`Failed to load HTML file ${fileName}: ${error.message}`);
+    }
+}
+
+describe("StorablePage", async function () {
+
+   let now = new Date().toUTCString();
+
+   let env = getEnvironment(EEnvironment.kLocal);
+   let api = new PageRepostoryApi(env, process.env.SessionKey.toString());
+
+   let key = randomKey();
+   let htmlFromFile = loadHtmlFromFile ("test/page_test.html");
+   let htmlCompressed = api.compressString (htmlFromFile);
+
+   it("Needs to succeed with save & valid key in local environment", async function () {
+      
+      let record: IStoredPage = {
+         id: randomKey(),
+         applicationId: "Test",
+         schemaVersion: "1",
+         created: now,
+         amended: now,
+         contextId: "madeupId",
+         userId: "madeeupId",
+         className: "madeUpClass",
+         functionalSearchKey: "1234",
+         html: htmlCompressed
+      }
+
+      let myRecord = { ...record };
+      myRecord.id = key;
+
+      let ok = await api.save (myRecord);
+
+      expect(ok).toBe(true);
+
+   }).timeout(20000);
+
+   it("Needs to succeed with load & valid key in local environment", async function () {
+
+      var response: any;
+
+      let environment = getEnvironment(EEnvironment.kLocal);
+
+      let url = environment.getPageApi() 
+         + "?id=" + key.toString();
+
+      response = await axios.post(url);     
+      
+      let html = response.data;
+
+      expect(html).toBe(htmlFromFile);
+
+   }).timeout(20000);   
+
+});
+****************************************

@@ -11,7 +11,8 @@
     "noImplicitAny": true,
     "declaration": true, 
     "declarationMap": true, 
-    "composite": true    
+    "composite": true,
+    "esModuleInterop": true
   },
   "references": []
 }

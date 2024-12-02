@@ -1,1 +1,0 @@
-"Nationwide Building Society reduced its fraud losses by 75% by implementing SAS® analytics. They established a fraud analytics team that utilized various SAS tools, creating rule sets to detect different types of fraud and improve fraud detection and reporting. This approach also supported anti-money laundering initiatives, contributing to significant cost savings."

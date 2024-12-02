@@ -1,0 +1,39 @@
+{
+  "definitions": {
+    "ISuppressSummariseFailRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "ISuppressSummariseFailRequest.text"
+        },
+        "lengthInWords": {
+          "type": "number",
+          "title": "ISuppressSummariseFailRequest.lengthInWords"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "title": "ISuppressSummariseFailRequest",
+      "description": "Defines the structure of a summarise request object."
+    },
+    "ISuppressSummariseFailResponse": {
+      "type": "object",
+      "properties": {
+        "isValidSummary": {
+          "title": "ISuppressSummariseFailResponse.isValidSummary"
+        }
+      },
+      "required": [
+        "isValidSummary"
+      ],
+      "additionalProperties": false,
+      "title": "ISuppressSummariseFailResponse",
+      "description": "Defines the structure of a summarise response object."
+    }
+  },
+  "$id": "SuppressSummariseFailApi.Types.json",
+  "$comment": "Generated from src\\SuppressSummariseFailApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}

@@ -13,13 +13,12 @@ import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functio
  */
 export function isSessionValid(request: HttpRequest, context: InvocationContext): boolean {
 
-   let requestedSession: string | null = null;
+   let requestedSession: string | undefined = undefined;
 
    for (const [key, value] of request.query.entries()) {
       if (key === 'session')
          requestedSession = value;
    }
-
 
    if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
       context.log("Passed session key validation:" + requestedSession);
