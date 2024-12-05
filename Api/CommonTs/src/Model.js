@@ -14,8 +14,8 @@ const tokenizer = new gpt4_tokenizer_1.default({ type: 'gpt3' });
  */
 class GPT4 {
     constructor() {
-        this.deploymentName = "BraidLarge";
-        this.embeddingDeploymentName = "BraidLargeEmbedding";
+        this.deploymentName = "GPT4o";
+        this.embeddingDeploymentName = "Embed-3";
         this.contextWindowSize = 8192;
         this.contextWindowSizeWithBuffer = (8192 - 256);
     }
