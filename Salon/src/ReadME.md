@@ -28,13 +28,13 @@
 Run the script from the command line with a single argument specifying the path to the JSON or YAML API specification file.
 
 ```bash
-python api_test_code_generator.py <path_to_api_file>
+python api_to_test_code.py <path_to_api_file>
 ```
 
 ### Example
 
 ```bash
-python api_test_code_generator.py sample_api.json
+python api_to_test_code.py sample_api.json
 ```
 
 ### Output
@@ -65,7 +65,7 @@ Once the code is generated, it is saved as a `.py` file with the original input 
 
 ### 6. Logging and Error Handling
 
-The tool uses comprehensive logging to track errors, warnings, and other critical steps throughout the script. The logging level is set to `ERROR` to minimize verbosity unless an error is encountered.
+The tool uses logging to track errors, warnings, and other critical steps throughout the script. The logging level is set to `ERROR` to minimize verbosity unless the developer overrides this.
 
 ## Sample Output
 
