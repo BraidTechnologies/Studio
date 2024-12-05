@@ -25,7 +25,9 @@
       "pull": "copy ..\\CommonTs\\src src\\CommonTs\\src",
       "build": "react-scripts build",
       "test": "react-scripts test",
-      "eject": "react-scripts eject"
+      "eject": "react-scripts eject",
+      "push-prep": "md ..\\..\\BraidWeb\\public\\wfbr",
+      "push": "xcopy build ..\\..\\BraidWeb\\public\\wfbr /s /v /h /y" 
    },
    "moduleNameMapper": {
       "\\.(css)$": "jest-css-modules"
@@ -70,5 +72,5 @@
       "pako": "^2.1.0",
       "ts-jest": "^29.2.5"
    },
-   "homepage": "/"   
+   "homepage": "/wfbr"   
 }

@@ -2,6 +2,19 @@ import React, { ReactNode } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
 import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
+
+
+/**
+ * Constructs a URL string by appending the given value as a query parameter.
+ *
+ * @param value - The string value to be appended as a query parameter.
+ * @returns The constructed URL string with the query parameter.
+ */
+function chunkUrl (value: string) : string {
+   return './?id=' + value.toString();
+}
+
+
 /**
  * Generates a ReactNode that provides a link back to a parent element.
  *
@@ -11,8 +24,7 @@ import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
 function backToParent (value: string | undefined) : ReactNode {
 
    if (value) {
-      let relatedUrl = '/chunks/' + value.toString();
-
+      let relatedUrl = chunkUrl(value);
       return (<p>{uiBackToParentChunk} <a href={relatedUrl}>{value}</a> </p>)
    }
    else
@@ -30,7 +42,7 @@ function backToParent (value: string | undefined) : ReactNode {
  */
 function mapRelated (value: string, index: number, all: Array<string>) : ReactNode {
 
-   let relatedUrl = '/chunks/' + value.toString();
+   let relatedUrl = chunkUrl(value);
    let nodeWithKey : ReactNode = <p key={value}> <a href={relatedUrl}>{value}</a> </p>;
 
    return (nodeWithKey)

@@ -49,14 +49,16 @@ function App() {
    const pageOuterClasses = pageOuterStyles();
    const innerColumnClasses = innerColumnStyles();
 
-   // If you have a URL like `https://braidapps.io/chunks/123`, you can extract the path segments:
-   const pathSegments = window.location.pathname.split('/');
    let chunkId : string | undefined = undefined;
 
-   if (pathSegments.length >= 3) {
-      chunkId = pathSegments[2]; // Assuming 'chunks' is the first segment
-   }
+   const params = new URLSearchParams(window.location.search);
+   let chunkParam = params.get("id");
+   console.log(chunkParam); 
 
+   if (chunkParam) {
+      chunkId = chunkParam; 
+   }
+   console.log (chunkId);
    return (
       <FluentProvider theme={teamsDarkTheme} className={fluidFillPageClasses.root}>
          <div className={pageOuterClasses.root}>
