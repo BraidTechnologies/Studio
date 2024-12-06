@@ -15,7 +15,7 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
       try {
          let spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(spec.repositoryId);
 
          let chunks = await repository.lookupRelevantFromSummary (spec);
 
@@ -40,7 +40,7 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
       try {
          let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(spec.repositoryId);
 
          let chunks = await repository.lookupRelevantFromUrl (spec);
 
@@ -65,7 +65,7 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
       try {
          let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(spec.repositoryId);
 
          let chunks = await repository.lookupFromUrl (spec);
 
