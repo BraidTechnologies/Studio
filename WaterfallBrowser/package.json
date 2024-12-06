@@ -27,7 +27,7 @@
       "test": "react-scripts test",
       "eject": "react-scripts eject",
       "push-prep": "md ..\\..\\BraidWeb\\public\\wfbr",
-      "push": "xcopy build ..\\..\\BraidWeb\\public\\wfbr /s /v /h /y" 
+      "push": "del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.js && del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.js.map && del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.txt && xcopy build ..\\..\\BraidWeb\\public\\wfbr /s /v /h /y" 
    },
    "moduleNameMapper": {
       "\\.(css)$": "jest-css-modules"
