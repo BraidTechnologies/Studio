@@ -1,5 +1,5 @@
 {
-   "azureFunctions.deploySubpath": "BraidApi",
+   "azureFunctions.deploySubpath": "Api",
    "azureFunctions.postDeployTask": "npm install (functions)",
    "azureFunctions.projectLanguage": "TypeScript",
    "azureFunctions.projectRuntime": "~4",

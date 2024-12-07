@@ -23,7 +23,7 @@ let boxerSummaries = [
 ];
 
 let waterfallSummaries = [
-   "BoNY Mellon is investing in Ai capabilities",
+   "BNY Mellon is investing in AI capabilities using an NVidia platform.",
 ];
 
 describe("FindEnrichedChunks - Boxer", async function () {
@@ -116,7 +116,7 @@ describe("FindEnrichedChunks - Waterfall", async function () {
             console.log (response[i].relevance.toString());
          }
          console.log ("\n");
-         expect(response.length == 0).toBe(true);
+         expect(response.length > 0).toBe(true);
       }
 
    }).timeout(20000);

@@ -94,6 +94,31 @@ export class AzureLogger implements ILoggingContext {
    }
 }
 
+export class ConsoleLogger implements ILoggingContext {
+
+
+   constructor () {
+
+   }
+
+   log (message: string, details: any) : void {
+
+      console.log (message, JSON.stringify(details));
+   }
+   
+   info (message: string, details: any) : void {
+      console.info (message, JSON.stringify(details));      
+   }
+   
+   warning (message: string, details: any) : void {
+      console.warn (message, JSON.stringify(details));
+   }  
+   
+   error (message: string, details: any) : void {
+      console.error (message, JSON.stringify(details));      
+   }
+}
+
 /**
  * Asynchronously finds a Storable from the database.
  * 
@@ -309,8 +334,8 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
  * @param transformer - An optional transformer function to apply to the loaded storable.
  * @returns A promise that resolves to an array of storable objects representing the loaded activities.
  */
-export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec, 
-   params: ICosmosStorableParams, 
+export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
+   params: ICosmosStorableParams,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
@@ -346,13 +371,13 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
 
             for (let i = 0; i < responseRecords.length; i++) {
                storedRecords.push(applyTransformer(responseRecords[i], transformer));
-               context.log ("Loaded storable:", storedRecords[i].id);               
+               context.log("Loaded storable:", storedRecords[i].id);
             }
             resolve(storedRecords);
          })
          .catch((error: any) => {
 
-            context.error ("Error calling database:", error);
+            context.error("Error calling database:", error);
             reject(new Array<IStorable>());
          });
    });
@@ -360,3 +385,75 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
    return done;
 }
 
+/**
+ * Asynchronously loads recent activities based on the provided query specifications.
+ * 
+ * @param querySpec - The query specifications including the limit and className.
+ * @param params - the ICosmosStorableParams for the collection
+ * @param context - The invocation context for logging and tracing.
+ * @param transformer - An optional transformer function to apply to the loaded storable.
+ * @returns A promise that resolves to an array of storable objects representing the loaded activities.
+ */
+export async function loadStorables(querySpec: IStorableMultiQuerySpec,
+   params: ICosmosStorableParams,
+   context: ILoggingContext,
+   transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
+
+   let dbkey = process.env.CosmosApiKey;
+
+   let done = new Promise<Array<IStorable>>(async function (resolve, reject) {
+
+      let time = new Date().toUTCString();
+      let continuation: string | undefined = undefined;
+      let more = true;
+
+      throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
+      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+
+      while (more) {
+
+         try {
+            let headers = makePostQueryHeader(key, time, params.partitionKey, continuation);
+
+            let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC";
+
+            let resp = await axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
+               {
+                  "query": query,
+                  "parameters": [
+                     {
+                        "name": "@className",
+                        "value": querySpec.className
+                     }
+                  ]
+               },
+               {
+                  headers: headers
+               });
+
+            if (resp.headers["x-ms-continuation"]) {
+               continuation = resp.headers["x-ms-continuation"];
+            }
+            else {
+               more = false;
+            }
+            let responseRecords = resp.data.Documents;
+            let storedRecords = new Array<IStorable>();
+
+            for (let i = 0; i < responseRecords.length; i++) {
+               storedRecords.push(applyTransformer(responseRecords[i], transformer));
+               context.log("Loaded storable:", storedRecords[i].id);
+            }
+
+            resolve (storedRecords);
+         }
+         catch (error: any) {
+
+            context.error("Error calling database:", error);
+            resolve (new Array<IStorable>());
+         };
+      }
+   });
+
+   return done;
+}
