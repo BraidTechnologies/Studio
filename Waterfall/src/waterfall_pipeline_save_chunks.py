@@ -9,7 +9,8 @@ import datetime
 from CommonPy.src.chunk_repository_api import (ChunkRepository,
                                                chunk_class_name,
                                                chunk_schema_version,
-                                               waterfall_application_name)
+                                               waterfall_application_name,
+                                               boxer_application_name)
 from CommonPy.src.chunk_repository_api_types import (IStoredChunk, create_text_rendering)
 
 from CommonPy.src.page_repository_api import (PageRepository,
@@ -18,7 +19,7 @@ from CommonPy.src.page_repository_api import (PageRepository,
                                               make_page_from_file)
 from CommonPy.src.page_repository_api_types import (IStoredPage)
 
-from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
+from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec, PipelineFileSpec
 from src.waterfall_pipeline_report_common import write_chart
 from src.db_repository import DbRepository
 
@@ -70,12 +71,29 @@ def create_theme_chunk (short_description: str,
 
     return theme_to_save
 
-def save_chunks(output_location: str,
+def save_chunks (items: list[PipelineItem],
+                 spec: PipelineFileSpec) -> None:
+     
+    db_repository = DbRepository(boxer_application_name, spec.description)
+    for item in items:
+        loaded_item = db_repository.find(item.path)
+        if loaded_item is None:
+            loaded_item = PipelineItem()
+            loaded_item.id = str(uuid.uuid4())
+        loaded_item.parent_id = None
+        loaded_item.path = item.path
+        loaded_item.embedding = item.embedding
+        loaded_item.summary = item.summary
+        loaded_item.text = item.text
+        db_repository.save(loaded_item)
+
+def save_chunk_tree(output_location: str,
                 items: list[PipelineItem],
                 themes: list[Theme],
                 spec: WebSearchPipelineSpec) ->None:
     '''
-    Generates a report based on the provided PipelineItems, Themes, and PipelineSpec.
+    saves chunks in a tree based on the provided PipelineItems, Themes, and PipelineSpec. 
+    There is one root chunk, then one per cluster, then one per each leaf. 
 
         Parameters:
         - output_location - directory to store file output
@@ -175,4 +193,3 @@ def save_chunks(output_location: str,
                                 spec.output_chart_name)
     page_repository.save (page)
 
-    return

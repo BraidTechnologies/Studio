@@ -87,6 +87,7 @@ class IStoredChunk(IStorable):
     storedEmbedding (Union[IStoredEmbedding, None]): An optional stored embedding associated with the chunk.
     storedSummary (Union[IStoredTextRendering, None]): An optional stored summary text rendering.
     storedTitle (Union[IStoredTextRendering, None]): An optional stored title text rendering.
+    url (Union[str, None]): web location
     relatedChunks (Union[List[str], None]): A list of IDs of related chunks, if any.
     """
     parentChunkId: Union[str, None]

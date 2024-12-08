@@ -61,8 +61,8 @@ class PageRepository:
 
         page.amended = utc_time_string
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
-        page_url = f'http://localhost:7071/api/SavePage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
+        #page_url = f'http://localhost:7071/api/SavePage?session={
             SESSION_KEY}'
         json_input = {
             'request': page.__dict__

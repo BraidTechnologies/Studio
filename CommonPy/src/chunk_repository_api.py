@@ -120,8 +120,8 @@ class ChunkRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Finding: %s', functional_key)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
@@ -179,8 +179,8 @@ class ChunkRepository:
         spec.functionalSearchKey = None
         logger.debug('Finding: %s', record_id)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/GetChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/GetChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
@@ -229,8 +229,8 @@ class ChunkRepository:
         spec.functionalSearchKey = None
         logger.debug('Removing: %s', id)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/RemoveChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/RemoveChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
@@ -261,8 +261,8 @@ class ChunkRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Checking existence of: %s', functional_key)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
