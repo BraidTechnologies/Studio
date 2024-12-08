@@ -104,7 +104,7 @@ def test_with_search_nationwide ():
     pipeline_spec.output_chart_name = 'nationwide_cluster.html'
     pipeline_spec.output_data_name = "nationwide_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, True)
+    links = pipeline.search (pipeline_spec, False)
     assert len(links) >= 1
 
 @pytest.mark.timeout(15000)

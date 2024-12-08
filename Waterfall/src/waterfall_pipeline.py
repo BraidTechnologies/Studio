@@ -205,5 +205,5 @@ class WaterfallDataPipeline:
         - send_final - set to false to suppress ending the report - used in testing
         '''
         write_details_json( self.output_location, items, themes, spec)
-        create_mail_report(self.output_location, items, themes, spec, send_final)
         save_chunk_tree (self.output_location, items, themes, spec)
+        create_mail_report(self.output_location, items, themes, spec, send_final)

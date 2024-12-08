@@ -93,7 +93,7 @@ def save_chunk_tree(output_location: str,
                 spec: WebSearchPipelineSpec) ->None:
     '''
     saves chunks in a tree based on the provided PipelineItems, Themes, and PipelineSpec. 
-    There is one root chunk, then one per cluster, then one per each leaf. 
+    There is one root chunk, then one per Theme, then one per Item. 
 
         Parameters:
         - output_location - directory to store file output
