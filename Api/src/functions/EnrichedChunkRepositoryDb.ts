@@ -13,7 +13,25 @@ import { IStorable } from "../../../CommonTs/src/IStorable";
 import { IStoredChunk } from "../../../CommonTs/src/ChunkRepositoryApi.Types";
 
 
-
+/**
+ * EnrichedChunkRepositoryDb is a class that implements the IEnrichedChunkRepository interface.
+ * It initializes an in-memory repository of enriched chunks and manages asynchronous loading
+ * of chunk data from a database. The class provides methods to look up relevant enriched chunks
+ * based on a summary or URL, and to retrieve a chunk summary by URL.
+ * 
+ * @constructor
+ * Initializes a new instance of the class, setting up an in-memory repository and a semaphore
+ * to manage asynchronous data loading from a database.
+ * 
+ * @method lookupRelevantFromSummary
+ * Searches for enriched chunks that are relevant to the text in the summary field of the query.
+ * 
+ * @method lookupRelevantFromUrl
+ * Searches for enriched chunks that are relevant to a given URL from other sources.
+ * 
+ * @method lookupFromUrl
+ * Retrieves the summary of an enriched chunk given its URL.
+ */
 export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
 
    private _repositoryInMemory: IEnrichedChunkRepository;

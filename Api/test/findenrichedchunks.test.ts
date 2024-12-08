@@ -12,7 +12,7 @@ import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
 import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
 
-let urls = ["https://www.youtube.com/watch?v=roEKOzxilq4&t=00m",
+let boxerUrls = ["https://www.youtube.com/watch?v=roEKOzxilq4&t=00m",
    "https://karpathy.medium.com/software-2-0-a64152b37c35"];
 
 let boxerSummaries = [
@@ -26,27 +26,31 @@ let waterfallSummaries = [
    "BNY Mellon is investing in AI capabilities using an NVidia platform.",
 ];
 
-describe("FindEnrichedChunks - Boxer", async function () {
+let waterfallUrls = ["https://www.datanami.com/this-just-in/bny-mellon-and-microsoft-unite-to-enhance-capital-markets-with-advanced-cloud-and-analytics-platform/"];
+
+async function commonChunkStoreTests(repo: EChunkRepository,
+                                summaries: Array<string>,
+                                urls: Array<string>): Promise<void> {
 
    it("Needs to find relevant chunks from a matching Summary.", async function () {
 
-      for (let i = 0; i < boxerSummaries.length; i++) {
+      for (let i = 0; i < summaries.length; i++) {
 
          let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
          let urlQuery = {
             maxCount: 2,
-            repositoryId: EChunkRepository.kBoxer,
-            summary: boxerSummaries[i],
+            repositoryId: repo,
+            summary: summaries[i],
             similarityThreshold: 0.15
          };
 
          let response = await api.findRelevantChunksFromSummary(urlQuery);
-         console.log ("\nLooking for:" + urlQuery.summary);      
+         console.log("\nLooking for:" + urlQuery.summary);
          for (let i = 0; i < response.length; i++) {
-            console.log (response[i].chunk.summary);
-            console.log (response[i].relevance.toString());
+            console.log(response[i].chunk.summary);
+            console.log(response[i].relevance.toString());
          }
-         console.log ("\n");
+         console.log("\n");
          expect(response.length > 0).toBe(true);
       }
 
@@ -59,22 +63,20 @@ describe("FindEnrichedChunks - Boxer", async function () {
       for (let i = 0; i < urls.length; i++) {
          let urlQuery = {
             maxCount: 2,
-            repositoryId: EChunkRepository.kBoxer,
+            repositoryId: repo,
             url: urls[i],
             similarityThreshold: 0.15
          };
 
          let response = await api.findRelevantChunksFromUrl(urlQuery);
-         console.log ("Looking for:" + urlQuery.url);
+         console.log("Looking for:" + urlQuery.url);
          for (let i = 0; i < response.length; i++)
-            console.log (response[i].chunk.url);
+            console.log(response[i].chunk.url);
 
          expect(response.length > 0).toBe(true);
       }
+   }).timeout (20000);
 
-   }).timeout(20000);
-
-   
    it("Needs to find same chunks from a matching URL.", async function () {
 
       let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
@@ -82,7 +84,7 @@ describe("FindEnrichedChunks - Boxer", async function () {
       for (let i = 0; i < urls.length; i++) {
          let urlQuery = {
             maxCount: 2,
-            repositoryId: EChunkRepository.kBoxer,
+            repositoryId: repo,
             url: urls[i],
             similarityThreshold: 0.75
          };
@@ -92,33 +94,17 @@ describe("FindEnrichedChunks - Boxer", async function () {
          expect(response !== undefined).toBe(true);
       }
 
-   }).timeout(20000);
-});
+   }).timeout(20000);   
+}
+
+
+describe("FindEnrichedChunks - Boxer", async function () {
+   
+   commonChunkStoreTests (EChunkRepository.kBoxer, boxerSummaries, boxerUrls);
+   
+}).timeout(20000);
 
 describe("FindEnrichedChunks - Waterfall", async function () {
 
-   it("Needs to find relevant chunks from a matching Summary.", async function () {
-
-      for (let i = 0; i < waterfallSummaries.length; i++) {
-
-         let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
-         let urlQuery = {
-            maxCount: 2,
-            repositoryId: EChunkRepository.kWaterfall,
-            summary: waterfallSummaries[i],
-            similarityThreshold: 0.15
-         };
-
-         let response = await api.findRelevantChunksFromSummary(urlQuery);
-         console.log ("\nLooking for:" + urlQuery.summary);      
-         for (let i = 0; i < response.length; i++) {
-            console.log (response[i].chunk.summary);
-            console.log (response[i].relevance.toString());
-         }
-         console.log ("\n");
-         expect(response.length > 0).toBe(true);
-      }
-
-   }).timeout(20000);
-
+   commonChunkStoreTests (EChunkRepository.kWaterfall, waterfallSummaries, waterfallUrls);
 });
