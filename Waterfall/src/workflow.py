@@ -154,6 +154,6 @@ class PipelineFileSpec(Freezable):
         Freeze the object to prevent adding spurious variables.
         '''
         self.output_data_name = None
-        self.desciption = None
+        self.description = None
 
         self._freeze()

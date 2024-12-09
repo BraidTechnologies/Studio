@@ -106,7 +106,7 @@ class BoxerDataPipeline:
                 all_enriched_chunks.append(embedded)
 
         # Save all chunks to the DB
-        save_chunks(all_enriched_chunks, file_spec.desciption)
+        save_chunks(all_enriched_chunks, file_spec)
 
         output_results = []
         for chunk in all_enriched_chunks:
