@@ -93,8 +93,8 @@ class PageRepository:
 
         logger.debug('Finding: %s', record_id)
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
-        page_url = f'http://localhost:7071/api/GetPage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
+        #page_url = f'http://localhost:7071/api/GetPage?session={
             SESSION_KEY}&id={record_id}'
 
         response = self.session.post(

@@ -26,7 +26,7 @@ let waterfallSummaries = [
    "BNY Mellon is investing in AI capabilities using an NVidia platform.",
 ];
 
-let waterfallUrls = ["https://www.datanami.com/this-just-in/bny-mellon-and-microsoft-unite-to-enhance-capital-markets-with-advanced-cloud-and-analytics-platform/"];
+let waterfallUrls = ["https://blog.google/products/search/generative-ai-google-search-may-2024/"];
 
 async function commonChunkStoreTests(repo: EChunkRepository,
                                 summaries: Array<string>,

@@ -45,6 +45,7 @@ class ChunkRepository:
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
         models_url = f'https://braid-api.azurewebsites.net/api/EnumerateModels?session={
+        #models_url = f'http://localhost:7071/api/EnumerateModels?session={
             SESSION_KEY}'
         json_input = {
             'request': ''
@@ -152,8 +153,6 @@ class ChunkRepository:
 
             response_obj = safe_dict_to_object(response_json)
             safe_response: IStoredChunk = safe_cast(response_obj, IStoredChunk)
-
-
 
             logger.debug('Found: %s', functional_key)
             return safe_response

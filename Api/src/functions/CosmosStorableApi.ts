@@ -409,6 +409,7 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
       let key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      let accumulatedRecords = new Array<IStorable>();
 
       while (more) {
 
@@ -438,14 +439,11 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
                more = false;
             }
             let responseRecords = resp.data.Documents;
-            let storedRecords = new Array<IStorable>();
 
             for (let i = 0; i < responseRecords.length; i++) {
-               storedRecords.push(applyTransformer(responseRecords[i], transformer));
-               context.log("Loaded storable:", storedRecords[i].id);
+               accumulatedRecords.push(applyTransformer(responseRecords[i], transformer));
+               context.log("Loaded storable:", accumulatedRecords[i].id);
             }
-
-            resolve (storedRecords);
          }
          catch (error: any) {
 
@@ -453,6 +451,8 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
             resolve (new Array<IStorable>());
          };
       }
+
+      resolve (accumulatedRecords);      
    });
 
    return done;
