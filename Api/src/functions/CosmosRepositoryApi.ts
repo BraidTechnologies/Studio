@@ -4,6 +4,8 @@
 // 3rd party imports
 var crypto = require("crypto");
 
+import { LooseObject } from "../../../CommonTs/src/LooseObject";
+
 /**
  * Generates an authorization token using the provided master key for the given verb, resource type, resource ID, and date.
  * 
@@ -125,10 +127,13 @@ export function makeDeleteHeader(key: string, time: string, partitionKey: string
  * @param key The authorization key for the query.
  * @param time The timestamp for the query.
  * @param partitionKey The default partition key for the query.
+ * @param continuation Continuation key (optional)
  * @returns An object containing the necessary headers for the POST activity query.
  */
-export function makePostQueryHeader(key: string, time: string, partitionKey: string): object {
-   return {
+export function makePostQueryHeader(key: string, time: string, partitionKey: string, 
+   continuation: string | undefined = undefined): object {
+
+   let headers : LooseObject = {
       "Authorization": key,
       "Content-Type": "application/query+json",
       "Accept": "application/json",
@@ -139,4 +144,9 @@ export function makePostQueryHeader(key: string, time: string, partitionKey: str
       "x-ms-consistency-level": "Eventual",
       "x-ms-documentdb-isquery": "True"
    };
+
+   if (continuation)
+      headers["x-ms-continuation"] = continuation;
+
+   return headers;
 }

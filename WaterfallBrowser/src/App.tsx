@@ -7,7 +7,7 @@ import { retrieveChunk } from './ChunkRetriever';
 const fluidFillPageStyles = makeStyles({
    root: {
       minWidth: "512px",  // Ask for enough for at least the error message  
-      height: '100vh', /* fill the screen with flex layout */
+      height: '100%', /* fill the screen with flex layout */
       width: '100vw'   /* fill the screen with flex layout */      
    },
 });
@@ -16,9 +16,9 @@ const pageOuterStyles = makeStyles({
    root: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'stretch',  /* for a row, the main axis is vertical, flex-end is items aligned to the bottom of the row */
+      alignItems: 'stretch',    /* for a row, the main axis is vertical, flex-end is items aligned to the bottom of the row */
       justifyContent: 'center', /* for a row, the cross-axis is horizontal, center means vertically centered */
-      height: '100vh', /* fill the screen with flex layout */
+      height: '100vh',  /* fill the screen with flex layout */
       width: '100vw',  /* fill the screen with flex layout */
       marginLeft: '0px',
       marginRight: '0px',

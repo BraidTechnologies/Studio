@@ -79,7 +79,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
    let chunks = new Array<IRelevantEnrichedChunk>();
 
    if (tokens >= minimumEnrichmentTokens) {
-      let repository = getEnrichedChunkRepository();
+      let repository = getEnrichedChunkRepository(query.repositoryId);
 
       let spec = {
          repositoryId: query.repositoryId,

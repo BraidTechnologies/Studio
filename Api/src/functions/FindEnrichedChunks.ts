@@ -7,7 +7,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../CommonTs/src/EnrichedChunk";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
-
+import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    if (isSessionValid(request, context)) {
@@ -15,7 +15,7 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
       try {
          let spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
          let chunks = await repository.lookupRelevantFromSummary (spec);
 
@@ -40,7 +40,7 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
       try {
          let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
          let chunks = await repository.lookupRelevantFromUrl (spec);
 
@@ -65,7 +65,7 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
       try {
          let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository();
+         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
          let chunks = await repository.lookupFromUrl (spec);
 

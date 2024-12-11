@@ -3,6 +3,8 @@
 
 import { IStorable} from "./IStorable";
 
+export const storedChunkClassName = "Chunk";
+
 /**
  * Represents an interface for storing embeddings with a model ID and an array of numbers representing the embedding.
  */

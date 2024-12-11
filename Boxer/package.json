@@ -1,6 +1,6 @@
 {
    "name": "boxer",
-   "version": "0.0.0",
+   "version": "0.1.0",
    "description": "An OpenAI assistant that likes to talk about AI, written using Typescript, Node.js, and the Azure stack. GPT-4 backed with a store of AI Canon documents.",
    "main": "ui/AppEntry.tsx",
    "author": {

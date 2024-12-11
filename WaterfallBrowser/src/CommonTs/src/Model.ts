@@ -18,8 +18,8 @@ export class GPT4 implements IModel {
    contextWindowSizeWithBuffer: number;
 
    public constructor() {
-      this.deploymentName = "BraidLarge";
-      this.embeddingDeploymentName = "BraidLargeEmbedding";
+      this.deploymentName = "GPT4o";
+      this.embeddingDeploymentName = "Embed-3";
       this.contextWindowSize = 8192;
       this.contextWindowSizeWithBuffer = (8192 - 256)
    }

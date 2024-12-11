@@ -14,6 +14,7 @@ from src.html_link_crawler import HtmlLinkCrawler
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
 from src.embedder import Embedder
+from src.waterfall_pipeline_save_chunks import save_chunks
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.DEBUG,
@@ -103,6 +104,9 @@ class BoxerDataPipeline:
                 embedded = embedder.embed(summarised)
             if embedded:
                 all_enriched_chunks.append(embedded)
+
+        # Save all chunks to the DB
+        save_chunks(all_enriched_chunks, file_spec)
 
         output_results = []
         for chunk in all_enriched_chunks:

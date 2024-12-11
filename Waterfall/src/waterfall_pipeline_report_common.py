@@ -7,6 +7,7 @@ import os
 import json
 import plotly
 import plotly.express as px
+import umap
 import umap.umap_ as umap__
 
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
@@ -29,8 +30,7 @@ def write_chart(output_location: str,
         - output_location - directory to store file output
         - items (list[PipelineItem]): A list of PipelineItem objects to generate the report from.
         - themes (list[Theme]): A list of Theme objects associated with the PipelineItems.
-        - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
-        - send_final - set to false to suppress ending the report - used in testing
+        - spec (WebSearchPipelineSpec): The PipelineSpec object containing specifications for the report.
 
         Returns:
         - path to the created file

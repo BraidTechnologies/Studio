@@ -13,7 +13,7 @@ get_page_url = f"{BASE_URL}/getpage?session=" + SESSION_KEY
 sample_successful_html = "<html><body>Sample Page</body></html>"
 
 def test_get_page_success():
-    url = get_page_url+ '&id=769686001'
+    url = get_page_url+ '&id=61d4bef7-31eb-4293-a19c-6e17db8d650a'
 
     response = requests.get(url)
     assert response.status_code == 200

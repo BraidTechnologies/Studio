@@ -61,8 +61,8 @@ class PageRepository:
 
         page.amended = utc_time_string
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
-        page_url = f'http://localhost:7071/api/SavePage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
+        #page_url = f'http://localhost:7071/api/SavePage?session={
             SESSION_KEY}'
         json_input = {
             'request': page.__dict__
@@ -93,8 +93,8 @@ class PageRepository:
 
         logger.debug('Finding: %s', record_id)
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
-        page_url = f'http://localhost:7071/api/GetPage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
+        #page_url = f'http://localhost:7071/api/GetPage?session={
             SESSION_KEY}&id={record_id}'
 
         response = self.session.post(

@@ -31,7 +31,7 @@ export async function enumerateRepositories(request: HttpRequest, context: Invoc
          let spec = (jsonRequest as any).request as IEnumerateRepositoriesRequest;        
 
          let body: IEnumerateReposotoriesResponse = {
-            repositoryIds: [EChunkRepository.kBoxer]            
+            repositoryIds: [EChunkRepository.kBoxer, EChunkRepository.kWaterfall]            
          }
 
          context.log (body)

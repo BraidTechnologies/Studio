@@ -1,10 +1,11 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 // Definitions for the data elements of the Chunk API
 
-// For now there is only one sort of chunk repository. In future there may be new ones so we have an ID to distinguish them. 
+// We have an ID to distinguish different Chunk repostories. 
 export enum EChunkRepository {
 
-   kBoxer = "Boxer"
+   kBoxer = "Boxer",
+   kWaterfall = "Waterfall"
 };
 
 // Default is we only consider >= 50% relevant to present to the user (GPT4 seems to generate low scores ...)
