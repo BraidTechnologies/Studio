@@ -8,7 +8,7 @@
    },
    "sideEffects": false,
    "scripts": {
-      "build-package": "webpack-cli --config webpack-config.js && copy dist\\aibot.min.js ..\\..\\braidweb\\public\\assets\\js && copy dist\\aibot.min.js.map ..\\..\\braidweb\\public\\assets\\js",
+      "build-package": "webpack-cli --config webpack-config.js && copy dist\\aibot.pack.js ..\\..\\braidweb\\public\\assets\\js && copy dist\\aibot.pack.js.map ..\\..\\braidweb\\public\\assets\\js",
       "build": "tsc --build",
       "clean": "tsc --build --clean",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
@@ -72,7 +72,7 @@
    },
    "repository": {
       "type": "git",
-      "url": "https://github.com/jonverrier/braideng.git"
+      "url": "https://github.com/BraidTechnologies/Studio/Boxer"
    },
    "engines": {
       "node": ">=20.10.0",
