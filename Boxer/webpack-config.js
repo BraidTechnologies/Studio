@@ -9,11 +9,11 @@ const {
 module.exports = {
    devtool: 'source-map',
    entry: "./ui/AppEntry.tsx",
-   mode: "development",
+   mode: "production",
    target: 'web', 
    externals: [],
    output: {
-      filename: "aibot.pack.js",
+      filename: "aibot.min.js",
       devtoolModuleFilenameTemplate: '[resource-path]',  // removes the webpack:/// prefix
       libraryTarget: 'window'
    },
