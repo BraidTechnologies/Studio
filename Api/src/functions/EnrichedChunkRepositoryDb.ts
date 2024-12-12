@@ -67,6 +67,15 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
 
                   let storedChunk: IStoredChunk = values[i] as IStoredChunk;
 
+                  if (!storedChunk.url) {
+                     console.error ("No URL found for chunk", storedChunk.id);
+                     continue;
+                  }
+                  if (!storedChunk.storedEmbedding) {
+                     console.error ("No Embedding found for chunk", storedChunk.id);
+                     continue;
+                  }                  
+
                   let chunk: IEnrichedChunk = {
                      id: storedChunk.id as string,
                      embedding: storedChunk.storedEmbedding?.embedding as number[],

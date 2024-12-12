@@ -2,12 +2,10 @@
 
 // Internal imports
 import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
-import { EnrichedChunkRepositoryFile } from "./EnrichedChunkRepositoryFile";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 
 
-let boxerRepository: EnrichedChunkRepositoryFile | undefined = undefined;
 let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
 
 
@@ -18,7 +16,7 @@ let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
  * @returns An instance of IEnrichedChunkRepository corresponding to the specified repository type.
  * 
  * If the repository type is 'kWaterfall', it returns an instance of EnrichedChunkRepositoryDb.
- * If the repository type is 'kBoxer' or any other value, it returns an instance of EnrichedChunkRepositoryFile.
+ * If the repository type is 'kBoxer' or any other value, it does the same - parameters are reserved for future variation
  * The function ensures that only one instance of each repository type is created (singleton pattern). 
  * Repositories are relative expensive which is why we use singleton. 
  */
@@ -26,15 +24,11 @@ export function getEnrichedChunkRepository (repository: EChunkRepository) : IEnr
    switch (repository) {
 
       case EChunkRepository.kWaterfall:
-         if (!waterfallRepository)
-            waterfallRepository = new EnrichedChunkRepositoryDb();    
-         return waterfallRepository;   
-
       case EChunkRepository.kBoxer:             
       default:
-         if (!boxerRepository)
-            boxerRepository = new EnrichedChunkRepositoryFile()
-         return boxerRepository;   
+         if (!waterfallRepository)
+            waterfallRepository = new EnrichedChunkRepositoryDb()
+         return waterfallRepository;   
    }
 }
 
