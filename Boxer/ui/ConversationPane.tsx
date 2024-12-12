@@ -395,7 +395,7 @@ export interface ISingleMessageViewProps {
    author: Persona; 
 }
 
-export interface IKnowledgeSegmentProps {
+export interface IRelevantChunkProps {
 
    sessionKey: SessionKey;
    segment: IRelevantEnrichedChunk;  
@@ -521,7 +521,18 @@ const buttonStyles = makeStyles({
    }
 });
 
-export const KowledgeSegmentsView = (props: IKnowledgeSegmentProps) => {
+/**
+ * Splits a string into an array of strings using double newlines as the delimiter.
+ * Empty strings are filtered out from the result.
+ *
+ * @param text - The input string to split
+ * @returns An array of non-empty strings split by double newlines
+ */
+function splitByDoubleNewline(text: string): string[] {
+   return text.split('\n\n').filter(str => str.trim().length > 0);
+}
+
+export const RelevantChunkView = (props: IRelevantChunkProps) => {
 
    const sourcesClasses = sourcesRow();
    const greenClasses = greenStyles();
@@ -588,6 +599,7 @@ export const KowledgeSegmentsView = (props: IKnowledgeSegmentProps) => {
       }   
    }
 
+   let splitSummary = splitByDoubleNewline (relevantChunk.chunk.summary);
 
    return (<div className={sourcesClasses.root} key={relevantChunk.chunk.url}>
               <div className={toolbarRowClasses.root}>
@@ -606,16 +618,11 @@ export const KowledgeSegmentsView = (props: IKnowledgeSegmentProps) => {
                      <Text size={100}>{likeText}</Text>    
                   </Toolbar>                                              
                </div>
-               <Body1 className={toolbarRowClasses.root}> {relevantChunk.chunk.summary} </Body1>
+               {splitSummary.map((paragraph, index) => (
+                  <Body1 key={index} className={toolbarRowClasses.root}> {paragraph} </Body1>
+              ))}                              
             </div>      
          );
-}
-
-// create a forceUpdate hook
-// https://stackoverflow.com/questions/46240647/how-to-force-a-functional-react-component-to-render
-function useForceUpdate() {
-   const [value, setValue] = useState(0); // simple integer state
-   return () => setValue(value => value + 1); // update state to force render
 }
 
 export const SingleMessageView = (props: ISingleMessageViewProps) => {
@@ -648,7 +655,7 @@ export const SingleMessageView = (props: ISingleMessageViewProps) => {
       if (props.message.chunks.length > 0) { 
 
          aiSources = props.message.chunks.map ((releventChunk : IRelevantEnrichedChunk) => {
-            return <KowledgeSegmentsView sessionKey={props.sessionKey} 
+            return <RelevantChunkView sessionKey={props.sessionKey} 
                     localPersonaName={props.localPersonaName}
                     segment={releventChunk} key={releventChunk.chunk.url} 
                     sharedEmbeddings={props.sharedEmbeddings}
@@ -675,8 +682,8 @@ export const SingleMessageView = (props: ISingleMessageViewProps) => {
          </div>   
          <div className={singleMessageColumnClasses.root}>
             <Caption1><b>{props.author.name}</b></Caption1> 
-            <div className={toolbarRowClasses.root}>                
-               <Body1>{props.message.text}</Body1>  
+            <div className={toolbarRowClasses.root}>      
+               <Body1>{props.message.text}</Body1>                 
                <Toolbar aria-label="Delete control toolbar" >                        
                   <ToolbarDivider />                  
                   <Tooltip content={EUIStrings.kDeleteMessage} relationship="label" positioning={'above'}>                     
