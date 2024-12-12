@@ -2,14 +2,10 @@
 
 // Internal imports
 import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
-import { EnrichedChunkRepositoryFile } from "./EnrichedChunkRepositoryFile";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 
-
-let boxerRepository: EnrichedChunkRepositoryFile | undefined = undefined;
 let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
-
 
 /**
  * Returns an instance of IEnrichedChunkRepository based on the specified repository type.
@@ -26,15 +22,11 @@ export function getEnrichedChunkRepository (repository: EChunkRepository) : IEnr
    switch (repository) {
 
       case EChunkRepository.kWaterfall:
-         if (!waterfallRepository)
-            waterfallRepository = new EnrichedChunkRepositoryDb();    
-         return waterfallRepository;   
-
-      case EChunkRepository.kBoxer:             
+      case EChunkRepository.kBoxer:           
       default:
-         if (!boxerRepository)
-            boxerRepository = new EnrichedChunkRepositoryFile()
-         return boxerRepository;   
+         if (!waterfallRepository)
+            waterfallRepository = new EnrichedChunkRepositoryDb()
+         return waterfallRepository;   
    }
 }
 
