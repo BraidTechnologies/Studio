@@ -64,18 +64,6 @@ export async function boxer(
             items.push(item);
          }
          console.log(items);
-         /*
-         let items = new Array();        
-         let item =
-         {
-            id: "3",
-            title: "Tire service",
-            description: "Rotate and replace tires, moving them from one position to another on the vehicle to ensure even wear and removing worn tires and installing new ones.",
-            image: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1",
-            url: "https://th.bing.com/th/id/OIP.N64J4jmqmnbQc5dHvTm-QAHaE8?pid=ImgDet&rs=1"
-         };
-         items.push(item);         
-         */
 
          // Return filtered boxer records, or an empty array if no records were found.
          res.jsonBody.results = items;

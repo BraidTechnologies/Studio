@@ -80,7 +80,16 @@ def create_theme_chunk (short_description: str,
 
 def save_chunks (items: list[PipelineItem],
                  spec: PipelineFileSpec) -> None:
-     
+    """
+    Save a list of PipelineItem objects as chunks in the database.
+
+    Parameters:
+        items (list[PipelineItem]): A list of PipelineItem objects to be saved.
+        spec (PipelineFileSpec): The specification for the pipeline file.
+
+    Returns:
+        None
+    """
     db_repository = DbRepository(boxer_application_name, spec.description)
     for item in items:
         loaded_item = db_repository.find(item.path)
@@ -133,7 +142,7 @@ def save_chunk_tree(output_location: str,
         master_theme.relatedChunks = None
         master_theme.storedSummary = None
         master_theme.storedTitle = None
-        master_theme.originalText = None     
+        master_theme.originalText = None
         master_theme.storedEmbedding = None
 
     for theme in themes:
