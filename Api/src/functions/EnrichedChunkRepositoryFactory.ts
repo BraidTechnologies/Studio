@@ -5,9 +5,7 @@ import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 
-
 let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
-
 
 /**
  * Returns an instance of IEnrichedChunkRepository based on the specified repository type.

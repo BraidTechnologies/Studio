@@ -84,7 +84,7 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
                      summary: storedChunk.storedSummary?.text as string
                   }
 
-                  loadedChunks.push (chunk);
+                  loadedChunks.push(chunk);
                }
 
                this._repositoryInMemory = new EnrichedChunkRepositoryInMemory (loadedChunks);   
