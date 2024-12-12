@@ -75,14 +75,8 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
         splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
     }
 
-    if (!props.chunk.parentChunkId) {
 
-        let env = getDefaultEnvironment();    
-        url = env.hostProtocolAndName() + '/api/GetPage?id=' + props.chunk.id;
-    }
-    else {
-        url = props.chunk.url;
-    }
+   url = props.chunk.url;
 
     return (
         <div>
