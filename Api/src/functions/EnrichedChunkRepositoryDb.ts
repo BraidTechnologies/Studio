@@ -67,15 +67,20 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
 
                   let storedChunk: IStoredChunk = values[i] as IStoredChunk;
 
-                  let chunk: IEnrichedChunk = {
-                     id: storedChunk.id as string,
-                     embedding: storedChunk.storedEmbedding?.embedding as number[],
-                     url: storedChunk.url as string,
-                     text: storedChunk.originalText as string,
-                     summary: storedChunk.storedSummary?.text as string
-                  }
+                  if (storedChunk.storedEmbedding) {
+                     let chunk: IEnrichedChunk = {
+                        id: storedChunk.id as string,
+                        embedding: storedChunk.storedEmbedding?.embedding as number[],
+                        url: storedChunk.url as string,
+                        text: storedChunk.originalText as string,
+                        summary: storedChunk.storedSummary?.text as string
+                     }
 
-                  loadedChunks.push (chunk);
+                     loadedChunks.push(chunk);
+                  }
+                  else {
+                     console.error ("No embedding found for chunk: ", storedChunk.id);
+                  }
                }
 
                this._repositoryInMemory = new EnrichedChunkRepositoryInMemory (loadedChunks);   

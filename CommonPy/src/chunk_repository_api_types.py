@@ -41,13 +41,6 @@ class IStoredEmbedding:
             self.embedding = None
 
 
-def create_embedding(embedding: List[float], model: str) -> IStoredEmbedding:
-    ''' Utility function to create an embedding '''
-    rendering: IStoredEmbedding = IStoredEmbedding()
-    rendering.embedding = embedding
-    rendering.modelId = model
-
-
 class IStoredTextRendering:
     """
     A TypedDict representing a text rendering.
@@ -75,6 +68,14 @@ def create_text_rendering(text: str, model: str) -> IStoredTextRendering:
     rendering.modelId = model
 
     return rendering
+
+def create_embedding(embedding: list[float], model: str) -> IStoredEmbedding:
+    ''' Utility function to create an embedding '''
+    stored_embedding: IStoredEmbedding = IStoredEmbedding()
+    stored_embedding.embedding = embedding
+    stored_embedding.modelId = model
+
+    return stored_embedding
 
 
 class IStoredChunk(IStorable):

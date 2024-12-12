@@ -11,7 +11,7 @@ from CommonPy.src.chunk_repository_api import (ChunkRepository,
                                                chunk_schema_version,
                                                waterfall_application_name,
                                                boxer_application_name)
-from CommonPy.src.chunk_repository_api_types import (IStoredChunk, create_text_rendering)
+from CommonPy.src.chunk_repository_api_types import (IStoredChunk, create_text_rendering, create_embedding)
 
 from CommonPy.src.page_repository_api import (PageRepository,
                                               page_class_name,
@@ -22,6 +22,7 @@ from CommonPy.src.page_repository_api_types import (IStoredPage)
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec, PipelineFileSpec
 from src.waterfall_pipeline_report_common import write_chart
 from src.db_repository import DbRepository
+from src.embedder import Embedder
 
 
 # Set up logging to display information about the execution of the script
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.ERROR)
 
 def set_timestamps (chunk: IStoredChunk, existing: bool) -> None:
-    ''' Set timestamps on Chnk depending it it is new or amended '''
+    ''' Set timestamps on Chunk depending it it is new or amended '''
     utc_time = datetime.datetime.now(datetime.timezone.utc)
     utc_time_string = utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')
     if existing:
@@ -43,6 +44,7 @@ def set_timestamps (chunk: IStoredChunk, existing: bool) -> None:
 def create_theme_chunk (short_description: str,
                         context: str,
                         long_description : str,
+                        output_location: str,
                         chunk_repository: ChunkRepository) -> IStoredChunk:
     ''' Utility function to create a chunk from Theme attributes '''
     existing_theme = chunk_repository.find (short_description)
@@ -51,12 +53,18 @@ def create_theme_chunk (short_description: str,
     else:
         theme_to_save = IStoredChunk()
 
+    embedder = Embedder(output_location)
+
     set_timestamps (theme_to_save, existing_theme is not None)
+
+    embedding = embedder.embed_text (long_description)
 
     theme_to_save.storedSummary = create_text_rendering (long_description,
                                                          chunk_repository.default_model)
     theme_to_save.storedTitle = create_text_rendering (short_description,
                                                        chunk_repository.default_model)
+    theme_to_save.storedEmbedding = create_embedding (embedding,
+                                                      chunk_repository.default_embedding_model)
 
     theme_to_save.applicationId = waterfall_application_name
     theme_to_save.contextId = context
@@ -65,8 +73,7 @@ def create_theme_chunk (short_description: str,
     theme_to_save.functionalSearchKey = short_description
 
     theme_to_save.userId = None
-    theme_to_save.originalText = None
-    theme_to_save.storedEmbedding = None
+    theme_to_save.originalText = long_description
     theme_to_save.relatedChunks = None
 
     return theme_to_save
@@ -105,6 +112,7 @@ def save_chunk_tree(output_location: str,
     write_chart (output_location, items, themes, spec)
 
     logger.debug('Writing chunk tree to DB')
+    embedder = Embedder(output_location)
     db_repository = DbRepository (waterfall_application_name, spec.description)
     chunk_repository = ChunkRepository ()
 
@@ -115,6 +123,7 @@ def save_chunk_tree(output_location: str,
         master_theme = create_theme_chunk (spec.description,
                                            spec.description,
                                            '',
+                                           output_location,
                                            chunk_repository)
         master_theme.id = master_id
         master_theme.parentChunkId = None
@@ -122,23 +131,26 @@ def save_chunk_tree(output_location: str,
         master_id = loaded_master_theme.id
         master_theme = loaded_master_theme
         master_theme.relatedChunks = None
+        master_theme.storedSummary = None
+        master_theme.storedTitle = None
+        master_theme.originalText = None     
+        master_theme.storedEmbedding = None
 
     for theme in themes:
 
         loaded_theme = chunk_repository.find (theme.short_description)
         if loaded_theme is None:
-            theme_to_save = create_theme_chunk (theme.short_description,
-                                               spec.description,
-                                               theme.long_description,
-                                               chunk_repository)
-            theme_id = str(uuid.uuid4())
-            theme_to_save.id = theme_id
-            theme_to_save.parentChunkId = master_id
+            theme_id = str(uuid.uuid4())            
         else:
             theme_id = loaded_theme.id
-            theme_to_save = loaded_theme
-            theme_to_save.parentChunkId = master_id
-            theme_to_save.relatedChunks = None
+
+        theme_to_save = create_theme_chunk (theme.short_description,
+                                            spec.description,
+                                            theme.long_description,
+                                            output_location,
+                                            chunk_repository)
+        theme_to_save.id = theme_id
+        theme_to_save.parentChunkId = master_id       
 
         # Save all the member items
         for item in theme.member_pipeline_items:
@@ -167,17 +179,19 @@ def save_chunk_tree(output_location: str,
         master_theme.relatedChunks.append (theme_id)
 
         # Build up summary text on the main entry
-        if master_theme.storedSummary is None:
-            master_theme.storedSummary = create_text_rendering (theme_to_save.storedSummary.text,
-                                                                chunk_repository.default_model)
+        if master_theme.originalText is None:
+            master_theme.originalText = theme.long_description
         else:
-            master_theme.storedSummary = create_text_rendering (master_theme.storedSummary.text +
-                                                               '\n\n' +
-                                                               theme_to_save.storedSummary.text,
-                                                               chunk_repository.default_model)
+            master_theme.originalText = master_theme.originalText + '\n\n' + theme.long_description
 
     # Save the Theme
     master_theme.url = "https://braid-api.azurewebsites.net/api/GetPage?id=" + str(master_theme.id)
+
+    master_theme_embedding = embedder.embed_text (master_theme.originalText)
+    master_theme.storedEmbedding = create_embedding (master_theme_embedding, chunk_repository.default_embedding_model)
+    master_theme.storedSummary = create_text_rendering (master_theme.originalText, chunk_repository.default_model)
+    master_theme.storedTitle = create_text_rendering (spec.description, chunk_repository.default_model)    
+
     chunk_repository.save (master_theme)
 
     # Save the Page - use functional search key and id from the parent theme
