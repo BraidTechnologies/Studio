@@ -39,8 +39,8 @@ class LoginApi extends Api_1.Api {
      * @returns A Promise that resolves to a string indicating the status after attempting to log in.
      */
     login() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.loginWithLinkedInApi() + "?session=" + this.sessionKey.toString();
             var response;
             try {

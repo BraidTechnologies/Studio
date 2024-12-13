@@ -22,7 +22,7 @@ function cosineSimilarity(vector1: number[], vector2: number[]): number {
    const magnitude2 = Math.sqrt(vector2.reduce((acc, val) => acc + val ** 2, 0));
 
    if (magnitude1 === 0 || magnitude2 === 0) {
-      throw new Error("Magnitude of a vector must be non-zero for cosine similarity calculation.");
+      return -1.0;
    }
 
    return dotProduct / (magnitude1 * magnitude2);
