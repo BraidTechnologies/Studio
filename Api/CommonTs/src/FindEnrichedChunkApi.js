@@ -36,8 +36,8 @@ class FindEnrichedChunkApi extends Api_1.Api {
      * @returns An IEnrichedChunkSummary objects representing the found enriched chunk summary, or undefined.
      */
     findChunkFromUrl(urlQuery) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.findEnrichedChunkFromUrl() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
@@ -66,8 +66,8 @@ class FindEnrichedChunkApi extends Api_1.Api {
      * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
      */
     findRelevantChunksFromUrl(urlQuery) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.findRelevantEnrichedChunksFromUrl() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = new Array();
@@ -96,8 +96,8 @@ class FindEnrichedChunkApi extends Api_1.Api {
      * @returns A Promise that resolves to an array of IRelevantEnrichedChunk objects representing the found relevant enriched chunks.
      */
     findRelevantChunksFromSummary(urlQuery) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let apiUrl = this.environment.findRelevantEnrichedChunksFromSummary() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = new Array();

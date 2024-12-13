@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
-import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
 
 

@@ -22,7 +22,7 @@
 ],  
   "references": [
    {
-     "path": "../BraidCommon"
+     "path": "../CommonTs"
    }    
 ]  
 }

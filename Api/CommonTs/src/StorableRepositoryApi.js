@@ -41,8 +41,8 @@ class StorableRepostoryApi {
      * @returns A Promise that resolves when the record is successfully saved, or rejects with an error.
      */
     save(record, url) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: record });
@@ -68,8 +68,8 @@ class StorableRepostoryApi {
      * @returns A Promise that resolves to true if the record is successfully removed, false otherwise.
      */
     remove(recordId, url) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let query = {
                 id: recordId,
                 functionalSearchKey: undefined
@@ -99,8 +99,8 @@ class StorableRepostoryApi {
      * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
      */
     load(recordId, url) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let query = {
                 id: recordId,
                 functionalSearchKey: undefined
@@ -130,8 +130,8 @@ class StorableRepostoryApi {
      * @returns A Promise that resolves to the record if successfully removed, undefined otherwise.
      */
     find(functionalSearchKey, url) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             let query = {
                 id: undefined,
                 functionalSearchKey: functionalSearchKey
@@ -161,8 +161,8 @@ class StorableRepostoryApi {
      * @returns A Promise that resolves to an array of IStorable objects representing the recent records, or an empty array if an error occurs.
      */
     recent(querySpec, url) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             var response;
             try {
                 response = yield axios_1.default.post(url, { request: querySpec });

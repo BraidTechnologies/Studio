@@ -17,10 +17,10 @@ from src.embedder import Embedder
 from src.waterfall_pipeline_save_chunks import save_chunks
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 class BoxerDataPipeline:

@@ -17,7 +17,7 @@ from src.web_searcher import (AI_SUPPLY_STACK_SEARCH_ENGINE_ID,
 test_root = os.path.dirname(__file__)
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)

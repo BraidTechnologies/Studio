@@ -14,7 +14,7 @@ src_dir = os.path.join(parent, 'src')
 sys.path.extend([parent, src_dir])
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
