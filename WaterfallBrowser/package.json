@@ -21,13 +21,11 @@
    },
    "scripts": {
       "start": "react-scripts start",
-      "pull_create_dirs": "md src\\CommonTs && md src\\CommonTs\\src",
-      "pull": "copy ..\\CommonTs\\src src\\CommonTs\\src",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "push-prep": "md ..\\..\\BraidWeb\\public\\wfbr",
-      "push": "del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.js && del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.js.map && del ..\\..\\BraidWeb\\public\\wfbr\\static\\js\\*.txt && xcopy build ..\\..\\BraidWeb\\public\\wfbr /s /v /h /y" 
+      "pull": "bash -c 'mkdir -p src/CommonTs/src && cp -r ../CommonTs/src/* src/CommonTs/src'",
+      "build": "npm run pull && react-scripts build",
+      "test": "react-scripts test --watchAll=false",
+      "clean": "rimraf build && rimraf src/CommonTs/src",
+      "eject": "react-scripts eject"
    },
    "moduleNameMapper": {
       "\\.(css)$": "jest-css-modules"
@@ -70,7 +68,8 @@
       "@testing-library/react": "^16.0.1",
       "@types/pako": "^2.0.3",
       "pako": "^2.1.0",
+      "rimraf": "^6.0.1",
       "ts-jest": "^29.2.5"
    },
-   "homepage": "/"   
+   "homepage": "/"
 }

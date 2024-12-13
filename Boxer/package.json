@@ -8,14 +8,12 @@
    },
    "sideEffects": false,
    "scripts": {
-      "build-package": "webpack-cli --config webpack-config.js && copy dist\\aibot.pack.js ..\\..\\braidweb\\public\\assets\\js && copy dist\\aibot.pack.js.map ..\\..\\braidweb\\public\\assets\\js",
       "build": "tsc --build",
       "clean": "tsc --build --clean",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
       "test-mini": "mocha --debug-brk --exit --require ts-node/register -g Activity*",
       "cover": "tsc && nyc mocha --exit --require ts-node/register test/*test.ts",
-      "local-fluid": "npx @fluidframework/azure-local-service@latest",
-      "api-embeddings-lite": "mocha --require ts-node/register scripts/make_api_embeddings.ts && copy data\\api_embeddings_lite.json ..\\braidapi",      
+      "local-fluid": "npx @fluidframework/azure-local-service@latest", 
       "new-conversation": "mocha --require ts-node/register scripts/make_new_container.ts"
    },
    "devDependencies": {

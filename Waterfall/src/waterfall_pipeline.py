@@ -18,10 +18,10 @@ from src.waterfall_pipeline_report_common import write_details_json
 from src.waterfall_pipeline_save_chunks import save_chunk_tree
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 def sort_array_by_another(arr1: list[Theme], arr2: list[int]) -> list[Theme]:

@@ -13,10 +13,10 @@ import umap.umap_ as umap__
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 def write_chart(output_location: str,

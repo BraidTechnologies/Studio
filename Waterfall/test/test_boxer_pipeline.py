@@ -18,7 +18,7 @@ sys.path.extend([parent, src_dir])
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.WARNING,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ def test_html_boxer_pipeline():
 def test_full_boxer_pipeline():
 
     # Normally we return immediately - only comment out when you want to do a full production build
-    # return
+    return
 
     test_root = os.path.dirname(__file__)
     os.chdir (test_root)

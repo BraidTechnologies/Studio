@@ -9,9 +9,9 @@ import sys
 import logging
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 # Add the project root and scripts directory to the Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
