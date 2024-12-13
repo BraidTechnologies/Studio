@@ -23,7 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decompressString = exports.compressString = void 0;
+exports.compressString = compressString;
+exports.decompressString = decompressString;
 const pako = __importStar(require("pako"));
 /**
  * Compresses a string using deflate algorithm
@@ -45,7 +46,6 @@ function compressString(input) {
         return btoa(String.fromCharCode.apply(null, Array.from(compressed)));
     }
 }
-exports.compressString = compressString;
 /**
  * Decompresses a string that was compressed using compressString
  * @param input Base64 encoded compressed string
@@ -72,5 +72,4 @@ function decompressString(input) {
         throw new Error('Failed to decompress string: Invalid input');
     }
 }
-exports.decompressString = decompressString;
 //# sourceMappingURL=Compress.js.map

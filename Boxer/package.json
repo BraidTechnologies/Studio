@@ -8,7 +8,7 @@
    },
    "sideEffects": false,
    "scripts": {
-      "build": "tsc --build",
+      "build": "tsc --build && webpack-cli --config webpack-config.js ",
       "clean": "tsc --build --clean",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
       "test-mini": "mocha --debug-brk --exit --require ts-node/register -g Activity*",
