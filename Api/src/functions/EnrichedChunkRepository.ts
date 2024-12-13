@@ -13,8 +13,9 @@ import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
  * @returns The cosine similarity score.
  */
 function cosineSimilarity(vector1: number[], vector2: number[]): number {
+   
    if (vector1.length !== vector2.length) {
-      throw new Error("Vector dimensions must match for cosine similarity calculation.");
+      return -1.0;
    }
 
    const dotProduct = vector1.reduce((acc, val, index) => acc + val * vector2[index], 0);
