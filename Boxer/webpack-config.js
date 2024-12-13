@@ -1,6 +1,5 @@
 
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const WebpackObfuscator = require('webpack-obfuscator');
 
 const {
    default: FluentUIReactIconsFontSubsettingPlugin,
@@ -23,12 +22,8 @@ module.exports = {
       // conditionNames: ['fluentIconFont', 'import']      
    },
    plugins: [
-      // new FluentUIReactIconsFontSubsettingPlugin(), new NodePolyfillPlugin()      
-      new NodePolyfillPlugin(),
-      // Include block below only for production build 
-         new WebpackObfuscator ({
-         rotateStringArray: true
-     }, ['excluded_bundle_name.js'])     
+      // new FluentUIReactIconsFontSubsettingPlugin(),     
+      new NodePolyfillPlugin()   
    ],   
    module: {
       rules: [
@@ -60,19 +55,7 @@ module.exports = {
          {
             test: /\.(ttf|woff2?)$/,
             type: 'asset',
-         },                       
-         // Include block below only for production build    
-         {
-            test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
-            enforce: 'post',
-            use: { 
-                loader: WebpackObfuscator.loader, 
-                options: {
-                    rotateStringArray: true
-                }
-            }
-        }        
+         }     
       ]
    }  
 }

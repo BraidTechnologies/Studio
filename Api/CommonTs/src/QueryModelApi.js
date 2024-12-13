@@ -39,8 +39,8 @@ class QueryModelApi extends Api_1.Api {
      * @returns A promise that resolves to the enriched response data, or undefined if an error occurs.
      */
     queryModelWithEnrichment(query) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
@@ -69,8 +69,8 @@ class QueryModelApi extends Api_1.Api {
      * @returns A promise that resolves to the generated question response, or undefined if an error occurs.
      */
     generateQuestion(query) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
