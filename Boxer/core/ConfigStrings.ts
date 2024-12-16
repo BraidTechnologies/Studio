@@ -8,12 +8,7 @@ export enum EConfigStrings {
 
    kFontNameForTextWrapCalculation = "12pt Segoe UI",
 
-   kHomeRelativeUrl= "/aibot.html",   
-
-   kCheckSessionUrl = "https://braid-api.azurewebsites.net/api/CheckSession",       
-   kSummariseUrl = "https://braid-api.azurewebsites.net/api/Summarize",     
-   kCheckSessionLocalUrl = "http://localhost:7071/api/CheckSession",        
-   kSummariseLocalUrl = "http://localhost:7071/api/Summarize",        
+   kHomeRelativeUrl= "/boxer.html",           
    
    kAzureTenantId = "b9576484-5c2e-4613-bfdf-039948cdd521",
    kAzureProductionFluidHost = "https://eu.fluidrelay.azure.com",
