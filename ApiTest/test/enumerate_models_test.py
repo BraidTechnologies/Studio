@@ -18,6 +18,8 @@ import requests
 import os
 import jsonschema
 
+from CommonPy.src.request_utilities import request_timeout
+
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
 SESSION_KEY = os.environ['SessionKey']
@@ -101,7 +103,7 @@ def test_enumerate_request():
     wrapped = {
         'request' : ''
     }       
-    response = requests.post(enumerate_models_url, json=wrapped)
+    response = requests.post(enumerate_models_url, json=wrapped, timeout=request_timeout)
     assert response.status_code == 200
     response_json = response.json()
     validate_enumerate_models_schema(response_json, 'IEnumerateModelsResponse')

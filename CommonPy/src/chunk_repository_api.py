@@ -9,6 +9,7 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from .request_utilities import request_timeout
 from .storable_types import IStorableQuerySpec
 from .chunk_repository_api_types import IStoredChunk, IStoredEmbedding, IStoredTextRendering
 from .type_utilities import safe_dict_to_object, safe_cast
@@ -52,7 +53,7 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            models_url, json=json_input, headers=headers)
+            models_url, json=json_input, headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
             data = response.json()
@@ -94,7 +95,8 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Saved: %s', chunk.id)
@@ -129,7 +131,8 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
 
@@ -186,7 +189,8 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
 
@@ -236,7 +240,9 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers,
+            timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Removed: %s', record_id)
@@ -268,7 +274,8 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, headers=headers,
+            timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Found: %s', functional_key)

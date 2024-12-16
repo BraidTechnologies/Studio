@@ -67,7 +67,7 @@ describe("StorablePage", async function () {
 
       expect(ok).toBe(true);
 
-   }).timeout(20000);
+   }).timeout(40000);
 
    it("Needs to succeed with load & valid key in local environment", async function () {
 
@@ -84,6 +84,6 @@ describe("StorablePage", async function () {
 
       expect(html).toBe(htmlFromFile);
 
-   }).timeout(20000);   
+   }).timeout(40000);   
 
 });

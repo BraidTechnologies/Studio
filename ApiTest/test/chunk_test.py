@@ -18,6 +18,8 @@ import pytest
 import requests
 import os
 
+from CommonPy.src.request_utilities import request_timeout
+
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -42,7 +44,7 @@ def test_chunk_endpoint(chunk_request_data):
     }
 
     # Send a POST request
-    response = requests.post(chunk_url, json=wrapped, timeout=10)
+    response = requests.post(chunk_url, json=wrapped, timeout=request_timeout)
 
     # Assert that the response status code is 200
     assert response.status_code == 200

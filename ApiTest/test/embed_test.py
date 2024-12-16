@@ -14,6 +14,7 @@ import pytest
 import requests
 import os
 
+from CommonPy.src.request_utilities import request_timeout
 
 # Configure the base URL for the API. 
 BASE_URL = 'http://localhost:7071/api'  
@@ -34,7 +35,7 @@ def test_embedding_request_structure():
     }     
 
     # Simulate sending the request to the API
-    response = requests.post(embed_url, json=wrapped)
+    response = requests.post(embed_url, json=wrapped, timeout=request_timeout)
 
     # Check for successful response
     assert response.status_code == 200, f'Unexpected status code: {response.status_code}'
@@ -58,7 +59,7 @@ def test_invalid_request_structure():
         'request' : invalid_request
     }   
     # Simulate sending the request to the API
-    response = requests.post(embed_url, json=wrapped)
+    response = requests.post(embed_url, json=wrapped, timeout=request_timeout)
 
     # Expecting a 400 status code for bad request
     assert response.status_code == 400, f'Expected 400 status for invalid request, got {response.status_code}'

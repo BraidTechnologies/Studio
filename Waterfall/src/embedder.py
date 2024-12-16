@@ -10,6 +10,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 from src.workflow import PipelineItem, PipelineStep
 from src.embedder_repository_facade import EmbeddingRespositoryFacade
+from CommonPy.src.request_utilities import request_timeout
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.WARNING,
@@ -73,7 +74,9 @@ class Embedder (PipelineStep):
             }
         }
 
-        response = session.post(embed_url, json=json_input, headers=headers)
+        response = session.post(embed_url, json=json_input, 
+                                headers=headers,
+                                timeout=request_timeout)
 
         if response.status_code == 200:
             response_json = json.loads(response.text)
@@ -115,7 +118,9 @@ class Embedder (PipelineStep):
             }
         }
 
-        response = session.post(embed_url, json=json_input, headers=headers)
+        response = session.post(embed_url, json=json_input, 
+                                headers=headers,
+                                timeout=request_timeout)
 
         if response.status_code == 200:
             response_json = json.loads(response.text)
