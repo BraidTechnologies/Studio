@@ -1,6 +1,6 @@
 import React from 'react';
+import { createRoot } from "react-dom/client";
 import { FluentProvider, teamsDarkTheme, makeStyles } from '@fluentui/react-components';
-import './App.css';
 import ChunkRetriever from './ChunkRetriever';
 import { retrieveChunk } from './ChunkRetriever';
 
@@ -71,3 +71,11 @@ function App() {
 }
 
 export default App;
+
+// This allows code to be loaded in node.js for tests, even if we dont run actual React methods
+if (document !== undefined && document.getElementById !== undefined) {
+   const root = createRoot(document.getElementById("reactRoot") as HTMLElement);
+   root.render(
+      <App />
+   ); 
+}

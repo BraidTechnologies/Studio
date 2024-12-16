@@ -186,5 +186,4 @@ if (document !== undefined && document.getElementById !== undefined) {
    root.render(
       <App />
    ); 
-
 }
