@@ -1,10 +1,10 @@
 ****************************************
-BraidApi.code-workspace
+Api.code-workspace
 ****************************************
 {
 	"folders": [
 		{
-			"path": "BraidApi"
+			"path": "Api"
 		},
 		{
 			"path": "."
@@ -1117,7 +1117,7 @@ The first pattern is '**Waterfall**'. Waterfall is a text analyser / classifier,
 
 '**CommonPy**' contains Python utility classes used to access the typescript server Apis and to hold common code used in multiple apps.
 
-'**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'BraidApiTest' directory. 
+'**Salon**' - a place where you do Braiding - is an application that uses the OpenAI Assistant API to generate test code. It processes API definitions written in JSON and generates Python code to test them. The resulting code is in the 'ApiTest' directory. 
 
 '**Boxer**', an AI-enabled learning assistant to help developers build generative AI applications more quickly.  It is a full web front end that passes questions to an LLM, and then enriches them with links to relevant document chunks found in its database of useful material - the A16Z AI Cannon. 
 
@@ -1218,7 +1218,7 @@ node_modules/typescript/
 ****************************************
 Api\README.md
 ****************************************
-**BraidApi** is a set of Azure-hosted functions. All calls to OpenAI and to the CosmoDB database are made via this layer, which includes logging, and allows us to centralize key management. 
+**Api** is a set of Azure-hosted functions. All calls to OpenAI and to the CosmoDB database are made via this layer, which includes logging, and allows us to centralize key management. 
 
 Requires the following environment variables:
 
@@ -1241,7 +1241,7 @@ log_cli = 1
 ****************************************
 ApiTest\README.md
 ****************************************
-**BraidApiTest** is generated source code to test BraidApis. The **Salon** application was used to generate the source.
+**ApiTest** is generated source code to test Apis. The **Salon** application was used to generate the source.
 ****************************************
 
 ****************************************
@@ -2102,7 +2102,7 @@ BoxerTest is all Python, an runs locally. It uses the following eval approaches:
 ****************************************
 Cascade\README.md
 ****************************************
-**Cascade** is an Edge plug in that uses simple BraidApi calls to summarise and classify the current page of the browser. This is intended as a technology demonstrator for enterprise use cases like a ticket summariser - you can imagine a front end in a ticketing system where you first summarise status then close the ticket. Cascade also shows multi-language processesing - summaries are shown in English, granslated from the source language.
+**Cascade** is an Edge plug in that uses simple Api calls to summarise and classify the current page of the browser. This is intended as a technology demonstrator for enterprise use cases like a ticket summariser - you can imagine a front end in a ticketing system where you first summarise status then close the ticket. Cascade also shows multi-language processesing - summaries are shown in English, granslated from the source language.
 ****************************************
 
 ****************************************
@@ -2114,7 +2114,7 @@ CommonPy\__init__.py
 ****************************************
 CommonTs\README.md
 ****************************************
-**BraidCommon** contains typescript compoents that are used by both front end (Browser, Mocha test) and back end (BraidApi) components. It also contains types that define the contract between client and server for APIS, which are used by the 'Salon' component to generate test code.
+**CommonTs** contains typescript compoents that are used by both front end (Browser, Mocha test) and back end (Api) components. It also contains types that define the contract between client and server for APIS, which are used by the 'Salon' component to generate test code.
 ****************************************
 
 ****************************************
