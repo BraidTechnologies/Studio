@@ -54,8 +54,6 @@ export class FluidTokenProvider implements ITokenProvider {
          userName: this._user.userName,
          documentId: documentId? documentId : ""
       }
-
-      console.log ("Requesting token for:" + JSON.stringify(request) + " tenantId:" + tenantId);
       
       const response = await this._api.generateToken(request);
       if (!response)

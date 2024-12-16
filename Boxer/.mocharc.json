@@ -1,6 +1,0 @@
-{
-    "loader": "ts-node/esm",
-    "require": [
-        "mocha.cjs"
-    ]
-}
