@@ -20,12 +20,13 @@
       "web-vitals": "^2.1.4"
    },
    "scripts": {
-      "start": "react-scripts start",
-      "pull": "bash -c 'mkdir -p src/CommonTs/src && cp -r ../CommonTs/src/* src/CommonTs/src'",
-      "build": "npm run pull && react-scripts build",
-      "test": "react-scripts test --watchAll=false",
-      "clean": "rimraf build && rimraf src/CommonTs/src",
-      "eject": "react-scripts eject"
+      "clean": "rimraf src/CommonTs/src",
+      "pull": "bash -c 'mkdir -p src/CommonTs/src && cp -r ../CommonTs/src/* src/CommonTs/src'",      
+      "build": "npm run pull && npx esbuild src/App.tsx --outfile=dist/waterfall.pack.js --bundle",
+      "start-react": "react-scripts start",
+      "build-react": "npm run pull && react-scripts build",
+      "test-react": "react-scripts test --watchAll=false",
+      "eject-react": "react-scripts eject"
    },
    "moduleNameMapper": {
       "\\.(css)$": "jest-css-modules"
@@ -67,6 +68,7 @@
       "@fluentui/react-components": "^9.56.5",
       "@testing-library/react": "^16.1.0",
       "@types/pako": "^2.0.3",
+      "esbuild": "^0.24.0",
       "pako": "^2.1.0",
       "rimraf": "^6.0.1",
       "ts-jest": "^29.2.5"

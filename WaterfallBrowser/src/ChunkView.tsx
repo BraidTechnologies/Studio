@@ -10,7 +10,7 @@ import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
  * @returns The constructed URL string with the query parameter.
  */
 function chunkUrl (value: string) : string {
-   return './?id=' + value.toString();
+   return window.location.protocol + '//' + window.location.host + window.location.pathname + '?id=' + value.toString();
 }
 
 
