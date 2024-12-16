@@ -6,15 +6,16 @@ import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
 import { EConfigStrings } from "./ConfigStrings";
 import { EConfigNumbers } from "./ConfigStrings";
+import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
 import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/SummariseApi.Types"
 
 
 export async function makeSummaryCall (session: SessionKey, text: string) : Promise<string | undefined> {
 
    let summary: string | undefined = undefined;
-   let apiUrl: string = EConfigStrings.kSummariseUrl;
+   let env =  getDefaultEnvironment();
+   let apiUrl = env.summariseApi() + '?session=' + session.toString();
    
-   apiUrl = apiUrl + '?session=' + session.toString();
    let request: ISummariseRequest = {
       text: text,
       lengthInWords: EConfigNumbers.kSummaryLengthWords
