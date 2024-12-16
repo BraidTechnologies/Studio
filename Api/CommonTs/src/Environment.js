@@ -160,7 +160,7 @@ class StagingEnvironment {
         return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "https://braidapps.io/aibot.html";
+        return "https://braidapps.io/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
@@ -266,7 +266,7 @@ class ProductionEnvironment {
         return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "https://braidapps.io/aibot.html";
+        return "https://braidapps.io/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";

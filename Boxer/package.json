@@ -4,7 +4,7 @@
    "description": "An OpenAI assistant that likes to talk about AI, written using Typescript, Node.js, and the Azure stack. GPT-4 backed with a store of AI Canon documents.",
    "main": "ui/AppEntry.tsx",
    "author": {
-      "name": "Jon Verrier"
+      "name": "Braid Technologies Ltd"
    },
    "sideEffects": false,
    "scripts": {
@@ -27,7 +27,7 @@
       "@types/react-dom": "18.2.18",
       "@types/react-router-dom": "^5.3.3",
       "crypto-browserify": "^3.12.1",
-      "esbuild": "0.24.0",
+      "esbuild": "^0.24.0",
       "expect": "^29.7.0",
       "fluid-framework": "^2.11.0",
       "jsdom": "^23.2.0",
