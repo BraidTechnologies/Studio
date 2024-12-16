@@ -35,7 +35,7 @@ export abstract class FluidConnection {
          this.setupBeforeConnection (sessionKey_, forceProduction);
 
          throwIfUndefined (this._client);
-         const { container, services } = await this._client.createContainer(this.schema());
+         const { container, services } = await this._client.createContainer(this.schema(), "2");
          this._container = container;
 
          let self = this;
@@ -71,7 +71,7 @@ export abstract class FluidConnection {
          this.setupBeforeConnection (sessionKey_, forceProduction);
 
          throwIfUndefined (this._client);
-         const { container, services } = await this._client.getContainer(conversationKey_.toString(), this.schema());
+         const { container, services } = await this._client.getContainer(conversationKey_.toString(), this.schema(), "2");
          this._container = container;
 
          this.setupAfterConnection(this._container);

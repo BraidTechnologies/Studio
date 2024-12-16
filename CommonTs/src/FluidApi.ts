@@ -1,11 +1,10 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import axios from 'axios';
+import axios, {AxiosInstance, AxiosStatic} from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 import { IFluidTokenRequest } from './Fluid';
-
 
 export class FluidApi extends Api {
 
@@ -33,7 +32,7 @@ export class FluidApi extends Api {
 
       try {
          // Up to 5 retries - it is a big fail if we cannot get a token for Fluid
-         axiosRetry(axios, {
+         axiosRetry(axios as AxiosStatic | AxiosInstance, {
             retries: 5,
             retryDelay: axiosRetry.exponentialDelay,
             retryCondition: (error) => {

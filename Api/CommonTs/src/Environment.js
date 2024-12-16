@@ -54,7 +54,7 @@ class DevelopmentEnvironment {
         return "http://localhost:7071/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "http://localhost:1337/aibot.html";
+        return "http://localhost:1337/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";

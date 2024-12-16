@@ -1,6 +1,5 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import { SharedMap, IValueChanged } from "fluid-framework";
-
+import { SharedMap, IValueChanged } from "fluid-framework/legacy";
 import { debounce } from './Debounce';
 import { MDynamicStreamable } from './StreamingFramework';
 import { Interest, NotificationFor, Notifier } from './NotificationFramework';
