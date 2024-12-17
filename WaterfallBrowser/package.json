@@ -22,7 +22,8 @@
    "scripts": {
       "clean": "rimraf src/CommonTs/src",
       "pull": "bash -c 'mkdir -p src/CommonTs/src && cp -r ../CommonTs/src/* src/CommonTs/src'",      
-      "build": "npm run pull && npx esbuild src/App.tsx --minify --sourcemap --outfile=dist/waterfall.min.js --bundle",
+      "build": "npm run pull && npx esbuild src/App.tsx --outfile=dist/waterfall.pack.js --bundle",
+      "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.tsx",
       "start-react": "react-scripts start",
       "build-react": "npm run pull && react-scripts build",
       "test-react": "react-scripts test --watchAll=false",
@@ -67,11 +68,18 @@
       "@babel/preset-typescript": "^7.26.0",
       "@fluentui/react-components": "^9.56.5",
       "@testing-library/react": "^16.1.0",
+      "@types/chai": "^5.0.1",
+      "@types/mocha": "^10.0.10",
       "@types/pako": "^2.0.3",
+      "chai": "^5.1.2",
       "esbuild": "^0.24.0",
+      "global-jsdom": "^25.0.0",
+      "ignore-styles": "^5.0.1",
+      "mocha": "^11.0.1",
       "pako": "^2.1.0",
       "rimraf": "^6.0.1",
-      "ts-jest": "^29.2.5"
+      "ts-jest": "^29.2.5",
+      "ts-node": "^10.9.2"
    },
    "homepage": "/wfbr"
 }

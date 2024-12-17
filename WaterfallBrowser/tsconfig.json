@@ -26,14 +26,16 @@
       "declaration": true, 
       "declarationMap": true, 
       "composite": true,
-      "sourceMap": true      
+      "sourceMap": true,
+      "allowJs": true,
+      "checkJs": false      
    },
    "include": [
       "./src/**/*.tsx",
       "./src/**/*.ts",
       "__tests__/**/*.tsx",
       "__tests__/**/*.ts", 
-      "src/CommonTs/src/*.ts"],       
+      "src/CommonTs/src/*.ts", "test/ChunkTestHelpers.tsx"],       
    "exclude": [
       "./node_modules"
    ],

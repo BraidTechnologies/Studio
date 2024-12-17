@@ -9,6 +9,7 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 from src.workflow import PipelineItem, PipelineStep
+from CommonPy.src.request_utilities import request_timeout
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.WARNING,
@@ -61,7 +62,10 @@ class SummariseFailSuppressor (PipelineStep):
             }
         }
 
-        response = session.post(summary_url, json=input_json, headers=headers)
+        response = session.post(summary_url, json=input_json, 
+                                headers=headers,
+                                timeout=request_timeout)
+        
         keep: bool = True  # If there is an error in the API, we default to 'keep'
         if response.status_code == 200:
             response_json = json.loads(response.text)

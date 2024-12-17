@@ -15089,7 +15089,7 @@ See [the docs](https://docs.pytest.org/en/stable/how-to/cache.html) for more inf
 ****************************************
 CommonPy\src\chunk_repository_api.py
 ****************************************
-'''Module to store data in the Chunk table of the BraidApis '''
+'''Module to store data in the Chunk table of the Apis '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -15502,7 +15502,7 @@ class IStoredChunk(IStorable):
 ****************************************
 CommonPy\src\page_repository_api.py
 ****************************************
-'''Module to store data in the Page table of the BraidApis '''
+'''Module to store data in the Page table of the Apis '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports

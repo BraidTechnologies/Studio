@@ -56,7 +56,6 @@ class FluidTokenProvider {
                 userName: this._user.userName,
                 documentId: documentId ? documentId : ""
             };
-            console.log("Requesting token for:" + JSON.stringify(request) + " tenantId:" + tenantId);
             const response = yield this._api.generateToken(request);
             if (!response)
                 throw new Errors_1.ConnectionError("Unable to generate Fluid Token");

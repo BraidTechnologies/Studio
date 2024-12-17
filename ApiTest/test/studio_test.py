@@ -19,6 +19,7 @@ import requests
 import os
 import jsonschema
 
+from CommonPy.src.request_utilities import request_timeout
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -89,7 +90,7 @@ def test_studio_boxer():
    # Prepare a mocked request that matches the IEnumerateModelsRequest schema
     params = {'question': 'What is the purpose of an LLM?'}
 
-    response = requests.post(studio_boxer_url, params=params)
+    response = requests.post(studio_boxer_url, params=params, timeout=request_timeout)
     assert response.status_code == 200
     response_json = response.json()
 
@@ -101,7 +102,7 @@ def test_studio_boxer():
 def test_invalid_studio_request():
     # Test how the API handles invalid request data
    invalid_data = {'wrong_field': 'Some value'}
-   response = requests.post(studio_boxer_url, params=invalid_data)
+   response = requests.post(studio_boxer_url, params=invalid_data, timeout=request_timeout)
    # Assuming a bad request returns status code 400
    assert response.status_code == 400
 

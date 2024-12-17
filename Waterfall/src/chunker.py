@@ -8,7 +8,9 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from CommonPy.src.request_utilities import request_timeout
 from src.workflow import PipelineItem, PipelineStep
+
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.WARNING,
@@ -74,7 +76,9 @@ class Chunker (PipelineStep):
                 }
             }
 
-        response = session.post(summary_url, json=input_json, headers=headers)
+        response = session.post(summary_url, json=input_json, 
+                                headers=headers,
+                                timeout=request_timeout)
         pipeline_chunks = []  # If there is an error in the API, return an empty list
 
         if response.status_code == 200:

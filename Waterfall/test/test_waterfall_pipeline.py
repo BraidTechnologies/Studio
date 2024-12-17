@@ -37,8 +37,8 @@ def test_with_search_supply ():
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_SUPPLY_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 1
-    pipeline_spec.clusters = 2
-    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "GenAI Supply Side"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'supply_cluster.html'
@@ -57,8 +57,8 @@ def test_with_search_demand ():
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_DEMAND_STACK_SEARCH_ENGINE_ID
     pipeline_spec.pages = 1
-    pipeline_spec.clusters = 2
-    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "GenAI Demand Side"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'demand_cluster.html'
@@ -76,9 +76,9 @@ def test_with_search_telecom ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_TELECOM_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "GenAI Telecoms"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'telco_cluster.html'
@@ -96,9 +96,9 @@ def test_with_search_nationwide ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_NATIONWIDE_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "GenAI Nationwide"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'nationwide_cluster.html'
@@ -116,9 +116,9 @@ def test_with_search_bny ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_BNY_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 4
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "GenAI BNY"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'bny_cluster.html'

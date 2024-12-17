@@ -7,7 +7,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "strict": true,
-    // "rootDirs": [".", "../../../BraidCommon"],
+    // "rootDirs": [".", "../../../CommonTs"],
     "noImplicitAny": true,
     "declaration": true, 
     "declarationMap": true, 
