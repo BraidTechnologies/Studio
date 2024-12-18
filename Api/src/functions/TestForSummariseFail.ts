@@ -8,7 +8,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
-import { ISuppressSummariseFailRequest, ISuppressSummariseFailResponse, ESuppressSummariseFail } from "../../../CommonTs/src/SuppressSummariseFailApi.Types";
+import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../../CommonTs/src/TestForSummariseFailApi.Types";
 
 let minimumTextLength = 64;
 
@@ -20,7 +20,7 @@ let minimumTextLength = 64;
  * @param length The length for the theme text to return.
  * @returns A Promise that resolves to the most common theme found in the text.
  */
-async function suppressSummariseFailCall(text: string, length: number): Promise<ESuppressSummariseFail> {
+async function testForSummariseFailCall(text: string, length: number): Promise<ETestForSummariseFail> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -52,7 +52,7 @@ async function suppressSummariseFailCall(text: string, length: number): Promise<
       }
    );
 
-   return (response.data.choices[0].message.content === ESuppressSummariseFail.kNo ? ESuppressSummariseFail.kNo : ESuppressSummariseFail.kYes);
+   return (response.data.choices[0].message.content === 'No' ? ETestForSummariseFail.kSummaryFailed : ETestForSummariseFail.kSummarySucceeded);
 }
 
 /**
@@ -62,11 +62,11 @@ async function suppressSummariseFailCall(text: string, length: number): Promise<
  * @param context - The invocation context for logging and validation.
  * @returns A promise of an HTTP response with the theme summary or an authorization error message.
  */
-export async function suppressSummariseFail(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function testForSummariseFail(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let text: string | undefined = undefined;
    let length: number | undefined = undefined;
-   let overallSummary: ESuppressSummariseFail | undefined = undefined;
+   let overallSummary: ETestForSummariseFail | undefined = undefined;
    const defaultLength = 15;
 
    if (isSessionValid(request, context)) {
@@ -75,21 +75,21 @@ export async function suppressSummariseFail(request: HttpRequest, context: Invoc
          let jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ISuppressSummariseFailRequest;   
+         let summariseSpec = (jsonRequest as any).request as ITestForSummariseFailRequest;   
          text = summariseSpec.text;
          length = summariseSpec.lengthInWords;
 
          if (!text || text.length < minimumTextLength) {
-            overallSummary = ESuppressSummariseFail.kNo;
+            overallSummary = ETestForSummariseFail.kSummaryFailed;
          }
          else {
 
             let definitelyText: string = text;
             let definitelyLength: number = length ? length : defaultLength;
-            overallSummary = await suppressSummariseFailCall(definitelyText, definitelyLength);
+            overallSummary = await testForSummariseFailCall(definitelyText, definitelyLength);
          }
 
-         let summariseResponse : ISuppressSummariseFailResponse = {
+         let summariseResponse : ITestForSummariseFailResponse = {
             isValidSummary: overallSummary
          }
 
@@ -110,9 +110,9 @@ export async function suppressSummariseFail(request: HttpRequest, context: Invoc
    }
 };
 
-app.http('SuppressSummariseFail', {
+app.http('TestForSummariseFail', {
    methods: ['GET', 'POST'],
    authLevel: 'anonymous',
-   handler: suppressSummariseFail
+   handler: testForSummariseFail
 });
 

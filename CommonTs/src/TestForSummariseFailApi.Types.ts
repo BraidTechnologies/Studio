@@ -4,21 +4,21 @@
 /**
  * Defines the structure of a summarise request object.
  */
-export interface ISuppressSummariseFailRequest{
+export interface ITestForSummariseFailRequest{
 
    text: string;
    lengthInWords?: number | undefined;
 }
 
-export enum ESuppressSummariseFail {
-   kYes = "Yes",
-   kNo = "No"
+export enum ETestForSummariseFail {
+   kSummaryFailed = "SummaryFailed",
+   kSummarySucceeded = "SummarySucceeded"
 }
 
 /**
  * Defines the structure of a summarise response object.
  */
-export interface ISuppressSummariseFailResponse {
+export interface ITestForSummariseFailResponse {
 
-   isValidSummary: ESuppressSummariseFail;
+   isValidSummary: ETestForSummariseFail;
 }

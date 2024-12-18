@@ -29,8 +29,8 @@ class DevelopmentEnvironment {
     embedApi() {
         return "http://localhost:7071/api/Embed";
     }
-    suppressSummariseFail() {
-        return "http://localhost:7071/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "http://localhost:7071/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "http://localhost:7071/api/SaveActivity";
@@ -135,8 +135,8 @@ class StagingEnvironment {
     embedApi() {
         return "https://braid-api.azurewebsites.net/api/Embed";
     }
-    suppressSummariseFail() {
-        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "https://braid-api.azurewebsites.net/api/SaveActivity";
@@ -241,8 +241,8 @@ class ProductionEnvironment {
     embedApi() {
         return "https://braid-api.azurewebsites.net/api/Embed";
     }
-    suppressSummariseFail() {
-        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "https://braid-api.azurewebsites.net/api/SaveActivity";

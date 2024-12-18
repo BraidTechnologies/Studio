@@ -28,8 +28,8 @@ export class DevelopmentEnvironment implements IEnvironment {
    embedApi () : string {
       return "http://localhost:7071/api/Embed"; 
    }
-   suppressSummariseFail(): string {
-      return "http://localhost:7071/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "http://localhost:7071/api/TestForSummariseFail";
    }
    saveActivityApi(): string {
       return "http://localhost:7071/api/SaveActivity"
@@ -134,8 +134,8 @@ export class StagingEnvironment implements IEnvironment {
    embedApi () : string {
       return "https://braid-api.azurewebsites.net/api/Embed"; 
    }   
-   suppressSummariseFail(): string {
-      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
    }   
    saveActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/SaveActivity";
@@ -241,8 +241,8 @@ export class ProductionEnvironment implements IEnvironment {
    embedApi () : string {
       return "https://braid-api.azurewebsites.net/api/Embed"; 
    }    
-   suppressSummariseFail(): string {
-      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
    }      
    saveActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/SaveActivity"

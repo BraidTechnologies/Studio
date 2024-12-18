@@ -54,7 +54,7 @@ class SummariseFailSuppressor (PipelineStep):
                         status_forcelist=[500, 502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
-        summary_url = f'https://braid-api.azurewebsites.net/api/SuppressSummariseFail?session={
+        summary_url = f'https://braid-api.azurewebsites.net/api/TestForSummariseFail?session={
             SESSION_KEY}'
         input_json = {
             'request': {
