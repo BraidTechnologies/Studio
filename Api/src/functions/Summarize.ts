@@ -10,6 +10,8 @@ import axiosRetry from 'axios-retry';
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
 import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
+import { getSummariser } from "./IPromptPersonaFactory";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 let minimumTextLength = 64;
 let model = getDefaultModel();
@@ -31,11 +33,12 @@ function chunkText(text: string, overlapWords: number): Array<string> {
 /**
  * Asynchronously summarizes the given text using an AI assistant.
  * 
+ * @param persona - The persona to use for the summarisation
  * @param text The text to be summarized.
  * @param words The number of words to use for the summary.
  * @returns A Promise that resolves to the summarized text.
  */
-async function singleShotSummarize(text: string, words: number): Promise<string> {
+async function singleShotSummarize(persona: EPromptPersona, text: string, words: number): Promise<string> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -46,22 +49,22 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
       }
    });
 
-   let wordString = Math.floor (words).toString();
-   let content = "You are an AI asistant that summarises text in "
-      + wordString +
-      " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
-      + wordString + " words.  Translate to English if necessary. "
-   console.log(content)
+   let summariser = getSummariser(persona, words, text);
+
+   let systemPrompt = summariser.systemPrompt;
+   let userPrompt = summariser.itemPrompt;
+
+   console.log(systemPrompt)
 
    let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
-            content: content
+            content: systemPrompt
          },
          {
             role: 'user',
-            content: text
+            content: userPrompt
          }
       ],
    },
@@ -79,12 +82,13 @@ async function singleShotSummarize(text: string, words: number): Promise<string>
 /**
  * Asynchronously generates a recursive summary of the input text based on the specified level and word limit.
  * 
+ * @param persona - The persona to use for the summarisation
  * @param text The text to be summarized.
  * @param level The current level of recursion.
  * @param words The maximum number of words in the summary.
  * @returns A Promise that resolves to the generated summary string.
  */
-export async function recursiveSummarize(text: string, level: number, words: number): Promise<string> {
+export async function recursiveSummarize(persona: EPromptPersona, text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
    let chunks = chunkText(text, 0);
@@ -97,19 +101,19 @@ export async function recursiveSummarize(text: string, level: number, words: num
       // Here we look over each chunk to generate a summary for each
       for (var i = 0; i < chunks.length; i++) {
 
-         let summary = await singleShotSummarize(chunks[i], recursizeSummarySize);
+         let summary = await singleShotSummarize(persona, chunks[i], recursizeSummarySize);
          summaries.push(summary);
       }
    }
    else {
-      let summary = await singleShotSummarize(chunks[0], words);
+      let summary = await singleShotSummarize(persona, chunks[0], words);
       summaries.push(summary);
    }
 
    // If we made multiple summaries, we join them all up 
    if (chunks.length > 1) {
       let joinedSummaries = summaries.join(" ");
-      overallSummary = await recursiveSummarize(joinedSummaries, level + 1, words);
+      overallSummary = await recursiveSummarize(persona, joinedSummaries, level + 1, words);
    }
    else {
       overallSummary = summaries[0];
@@ -141,10 +145,11 @@ export async function summarize(request: HttpRequest, context: InvocationContext
 
          text = summariseSpec.text;
          words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
+         let persona = summariseSpec.persona;
 
          if (text && text.length >= minimumTextLength && words > 0) {
             let definitelyText: string = text;
-            overallSummary = await recursiveSummarize(definitelyText, 0, words);
+            overallSummary = await recursiveSummarize(persona, definitelyText, 0, words);
 
             let summariseResponse: ISummariseResponse = {
                summary: overallSummary

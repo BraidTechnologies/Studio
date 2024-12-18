@@ -72,7 +72,7 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
 
             // If the text is bigger than available context, we have to summarise it
             if (!model.fitsInContext(text)) {
-               text = await recursiveSummarize(text, 0, model.contextWindowSize)
+               text = await recursiveSummarize(spec.persona, text, 0, model.contextWindowSize)
 
                context.log("Summarised");
             }

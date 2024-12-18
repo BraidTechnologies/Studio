@@ -145,6 +145,11 @@ def save_chunk_tree(output_location: str,
         master_theme.originalText = None
         master_theme.storedEmbedding = None
 
+    master_theme.originalText = 'Please find below the result of the ' + \
+        spec.description + \
+        ' cluster analysis (' + str(len(items)) + ' samples).'
+    
+    
     for theme in themes:
 
         loaded_theme = chunk_repository.find (theme.short_description)
@@ -195,7 +200,7 @@ def save_chunk_tree(output_location: str,
 
     # Save the Theme
     master_theme.url = "https://braid-api.azurewebsites.net/api/GetPage?id=" + str(master_theme.id)
-
+    
     master_theme_embedding = embedder.embed_text (master_theme.originalText)
     master_theme.storedEmbedding = create_embedding (master_theme_embedding, chunk_repository.default_embedding_model)
     master_theme.storedSummary = create_text_rendering (master_theme.originalText, chunk_repository.default_model)

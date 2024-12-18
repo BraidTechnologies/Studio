@@ -8,6 +8,7 @@ import axios from 'axios';
 import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { ISummariseRequest, ISummariseResponse } from "../../CommonTs/src/SummariseApi.Types";
+import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
 
 declare var process: any;
 
@@ -17,6 +18,7 @@ describe("Summarise", async function () {
 
       let summary: string | undefined = undefined;
       let summariseRequest: ISummariseRequest = {
+         persona: EPromptPersona.kArticleSummariser,
          text: text,
          lengthInWords: 50
       }

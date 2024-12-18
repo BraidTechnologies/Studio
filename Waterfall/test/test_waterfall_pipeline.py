@@ -6,8 +6,8 @@ import logging
 
 import pytest
 
-from src.workflow import WebSearchPipelineSpec
-from src.waterfall_pipeline import WaterfallDataPipeline
+from src.workflow import WebSearchPipelineSpec, FileDirectedPipelineSpec
+from src.waterfall_pipeline import WaterfallDataPipeline, PipelineSpec
 from src.web_searcher import (AI_SUPPLY_STACK_SEARCH_ENGINE_ID,
                               AI_DEMAND_STACK_SEARCH_ENGINE_ID,
                               AI_TELECOM_SEARCH_ENGINE_ID,
@@ -44,7 +44,7 @@ def test_with_search_supply ():
     pipeline_spec.output_chart_name = 'supply_cluster.html'
     pipeline_spec.output_data_name = "supply_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, False)
+    links = pipeline.search_dynamic (pipeline_spec)
     assert len(links) >= 1
 
 @pytest.mark.timeout(9000)
@@ -64,7 +64,7 @@ def test_with_search_demand ():
     pipeline_spec.output_chart_name = 'demand_cluster.html'
     pipeline_spec.output_data_name = "demand_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, False)
+    links = pipeline.search_dynamic (pipeline_spec)
     assert len(links) >= 1
 
 @pytest.mark.timeout(9000)
@@ -84,7 +84,7 @@ def test_with_search_telecom ():
     pipeline_spec.output_chart_name = 'telco_cluster.html'
     pipeline_spec.output_data_name = "telco_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, False)
+    links = pipeline.search_dynamic (pipeline_spec)
     assert len(links) >= 1
 
 @pytest.mark.timeout(9000)
@@ -104,7 +104,7 @@ def test_with_search_nationwide ():
     pipeline_spec.output_chart_name = 'nationwide_cluster.html'
     pipeline_spec.output_data_name = "nationwide_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, False)
+    links = pipeline.search_dynamic (pipeline_spec)
     assert len(links) >= 1
 
 @pytest.mark.timeout(15000)
@@ -124,5 +124,24 @@ def test_with_search_bny ():
     pipeline_spec.output_chart_name = 'bny_cluster.html'
     pipeline_spec.output_data_name = "bny_cluster_output.json"
 
-    links = pipeline.search (pipeline_spec, False)
+    links = pipeline.search_dynamic (pipeline_spec)
+    assert len(links) >= 1
+
+def test_with_search_vf_survey_01 ():
+    os.chdir (test_root)
+    test_output_location = 'vf_survey_01_output'
+
+    pipeline = WaterfallDataPipeline (test_output_location)
+
+    pipeline_spec = PipelineSpec()
+    pipeline_spec.clusters = 3
+    pipeline_spec.clusters_in_summary = 3
+    pipeline_spec.description = "Vodafone Cohort 1 Survey 1"
+    pipeline_spec.output_chart_name = 'vf_survey_01.html'
+    pipeline_spec.output_data_name = "vf_survey_01_output.json"
+
+    file_spec = FileDirectedPipelineSpec()
+    file_spec.files = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
+    links = pipeline.search_static (pipeline_spec, file_spec)
     assert len(links) >= 1

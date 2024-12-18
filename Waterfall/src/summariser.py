@@ -36,7 +36,7 @@ class Summariser (PipelineStep):
         '''
         Initializes the Summariser object with the provided output location.
         '''
-        # pylint: disable-next=useless-parent-delegation         
+        # pylint: disable-next=useless-parent-delegation
         super(Summariser, self).__init__(output_location)
 
     def summarise(self, pipeline_item: PipelineItem) -> PipelineItem:
@@ -67,6 +67,7 @@ class Summariser (PipelineStep):
             SESSION_KEY}'
         input_json = {
             'request': {
+                'persona': "SurveySummariser",
                 'text': pipeline_item.text,
                 'lengthInWords': 50
             }
@@ -76,7 +77,7 @@ class Summariser (PipelineStep):
                                 headers=headers,
                                 timeout=request_timeout)
 
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
             summary = response_json['summary']
 

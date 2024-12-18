@@ -89,7 +89,6 @@ describe("TestForSummariseFail", async function () {
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         console.log (failCode);
          expect (failCode).toBe (ETestForSummariseFail.kSummaryFailed.toString()) ;           
       }   
 
@@ -120,8 +119,7 @@ describe("TestForSummariseFail", async function () {
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         let noValue = ETestForSummariseFail.kSummaryFailed;
-         console.log (failCode);         
+         let noValue = ETestForSummariseFail.kSummaryFailed;     
          expect (failCode == noValue).toBe (true) ;           
       }   
 
