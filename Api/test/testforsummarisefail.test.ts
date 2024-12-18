@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { ISuppressSummariseFailRequest, ISuppressSummariseFailResponse, ESuppressSummariseFail } from "../../CommonTs/src/SuppressSummariseFailApi.Types";
+import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../CommonTs/src/TestForSummariseFailApi.Types";
 
 declare var process: any;
 
@@ -20,12 +20,12 @@ let summariseFails = ["Im sorry, but it seems that the text you provided does no
   "There is no main body of text.",
   "I apologize for the inconvenience, but there is no main body of text, I cannot provide a summary."]
 
-describe("SuppressSummariseFail", async function () {
+describe("TestForSummariseFail", async function () {
 
    async function validCall (apiUrl: string, text: string, length: number) : Promise<string | undefined> {
 
       let failCode: string | undefined = undefined;
-      let summariseRequest: ISuppressSummariseFailRequest = {
+      let summariseRequest: ITestForSummariseFailRequest = {
          text: text,
          lengthInWords: 50
       }
@@ -38,7 +38,7 @@ describe("SuppressSummariseFail", async function () {
            }
          });
 
-         failCode = (response.data as ISuppressSummariseFailResponse).isValidSummary;
+         failCode = (response.data as ITestForSummariseFailResponse).isValidSummary;
   
       } catch (e: any) {       
 
@@ -69,7 +69,7 @@ describe("SuppressSummariseFail", async function () {
       let sampleText : string | undefined = summariseFails[0] ;      
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.suppressSummariseFail() + "?session=" + "thiswillfail";
+      let apiUrl = environment.testForSummariseFail() + "?session=" + "thiswillfail";
 
       let caught = await invalidCall (apiUrl, sampleText);
 
@@ -84,12 +84,13 @@ describe("SuppressSummariseFail", async function () {
 
          let environment = getEnvironment(EEnvironment.kLocal);
   
-         let apiUrl = environment.suppressSummariseFail() + "?session=" + process.env.SessionKey.toString();
+         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.SessionKey.toString();
 
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         expect (failCode).toBe (ESuppressSummariseFail.kNo.toString()) ;           
+         console.log (failCode);
+         expect (failCode).toBe (ETestForSummariseFail.kSummaryFailed.toString()) ;           
       }   
 
    }).timeout(20000);
@@ -99,7 +100,7 @@ describe("SuppressSummariseFail", async function () {
       let sampleText : string | undefined = summariseFails[0] ;      
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.suppressSummariseFail() + "?session=" + "thiswillfail";
+      let apiUrl = environment.testForSummariseFail() + "?session=" + "thiswillfail";
 
       let caught = await invalidCall (apiUrl, sampleText);
 
@@ -114,12 +115,13 @@ describe("SuppressSummariseFail", async function () {
 
          let environment = getEnvironment(EEnvironment.kProduction);
   
-         let apiUrl = environment.suppressSummariseFail() + "?session=" + process.env.SessionKey.toString();
+         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.SessionKey.toString();
 
          let failCode = await validCall (apiUrl, sampleText, 10);
 
          expect (failCode && failCode?.length > 0).toBe (true) ;  
-         let noValue = ESuppressSummariseFail.kNo;
+         let noValue = ETestForSummariseFail.kSummaryFailed;
+         console.log (failCode);         
          expect (failCode == noValue).toBe (true) ;           
       }   
 

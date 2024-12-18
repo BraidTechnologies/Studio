@@ -19,7 +19,7 @@ export interface IEnvironment {
    chunkApi () : string;   
    classifyApi () : string;
    embedApi() : string;
-   suppressSummariseFail(): string;
+   testForSummariseFail(): string;
    saveActivityApi(): string;
    removeActivityApi(): string;
    getActivityApi(): string;   
