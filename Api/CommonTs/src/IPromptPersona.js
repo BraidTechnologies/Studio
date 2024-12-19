@@ -6,6 +6,7 @@ var EPromptPersona;
 (function (EPromptPersona) {
     EPromptPersona["kArticleSummariser"] = "ArticleSummariser";
     EPromptPersona["kCodeSummariser"] = "CodeSummariser";
+    EPromptPersona["kSurveySummariser"] = "SurveySummariser";
 })(EPromptPersona || (exports.EPromptPersona = EPromptPersona = {}));
 ;
 //# sourceMappingURL=IPromptPersona.js.map

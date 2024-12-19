@@ -17,16 +17,35 @@ const CodeSummariserPersona: IPromptPersona = {
    itemPrompt: ""
 };
 
+const SurveySummariserPersona: IPromptPersona = {
+
+   name: EPromptPersona.kSurveySummariser,
+   systemPrompt: "",
+   itemPrompt: ""
+};
+
 export function getSummariser (persona: EPromptPersona, wordTarget: number, textToSummarise: string) : IPromptPersona {
 
+   let wordString = Math.floor (wordTarget).toString();
 
    switch (persona) {
+      
+      case EPromptPersona.kSurveySummariser:
+         let surveyTemplate = SurveySummariserPersona;
+         surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
+         + wordString  +
+         " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
+         + wordString + " words. Make each distinct point a separate paragraph. Be as positive as reasonably possible.";
+
+         surveyTemplate.itemPrompt = textToSummarise;
+         return surveyTemplate;
+
       case EPromptPersona.kCodeSummariser:
          let codeTemplate = CodeSummariserPersona;
          codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
-         + wordTarget.toString() +
+         + wordString  +
          " words or less, to help explain the code it to new developers. Please summarise the following code in "
-         + wordTarget.toString() + " words. ";
+         + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
 
          codeTemplate.itemPrompt = textToSummarise;
          return codeTemplate;
@@ -37,9 +56,9 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
          let articleTemplate = ArticleSummariserPersona; 
          
          articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
-         + wordTarget.toString() +
+         + wordString  +
          " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
-         + wordTarget.toString() + " words.  Translate to English if necessary. ";
+         + wordString  + " words. Translate to English if necessary. Make each distinct point a separate paragraph.";
 
          articleTemplate.itemPrompt = textToSummarise;
          return ArticleSummariserPersona;

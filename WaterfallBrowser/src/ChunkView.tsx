@@ -48,14 +48,18 @@ function mapRelated (value: string, index: number, all: Array<string>) : ReactNo
 }
 
 /**
- * Splits a string into an array of strings using double newlines as the delimiter.
- * Empty strings are filtered out from the result.
+ * Splits the input text into an array of strings based on double newline characters.
+ * If no double newline is found, splits by single newline characters.
+ * Filters out any empty or whitespace-only strings from the result.
  *
- * @param text - The input string to split
- * @returns An array of non-empty strings split by double newlines
+ * @param text - The input string to be split.
+ * @returns An array of non-empty strings obtained by splitting the input text.
  */
-function splitByDoubleNewline(text: string): string[] {
-   return text.split('\n\n').filter(str => str.trim().length > 0);
+function splitByNewlines(text: string): string[] {
+   if (!text.includes('\n\n')) {
+      return text.split('\n\n').filter(str => str.trim().length > 0);
+   }
+   return text.split('\n').filter(str => str.trim().length > 0);
 }
 
 /**
@@ -71,7 +75,7 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
     let url : string | undefined = undefined
 
     if (props.chunk.storedSummary?.text) {
-        splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
+        splitSummary = splitByNewlines (props.chunk.storedSummary?.text);
     }
 
 

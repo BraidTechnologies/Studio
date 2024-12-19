@@ -1,0 +1,15 @@
+"The course meets my overall expectations:'Agree'
+The duration and pacing of the course were appropriate:'Agree'
+The “AI Ethics” session provided valuable insights that I can apply in real-world scenarios.
+:'Agree'
+. The “Design Thinking” sessions enhanced my problem-solving and innovation skills.:'Neutral'
+The “Achieving Personal High Performance” session offered practical techniques to improve my productivity and focus.:'Neutral'
+The Python coursework helped build a strong foundation in programming for AI applications.:'Neutral'
+The courses on Large Language Models (LLMs) and Generative AI improved my understanding of these technologies and their potential uses. :'Strongly agree'
+I feel confident the skills I'm building will help my career at Vodafone :'Strongly agree'
+The practical exercises, examples, and group activities were engaging and helped reinforce key concepts. :'Strongly agree'
+What was the most valuable part of this course for you, and why:'Building a real world solution using cutting-edge tech'
+What could be improved to enhance the learning experience for future participants?:'Having separate trainings depending on your role in the team, i.e, being a Team Lead not studying in depth python or being a technical contributor not studying in depth scrum master...'
+What changes would you like to see for the “Gateway Projects” build phase?:'More time to develop the project itself, it should take up to a year.'"
+
+

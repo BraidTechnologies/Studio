@@ -7,7 +7,6 @@ import os
 import json
 import plotly
 import plotly.express as px
-import umap
 import umap.umap_ as umap__
 
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec

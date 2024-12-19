@@ -9,6 +9,7 @@ import axios from 'axios';
 import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { IEmbedRequest, IEmbedResponse } from "../../CommonTs/src/EmbedApi.Types";
+import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
 
 declare var process: any;
 
@@ -18,6 +19,7 @@ describe("Embed", async function () {
 
       let embedding: Array<number> | undefined = undefined;
       let embeddingRequest: IEmbedRequest = {
+         persona: EPromptPersona.kArticleSummariser,
          text: text
       }
 

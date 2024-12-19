@@ -26,7 +26,6 @@ def create_mail_report(output_location: str, items: list[PipelineItem], themes: 
         - send_final - set to false to suppress ending the report - used in testing
     '''
 
-    write_chart (output_location, items, themes, spec)
 
     logger.debug('Writing summary')
     size = min(len(themes), spec.clusters_in_summary)
