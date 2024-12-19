@@ -16,18 +16,32 @@ Options:
     -v, --verbose     Enable verbose output.
 
 Example:
+    python repo_to_text.py --cfg config.yaml --repo_path . -o test_output
     python repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
 """
+
+
 import os
-import nltk
-import yaml
 import fnmatch
 import argparse
 from pathlib import Path
-from textwrap import dedent
+import requests
+import yaml
+import nltk
+
+from CommonPy.src.request_utilities import request_timeout
 
 nltk.download('punkt', quiet=True)
 from nltk.tokenize import word_tokenize
+
+class SummarisedDirectory:
+    def __init__(self):
+        self.name = ''
+        self.summary = ''
+
+
+# Dictionary to store processed content with string keys
+directories = {}
 
 
 def load_yaml(fname):
@@ -44,6 +58,35 @@ def load_yaml(fname):
 
     return config
 
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['SessionKey']
+
+def summarise_endpoint_url():
+    # Construct the full URL for the summary endpoint
+    return f'{BASE_URL}/Summarize?session=' + SESSION_KEY
+
+def summarise_code(source: str) -> str:
+
+
+    payload = {
+        'persona': 'CodeSummariser',
+        'text': source,
+        'lengthInWords': 100
+    }
+    wrapped = {
+        'request': payload
+    }
+    response = requests.post(summarise_endpoint_url(),
+                             json=wrapped, timeout=request_timeout)
+    if response.status_code == 200:
+        data = response.json()
+        if 'summary' in data:
+            return data['summary']
+
+    return None
+    
+    
 
 class RepoContentProcessor:
     def __init__(self, repo_path, config_path={}, max_words=200000):
@@ -60,6 +103,8 @@ class RepoContentProcessor:
         self.skip_dirs = config.get("skip_dirs", [])
         # Define file patterns to skip
         self.skip_patterns = config.get("skip_patterns", [])
+        # Define file patterns to use a source for chunk size assessment & active code summarisation
+        self.source_patterns = config.get("source_patterns", [])
 
     def format_file_block(self, relative_path, file_content):
         """Format a file's content block with consistent indentation"""
@@ -82,6 +127,19 @@ class RepoContentProcessor:
                return True
         return False
 
+    def is_source_file(self, path):
+        """
+        Check if a path is a source file
+        """
+
+        if path.is_file():
+            base_name = os.path.basename(path)
+            skip1 = any(fnmatch.fnmatch(base_name, pattern)
+                      for pattern in self.source_patterns)
+            if skip1:
+                return True
+        
+        return False
     
     def should_skip_path(self, path):
         """
@@ -105,6 +163,28 @@ class RepoContentProcessor:
         
         return False
     
+    def save_directory_content(self):
+        """
+        Save the directory summaries to the repo path
+        """
+        
+        # Save current working directory 
+        current_working_directory = os.getcwd()
+
+        # Change to the repo path
+        os.chdir(self.repo_path)
+
+        # Save current directory summaries
+        for directory, item in directories.items():
+            if len (item.summary) > 0:
+                full_file_path = os.path.join(item.name, 'ReadMe.Salon.md')
+                with open(full_file_path, 'w+', encoding='utf-8') as f:
+                    f.write(item.summary)
+                    print(f"Created {full_file_path}")
+        
+        os.chdir(current_working_directory)
+
+
     def save_current_content(self):
         """Save current content to a numbered file"""
         if self.content:
@@ -156,10 +236,10 @@ class RepoContentProcessor:
         # Use Path.rglob instead of os.walk for better path handling
         for file_path in self.repo_path.rglob('*'):
             try:
+                rel_path = file_path.relative_to(self.repo_path)                
                 # Skip if path should be skipped
                 if self.should_skip_path(file_path):
                     if file_path.is_dir():
-                        rel_path = file_path.relative_to(self.repo_path)
                         if str(rel_path) not in skipped_dirs:
                             print(f"Skipping directory: {rel_path}")
                             skipped_dirs.add(str(rel_path))
@@ -167,21 +247,54 @@ class RepoContentProcessor:
                         skipped_count += 1
                     continue
                 else:
-                    # Process only files, not directories
+                    # Ingest only files, not directories
                     if file_path.is_file():
                         print(f"Processing: {file_path.relative_to(self.repo_path)}")
                         self.process_file(file_path)
                         file_count += 1
+
+                        if self.is_source_file(file_path):                           
+                            file_content = ""
+                            summary = None
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                file_content = f.read().rstrip()  # Remove trailing whitespace
+                            if (len(file_content) > 250):
+                                summary = summarise_code(file_content)
+                            if summary:
+                                file_name = file_path.name
+                                directory_path = file_path.parent
+                                directory_rel_path = str(directory_path.relative_to(self.repo_path))
+                                if directory_rel_path not in directories:
+                                    directories[directory_rel_path] = SummarisedDirectory()
+                                    (directories[directory_rel_path]).name = str(directory_rel_path)
+                                name_and_summary = '**' + file_name + "**\n\n" + summary + '\n\n'
+                                existing_summary = directories[directory_rel_path].summary
+                                if existing_summary:
+                                    accumulated_summary = existing_summary + name_and_summary
+                                else:
+                                    accumulated_summary = name_and_summary
+                                directories[directory_rel_path].summary  = accumulated_summary
+                    else:
+                        # Keep a dictionary of directories - when we find source files, we add to the summary
+                        print(f"Directory: {rel_path}")
+                        directories[str(rel_path)] = SummarisedDirectory()
+                        (directories[str(rel_path)]).name = str(rel_path)
+                                                
                     
             except ValueError as e:
                 print(f"Error processing path {file_path}: {e}")
                 continue
         
+        # Save the directory summaries
+        self.save_directory_content()
+                
         # Save any remaining content
         if self.content:
             self.save_current_content()
             
         print(f"\nProcessed {file_count} files, skipped {skipped_count} files")
+
+
 
 
 def parse_arguments():

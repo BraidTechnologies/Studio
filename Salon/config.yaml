@@ -1,8 +1,14 @@
+source_patterns:
+    - "*.py"
+    - "*.ts"
+    - "*.tsx"
+
 skip_dirs:
     - "__pycache__"
     - "node_modules"
     - "venv"
     - ".idea"
+    - ".pytest_cache"
     - ".vscode"
     - "data"    
         
@@ -34,3 +40,4 @@ skip_patterns:
     - "*.mdd"       
     - "*.vtt"       
     - "*.html"
+    - "__init__.py"

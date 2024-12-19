@@ -45,7 +45,7 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
          codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
          + wordString  +
          " words or less, to help explain the code it to new developers. Please summarise the following code in "
-         + wordString + " words. Make each distinct point a separate paragraph.";
+         + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
 
          codeTemplate.itemPrompt = textToSummarise;
          return codeTemplate;
