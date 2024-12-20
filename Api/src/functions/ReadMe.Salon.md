@@ -1,405 +1,425 @@
 **AzureStorableApi.ts**
 
-The module handles HTTP requests to manage `Storable` objects in Azure CosmosDB.
+The `AzureStorableApi` module provides HTTP endpoints to perform CRUD operations on `IStorable` objects stored in Azure Cosmos DB via Azure Functions. 
 
-Important functions:
-1. `findStorableApi`: Validates session, logs actions, and retrieves a storable based on a query. Utilizes helper `applyTransformer`.
-2. `getStorableApi`: Similar to `findStorableApi`, but the actual processing is delegated to `getStorableApiCommon`.
-3. `getStorableApiFromQuery`: Retrieves storable using query parameters without session validation.
-4. `getStorableApiCommon`: Common retrieval logic for `getStorableApi` and `getStorableApiFromQuery`.
-5. `saveStorableApi`: Validates session, processes request JSON, logs, and saves the storable.
-6. `removeStorableApi`: Validates session, processes request JSON, logs, and removes the storable.
-7. `getRecentStorablesApi`: Validates session and retrieves recent storables.
-
-Helper functions:
-- `applyTransformer` and `applyArrayTransformer`: Apply optional transformer functions to storable(s).
-
-Key imports include Azure functions, utilities for session validation, responses, and handling storables with CosmosDB operations.
+Classes/Functions:
+- `applyTransformer` and `applyArrayTransformer`: Apply a transformer function to storable objects or arrays.
+- `findStorableApi`, `getStorableApi`, `getStorableApiFromQuery`, `getStorableApiCommon`: Retrieve storable objects from Azure Cosmos DB with optional data transformation and session validation.
+- `saveStorableApi`: Validate session keys and save storable objects, logging the operation status.
+- `removeStorableApi`: Validate session keys and remove storable objects, logging the operation status.
+- `getRecentStorablesApi`: Retrieve recent storable objects with an option to transform data and log the operation.
 
 **CheckSession.ts**
 
-The code defines a function called `checkSession` which validates a session key provided in HTTP request query parameters. 
+**Important Functions and Modules:**
+1. `checkSession(request: HttpRequest, context: InvocationContext)`: This function validates the session key from the query parameters of the request. It checks if the session key matches the expected values stored in environment variables. Based on the validity, it returns a 200 status with the session key or a 401 status with an authorization failure message.
 
-If the session key is valid, it logs a success message and returns a 200 status response with the session key. If the session key is invalid, it logs a failure message and returns a 401 status response indicating authorization failure.
+2. `app.http('CheckSession', { methods: ['GET', 'POST'], authLevel: 'anonymous', handler: checkSession })`: This code configures an HTTP endpoint named "CheckSession" that supports GET and POST methods, sets anonymous access, and handles requests using the `checkSession` function.
 
-The `app.http` function sets up an HTTP trigger for the Azure Function named `CheckSession`, allowing GET and POST methods with anonymous authentication.
-
-Key imports: `app`, `HttpRequest`, `HttpResponseInit`, `InvocationContext` from "@azure/functions" and utility functions `isSessionValid`, `sessionFailResponse`, `defaultOkResponse` from "./Utility".
+**Summary:**
+- This Azure Function module validates session keys against environment-configured valid sessions.
+- It supports GET and POST methods.
+- The `checkSession` function handles session validation, returning different responses based on session validity.
+- The function is publicly accessible but requires a valid session key for successful authentication.
 
 **Chunk.ts**
 
-The module is for an Azure Function app, designed to deploy using 'func azure functionapp publish Braid-Api' or run locally with 'npm start'.
+### Functionality
+The code defines an Azure Function module for text chunking, which splits input text into manageable chunks with configurable size and overlap settings.
 
-The main function `chunk` processes HTTP requests for text chunking, using the auxiliary function `chunkText` to split input text into chunks based on specified size and overlap.
+### Important Classes/Functions
+- **chunkText**: Utilizes the `model.chunkText` method to split input text based on specified chunk size and overlap words.
+- **chunk**: Asynchronous function that handles HTTP requests, validates session, and returns text chunks or error messages.
 
-`chunkText` utilizes `model.chunkText` to divide the text accordingly, returning an array of strings.
-
-The `chunk` function validates the session using `isSessionValid` before processing, handles requests to extract and chunk the text, and returns a response with either the chunks or an error.
-
-Classes/functions: `chunkText`, `chunk`, `isSessionValid`, `sessionFailResponse`, `defaultErrorResponse`.
-
-The `app.http` binds the `chunk` handler to HTTP methods 'GET' and 'POST' for the 'Chunk' endpoint.
+### Key Points
+- The module is part of Braid API infrastructure and ensures authenticated sessions.
+- The `chunk` function parses the HTTP request, validates the session, and processes the input text if valid.
+- In case of errors, it returns standardized error responses.
+- The Azure Function configuration is specified for anonymous access and supports GET and POST methods.
 
 **Classify.ts**
 
-This code provides an Azure Function-based classification service for textual data, using an AI assistant. 
+This module, **Classify**, is an Azure Function that provides text classification services using the OpenAI API. 
 
-The `decodeClassification` function decodes an initial classification string to a human-readable format. 
+The **`decodeClassification`** function converts initial classification results into human-readable formats.
 
-The `singleShotClassify` function classifies the given text into predefined subject areas, leveraging OpenAI's API with retry logic for network or rate-limit errors.
+The **`singleShotClassify`** function classifies input text into predefined categories using OpenAI's model. It retries up to five times on network errors or rate limit hits.
 
-The `classify` function serves as the main handler for HTTP requests. It validates the session, processes the input text and classification parameters, invokes the classification function, and constructs an HTTP response with the result or error information.
+The **`classify`** function handles text classification requests. It validates the session, reads the request JSON, and uses the `singleShotClassify` function to classify the text. It then returns the classification result or an appropriate error message.
 
-Important classes and functions:
-1. `decodeClassification`
-2. `singleShotClassify`
-3. `classify`
-4. `sessionFailResponse`, `defaultErrorResponse`, `invalidRequestResponse` (from Utility module)
+The main module imports necessary functions and sets up the Azure HTTP handler with authentication level set to 'anonymous'.
 
 **CosmosRepositoryApi.ts**
 
-This module provides several functions to generate authorization tokens and headers for HTTP requests to a Cosmos DB based on specific parameters such as verb, resource type, resourceId, and date.
+The `CosmosRepositoryApi` module provides utility functions for interacting with Azure Cosmos DB. It generates authorization tokens and headers compliant with Microsoft's authentication requirements.
 
-1. `getAuthorizationTokenUsingMasterKey`: Generates a base64-encoded authorization token using a master key and HTTP request details.
-2. `storableToken`: Generates an activity token for authorization using `getAuthorizationTokenUsingMasterKey`.
-3. `makeStorableDeleteToken`: Generates a token specifically for delete operations in Cosmos DB.
-4. `makeStorablePostToken`: Generates a post activity token.
-5. `makePostHeader`: Creates headers required for a POST request to Cosmos DB.
-6. `makeDeleteHeader`: Creates headers needed for a delete request.
-7. `makePostQueryHeader`: Creates headers for a POST query.
+**Key Functions:**
 
-The `crypto` module is utilized for HMAC SHA-256 hashing, and the structure relies on specific date formats, HTTP verbs, and key-based authentication.
+1. `getAuthorizationTokenUsingMasterKey`: Generates authorization tokens using an HTTP request's verb, resource type, resource ID, date, and master key.
+2. `storableToken`: Creates tokens for various storage operations using the master key.
+3. `makeStorableDeleteToken`: Generates tokens for delete operations.
+4. `makeStorablePostToken`: Generates tokens for post operations.
+5. `makePostHeader`: Creates headers for POST requests to Azure Cosmos DB.
+6. `makeDeleteHeader`: Creates headers for delete requests.
+7. `makePostQueryHeader`: Generates headers for query operations, supporting continuation tokens.
+
+These functions utilize the `crypto` module to generate necessary signatures and authorization tokens for secure communication with Azure Cosmos DB's REST API.
 
 **CosmosStorableApi.ts**
 
-This module interacts with Microsoft's Azure Cosmos DB to perform CRUD operations on "storable" records.
+The code provides a high-level API for interacting with Azure Cosmos DB storage, implementing CRUD operations and query capabilities for storable objects.
 
-**Important Classes and Functions:**
+**Important Classes/Functions:**
+1. **Interfaces and Constants:**
+   - `ICosmosStorableParams` and `ILoggingContext`: Define parameters and logging methods.
+   - Constants for partition keys and collection paths like `chunkPartitionKey`, `chunkCollectionPath`.
 
-1. **Cosmos Functions**:
-    - `findStorable`
-    - `loadStorable`
-    - `saveStorable`
-    - `removeStorable`
-    - `loadRecentStorables`
-    - `loadStorables`
+2. **Logging Classes:**
+   - `AzureLogger` and `ConsoleLogger`: Implement different logging functionalities using Azure Functions or Console.
 
-These functions support finding, loading, saving, removing, and querying records.
+3. **Utility Functions:**
+   - `applyTransformer`: Applies an optional transformation to storable objects.
 
-2. **Helper Functions**:
-    - `applyTransformer` - Applies transformations to storable records.
+4. **Asynchronous CRUD Functions:**
+   - `findStorable`, `loadStorable`, `saveStorable`, `removeStorable`: Perform database operations (find, load, save, and remove).
 
-3. **Logger Classes**:
-    - `AzureLogger`
-    - `ConsoleLogger`
+5. **Query Functions:**
+   - `loadRecentStorables`, `loadStorables`: Load multiple storable objects from the database based on query specifications.
 
-These log actions and errors to different contexts (Azure and console).
-
-4. **Configuration Objects**:
-    - `chunkStorableAttributes`
-    - `activityStorableAttributes`
-    - `pageStorableAttributes`
-
-These objects store configurations (keys, paths) for different collections.
+Overall, the module highlights usage of Azure Cosmos DB for data storage, ensuring efficient query execution while maintaining robust logging capabilities.
 
 **Embed.ts**
 
-This code defines an Azure Function that processes embedding requests for text data using the Azure AI service.
+The code is an Azure Function for embedding text via the Azure AI service.
 
-The `calculateEmbedding` function takes a text input, sends a POST request to the Azure AI service, and returns the embedding as an array of numbers. It also includes retry logic for handling rate limits and network errors.
+**Key Functions and Classes:**
+1. **calculateEmbedding**:
+   - Asynchronously calculates the embedding of given text.
+   - Uses `axios` with retries managed by `axiosRetry` in case of rate limits (HTTP 429) or network errors.
+   - Sends a POST request to the Azure AI service and extracts the embedding from the response.
 
-The `embed` function handles HTTP requests for embedding text data. It validates the session, processes the request, and potentially summarizes the text if it exceeds context window size before calling `calculateEmbedding` to generate the embedding. Responses are constructed based on session validation and processing outcomes.
+2. **embed**:
+   - Handles HTTP requests to embed text data.
+   - Validates session using `isSessionValid`.
+   - Extracts and processes the text from the request.
+   - Summarizes text if it exceeds context window size using `recursiveSummarize`.
+   - Obtains embeddings via `calculateEmbedding`.
+   - Returns the embedding in the HTTP response or appropriate error responses.
 
-Key Functions:
-1. `calculateEmbedding`
-2. `embed`
+3. **app.http**:
+   - Defines HTTP endpoint 'Embed' for GET and POST methods with anonymous authentication, handling requests using the `embed` function.
 
-Key Classes:
-1. `HttpRequest`
-2. `HttpResponseInit`
-3. `InvocationContext`
+**Utilities and Helper Imports:**
+- `isSessionValid`, `sessionFailResponse`, `defaultErrorResponse`, `invalidRequestResponse`: Utility functions for session validation and error handling.
+- `getDefaultModel`: Fetches default model settings.
+- `recursiveSummarize`: Summarizes text when necessary.
 
-Important Modules from the Import Section:
-1. `axios`
-2. `axiosRetry`
-3. `isSessionValid`, `sessionFailResponse`, `defaultErrorResponse`, `invalidRequestResponse` (from "Utility")
-4. `getDefaultModel` (from "IModelFactory")
-5. `recursiveSummarize` (from "Summarize")
-6. `IEmbedRequest`, `IEmbedResponse` (from "EmbedApi.Types")
+**Summary:**
+This module defines an Azure Function `embed` that processes incoming HTTP requests, validates the session, optionally summarizes the input text, and calculates an embedding using a remote AI service, returning the result or appropriate errors based on the flow and validations.
 
 **EnrichedChunkRepository.ts**
 
-This code provides a module for managing and querying enriched chunks, which are enhanced pieces of content with metadata such as embeddings.
+The code provides a module for handling and querying enriched chunks of data from memory using various criteria.
 
-The `cosineSimilarity` function calculates the cosine similarity between two numerical vectors, determining the similarity score between them.
+**Important functions and classes:**
 
-The `lookLikeSameSource` function compares two URLs to see if they originate from the same source, specifically handling YouTube video IDs and GitHub repositories.
+1. `cosineSimilarity`: Computes the cosine similarity between two vectors, used for assessing relevance.
+2. `lookLikeSameSource`: Compares two URLs to determine if they are from the same source, handling specific rules for YouTube and GitHub URLs.
+3. `lowestOfCurrent`: Finds the index of the least relevant chunk in an array, optionally considering URL similarities.
+4. `replaceIfBeatsCurrent`: Decides whether a candidate chunk should replace an existing chunk in an array based on relevance.
+5. `EnrichedChunkRepositoryInMemory`: The main class storing chunks and providing methods to query chunks relevant to a summary or URL.
 
-The `lowestOfCurrent` function finds the index of the entry with the lowest relevance in an array, and optionally checks if it is from the same source as a given URL.
+**Methods in EnrichedChunkRepositoryInMemory:**
+1. `lookupRelevantFromSummary`: Finds relevant chunks by comparing a summary.
+2. `lookupRelevantFromUrl`: Finds relevant chunks by comparing embeddings from a URL.
+3. `lookupFromUrl`: Retrieves detailed information about a chunk matching a specific URL.
 
-The `replaceIfBeatsCurrent` function replaces a candidate enriched chunk in a current array if the candidate meets certain criteria, ensuring the array does not have multiple references to the same source.
-
-The `EnrichedChunkRepositoryInMemory` class manages in-memory storage of enriched chunks and provides methods for querying relevant chunks based on text summaries (`lookupRelevantFromSummary`) and URLs (`lookupRelevantFromUrl`), and for finding a chunk summary based on a URL (`lookupFromUrl`). This class ensures that chunks are selected based on relevance and similarity criteria.
+The code also leverages assert functions, calculates embeddings, and sorts results based on relevance.
 
 **EnrichedChunkRepositoryDb.ts**
 
-The `EnrichedChunkRepositoryDb` class implements the `IEnrichedChunkRepository` interface and initializes an in-memory repository of enriched chunks while managing asynchronous data loading from a database. 
+The `EnrichedChunkRepositoryDb` class implements the `IEnrichedChunkRepository` interface and manages enriched chunks both in an in-memory repository and through asynchronous data loading from a database.
 
-The constructor sets up an instance of the in-memory repository with an initial empty array and a semaphore for handling data loading. It uses a logger and interacts with the `loadStorables` function to fetch chunk data.
+The class constructor initializes the in-memory repository by loading chunk data from the database and setting up a semaphore to handle asynchronous operations.
 
-The `lookupRelevantFromSummary` method searches for chunks relevant to the text in the summary field of the query. 
+Key methods include:
+- `lookupRelevantFromSummary`: Searches for enriched chunks relevant to the summary in the query.
+- `lookupRelevantFromUrl`: Searches for relevant enriched chunks based on a given URL.
+- `lookupFromUrl`: Retrieves the summary of an enriched chunk by its URL.
 
-The `lookupRelevantFromUrl` method searches for chunks relevant to a given URL from other sources.
-
-The `lookupFromUrl` method retrieves a chunk summary given its URL.
-
-Important classes and functions include `EnrichedChunkRepositoryDb` (class), `lookupRelevantFromSummary` (method), `lookupRelevantFromUrl` (method), and `lookupFromUrl` (method).
+Important classes and functions in the module:
+- `EnrichedChunkRepositoryDb`
+- `lookupRelevantFromSummary`
+- `lookupRelevantFromUrl`
+- `lookupFromUrl`
 
 **EnrichedChunkRepositoryFactory.ts**
 
-This module provides functionality to retrieve a repository instance that implements `IEnrichedChunkRepository`.
+The code defines a function called `getEnrichedChunkRepository` which returns an instance of `IEnrichedChunkRepository` based on the provided `repository` type, specified by the `EChunkRepository` enumeration.
 
-The `getEnrichedChunkRepository` function accepts a parameter `repository` of type `EChunkRepository`. Based on the `repository` type, it returns an instance of `EnrichedChunkRepositoryDb`. 
+The function implements a singleton pattern, ensuring that only one instance of `EnrichedChunkRepositoryDb` is created and reused. This is important because repository instances are relatively expensive to create.
 
-Currently, both `kWaterfall` and `kBoxer` repository types return an instance of `EnrichedChunkRepositoryDb`.
-
-The code ensures that only one instance of `EnrichedChunkRepositoryDb` is created and reused (singleton pattern). This design is used to manage the expensive nature of repository creation.
-
-Important classes/functions: `getEnrichedChunkRepository`, `IEnrichedChunkRepository`, `EnrichedChunkRepositoryDb`, `EChunkRepository`.
+The function checks the repository type and creates an instance of `EnrichedChunkRepositoryDb` if it hasn’t been created already, and returns this instance. Currently, it handles `kWaterfall` and `kBoxer` repository types in the same way, but the structure allows for future extension.
 
 **EnumerateModels.ts**
 
-This code defines an Azure Function that enumerates installed models, keeping Python code consistent with TypeScript.
+This code defines an Azure Function that handles HTTP requests and returns details of installed models. 
 
-The `enumerateModels` function is asynchronous and handles HTTP requests. It checks if the session is valid and processes the request to return model details. If the session is invalid, it logs an error message and returns a session failure response.
+It imports required modules from `@azure/functions`, custom utilities, and types from a common TypeScript source.
 
-Key imported modules include `app`, `HttpRequest`, and `HttpResponseInit` from "@azure/functions", and utility functions `sessionFailResponse`, `defaultErrorResponse`, and `isSessionValid` from "./Utility".
+A model is retrieved using `getDefaultModel()`.
 
-The `app.http` function registers the `enumerateModels` function as an HTTP trigger for GET and POST requests with open access.
+The `enumerateModels` function is the key function utilized here. It checks if the session is valid with `isSessionValid(request, context)`. If valid, it processes the HTTP request, logs the details, and returns model specifications in JSON format. If any error occurs, it logs the error and sends a default error response.
+
+The `app.http` method registers the `enumerateModels` function for handling 'GET' and 'POST' requests anonymously.
+
+Important functions: `enumerateModels`.
+
+Key modules: `@azure/functions`, `getDefaultModel`, `IEnumerateModelsRequest`, `IEnumerateModelsResponse`, `sessionFailResponse`, `defaultErrorResponse`, `isSessionValid`.
 
 **EnumerateRepositories.ts**
 
-This module defines an Azure Function that lists installed repositories.
+The code defines an Azure Function named `enumerateRepositories` within a Node.js module.
 
-It imports the necessary modules from `@azure/functions`, common types and utility functions from local files.
+The `enumerateRepositories` function is an asynchronous HTTP-triggered function that sends back details of installed repositories. It accepts `HttpRequest` and `InvocationContext` objects as parameters and returns an `HttpResponseInit` object.
 
-The main function `enumerateRepositories` handles HTTP requests. It checks if a session is valid using the `isSessionValid` function.  
+The function checks if the session is valid using the `isSessionValid` utility function. If valid, it processes the JSON request and returns a response containing the repository details. If an error occurs, it logs the error and returns the default error response. If the session is invalid, a session failure response is returned.
 
-If the session is valid, it parses the JSON request, logs it, and provides a hard-coded response with repository details.
+The function is registered with the Azure Function app, supporting both GET and POST methods and having anonymous authentication level. 
 
-In case of an error, it logs the error and returns a default error response from `Utility`.
-
-The function is exported and configured to handle both `GET` and `POST` requests with anonymous authentication through the `app.http` method from `@azure/functions`.
+Important functions: `enumerateRepositories`.
 
 **FindEnrichedChunks.ts**
 
-This module provides Azure Functions to handle HTTP requests for retrieving enriched chunks of data.
+This module contains functions for an Azure Function App to search for enriched chunks of data based on query specifications.
 
-The function `FindRelevantEnrichedChunksFromSummary` processes HTTP requests to find chunks relevant to a summary. It validates the session, parses the request body for specifications, queries the appropriate repository, and returns the results or an error response.
+**Key Functions:**
+1. **FindRelevantEnrichedChunksFromSummary:** Validates the session and retrieves chunks relevant to the summary specification provided in the request.
+2. **FindRelevantEnrichedChunksFromUrl:** Validates the session and retrieves chunks relevant to the URL specification in the request.
+3. **FindEnrichedChunkFromUrl:** Validates the session and retrieves single chunks from the URL specification in the request.
 
-`FindRelevantEnrichedChunksFromUrl` works similarly, but retrieves chunks relevant to a URL instead.
+**Utility Functions:** 
+1. **isSessionValid, sessionFailResponse, defaultErrorResponse**: Handle session validation and response generation.
+2. **getEnrichedChunkRepository**: Retrieves the repository for data operations.
 
-`FindEnrichedChunkFromUrl` fetches specific chunks directly from the URL provided in the request, following a similar process.
-
-The `app.http` configurations map these functions to HTTP endpoints, allowing anonymous access through GET and POST methods. 
-
-Important classes/functions: `FindRelevantEnrichedChunksFromSummary`, `FindRelevantEnrichedChunksFromUrl`, `FindEnrichedChunkFromUrl`, `isSessionValid`, `sessionFailResponse`, `defaultErrorResponse`.
+HTTP endpoints for these functions are registered using `app.http()`.
 
 **FindTheme.ts**
 
-The module is an Azure Function App that processes HTTP requests to determine a common theme from specified text. The important components and functions include:
+### Important Classes/Functions
+- `findThemeCall`
+- `findTheme`
+- `app.http`
 
-1. `findThemeCall`: An asynchronous function that makes an HTTP POST request to an Azure endpoint using `axios` and `axiosRetry` for retrying requests up to 5 times in case of rate limit errors. It sends the text paragraphs and requests the most common theme from the specified text length.
+### Code Summary
+The code defines an Azure Function to find a common theme in given text. The `findThemeCall` function asynchronously makes a POST request to an Azure endpoint using `axios` to retrieve the theme, with `axiosRetry` providing up to 5 retries for rate limit errors.
 
-2. `findTheme`: An HTTP handler function that validates the session key and checks if the input text meets the minimum length requirement. It calls `findThemeCall` and formats the theme response.
-
-Key Imports:
-- `app`, `HttpRequest`, `HttpResponseInit`, `InvocationContext` from `@azure/functions`
-- `axios`, `axiosRetry`
-- Utility functions: `sessionFailResponse`, `defaultErrorResponse`, `isSessionValid`, `invalidRequestResponse`
-- Type Definitions: `IFindThemeRequest`, `IFindThemeResponse`
+The `findTheme` function processes HTTP requests, validates the session key, extracts text and length from the request, ensures the text meets the minimum length, and calls `findThemeCall` to get the theme. The result is returned in an HTTP response, with appropriate error handling for validation, exceptions, and invalid requests.
 
 **GenerateFluidToken.ts**
 
-This code defines an Azure Function that generates a Fluid token for authentication in Fluid framework applications.
+This code defines an Azure Function for generating Fluid tokens.
 
-The main function, `generateFluidToken`, checks if a session is valid using the `isSessionValid` function. If valid, it processes the request to generate a Fluid token. Required parameters for token generation include `tenantId`, `documentId`, `userId`, and `userName`.
+The initial setup imports necessary modules from Azure Functions and custom utility functions that check session validity and handle responses. It also imports the `generateToken` function from the Fluid Framework server services.
 
-The Fluid token is created using the `generateToken` function with specific `ScopeType` permissions and user information. 
+The `ScopeType` enum is redefined to include specific access levels for the Fluid container/document.
 
-Key dependencies include the `@azure/functions`, `@fluidframework/server-services-client`, and a few utility functions from `./Utility`.
+The main function, `generateFluidToken`, validates the session by calling `isSessionValid`. It checks for the presence of necessary credentials (tenantId and key). If valid, it processes the request, extracts relevant data, generates a Fluid token using `generateToken`, and returns the token.
 
-The Azure function endpoints are set up to accept `GET` and `POST` methods with anonymous access.
+Finally, the function is configured with HTTP methods (GET, POST) and its handler in the Azure function app. 
+
+Important functions and classes include:
+- `generateFluidToken`
+- `isSessionValid`
+- `sessionFailResponse`
+- `defaultErrorResponse`
+- `generateToken`
+- `ScopeType` enum.
 
 **GenerateQuestion.ts**
 
-The code is designed to run an Azure Function that generates questions using OpenAI's Chat Completion API.
+This module provides an Azure Function that generates questions based on user inputs by interacting with OpenAI's StudioLarge model.
 
-**Important functions:**
-- **askModel(query: IGenerateQuestionQuery)**: Formats input data, including retry logic for API requests, and sends a POST request to the OpenAI API to generate a question based on the input prompt.
-- **generateQuestion(request: HttpRequest, context: InvocationContext)**: Handles HTTP requests, verifies session validity, processes the input, invokes `askModel`, and returns the response or error.
+**Important Classes or Functions:**
+1. `askModel(query: IGenerateQuestionQuery)`: Makes an HTTP POST request to OpenAI's API with retries on rate-limiting or network errors. It composes the prompt from the `personaPrompt` and `questionGenerationPrompt` within the `query` and returns the generated question.
+2. `generateQuestion(request: HttpRequest, context: InvocationContext)`: Handles HTTP requests to the Azure Function. It validates the session, parses the request, logs the input and output, calls `askModel` to get the question, and returns the result. If there's an error, it logs the error and returns a default error response.
+3. `isSessionValid`, `sessionFailResponse`, and `defaultErrorResponse` (imported from `./Utility`): Utility functions for session validation and error handling.
 
-**Important imports:**
-- `axios` and `axiosRetry` for making HTTP requests and handling retries.
-- Custom types and utility functions for session validation and error handling.
-
-The function is designed to be deployable to Azure and runnable locally.
+The Azure Function can be published using 'func azure functionapp publish Braid-Api' or run locally with 'npm start'.
 
 **IEnrichedChunkRepository.ts**
 
-This module imports specific interfaces (`IRelevantEnrichedChunk`, `IChunkQueryRelevantToSummarySpec`, `IEnrichedChunkSummary`, `IChunkQueryRelevantToUrlSpec`) from another module to manage enriched chunk data.
+This code defines constants and interfaces for managing enriched content chunks.
 
-The constants `kDefaultSearchChunkCount` and `kDefaultMinimumCosineSimilarity` are defined to set default values for search chunk count and minimum cosine similarity, respectively.
+`kDefaultSearchChunkCount` is a constant specifying the default number of chunks to search, set to 2. `kDefaultMinimumCosineSimilarity` specifies the minimum cosine similarity threshold for content comparison, set to 0.5.
 
-The `IEnrichedChunkRepository` interface outlines three asynchronous methods:
-1. `lookupRelevantFromSummary`: Retrieves similar content based on a summary specification.
-2. `lookupRelevantFromUrl`: Finds similar content from other sources based on a URL specification.
-3. `lookupFromUrl`: Retrieves an entire chunk of data given its URL.
+The `IEnrichedChunkRepository` interface outlines three main methods: 
+1. `lookupRelevantFromSummary`, which retrieves an array of relevant enriched chunks based on summary specifications.
+2. `lookupRelevantFromUrl`, which retrieves relevant enriched chunks from other sources using URL specifications.
+3. `lookupFromUrl`, which fetches an entire chunk summary given a URL.
 
-These methods return promises that resolve to either arrays of relevant chunks or an optional chunk summary.
+Important classes or functions in the module:
+- IEnrichedChunkRepository
+- lookupRelevantFromSummary
+- lookupRelevantFromUrl
+- lookupFromUrl
 
 **IPromptPersonaFactory.ts**
 
-The provided code defines a module for summarising different types of text, including articles, code, and survey responses.
+This code defines and exports a function `getSummariser` that returns a specific summariser persona configuration based on the input parameters.
 
-**Important Classes or Functions:**
-- **ArticleSummariserPersona:** Defines the persona for summarising articles.
-- **CodeSummariserPersona:** Defines the persona for summarising code.
-- **SurveySummariserPersona:** Defines the persona for summarising survey responses.
-- **getSummariser():** Function that accepts a persona type, a word target for the summary, and the text to summarise. It returns an appropriate persona with prompts set based on the input. This switch statement configures the `systemPrompt` and `itemPrompt` for each persona type.
+Three summariser personas are defined using the `IPromptPersona` interface:
+- `ArticleSummariserPersona`
+- `CodeSummariserPersona`
+- `SurveySummariserPersona`
 
-Each persona is an implementation of the `IPromptPersona` interface.
+Each persona has `name`, `systemPrompt`, and `itemPrompt` properties.
+
+The `getSummariser` function receives three parameters: `persona`, `wordTarget`, and `textToSummarise`. It returns an IPromptPersona object with customized `systemPrompt` and `itemPrompt` based on `persona` type:
+- `kSurveySummariser` for survey summaries.
+- `kCodeSummariser` for code summaries.
+- `kArticleSummariser` for general text summaries.
 
 **LoginWithLinkedIn.ts**
 
-This module contains an Azure Function API for LinkedIn authentication. 
+This module is an Azure Function application that allows users to log in using their LinkedIn credentials.
 
-The `LoginWithLinkedIn` function validates an incoming session key and redirects users to LinkedIn for authentication using the `redirectToLinkedIn` function if the session key is valid. 
+The main function, `LoginWithLinkedIn`, validates a session key from the request parameters and redirects eligible users to LinkedIn for authentication.
 
-`redirectToLinkedIn` constructs the LinkedIn authentication URL and redirects the user.
+The helper function, `redirectToLinkedIn`, constructs the LinkedIn authorization URL with required query parameters and facilitates the redirection.
 
-`processAuthFromLinkedIn` processes the authentication response from LinkedIn, extracting parameters from the query and calling `redirectBackHomeWithFullPath` to manage the completion of the authentication. 
+`processAuthFromLinkedIn` handles the callback from LinkedIn, processing the authorization code, and redirects the user back to the home page with specific session details.
 
-`redirectBackHomeWithFullPath` exchanges the authorization code for an access token, retrieves the user's profile information, and redirects the user back to the home page with the necessary query parameters.
+`redirectBackHomeWithFullPath` retrieves the access token and user profile information from LinkedIn and constructs the redirection URL to the application's home page with necessary details.
 
-Important functions: `LoginWithLinkedIn`, `redirectToLinkedIn`, `processAuthFromLinkedIn`, `redirectBackHomeWithFullPath`.
+Key functions include `LoginWithLinkedIn`, `redirectToLinkedIn`, `processAuthFromLinkedIn`, and `redirectBackHomeWithFullPath`.
 
 **QueryModelWithEnrichment.ts**
 
-This code is used to handle and respond to HTTP requests in an Azure Function App with query enrichment aspects.
+This module is designed to handle enriched queries via an Azure function app.
 
-The `askModel` function asynchronously sends an enriched query to an AI model using the `axios` library, with a retry mechanism in case of rate limits or network issues. It combines the query and historic conversation elements, making both a direct query and an enriched prompt query to the model, and processes the responses.
+The `askModel` function sends an enriched query to an AI model, processes the responses, and retrieves relevant enriched chunks if specific criteria are met. It supports up to five retries for network issues or rate limiting and uses Axios for HTTP requests.
 
-The `queryModelWithEnrichment` function validates the incoming session, processes the request by calling the `askModel` function, and returns the enriched query response.
+The `queryModelWithEnrichment` function validates the session, processes the HTTP request, logs the query, calls `askModel`, and returns the result as an HTTP response or handles errors appropriately.
 
-Important classes/functions:
-- `askModel`
-- `queryModelWithEnrichment`
-- `app.http`
+Important functions:
+1. `askModel(query: IEnrichedQuery)`: Processes and retrieves responses to an enriched query.
+2. `queryModelWithEnrichment(request: HttpRequest, context: InvocationContext)`: Handles HTTP requests, validates the session, and returns the enriched query results.
 
 **StorableActivity.ts**
 
-The code is for an Azure Function App by Braid Technologies Ltd which handles CRUD operations on activities.
+This module defines endpoints for an Azure Functions application to handle activity records.
 
-The `getActivity` function saves an activity record, validates session keys, processes the JSON request, and then saves the activity. It returns an HTTP response.
+The `GetActivity`, `SaveActivity`, `RemoveActivity`, and `GetActivities` endpoints are configured using `app.http` allowing them to process HTTP requests.
 
-The `saveActivity` function performs similar tasks, accepting HTTP requests, validating session keys, saving activity data, and returning an HTTP response.
+`getActivity` is an asynchronous function that retrieves activity records and processes the HTTP request using `getStorableApi`.
 
-The `removeActivity` function deletes an activity record based on the provided HTTP request and context.
+`saveActivity` validates the session key, processes the JSON request to save activity records using `saveStorableApi`.
 
-The `getRecentActivities` function retrieves recent activity records.
+`removeActivity` removes the specified activity records using the `removeStorableApi` function.
 
-The third-party imports and custom modules facilitate communication with Azure Functions and the Cosmos database. Important classes/functions include `getActivity`, `saveActivity`, `removeActivity`, `getRecentActivities`, and `activityStorableAttributes`.
+`getRecentActivities` retrieves recent activity records using `getRecentStorablesApi`.
+
+The important classes and functions are `app`, `HttpRequest`, `HttpResponseInit`, `InvocationContext`, `getActivity`, `saveActivity`, `removeActivity`, and `getRecentActivities`.
 
 **StorableChunk.ts**
 
-This code creates an Azure Function App that manages "Chunk" records, providing endpoints for various operations, such as getting, finding, saving, removing, and retrieving recent chunks.
+The provided module defines several Azure HTTP functions within an `app` object, designed to handle CRUD operations for "Chunk" records.
 
-Key classes and functions include:
-- `getChunk`: Loads a Chunk record based on the HTTP request and context.
-- `findChunk`: Finds a specific Chunk record based on the HTTP request and context.
-- `saveChunk`: Saves Chunk data from the HTTP request.
-- `removeChunk`: Removes a specified Chunk record.
-- `getRecentChunks`: Retrieves recent Chunk records.
-- All operations validate session keys present in the requests.
-- Third-party imports like `app`, `HttpRequest`, and `HttpResponseInit` from "@azure/functions".
-- Internal function calls to methods like `getStorableApi`, `findStorableApi`, `saveStorableApi`, `removeStorableApi`, and `getRecentStorablesApi` for database interactions.
+`getChunk`, `findChunk`, `saveChunk`, `removeChunk`, and `getRecentChunks` are the primary functions in this module, each mapped to their respective HTTP routes using `app.http`.
+
+Each function validates the session key from the request query parameters, processes the JSON request, and interacts with various helper functions (`getStorableApi`, `findStorableApi`, `saveStorableApi`, `removeStorableApi`, and `getRecentStorablesApi`) imported from internal modules for performing database operations.
+
+The handlers return a properly formatted HTTP response with either the operation result or an error message.
 
 **StorablePage.ts**
 
-The code is for an Azure Function app used to manage page records, deployed via Azure or run locally with npm.
+This code defines an Azure Function app that handles HTTP requests to get or save page data. 
 
-It includes third-party imports (`@azure/functions`) and internal imports such as `CosmosStorableApi`, `AzureStorableApi`, and several interfaces (`IStorable`, `IStoredPage`).
+It imports necessary modules and methods from Azure Functions and some custom internal utilities, including `decompressString`, `pageStorableAttributes`, `getStorableApiFromQuery`, `saveStorableApi`, and various types from common modules.
 
-The `decompressHtml` function decompresses the `html` field of a storable page, while the `sendHtml` function returns an HTTP response with the `html` field as the body.
+Two transformer functions, `decompressHtml` and `sendHtml`, are provided to process page data: decompressing HTML content and sending it as an HTTP response, respectively.
 
-The `getPage` function handles 'GET' and 'POST' requests to load a page record, validating session keys and decompressing HTML as needed.
+The `getPage` function fetches a page record according to query parameters, decompresses its HTML, and returns it, while the `savePage` function saves a page record from the request's JSON payload.
 
-The `savePage` function handles 'POST' requests, validating session keys and saving page data.
-
-Key methods: `decompressHtml`, `sendHtml`, `getPage`, `savePage`.
+Important classes or functions: 
+- `decompressHtml`
+- `sendHtml`
+- `getPage`
+- `savePage`
 
 **StudioForTeams.ts**
 
-This code defines an Azure Function `boxerQuery` that processes boxer query requests for an application. 
+- The code is a module for an Azure Function App to handle HTTP queries for a Boxer application.
+  
+- It uses imports from `@azure/functions`, including `app`, `HttpRequest`, `HttpResponseInit`, and `InvocationContext`.
 
-Classes and functions in the module:
-- `boxerQuery`: Core function that handles HTTP requests, logs the question, translates it to an enriched format, calls a model for processing (`askModel`), and formats the response.
-- `makeIconPath`: Utility function that generates an icon URL from a given URL using Google's favicon service.
-- `app.http`: Registers the `boxerQuery` function to handle HTTP GET and POST requests with anonymous authentication.
+- Key functions and constants are imported from other modules, like `askModel` from `./QueryModelWithEnrichment`, and various types from `StudioApi.Types` and `EnrichedQuery`.
 
-Important imports and their usage:
-- `@azure/functions`: Provides necessary functions and classes for Azure Functions (e.g., `HttpRequest`, `HttpResponseInit`).
-- `IStudioBoxerRequest`, `IStudioBoxerResponseEnrichment`: Common request and response types.
-- `EStandardPrompts`, `IEnrichedQuery`, `EChunkRepository`: Enrichment and repository constants and types.
-- `defaultErrorResponse`, `invalidRequestResponse`: Utility responses for handling errors and invalid requests.
-- `askModel`: Function called to process the enriched query and return a formatted response.
+- The `makeIconPath` function constructs a URL to fetch a website’s favicon.
+
+- The main function, `boxerQuery`, processes HTTP requests with a question query parameter, and generates a response with enriched data using `askModel`.
+
+- The function formats the response into an array of `IStudioBoxerResponseEnrichment` objects before returning it.
+
+- The function setup is registered with the Azure Function App using `app.http`.
 
 **Summarize.ts**
 
-This code provides an Azure Function for text summarization. It uses an AI model to divide and summarize text, with support for running locally or deployed to Azure.
+1. **Essential Imports and Setup:**
+   The code imports necessary modules such as `axios`, and `axiosRetry` for HTTP requests, and various Azure Functions utilities. It uses TypeScript and enforces “strict mode”.
 
-- **chunkText**: Splits the input text into smaller chunks based on model constraints for efficient processing.
-- **singleShotSummarize**: Uses an AI model to summarize a single chunk of text, with retry logic for API rate limits.
-- **recursiveSummarize**: Summarizes text recursively by breaking it into chunks, summarizing each, and then combining the results for a final summary.
-- **summarize**: The main function that processes HTTP requests. It validates sessions, processes input, and returns the text summary or error response.
+2. **Text Chunking:**
+   The `chunkText` function splits input text into smaller chunks suitable for processing, taking into account an overlap between chunks.
 
-Important classes/functions: 
-- **chunkText**
-- **singleShotSummarize**
-- **recursiveSummarize**
-- **summarize**
+3. **Single-shot Summarization:**
+   The `singleShotSummarize` function performs asynchronous summarization of a text. It uses a specified persona and makes HTTP requests to an AI service for summarization, with retry logic for handling rate limits.
 
-External libraries used:
-- **@azure/functions**
-- **axios**
-- **axios-retry**
+4. **Recursive Summarization:**
+   The `recursiveSummarize` function performs hierarchical, multi-level summarization by breaking long texts into chunks, summarizing each, and potentially summarizing the combined summary again if needed.
+
+5. **HTTP Handler:**
+   The `summarize` function is an HTTP handler for processing HTTP requests to summarize text. It validates sessions, processes input, and calls `recursiveSummarize` to return the summarized text or error responses.
+
+6. **Azure Function Binding:**
+   The code finally binds the `summarize` function to the HTTP endpoint "Summarize", handling both GET and POST requests with anonymous authentication.
+
+**Important functions and classes include:**
+- `chunkText`
+- `singleShotSummarize`
+- `recursiveSummarize`
+- `summarize`
+
 
 **TestForSummariseFail.ts**
 
-This code defines an Azure Function that validates, processes, and analyzes text to determine if a summarizer has successfully created a valid summary.
+This code defines a serverless application using Azure Functions to test if a summary correctly conveys the main body of a given text.
 
-### Important Functions and Classes
-- `testForSummariseFailCall`: Makes a POST request to an Azure endpoint using `axios` to validate if a provided summary is correct. Utilizes `axiosRetry` for retrying the request if rate limited.
-- `testForSummariseFail`: Handles incoming HTTP requests, validates session keys, processes the request data, and returns a response indicating whether the summary was valid.
+**Important Classes/Functions:**
+1. `testForSummariseFailCall`: Asynchronously sends a POST request to an Azure endpoint to determine if a summary fails or succeeds. It retries the request up to five times if rate limit errors occur.
+2. `testForSummariseFail`: Handles HTTP requests, validates sessions, and uses `testForSummariseFailCall` to process the text and determine if the summary is valid.
 
-### Additional Details
-- The `app.http` method registers the function endpoint, exposing it to GET and POST requests.
-- The function integrates utility methods like `isSessionValid`, `sessionFailResponse`, and `defaultErrorResponse` for session management and error handling.
+**Key Points:**
+- Uses `axios` for HTTP requests and `axiosRetry` for retrying failed requests.
+- Validates session keys using `isSessionValid`.
+- Returns specific error responses with `sessionFailResponse` and `defaultErrorResponse`.
+- Configures Azure Functions with defined HTTP methods and authentication levels.
 
 **Utility.ts**
 
-This module provides utility functions for handling HTTP responses and validating session keys within an Azure Function app.
+This module is designed for use with Azure Functions and provides several utility functions to handle HTTP responses and session validation. 
 
-The `isSessionValid` function validates a session by checking the 'session' query parameter from the request against session keys stored in environment variables. It logs the result and returns true if the session is valid, otherwise false.
+The `isSessionValid` function checks if a session provided in the request matches one of the valid session keys stored in the environment variables. It returns `true` if the session is valid and logs the validation result using the provided context.
 
-The `sessionFailResponse` function generates a 401 Unauthorized HTTP response when session validation fails.
+The `sessionFailResponse` function generates an HTTP response with a status code of 401 (Unauthorized) indicating that the session validation failed.
 
-The `defaultOkResponse` function returns a basic 200 Ok HTTP response.
+The `defaultOkResponse` function creates an HTTP response with status code 200 (OK) and a body of "Ok".
 
-The `defaultErrorResponse` function returns a 500 Internal Server Error HTTP response for unexpected issues.
+The `defaultErrorResponse` function produces an HTTP response with status code 500 (Server Error) to indicate unexpected server issues.
 
-The `invalidRequestResponse` function returns a 400 Bad Request HTTP response with a specific message.
+The `invalidRequestResponse` function returns a 400 (Bad Request) status with a custom error message.
 
-The `notFoundResponse` function generates a 404 Not Found HTTP response.
+The `notFoundResponse` function generates a 404 (Not Found) response with an empty body.
+
+Important functions: `isSessionValid`, `sessionFailResponse`, `defaultOkResponse`, `defaultErrorResponse`, `invalidRequestResponse`, `notFoundResponse`.
 

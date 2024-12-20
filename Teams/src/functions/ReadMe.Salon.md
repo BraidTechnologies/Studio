@@ -1,17 +1,18 @@
 **boxer.ts**
 
-The code is an Azure Function written in TypeScript for a Teams App to handle HTTP requests and provide boxer information.
+**Important Functions:**
+- `boxer`
 
-The boxer function is the main function that processes HTTP GET requests. It extracts the "question" query parameter from the request.
+**Summary:**
+- The code provides a starter kit for implementing server-side logic for a Teams App using TypeScript and Azure Functions, with reference to Azure Functions documentation for a complete developer guide.
+  
+- It defines the `boxer` function that handles HTTP requests and extracts the "question" parameter from the request query or body.
+  
+- It utilizes the `axios` library with retry capabilities for making HTTP requests to the external Braid API.
 
-The code uses axios for making HTTP POST requests and axiosRetry for retrying requests in case of rate limits or network issues, with up to 5 retries.
+- The function queries an external API with the extracted question and processes the API response by mapping the results into a formatted array of items.
 
-The function sends a POST request to the Braid API endpoint and processes the response to extract details like id, description, URL, title, and image.
+- It returns an HTTP response containing the processed boxer information or an error status if the request is invalid or an internal error occurs.
 
-It returns a JSON response with the processed boxer information or error messages for invalid requests or server errors.
-
-Key components:
-- boxer function
-- axios and axiosRetry setup
-- app.http for handling "boxer" endpoint requests
+- The `app.http` method registers the `boxer` function to handle HTTP GET requests without requiring authentication.
 

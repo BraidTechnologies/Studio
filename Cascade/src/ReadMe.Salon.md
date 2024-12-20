@@ -1,8 +1,10 @@
 **content.ts**
 
-This TypeScript module functions as a content script for a Chrome extension, handling web scraping, text summarization, and content classification. It interacts with web pages and communicates with both the extension's background script and an external API service.
+This TypeScript module is designed to function as a content script in a Chrome extension for web scraping, text summarization, and content classification.
 
-Key functions include `suppressUnhandledPromiseRejection` for managing unhandled promise rejections and sending error messages, and `startScrape` to orchestrate the entire scraping and summarization process, including API calls for text summarization and classification.
+The module's key functions are `suppressUnhandledPromiseRejection` to handle unhandled promise rejections, and `startScrape` to handle the scraping, summarization, and classification processes. 
 
-It uses global variables like `haveStartedScrape` to manage the scraping process and prevent concurrent operations. Dependencies include Artoo.js, Axios, and Chrome Extension APIs. The module includes comprehensive error handling and user feedback mechanisms.
+It leverages `artoo.js` for web scraping, `axios` for HTTP requests, and Chrome Extension APIs for message passing. The `startScrape` function manages text extraction using fallback strategies, enforces text length limits (100KB), and interfaces with external APIs for summarization and classification.
+
+The module also includes error handling, progressive visual feedback, and rate limiting to enhance user experience.
 

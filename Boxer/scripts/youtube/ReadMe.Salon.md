@@ -1,104 +1,84 @@
 **download_transcripts.py**
 
-This script downloads transcripts for all videos in a YouTube playlist. It uses the `googleapiclient.discovery` package to interact with the YouTube Data API and fetch playlist items. The `youtube_transcript_api` package is used to download video transcripts.
+The script downloads transcripts for videos in a YouTube playlist.
 
-The main classes and functions are:
-1. **Counter**: A thread-safe counter for tracking the number of processed videos.
-2. **gen_metadata**: Generates metadata for each video and saves it as a JSON file.
-3. **get_transcript**: Fetches and saves the transcript of a video, handling possible exceptions like missing transcripts.
-4. **process_queue**: Processes a queue of videos, fetching transcripts, and generating metadata.
-5. **download_transcripts**: The main function that sets up API connections, creates a queue of videos, and uses multithreading to process them.
+**Important Classes and Functions:**
 
-The script initializes a logger, handles multithreading with the `threading` module, and ensures directories exist before saving data. The `queue.Queue` is used for managing videos to process.
+- **Counter Class**: A thread-safe counter.
+    - **increment()**: increments the counter value.
+    
+- **gen_metadata()**: Generates metadata for a video and saves it as a JSON file.
+    - **Inputs**: playlist_item, transcriptDestinationDir.
+
+- **get_transcript()**: Retrieves and saves the transcript of a video.
+    - **Inputs**: playlist_item, counter_id, transcriptDestinationDir, logger.
+
+- **process_queue()**: Processes videos in the queue for transcription and metadata generation.
+    - **Inputs**: q, counter, transcriptDestinationDir, logger.
+
+- **download_transcripts()**: Main function to initiate downloading transcripts.
+    - **Inputs**: playlistId, transcriptDestinationDir.
+
+The YouTube Data API fetches video details, and YouTubeTranscriptApi retrieves the transcripts. Transcripts and metadata are processed and saved in the specified directory. The process uses multithreading for efficiency.
 
 **enrich_transcript_chunks.py**
 
-This script reads transcript files in `.json.vtt` format from a specified directory, processes them, and generates a cleaned and combined master CSV file.
+This script generates a master csv file from transcript files by reading `.json` and `.vtt` files in a specified directory.
 
-The `VttChunk` class is defined to structure the data from each transcription segment.
+The important classes and functions include:
 
-Key functions include:
-- `gen_metadata_master(metadata)`: Generates metadata for the master CSV file.
-- `clean_text(text)`: Cleans and processes text for better consistency.
-- `append_text_to_previous_chunk(text, chunks)`: Adds a portion of text to previous chunk for context continuity.
-- `add_new_chunk(metadata, text, chunk_begin_seconds, chunks)`: Adds a new text chunk.
-- `parse_json_vtt_transcript(vtt, metadata, chunks, chunkMinutes, maxTokens)`: Parses and processes the JSON VTT file to extract transcript data.
-- `get_transcript(metadata, transcriptDestinationDir, chunks, chunkMinutes, maxTokens)`: Retrieves a transcript based on the given metadata and directory.
-- `enrich_transcript_chunks(config, transcriptDestinationDir)`: Orchestrates the full process of enriching chunks and saving the final master transcription file.
-- `ensure_directory_exists(directory)`: Ensures that the output directory exists, creating it if necessary.
+1. **VttChunk**: A class that initializes transcript chunks with start time, duration, and text.
+2. **gen_metadata_master**: Generates metadata text for titles and descriptions.
+3. **clean_text**: Cleans transcript text by removing unwanted characters and symbols.
+4. **append_text_to_previous_chunk**: Appends a portion of the current text to the previous chunk to achieve context overlap.
+5. **add_new_chunk**: Adds a new chunk to the list of transcript chunks.
+6. **parse_json_vtt_transcript**: Parses the `.json.vtt` file and extracts transcript chunks.
+7. **get_transcript**: Retrieves the transcript from the `.vtt` file.
+8. **enrich_transcript_chunks**: Processes JSON and VTT transcript files, enriches the chunks, and saves the output.
+9. **ensure_directory_exists**: Ensures that the directory for output files exists, creating it if necessary.
 
-Finally, the results are saved to `master_transcriptions.json` for further use.
+The script configures logging, uses `tiktoken` for encoding with the GPT-3.5-turbo model, and utilizes `rich` for progress tracking.
 
 **enrich_transcript_embeddings.py**
 
-1. **Imports**: The code imports essential libraries including standard libraries (logging, re, os, json, threading, and queue), third-party packages (AzureOpenAI, BadRequestError, tiktoken, tenacity, and rich.progress), and local modules from a common package.
+This code leverages the OpenAI API for text embedding and log handling within a multi-threaded environment. It starts by importing necessary libraries and modules, including logging, regex, JSON, threading, and queue.
 
-2. **Utilities and Tokenization**: Uses tiktoken to obtain a tokenizer and includes the `normalize_text` function to standardize text by removing extra spaces and newlines.
+Key functions include:
 
-3. **Retry Mechanism**: Implements the `get_text_embedding` function, which retrieves text embeddings with retry logic in case of failures, excluding `BadRequestError`.
+- `normalize_text`: Cleans text by removing extra spaces and newlines.
+- `get_text_embedding`: Retries API requests until successful or after multiple attempts.
+- `process_queue`: Processes chunks in a queue, retrieving or generating embeddings, handling errors, and updating progress.
+- `convert_time_to_seconds`: Converts timestamps to seconds.
+- `enrich_transcript_embeddings`: Main function initializing the API client, setting up logging, reading input, and processing text chunks using multiple threads.
 
-4. **Queue Processing**: `process_queue` function to manage and process a queue of chunks, handling embeddings and logging various processing steps or errors.
-
-5. **Time Conversion**: The `convert_time_to_seconds` function converts time from a string format to seconds.
-
-6. **Main Function `enrich_transcript_embeddings`**: Initializes the AzureOpenAI client and logging, verifies input directory, loads chunk data, and processes these chunks via multi-threading and progress tracking. Generated output is saved in `master_enriched.json`.
-
-Important classes and functions:
-- `normalize_text`
-- `get_text_embedding`
-- `process_queue`
-- `convert_time_to_seconds`
-- `enrich_transcript_embeddings`
+Overall, it reads transcript data, processes it to generate or retrieve embeddings from an OpenAI API, and writes the enriched output back to a file.
 
 **enrich_transcript_summaries.py**
 
-### Important Classes or Functions:
-1. **Counter**
-2. **chatgpt_summary**
-3. **process_queue**
-4. **convert_time_to_seconds**
-5. **enrich_transcript_summaries**
+1. **Imports:** The code imports various libraries including standard library modules (`json`, `os`, `threading`, `queue`, `logging`), third-party packages (`openai`, `tenacity`, `rich.progress`), and local modules (`common.common_functions`, `common.ApiConfiguration`).
 
-### Summary:
-1. **Imports**: The code imports standard, third-party, and local modules. These modules include threading, logging, queue from the standard library, `openai` and `tenacity` for handling OpenAI requests, and `rich.progress` for progress tracking.
+2. **Class: `Counter`:** A thread-safe counter with a lock mechanism to handle concurrent increments.
 
-2. **Counter Class**: A thread-safe counter class with locking mechanism to safely increment its value. 
+3. **Function: `chatgpt_summary`:** A retry-decorated function that uses the AzureOpenAI's `chat` API to generate summaries, retrying on certain errors up to 5 times.
 
-3. **chatgpt_summary Function**: A retry-enabled function that generates summaries using the OpenAI GPT-3 model, handling retries with exponential backoff and stopping after five attempts.
+4. **Function: `process_queue`:** Processes text chunks from a queue, generating summaries using `chatgpt_summary`, and handling errors. Updates progress and stores results in a shared list.
 
-4. **process_queue Function**: This function processes a queue of text segments, generates summaries using the `chatgpt_summary` function, and stores results in an output list, updating progress.
+5. **Function: `convert_time_to_seconds`:** Converts a `HH:MM:SS` formatted string to seconds.
 
-5. **convert_time_to_seconds Function**: Converts a given time string of the format "HH:MM:SS" to total seconds.
+6. **Function: `enrich_transcript_summaries`:** Loads transcript chunks, processes them using multiple threads, and combines summaries with existing data. Saves the results to a file after processing.
 
-6. **enrich_transcript_summaries Function**: This comprehensive function manages the entire process—initializing the OpenAI client, setting up logging, reading input data, creating a queue, initializing threading, and finally saving enriched summaries to an output file.
+This code is designed to parallelize obtaining summaries for blocks of text that likely come from video transcripts, enrich existing data, and save the results efficiently.
 
 **not_used_enrich_transcript_speaker.py**
 
-The code is designed to extract and update speaker names from YouTube video metadata and transcript files using OpenAI Functions entity extraction.
+This script extracts speaker names from YouTube video metadata and the first minute of the transcript using OpenAI Functions entity extraction.
 
-Key Steps and Functions:
-1. **Configuration and Logging**: The script sets up configurations, including API keys, paths, thread count, and logging levels. 
-2. **Command-Line Parsing**: It uses `argparse` to parse input arguments for the transcript folder and verbose logging.
-3. **Function Definition**: Defines OpenAI function metadata for extracting speaker names.
-4. **Thread-Safe Counter**: The `Counter` class ensures increments are thread-safe.
-5. **`get_speaker_info`**: This retries OpenAI API calls to fetch speaker names while managing errors.
-6. **Text Cleaning**: The `clean_text` function formats transcription text.
-7. **Transcript Processing**: The `get_first_segment` function gathers initial video segments.
-8. **Queue Processing**: The `process_queue` function processes each file, extracting speaker names and updating metadata using threads.
+Important classes and functions:
+1. `Counter` class: Provides a thread-safe counter for tracking processed items.
+2. `get_speaker_info` function: Uses OpenAI API to extract speaker names from text.
+3. `clean_text` function: Cleans the input text by removing unwanted characters.
+4. `get_first_segment` function: Reads the first segment of the video's transcript.
+5. `process_queue` function: Processes files in a queue, extracting and saving speaker names.
 
-Overall, the script loads transcript files, processes them, and updates speaker information concurrently.
-
-**__init__.py**
-
-This code imports four functions from the current package/module.
-
-The `download_transcripts` function is likely responsible for retrieving or downloading transcript data.
-
-The `enrich_transcript_chunks` function appears to enhance or process chunks or segments of the transcripts.
-
-The `enrich_transcript_summaries` function likely creates or improves summaries for the transcript data.
-
-The `enrich_transcript_embeddings` function probably generates or refines embeddings for the transcripts, which are useful for various NLP tasks.
-
-Important functions in the module are `download_transcripts`, `enrich_transcript_chunks`, `enrich_transcript_summaries`, and `enrich_transcript_embeddings`.
+The script uses threading to improve efficiency, retries API requests on failure, and logs progress. It reads metadata and transcripts from JSON files, calls the OpenAI API for entity extraction, and updates files with the extracted speaker names.
 

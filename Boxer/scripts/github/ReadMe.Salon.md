@@ -1,13 +1,16 @@
 **download_markdown.py**
 
-This script downloads and processes Markdown files from a GitHub repository and saves both their plain text content and metadata.
+- **Imports**: The script imports standard libraries like `os`, `json`, `logging`, `time`, `threading`, `queue`, and `pathlib`, and third-party packages like `markdown` and `BeautifulSoup`.
 
-- The `Counter` class provides a thread-safe counter to track processed files.
-- `makeSourceId` constructs a unique source identifier from the given repository and file path.
-- `md_to_plain_text` converts Markdown content into plain text using BeautifulSoup.
-- `get_markdown` reads a Markdown file, converts it to plain text, and saves the content and metadata in JSON format.
-- `process_queue` manages a queue of files to process, utilizing threading for efficiency.
-- `download_markdown` sets up the logging, initializes the queue, starts processing threads, and calculates total execution time.
+- **Counter Class**: Defines a thread-safe counter for tracking processed files, which uses a threading lock to ensure synchronization.
 
-Relevant functions and classes: `Counter`, `makeSourceId`, `md_to_plain_text`, `get_markdown`, `process_queue`, and `download_markdown`.
+- **makeSourceId Function**: Constructs a unique source ID for each file based on the repository directory, repository name, and file path.
+
+- **md_to_plain_text Function**: Converts Markdown content to plain text using `markdown` and `BeautifulSoup`.
+
+- **get_markdown Function**: Reads the Markdown content of a file, converts it to plain text, and saves it as a `.json` file along with metadata. It also skips files that already exist.
+
+- **process_queue Function**: Processes a queue of files, increments the counter, and calls the `get_markdown` function for each file.
+
+- **download_markdown Function**: Main function that sets up the logging, initializes the queue, searches for `.md` files recursively, and processes these files with multiple threads.
 

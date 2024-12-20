@@ -255,6 +255,7 @@ class RepoContentProcessor:
                     print(f"Skipping duplicate common file {file_path}")                    
                     return
             
+            print(f"Processing: {file_path}")            
             with open(file_path, 'r', encoding='utf-8') as f:
                 file_content = f.read().rstrip()  # Remove trailing whitespace
             
@@ -308,7 +309,6 @@ class RepoContentProcessor:
                 else:
                     # Ingest only files, not directories
                     if file_path.is_file():
-                        print(f"Processing: {file_path.relative_to(self.repo_path)}")
                         self.process_file(file_path)
                         file_count += 1
 

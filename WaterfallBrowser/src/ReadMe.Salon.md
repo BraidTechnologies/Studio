@@ -1,102 +1,98 @@
 **App.tsx**
 
-This code is a React application that uses Fluent UI for styling.
+This React module renders an application using Fluent UI components. The `App` function is the main component that handles the retrieval of chunk data based on a URL parameter.
 
-The `makeStyles` function is used to create `fluidFillPageStyles`, `pageOuterStyles`, and `innerColumnStyles` for styling the layout of the page.
+The `fluidFillPageStyles`, `pageOuterStyles`, and `innerColumnStyles` provide CSS-in-JS styles for various layout configurations. These styles are applied respectively to the root, outer container, and inner column elements to ensure a responsive and flexible layout.
 
-The `App` function component applies these styles and retrieves a chunk ID from the URL parameters. It renders a `ChunkRetriever` component, passing the chunk ID and `retrieveChunk` function as props.
+`ChunkRetriever` is a component that receives a `chunkId` parameter from the URL and a retrieval function `retrieveChunk` to fetch relevant data.
 
-The `FluentProvider` component is used to apply the `teamsDarkTheme` to the app.
+The application is initialized and rendered to the DOM within an element with the ID `reactRoot`. For performance measurement, it uses `reportWebVitals`.
 
-The code includes code for creating a root and rendering the `App` component if the document is defined. 
-
-The `reportWebVitals` function is called to measure app performance.
+Important functions and classes:
+- `App`
+- `fluidFillPageStyles`
+- `pageOuterStyles`
+- `innerColumnStyles`
+- `ChunkRetriever`
 
 **ChunkRetriever.tsx**
 
-**Important Classes/Functions:**
-1. `ChunkRetriever`
-2. `retrieveChunk`
+The module defines a React component `ChunkRetriever` that fetches and displays a data chunk based on a `chunkId`. It uses hooks to manage fetching state (`chunk`, `calling`, `called`). If the chunk is successfully retrieved using `props.retrieverFn`, it displays the chunk using `ChunkView`; if loading, shows `ChunkViewLoading`; otherwise, shows `ChunkViewError`.
 
-**Summary:**
-
-This React module defines a component and a function for retrieving and displaying chunks of data. The `ChunkRetriever` is a React functional component using `useState` to manage retrieval state and display different UI states (`ChunkView`, `ChunkViewLoading`, `ChunkViewError`) during the asynchronous retrieval process. 
-
-The `retrieveChunk` function asynchronously fetches a chunk of data using a unique chunk ID. It utilizes `getDefusc` to decode an API key, initializes `ChunkRepostoryApi` with the default environment, and attempts to load the chunk with the provided chunk ID before returning the result or `undefined`.
+Key functions and classes:
+- `ChunkRetriever`: Main React component to retrieve and display data chunk.
+- `ChunkRetrieveFunction`: Type defining a function signature for chunk retrieval.
+- `retrieveChunk`: Asynchronously retrieves a data chunk using `ChunkRepostoryApi` and a decoded API key.
 
 **ChunkView.tsx**
 
-The `chunkUrl` function constructs a URL string by appending a given value as a query parameter. 
+- The code defines several functions and a `ChunkView` component in a React module.
+- `chunkUrl(value: string)`: Constructs a URL string with `value` as a query parameter.
+- `backToParent(value: string | undefined)`: Generates a `ReactNode` with a link to the parent element if `value` is provided.
+- `mapRelated(value: string, index: number, all: Array<string>)`: Maps string values to `ReactNode` elements containing hyperlinks.
+- `splitByNewlines(text: string)`: Splits the input text into an array of non-empty strings based on newline characters.
+- `ChunkView(props: {chunk: IStoredChunk})`: A React component that displays a stored chunk's title, summary, and URL. It also includes navigation to the parent chunk and related chunks.
 
-The `backToParent` function generates a ReactNode that provides a navigable link to a parent element using the given identifier.
-
-The `mapRelated` function creates a ReactNode containing hyperlinks to related chunks using the input string value to generate URLs and React keys.
-
-The `splitByNewlines` function splits an input text into an array of non-empty strings based on double or single newline characters.
-
-The `ChunkView` component renders a view for a stored chunk, displaying its title, summary, and URL, as well as navigation to the parent chunk and any related chunks.
-
-Important functions and classes: `chunkUrl`, `backToParent`, `mapRelated`, `splitByNewlines`, `ChunkView`.
 
 **ChunkViewError.tsx**
 
-This React code defines a functional component named `ChunkViewError`.
+The `ChunkViewError` component is a React functional component. 
 
-The component imports two string constants, `uiAppName` and `uiSorryNoData`, from a module named `UIString`.
+It imports React and two string values, `uiAppName` and `uiSorryNoData`, from a module named `UIString`.
 
-Within the `ChunkViewError` function, the component returns a simple JSX structure that includes a div containing two paragraphs. The first paragraph displays the `uiAppName` value in bold, and the second one shows the `uiSorryNoData` value.
+Within the component, it returns a JSX structure consisting of a `div` element. Inside the `div`, it renders a paragraph containing `uiAppName` inside bold tags, another paragraph displaying `uiSorryNoData`, and some non-breaking spaces (&nbsp;) for spacing.
 
-The component is then exported as the default export of the module, allowing it to be easily imported and used in other parts of the application.
+The component is then exported as the default export from the module. 
 
-The main function in the module is `ChunkViewError`.
+Important functions/classes:
+- `ChunkViewError`: React functional component.
+- `uiAppName` and `uiSorryNoData`: Imported string values.
 
 **ChunkViewLoading.tsx**
 
-This React module imports string constants `uiAppName` and `uiLoading` from './UIString'.
+This code imports React and two variables, `uiAppName` and `uiLoading`, from a module named `UIString`.
 
-The `ChunkViewLoading` function component returns a JSX structure consisting of a `div` element containing two paragraphs.
+The function `ChunkViewLoading` is defined, which is a React functional component. It returns a JSX fragment containing a `div` element with two `p` tags.
 
-The first paragraph displays the value of `uiAppName` in bold, while the second paragraph displays the value of `uiLoading`.
+The first `p` tag displays the `uiAppName` variable in bold.
 
-The `ChunkViewLoading` component is exported as the default export of the module.
+The second `p` tag displays the `uiLoading` variable.
 
-Important functions and components: `ChunkViewLoading`.
+The `ChunkViewLoading` function is exported as the default export from this module.
 
 **Defusc.tsx**
 
-The function `getDefusc` decodes an obfuscated string.
+This code defines a function `getDefusc` that decodes an obfuscated string. 
 
-The variable `obfusc` stores the obfuscated string "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh".
+The function starts by initializing a string variable `obfusc` with an obfuscated value, which is encoded in Base64 format.
 
-It uses the `atob` function to decode the base64-encoded string.
+It then uses the `atob` function to decode this Base64-encoded string, storing the resulting decoded string in the variable `defusc`.
 
-The decoded string is stored in the variable `defusc`.
+Finally, the function returns the decoded string stored in `defusc`.
 
-Lastly, it returns the decoded string.
+The primary function in this module is `getDefusc`.
 
 **reportWebVitals.ts**
 
-The module imports the `ReportHandler` type from the 'web-vitals' library.
+The `reportWebVitals` function conditionally imports and reports web vitals data. 
 
-It defines the `reportWebVitals` function, which takes an optional `onPerfEntry` callback.
+It accepts an optional `onPerfEntry` callback function. If `onPerfEntry` is provided and is a function, it dynamically imports specific functions from the 'web-vitals' module.
 
-If `onPerfEntry` is provided and is a function, the function dynamically imports specific performance metrics functions (`getCLS`, `getFID`, `getFCP`, `getLCP`, `getTTFB`) from the 'web-vitals' library.
+The imported functions (`getCLS`, `getFID`, `getFCP`, `getLCP`, `getTTFB`) are then executed with `onPerfEntry` as their parameter to measure various web vital metrics.
 
-Each imported performance metric function is then called with `onPerfEntry` as its argument to report performance metrics.
+The function is exported as the default export of the module. 
 
-The module exports the `reportWebVitals` function as the default export.
+Important function: `reportWebVitals`.
 
 **UIString.ts**
 
-This code module defines a set of string constants used for user interface text elements.
+This code defines a module that exports several string variables used for UI messaging in an application named "Waterfall Browser".
 
-The `uiAppName` variable stores the name of the application, which is "Waterfall Browser".
+- `uiAppName` contains the name of the application.
+- `uiSorryNoData` provides a message for situations where data with a specific ID cannot be found.
+- `uiBackToParentChunk` holds the text for a navigation option to return to a parent chunk of data.
+- `uiRelatedChunks` is used for labeling related data chunks.
+- `uiLoading` serves as a loading message.
 
-The `uiSorryNoData` variable holds a message that is displayed when data with a specific ID cannot be found.
-
-The `uiBackToParentChunk` variable contains text for navigating back to the parent chunk.
-
-The `uiRelatedChunks` variable holds the label for related chunks.
-
-The `uiLoading` variable provides a loading message.
+Important elements include each exported variable which can be used for internationalization or to maintain consistent text across various UI components.
 
