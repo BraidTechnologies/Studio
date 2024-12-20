@@ -3,6 +3,13 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module LoginWithLinkedIn
+ * @description Azure Function module that provides a method for logging in with LinkedIn.
+ * This module handles the login process with LinkedIn, including authentication and session management.
+ * It includes validation for session authentication and error handling for any issues encountered during the request processing.
+ */
+
 import axios from "axios";
 import * as QueryString from "qs";
 

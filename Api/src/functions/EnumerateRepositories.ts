@@ -3,6 +3,14 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module EnumerateRepositories
+ * @description Azure Function module that provides details of installed repositories.
+ * This module handles the retrieval of repository details, including Boxer and Waterfall repositories,
+ * and returns them in a structured format. It includes validation for session authentication
+ * and error handling for any issues encountered during the request processing.
+ */
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { IEnumerateRepositoriesRequest, IEnumerateReposotoriesResponse} from "../../../CommonTs/src/EnumerateModelsApi.Types"

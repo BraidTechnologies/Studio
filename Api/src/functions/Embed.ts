@@ -1,5 +1,15 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
+
+/**
+ * @module Embed
+ * @description Azure Function module that provides text embedding capabilities using Azure AI services.
+ * This module handles the conversion of text into numerical vector representations (embeddings),
+ * with support for automatic text summarization when input exceeds the model's context window.
+ * It includes retry logic for rate limiting and network errors, and validates session authentication
+ * for all requests.
+ */
+
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 

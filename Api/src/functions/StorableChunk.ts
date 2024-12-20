@@ -3,6 +3,13 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure 
 // 'npm start' to run locally
 
+/**
+ * @module StorableChunk
+ * @description Azure Function module that provides methods for managing storable chunks.
+ * This module handles the retrieval, saving, and removal of chunk records, as well as fetching recent chunks.
+ * It includes validation for session authentication and error handling for any issues encountered during the request processing.
+ */
+
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 

@@ -1,5 +1,12 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
+/**
+ * @module EnrichedChunkRepository
+ * @description In-memory implementation of the IEnrichedChunkRepository interface for storing and querying enriched chunks.
+ * This module provides methods to lookup relevant chunks based on URL and summary, as well as retrieving chunks by URL.
+ * It includes helper functions for comparing URLs and calculating cosine similarity between embeddings.
+ */
+
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
 import { calculateEmbedding } from "./Embed";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedChunk";

@@ -3,6 +3,14 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module EnumerateModels
+ * @description Azure Function module that provides details of installed models.
+ * This module handles the retrieval of model details, including default, large, and small models,
+ * and returns them in a structured format. It includes validation for session authentication
+ * and error handling for any issues encountered during the request processing.
+ */
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";

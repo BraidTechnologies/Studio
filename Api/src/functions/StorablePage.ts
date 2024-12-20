@@ -3,6 +3,13 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure 
 // 'npm start' to run locally
 
+/**
+ * @module StorablePage
+ * @description Azure Function module that provides methods for managing storable pages.
+ * This module handles the retrieval, saving, and removal of page records, as well as fetching recent pages.
+ * It includes validation for session authentication and error handling for any issues encountered during the request processing.
+ */
+
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 

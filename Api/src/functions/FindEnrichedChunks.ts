@@ -3,6 +3,14 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module FindEnrichedChunks
+ * @description Azure Function module that provides methods for finding enriched chunks based on URL and summary.
+ * This module handles the retrieval of enriched chunks based on specified criteria, including URL and summary,
+ * and returns them in a structured format. It includes validation for session authentication
+ * and error handling for any issues encountered during the request processing.
+ */
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../CommonTs/src/EnrichedChunk";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";

@@ -1,7 +1,23 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+
+/**
+ * StudioForTeams Module
+ * 
+ * This module provides Azure Functions endpoints for integrating Boxer's AI capabilities with Microsoft Teams.
+ * It handles query requests from Teams, processes them through the Boxer backend, and returns enriched responses
+ * formatted specifically for the Teams interface.
+ * 
+ * Key features:
+ * - Processes natural language queries from Teams users
+ * - Converts requests between Teams and Boxer API formats
+ * - Generates enriched responses with relevant document links and summaries
+ * - Handles favicon generation for source URLs
+ * 
+ * Deployment:
+ * - 'func azure functionapp publish Braid-Api' to publish to Azure
+ * - 'npm start' to run locally
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 

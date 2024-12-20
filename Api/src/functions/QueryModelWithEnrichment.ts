@@ -1,7 +1,22 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+
+/**
+ * QueryModelWithEnrichment Module
+ * 
+ * This module provides functionality for querying an AI model with document enrichment.
+ * It handles both direct model queries and enriched queries that incorporate relevant
+ * document context from a repository. The module supports Azure Functions integration
+ * and includes retry logic for handling rate limits.
+ * 
+ * Key features:
+ * - Parallel processing of direct and enriched model queries
+ * - Document enrichment based on similarity matching
+ * - Session validation and error handling
+ * - Configurable retry logic for API rate limits
+ * 
+ * @module QueryModelWithEnrichment
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';

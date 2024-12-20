@@ -1,5 +1,12 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
+/**
+ * @module IEnrichedChunkRepository
+ * @description Interface for an enriched chunk repository.
+ * This module provides methods for querying and retrieving enriched chunks based on URL and summary.
+ * It includes validation for session authentication and error handling for any issues encountered during the request processing.
+ */
+
 // Internal import
 import {IRelevantEnrichedChunk, IChunkQueryRelevantToSummarySpec, IEnrichedChunkSummary, IChunkQueryRelevantToUrlSpec} from '../../../CommonTs/src/EnrichedChunk';
 
