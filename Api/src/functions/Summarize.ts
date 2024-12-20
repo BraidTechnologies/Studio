@@ -13,8 +13,8 @@ import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/Sum
 import { getSummariser } from "./IPromptPersonaFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
-let minimumTextLength = 64;
-let model = getDefaultModel();
+const minimumTextLength = 64;
+const model = getDefaultModel();
 
 /**
  * Splits the input text into chunks of maximum size defined by the model
@@ -25,7 +25,7 @@ let model = getDefaultModel();
  */
 function chunkText(text: string, overlapWords: number): Array<string> {
 
-   let chunks = model.chunkText(text, undefined, overlapWords);
+   const chunks = model.chunkText(text, undefined, overlapWords);
 
    return chunks;
 }
@@ -49,14 +49,14 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
       }
    });
 
-   let summariser = getSummariser(persona, words, text);
+   const summariser = getSummariser(persona, words, text);
 
-   let systemPrompt = summariser.systemPrompt;
-   let userPrompt = summariser.itemPrompt;
+   const systemPrompt = summariser.systemPrompt;
+   const userPrompt = summariser.itemPrompt;
 
    console.log(systemPrompt)
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -91,28 +91,28 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
 export async function recursiveSummarize(persona: EPromptPersona, text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
-   let chunks = chunkText(text, 0);
-   let summaries = new Array<string>();
+   const chunks = chunkText(text, 0);
+   const summaries = new Array<string>();
 
-   let recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
+   const recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
    if (chunks.length > 1) {
       // If the text was > threshold, we break it into chunks.
       // Here we look over each chunk to generate a summary for each
-      for (var i = 0; i < chunks.length; i++) {
+      for (let i = 0; i < chunks.length; i++) {
 
-         let summary = await singleShotSummarize(persona, chunks[i], recursizeSummarySize);
+         const summary = await singleShotSummarize(persona, chunks[i], recursizeSummarySize);
          summaries.push(summary);
       }
    }
    else {
-      let summary = await singleShotSummarize(persona, chunks[0], words);
+      const summary = await singleShotSummarize(persona, chunks[0], words);
       summaries.push(summary);
    }
 
    // If we made multiple summaries, we join them all up 
    if (chunks.length > 1) {
-      let joinedSummaries = summaries.join(" ");
+      const joinedSummaries = summaries.join(" ");
       overallSummary = await recursiveSummarize(persona, joinedSummaries, level + 1, words);
    }
    else {
@@ -138,20 +138,20 @@ export async function summarize(request: HttpRequest, context: InvocationContext
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ISummariseRequest;
+         const summariseSpec = (jsonRequest as any).request as ISummariseRequest;
 
          text = summariseSpec.text;
          words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
-         let persona = summariseSpec.persona;
+         const persona = summariseSpec.persona;
 
          if (text && text.length >= minimumTextLength && words > 0) {
-            let definitelyText: string = text;
+            const definitelyText: string = text;
             overallSummary = await recursiveSummarize(persona, definitelyText, 0, words);
 
-            let summariseResponse: ISummariseResponse = {
+            const summariseResponse: ISummariseResponse = {
                summary: overallSummary
             }
 

@@ -10,7 +10,7 @@ import axiosRetry from 'axios-retry';
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../../CommonTs/src/TestForSummariseFailApi.Types";
 
-let minimumTextLength = 64;
+const minimumTextLength = 64;
 
 /**
  * Asynchronous function to find a common theme from a number of paragraphs of text.
@@ -31,7 +31,7 @@ async function testForSummariseFailCall(text: string, length: number): Promise<E
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -72,10 +72,10 @@ export async function testForSummariseFail(request: HttpRequest, context: Invoca
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ITestForSummariseFailRequest;   
+         const summariseSpec = (jsonRequest as any).request as ITestForSummariseFailRequest;   
          text = summariseSpec.text;
          length = summariseSpec.lengthInWords;
 
@@ -84,12 +84,12 @@ export async function testForSummariseFail(request: HttpRequest, context: Invoca
          }
          else {
 
-            let definitelyText: string = text;
-            let definitelyLength: number = length ? length : defaultLength;
+            const definitelyText: string = text;
+            const definitelyLength: number = length ? length : defaultLength;
             overallSummary = await testForSummariseFailCall(definitelyText, definitelyLength);
          }
 
-         let summariseResponse : ITestForSummariseFailResponse = {
+         const summariseResponse : ITestForSummariseFailResponse = {
             isValidSummary: overallSummary
          }
 

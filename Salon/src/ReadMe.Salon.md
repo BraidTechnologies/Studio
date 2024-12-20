@@ -1,26 +1,22 @@
 **api_to_test_code.py**
 
-This code is a script designed to generate Pytest test cases from API data provided in either JSON or YAML format.
+This script generates Pytest code from API data provided in JSON or YAML formats.
 
-**Classes/Functions:**
-1. **parse_arguments**: Parses command-line arguments to get the input file path.
-2. **extract_code**: Extracts Python code snippets from content using specified markers.
-3. **load_api_data**: Loads API data from a provided JSON or YAML file and returns it as a dictionary.
-4. **main**: Coordinates the workflow, including parsing arguments, loading data, initializing the OpenAI assistant, and generating and saving test code.
+**Important functions and their roles:**
+- `parse_arguments()`: Parses command-line arguments to get the input file path.
+- `extract_code(content: str)`: Extracts Python code snippets from the provided content between defined markers.
+- `load_api_data(file_path: str)`: Loads API data from the specified JSON or YAML file and returns it as a dictionary.
+- `main()`: Orchestrates the overall process, including parsing arguments, loading API data, generating code using an OpenAI assistant, and saving the generated code.
 
-Logging is configured to handle different levels of messages, and the OpenAI client is used for generating Pytest test cases.
+It logs errors, warnings, and information messages for debugging. Additionally, it initializes an OpenAI assistant to generate test codes from the API data.
 
 **repo_to_text.py**
 
-The `repo_to_text.py` script processes a local GitHub repository by concatenating the contents of its files into text files, with a specified word limit per file. The usage and options for running this script are provided through command-line arguments.
+The `repo_to_text.py` script processes files in a local GitHub repository by concatenating their content into text files while observing a specified word limit per file. 
 
-Key classes and functions:
+Key functions include `parse_arguments()` for parsing command-line arguments, `validate_args(args)` for ensuring the repository path and output directories are valid, and `load_yaml(fname)` for loading the configuration from YAML files.
 
-1. **SummarisedDirectory**: Represents summaries of directory contents.
-2. **RepoContentProcessor**: Handles the processing of the repository files, including skipping certain files/directories, summarizing source files, and saving the concatenated content.
-3. **load_yaml**: Loads configuration from a YAML file.
-4. **summarise_code**: Summarizes the content of source files using an API call.
-5. **parse_arguments** and **validate_args**: Handle command-line argument parsing and validation.
+Key classes are `SummarisedDirectory`, which stores the name and summary of directories, and `RepoContentProcessor`, which is the main class responsible for processing the repository's contents.
 
-Important methods within `RepoContentProcessor` manage formatting file content, counting words, checking paths, saving directory summaries, processing files, and processing the entire repository. The script also handles different configuration options and verbose output.
+The script uses `summarise_code(source)` with an external API to condense source files’ content. It also employs patterns to exclude certain files or directories and leverages the NLTK library for word tokenization and the `requests` library for API calls.
 

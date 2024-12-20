@@ -1,5 +1,22 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module AzureStorableApi
+ * 
+ * Provides Azure Functions HTTP endpoints for CRUD operations on IStorable objects in Azure Cosmos DB.
+ * This module acts as a REST API layer between HTTP clients and the underlying Cosmos DB storage,
+ * handling session validation, request parsing, and response formatting.
+ * 
+ * Key features:
+ * - Session-validated endpoints for finding, getting, saving, and removing IStorable objects
+ * - Support for custom transformers to modify data before storage and after retrieval
+ * - Error handling and logging through Azure Functions context
+ * - Query support for both ID-based and functional key-based searches
+ * - Batch operations for retrieving recent storables
+ * 
+ * The module uses ICosmosStorableParams for database configuration and supports
+ * custom response transformers for flexible API responses.
+ */
 
 // 3rd party imports
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
@@ -61,12 +78,12 @@ export async function findStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
-         let result = await findStorable (spec.functionalSearchKey, params, logger, transformer);
+         const result = await findStorable (spec.functionalSearchKey, params, logger, transformer);
          if (result)
             context.log("Found:" + result.id);
          else
@@ -113,8 +130,8 @@ export async function getStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;
 
          return await getStorableApiCommon (spec, params, context, transformer, resultTransformer);
       }
@@ -156,7 +173,7 @@ export async function getStorableApiFromQuery(request: HttpRequest,
          requestedId = value;
    }
 
-   let spec: IStorableQuerySpec = {
+   const spec: IStorableQuerySpec = {
       id: requestedId,
       functionalSearchKey: undefined
    };
@@ -190,9 +207,9 @@ async function getStorableApiCommon(spec: IStorableQuerySpec,
    resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
 
    try {
-      let logger = new AzureLogger(context);
+      const logger = new AzureLogger(context);
 
-      let result = await loadStorable(spec.id, params, logger, transformer);
+      const result = await loadStorable(spec.id, params, logger, transformer);
       if (result)
          context.log("Loaded:" + result.id);
       else
@@ -233,13 +250,13 @@ export async function saveStorableApi (request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorable;   
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorable;   
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
          await saveStorable(spec, params, logger);
 
-         let result: IStorableOperationResult = {
+         const result: IStorableOperationResult = {
             ok: true
          }
          return {
@@ -279,14 +296,14 @@ export async function removeStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;   
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;   
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
-         let ok = await removeStorable (spec.id, params, logger);
+         const ok = await removeStorable (spec.id, params, logger);
 
-         let result: IStorableOperationResult = {
+         const result: IStorableOperationResult = {
             ok: ok
          }
          return {
@@ -330,10 +347,10 @@ export async function getRecentStorablesApi(request: HttpRequest,
       let loaded: Array<IStorable> | undefined = undefined;
 
       try {
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
          loaded = await loadRecentStorables (spec, params, logger, transformer);
          for (let i = 0; loaded && i < loaded.length; i++) {

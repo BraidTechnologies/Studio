@@ -1,7 +1,11 @@
 source_patterns:
-    - "*.py"
     - "*.ts"
     - "*.tsx"
+    - "*.py"
+
+common_directories_patterns:
+    - "CommonTs"
+    - "CommonPy"
 
 skip_dirs:
     - "__pycache__"
@@ -10,7 +14,10 @@ skip_dirs:
     - ".idea"
     - ".pytest_cache"
     - ".vscode"
+    - ".coverage"
     - "data"    
+    - "env"
+    - ".nyc_output"
         
 skip_patterns:
     - "*.pyc"
@@ -41,3 +48,9 @@ skip_patterns:
     - "*.vtt"       
     - "*.html"
     - "__init__.py"
+    - ".coverage"    
+    - "*.xlsx"
+    - "*.zip"
+    - "*.wav"
+    - "*.mov"
+

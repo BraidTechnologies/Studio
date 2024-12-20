@@ -26,12 +26,12 @@ const SurveySummariserPersona: IPromptPersona = {
 
 export function getSummariser (persona: EPromptPersona, wordTarget: number, textToSummarise: string) : IPromptPersona {
 
-   let wordString = Math.floor (wordTarget).toString();
+   const wordString = Math.floor (wordTarget).toString();
 
    switch (persona) {
       
       case EPromptPersona.kSurveySummariser:
-         let surveyTemplate = SurveySummariserPersona;
+         const surveyTemplate = SurveySummariserPersona;
          surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
          + wordString  +
          " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
@@ -41,7 +41,7 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
          return surveyTemplate;
 
       case EPromptPersona.kCodeSummariser:
-         let codeTemplate = CodeSummariserPersona;
+         const codeTemplate = CodeSummariserPersona;
          codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
          + wordString  +
          " words or less, to help explain the code it to new developers. Please summarise the following code in "
@@ -53,7 +53,7 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
       case EPromptPersona.kArticleSummariser:
       default:
 
-         let articleTemplate = ArticleSummariserPersona; 
+         const articleTemplate = ArticleSummariserPersona; 
          
          articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
          + wordString  +

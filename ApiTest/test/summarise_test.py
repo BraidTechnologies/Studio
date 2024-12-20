@@ -1,19 +1,31 @@
-'''
-The module tests the text summarization API endpoint for various scenarios, including
-valid requests with and without specified lengths, requests with missing text, and
-empty requests.
+"""
+Test module for the text summarization API endpoint.
 
-Each test case constructs a payload and sends a request to the summarization
-endpoint, then verifies the response status and the presence of a 'summary' field
-in the response.
+This module contains integration tests for the summarization functionality,
+covering various use cases and scenarios including:
 
-The module includes functions for generating the summarization endpoint URL and
-reading the current source code for a summarization request.
+- Standard text summarization with specified length
+- Survey response summarization using specialized personas
+- Code summarization using specialized personas
+- Edge cases and error handling:
+  - Missing length parameter
+  - Missing text parameter
+  - Empty requests
+  - Invalid requests
 
-The source includes tests for specific summarization personas like
-'SurveySummariser' and 'CodeSummariser', and ensures proper error handling for
-invalid and empty requests.
-'''
+The tests verify both successful responses (200) and error conditions (400, 500),
+ensuring the API endpoint handles different input scenarios appropriately.
+
+Dependencies:
+    - pytest: Testing framework
+    - requests: HTTP client for API calls
+    - pathlib: File path handling
+    - os: Environment variable access
+
+Environment Variables:
+    - SessionKey: Required for API authentication
+    - BASE_URL: API endpoint (defaults to http://localhost:7071/api)
+"""
 
 import os
 import pathlib

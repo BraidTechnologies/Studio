@@ -1,7 +1,19 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+
+/**
+ * @module Chunk
+ * @description Azure Function that provides text chunking capabilities. This module splits input text
+ * into smaller, manageable chunks with configurable size and overlap settings. It's designed to work
+ * with authenticated sessions and returns chunked text as part of the Braid API infrastructure.
+ * 
+ * Usage:
+ * - Deployed via 'func azure functionapp publish Braid-Api'
+ * - Local development via 'npm start'
+ * 
+ * The chunking process respects session validation and handles errors appropriately,
+ * returning standardized API responses.
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
@@ -10,7 +22,7 @@ import { IChunkRequest, IChunkResponse } from "../../../CommonTs/src/ChunkApi.Ty
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 /**
  * Splits the input text into chunks based on the specified chunk size and overlap words.
@@ -22,7 +34,7 @@ let model = getDefaultModel();
  */
 function chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
 
-   let chunks = model.chunkText(text, chunkSize, overlapWords);
+   const chunks = model.chunkText(text, chunkSize, overlapWords);
 
    return chunks;
 }
@@ -45,10 +57,10 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let spec = (jsonRequest as any).request as IChunkRequest;
+         const spec = (jsonRequest as any).request as IChunkRequest;
          text = spec.text;
          chunkSize = spec.chunkSize;         
          overlapWords = spec.overlapWords;         
@@ -56,7 +68,7 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
          if (text)
             chunks = chunkText(text, chunkSize, overlapWords);
 
-         let body: IChunkResponse = {
+         const body: IChunkResponse = {
             chunks: chunks
          }
 

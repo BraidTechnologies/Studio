@@ -12,7 +12,7 @@ import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
 import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
@@ -32,7 +32,7 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
    });
 
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
       input: text,
    },
       {
@@ -43,7 +43,7 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
       }
    );
 
-   let embedding = response.data.data[0].embedding as Array<number>;
+   const embedding = response.data.data[0].embedding as Array<number>;
 
    return (embedding);
 }
@@ -63,9 +63,9 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
-         let spec = (jsonRequest as any).request as IEmbedRequest;
+         const spec = (jsonRequest as any).request as IEmbedRequest;
          text = spec.text;
 
          if ((text && text.length > 0)) {
@@ -77,7 +77,7 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
                context.log("Summarised");
             }
 
-            let embeddingResponse : IEmbedResponse = {
+            const embeddingResponse : IEmbedResponse = {
                embedding: await calculateEmbedding(text)
             };
 

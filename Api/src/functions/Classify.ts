@@ -1,5 +1,18 @@
-'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module Classify
+ * @description Azure Function that provides text classification services using AI.
+ * This module handles the classification of text into predefined subject areas
+ * using OpenAI's API. It includes functionality for session validation, error handling,
+ * and response formatting.
+ * 
+ * The classification process uses a single-shot approach where the AI model
+ * categorizes the input text into one of the provided classification categories.
+ * 
+ * @copyright Braid Technologies Ltd, 2024
+ */
+
+'use strict';
 // 'func azure functionapp publish Braid-Api to publish to Azure
 // 'npm start' to run locally
 
@@ -45,7 +58,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -69,7 +82,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       }
    );
 
-   let decoded = decodeClassification(response.data.choices[0].message.content, classifications);
+   const decoded = decodeClassification(response.data.choices[0].message.content, classifications);
 
    return (decoded);
 }
@@ -89,19 +102,19 @@ export async function classify(request: HttpRequest, context: InvocationContext)
 
    if (isSessionValid(request, context)) {
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log (jsonRequest);
          
-         let spec = (jsonRequest as any).request as IClassifyRequest;
+         const spec = (jsonRequest as any).request as IClassifyRequest;
          text = spec.text;
          classifications = spec.classifications;
 
          if ((text && text.length > 0)
          && (classifications && classifications.length > 0)) {
 
-            let summaryClassification = await singleShotClassify(text, classifications);
+            const summaryClassification = await singleShotClassify(text, classifications);
 
-            let classificationResponse : IClassifyResponse = {
+            const classificationResponse : IClassifyResponse = {
                classification: summaryClassification
             }
             

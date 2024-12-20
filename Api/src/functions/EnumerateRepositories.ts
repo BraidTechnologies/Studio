@@ -25,12 +25,12 @@ export async function enumerateRepositories(request: HttpRequest, context: Invoc
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let spec = (jsonRequest as any).request as IEnumerateRepositoriesRequest;        
+         const spec = (jsonRequest as any).request as IEnumerateRepositoriesRequest;        
 
-         let body: IEnumerateReposotoriesResponse = {
+         const body: IEnumerateReposotoriesResponse = {
             repositoryIds: [EChunkRepository.kBoxer, EChunkRepository.kWaterfall]            
          }
 

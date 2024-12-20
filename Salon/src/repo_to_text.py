@@ -1,7 +1,10 @@
 """
 repo_to_text.py
 
-This script processes a local GitHub repository by concatenating the contents of its files into text files, with a specified word limit per file.
+This script processes a local GitHub repository by concatenating the contents of its files into text files, 
+with a specified word limit per file.
+When it encounters a source file it creates a summary, and acccumulates summaries for all source files ina given directory. 
+These are written out at the end. 
 
 Usage:
     python repo_to_text.py --cfg <path_to_config_yaml_file> --repo_path <path-to-repo> [options]
@@ -16,8 +19,8 @@ Options:
     -v, --verbose     Enable verbose output.
 
 Example:
-    python repo_to_text.py --cfg config.yaml --repo_path . -o test_output
-    python repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
+    python src/repo_to_text.py --cfg config.yaml --repo_path . -o test_output
+    python src/repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
 """
 
 
@@ -28,11 +31,13 @@ from pathlib import Path
 import requests
 import yaml
 import nltk
+from nltk.tokenize import word_tokenize
 
 from CommonPy.src.request_utilities import request_timeout
 
 nltk.download('punkt', quiet=True)
-from nltk.tokenize import word_tokenize
+
+SUMMARY_FILENAME='ReadMe.Salon.md'
 
 class SummarisedDirectory:
     def __init__(self):
@@ -43,6 +48,8 @@ class SummarisedDirectory:
 # Dictionary to store processed content with string keys
 directories = {}
 
+# Dictionary to store common files with string keys
+common_files = {}
 
 def load_yaml(fname):
     # Load configuration from the YAML config file
@@ -105,7 +112,13 @@ class RepoContentProcessor:
         self.skip_patterns = config.get("skip_patterns", [])
         # Define file patterns to use a source for chunk size assessment & active code summarisation
         self.source_patterns = config.get("source_patterns", [])
+        # Define common directories to use for skipping duplicates where the directories are copied around for deployment reasons
+        self.common_directories_patterns = config.get("common_directories_patterns", [])
 
+    def make_common_file_name (self, directory_name, file_name):
+        """Make a common file name by combining directory and file name"""
+        return directory_name + "-" + file_name
+    
     def format_file_block(self, relative_path, file_content):
         """Format a file's content block with consistent indentation"""
         separator = "*" * 40
@@ -127,6 +140,30 @@ class RepoContentProcessor:
                return True
         return False
 
+    def is_in_common_dir (self, path):
+        """Check if the path includes a component in the common_directories_patterns list"""
+        for common_dir in self.common_directories_patterns:
+            if common_dir in path.parts:
+               return True
+        return False
+    
+    def extract_common_dir (self, path):
+        """Extract the common directory from the path"""
+        for common_dir in self.common_directories_patterns:
+            if common_dir in path.parts:
+               return common_dir
+        return None
+        
+    def is_summary_file(self, path):
+        """
+        Check if a path is a summary file
+        """
+
+        if SUMMARY_FILENAME in path.parts:
+            return True
+        
+        return False
+            
     def is_source_file(self, path):
         """
         Check if a path is a source file
@@ -153,6 +190,10 @@ class RepoContentProcessor:
         if self.is_skip_dir(path):
             return True
             
+        # Skip summary files - we add the  later on
+        if self.is_summary_file(path):
+            return True
+        
         # Skip files matching patterns
         if path.is_file():
             base_name = os.path.basename(path)
@@ -174,15 +215,22 @@ class RepoContentProcessor:
         # Change to the repo path
         os.chdir(self.repo_path)
 
-        # Save current directory summaries
+        # Save current directory summaries 
         for directory, item in directories.items():
             if len (item.summary) > 0:
-                full_file_path = os.path.join(item.name, 'ReadMe.Salon.md')
+                full_file_path = os.path.join(item.name, SUMMARY_FILENAME)
                 with open(full_file_path, 'w+', encoding='utf-8') as f:
-                    f.write(item.summary)
+                    f.write(item.summary)                
                     print(f"Created {full_file_path}")
         
         os.chdir(current_working_directory)
+
+        # Add summaries to the text accumulation buckets
+        for directory, item in directories.items():
+            if len (item.summary) > 0:
+                full_file_path = os.path.join(item.name, SUMMARY_FILENAME)
+                repo_path = os.path.join(self.repo_path, full_file_path)
+                self.process_file(Path(repo_path))                           
 
 
     def save_current_content(self):
@@ -196,9 +244,17 @@ class RepoContentProcessor:
             self.content = ""
             self.current_word_count = 0
     
+        
     def process_file(self, file_path):
         """Process a single file and add its content to the accumulator"""
         try:
+            # Skip if the file is in a common directory and we have already processed a copy of it
+            if self.is_in_common_dir(file_path):
+                common_file_name = self.make_common_file_name(self.extract_common_dir (file_path), file_path.name)
+                if common_file_name in common_files:
+                    print(f"Skipping duplicate common file {file_path}")                    
+                    return
+            
             with open(file_path, 'r', encoding='utf-8') as f:
                 file_content = f.read().rstrip()  # Remove trailing whitespace
             
@@ -219,6 +275,10 @@ class RepoContentProcessor:
             self.content += path_block
             self.current_word_count += block_word_count
             
+            if self.is_in_common_dir(file_path):
+                common_file_name = self.make_common_file_name(self.extract_common_dir (file_path), file_path.name)
+                common_files[common_file_name] = True    
+
         except (UnicodeDecodeError, IOError) as e:
             print(f"Skipping {file_path}: {str(e)}")
     
@@ -241,7 +301,6 @@ class RepoContentProcessor:
                 if self.should_skip_path(file_path):
                     if file_path.is_dir():
                         if str(rel_path) not in skipped_dirs:
-                            print(f"Skipping directory: {rel_path}")
                             skipped_dirs.add(str(rel_path))
                     else:
                         skipped_count += 1

@@ -16,7 +16,7 @@ import { decompressString } from "../../../CommonTs/src/Compress";
 // A transformer function that can be applied to a storable to transform it to decompress the html field
 function decompressHtml (storable: IStorable) : IStorable {
 
-   let storedPage: IStoredPage = storable as IStoredPage;
+   const storedPage: IStoredPage = storable as IStoredPage;
 
    if (storedPage.html)
       storedPage.html = decompressString (storedPage.html);
@@ -27,7 +27,7 @@ function decompressHtml (storable: IStorable) : IStorable {
 // A transformer function that can be applied to a storable to transform it to send the html field as the HTTP response
 function sendHtml (storable: IStorable) : HttpResponseInit {
 
-   let storedPage: IStoredPage = storable as IStoredPage;
+   const storedPage: IStoredPage = storable as IStoredPage;
 
    return {
       status: 200,

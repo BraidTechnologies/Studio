@@ -12,7 +12,7 @@ import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidReque
 import { IFindThemeRequest, IFindThemeResponse } from "../../../CommonTs/src/FindThemeApi.Types";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
 
-let minimumTextLength = 64;
+const minimumTextLength = 64;
 
 /**
  * Asynchronous function to find a common theme from a number of paragraphs of text.
@@ -33,7 +33,7 @@ async function findThemeCall(text: string, length: number): Promise<string> {
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -75,21 +75,21 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
    if (isSessionValid(request, context)) {
       
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
-         let themeSpec = (jsonRequest as any).request as IFindThemeRequest;                                        
+         const themeSpec = (jsonRequest as any).request as IFindThemeRequest;                                        
 
          text = themeSpec.text;
          length = themeSpec.length;
 
          if (text && text.length >= minimumTextLength && length > 0) {
 
-            let definitelyText: string = text;
-            let definitelyLength: number = length ? length : defaultLength;
+            const definitelyText: string = text;
+            const definitelyLength: number = length ? length : defaultLength;
             theme = await findThemeCall(definitelyText, definitelyLength);
 
             throwIfUndefined (theme);
-            let themeResponse : IFindThemeResponse = {
+            const themeResponse : IFindThemeResponse = {
                theme: theme
             }
             context.log (themeResponse);

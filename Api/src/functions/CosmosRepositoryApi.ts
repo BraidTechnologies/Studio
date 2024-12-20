@@ -1,8 +1,20 @@
-'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module CosmosRepositoryApi
+ * @description Provides utility functions for generating authorization tokens and headers
+ * for interacting with Azure Cosmos DB. This module includes functions for:
+ * - Generating authorization tokens using master keys
+ * - Creating headers for POST, DELETE, and query operations
+ * - Managing storable tokens for various CRUD operations
+ * 
+ * All functions in this module are designed to work with Azure Cosmos DB's REST API
+ * and follow Microsoft's authentication requirements.
+ */
+
+'use strict';
 
 // 3rd party imports
-var crypto = require("crypto");
+const crypto = require("crypto");
 
 import { LooseObject } from "../../../CommonTs/src/LooseObject";
 
@@ -18,22 +30,22 @@ import { LooseObject } from "../../../CommonTs/src/LooseObject";
  */
 export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: string, resourceId: string, date: string, masterKey: string) {
 
-   var key = Buffer.from(masterKey, "base64");
+   const key = Buffer.from(masterKey, "base64");
 
-   var text = (verb || "").toLowerCase() + "\n" +
+   const text = (verb || "").toLowerCase() + "\n" +
       (resourceType || "").toLowerCase() + "\n" +
       (resourceId || "") + "\n" +
       date.toLowerCase() + "\n" +
       "" + "\n";
 
-   var body = Buffer.from(text, "utf8");
-   var signature = crypto.createHmac("sha256", key).update(body).digest("base64");
+   const body = Buffer.from(text, "utf8");
+   const signature = crypto.createHmac("sha256", key).update(body).digest("base64");
 
-   var MasterToken = "master";
+   const MasterToken = "master";
 
-   var TokenVersion = "1.0";
+   const TokenVersion = "1.0";
 
-   var encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);
+   const encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);
 
    return encoded;
 }
@@ -133,7 +145,7 @@ export function makeDeleteHeader(key: string, time: string, partitionKey: string
 export function makePostQueryHeader(key: string, time: string, partitionKey: string, 
    continuation: string | undefined = undefined): object {
 
-   let headers : LooseObject = {
+   const headers : LooseObject = {
       "Authorization": key,
       "Content-Type": "application/query+json",
       "Accept": "application/json",

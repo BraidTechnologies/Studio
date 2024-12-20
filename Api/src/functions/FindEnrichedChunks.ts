@@ -13,11 +13,11 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
+         const spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupRelevantFromSummary (spec);
+         const chunks = await repository.lookupRelevantFromSummary (spec);
 
          return {
             status: 200, // Ok
@@ -38,11 +38,11 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupRelevantFromUrl (spec);
+         const chunks = await repository.lookupRelevantFromUrl (spec);
 
          return {
             status: 200, // Ok
@@ -63,11 +63,11 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupFromUrl (spec);
+         const chunks = await repository.lookupFromUrl (spec);
 
          return {
             status: 200, // Ok

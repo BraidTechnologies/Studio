@@ -22,14 +22,14 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
       }
    });
 
-   let systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   let questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
+   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
 
-   let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
+   const fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {
@@ -42,9 +42,9 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
 
    const directResponse = await directPromise;
 
-   let question = (directResponse.data.choices[0].message.content);
+   const question = (directResponse.data.choices[0].message.content);
 
-   let queryResponse: IQuestionGenerationResponse = {
+   const queryResponse: IQuestionGenerationResponse = {
       question: question
    }
 
@@ -57,13 +57,13 @@ export async function generateQuestion(request: HttpRequest, context: Invocation
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
                   
-         let query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
+         const query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
 
          context.log (query);
-         let response = await askModel(query);
-         let responseText = JSON.stringify(response);
+         const response = await askModel(query);
+         const responseText = JSON.stringify(response);
          context.log (responseText);
 
          return {

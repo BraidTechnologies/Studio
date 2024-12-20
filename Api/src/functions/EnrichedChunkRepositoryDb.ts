@@ -43,12 +43,12 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
     */
    public constructor() {
 
-      let enrichedChunks = new Array<IEnrichedChunk>;    
+      const enrichedChunks = new Array<IEnrichedChunk>;    
       this._repositoryInMemory = new EnrichedChunkRepositoryInMemory (enrichedChunks);
 
       this._semaphore = new Promise<boolean> ((resolve) => {
    
-         let query = {
+         const query = {
             maxCount: 2,
             repositoryId: EChunkRepository.kWaterfall,
             limit: 2,
@@ -56,16 +56,16 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
             similarityThreshold: 0.15
          };
       
-         let logger = new ConsoleLogger();
+         const logger = new ConsoleLogger();
       
          try {
-            let loaded = loadStorables (query, chunkStorableAttributes, logger).then ((values: Array<IStorable>) => {
+            const loaded = loadStorables (query, chunkStorableAttributes, logger).then ((values: Array<IStorable>) => {
 
-               let loadedChunks = new Array<IEnrichedChunk>;
+               const loadedChunks = new Array<IEnrichedChunk>;
 
                for (let i = 0; i < values.length; i++) {
 
-                  let storedChunk: IStoredChunk = values[i] as IStoredChunk;
+                  const storedChunk: IStoredChunk = values[i] as IStoredChunk;
 
                   if (!storedChunk.url) {
                      console.error ("No URL found for chunk", storedChunk.id);
@@ -76,7 +76,7 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
                      continue;
                   }                  
 
-                  let chunk: IEnrichedChunk = {
+                  const chunk: IEnrichedChunk = {
                      id: storedChunk.id as string,
                      embedding: storedChunk.storedEmbedding?.embedding as number[],
                      url: storedChunk.url as string,
