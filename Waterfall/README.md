@@ -1,6 +1,47 @@
 **Waterfall** is a Python framework for processing documents through an AI enrichment pipeline. 
+# Waterfall
 
-There are two main pipelines:
+**Waterfall** is a Python framework for processing documents through an AI enrichment pipeline. It provides automated document processing, enrichment, and analysis capabilities through two main pipelines.
 
-1. **Waterfall** itself - Waterfall calls a Google search API for a given set of sources, then summarises the documents, calculates an embedding, and uses the embeddings to find clusters. It then generates an interactive report and a mail summary on the clusters, which it send to Braid leadership.
-2. **Boxer** - Waterfall generates the back end database used by Boxer - it downloads a tree from a set of web URLs, and it downloads a set of transcripts from YouTube playlists, then it chunks, summarises, and calculates embeddings for the documents. The embeddings are then used to enriched search in Boxer. 
+## Key Features
+
+- Document retrieval from multiple sources (Google Search API, web URLs, YouTube playlists)
+- Text summarization using AI models
+- Embedding generation for semantic search and clustering
+- Automated cluster analysis and reporting
+- Email notifications with insights
+- Integration with Boxer search interface
+
+## Main Components
+
+### 1. Waterfall Pipeline
+The core Waterfall pipeline handles document processing and analysis:
+
+- Retrieves documents via Google Search API for configured sources
+- Generates AI-powered summaries of documents
+- Calculates document embeddings for semantic analysis  
+- Performs clustering to group related content
+- Generates interactive analysis reports
+- Sends email summaries to leadership
+
+### 2. Boxer Pipeline
+The Boxer pipeline builds the knowledge base:
+
+- Downloads and processes content from:
+  - Configured web URLs (full page content)
+  - YouTube playlists (video transcripts)
+- Chunks documents into processable segments
+- Generates summaries and embeddings
+- Powers semantic search functionality in Boxer interface
+
+## Source Materials
+
+The system processes curated educational content focused on AI/ML topics including:
+
+- University course content (Stanford CS229, CS224N)
+- Industry expert articles and tutorials
+- Technical documentation
+- Educational video content
+
+See [boxer_sources.py](src/boxer_sources.py) for the full list of source materials.
+
