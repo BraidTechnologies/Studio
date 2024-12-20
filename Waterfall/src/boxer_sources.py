@@ -1,3 +1,15 @@
+"""
+Contains source material references for AI/ML education and research.
+
+This module maintains curated lists of educational resources including:
+- YouTube playlists covering machine learning, NLP, and AI fundamentals
+- Key articles and tutorials from industry experts and educational institutions
+- Reference documentation and learning materials from leading AI platforms
+
+The sources serve as a knowledge base for understanding core AI/ML concepts
+and staying current with developments in the field.
+"""
+
 
 youtube_playlists = [
     # "Stanford CS229: Machine Learning Full Course taught by Andrew Ng | Autumn 2018 - YouTube",

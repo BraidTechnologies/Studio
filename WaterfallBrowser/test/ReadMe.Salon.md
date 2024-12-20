@@ -1,35 +1,48 @@
 **chunkretriever.test.tsx**
 
-This code is a set of unit tests for the `ChunkRetriever` component using Mocha and Expect libraries. 
+This code is a test suite for the `ChunkRetriever` component, using Mocha as the test framework, `expect` for assertions, and `@testing-library/react` for rendering the component and querying the DOM.
 
-`describe` is a function from Mocha that groups the tests under the "ChunkRetriever" label, while `it` defines a single test case that checks the rendering of a sample chunk.
+The `waitFor` function is defined to pause execution for a specified number of seconds.
 
-`waitFor` is a helper function that pauses execution for a specified number of seconds.
+Within the `describe` block, a test case named "Renders sample Chunk" is provided as an `it` function. This test asynchronously renders the `ChunkRetriever` component with specific props, waits for 19 seconds, and then checks for the presence of elements containing the text "Summary", "Title", and "microsoft".
 
-The `render` function from `@testing-library/react` is used to mount the `ChunkRetriever` component with specific props.
+The `.timeout(20000)` method sets a timeout of 20 seconds for both the `describe` and `it` blocks to ensure tests have ample time to complete.
 
-The test uses `screen.getByText` to find elements containing specific texts ("Summary", "Title", "microsoft") and verifies their existence using `expect`.
-
-Important functions: `describe`, `it`, `waitFor`, `renderfn`.
+Important functions and classes:
+- `describe`
+- `it`
+- `waitFor`
+- `render`
+- `screen.getByText`
+- `ChunkRetriever`
 
 **ChunkTestHelpers.tsx**
 
-This code defines and exports JavaScript objects representing data chunks that are part of a hierarchical structure. 
+The code defines and exports several variables representing chunks of data, adhering to the `IStoredChunk` interface from an imported module.
 
-It imports the `IStoredChunk` interface from another module to use as a type for these objects. Three chunks are defined: `testChunk` (representing a parent chunk), `childChunk1`, and `childChunk2` (representing child chunks). These chunks contain meta-information such as `id`, `applicationId`, `schemaVersion`, timestamps, context, and URLs. 
+It initializes `parentKey`, `childKey1`, `childKey2`, and `modelKey` with specific string values and also sets the current date as `now`.
 
-Chunks include nested objects for summary and title, as well as relationships between chunks via `parentChunkId` and `relatedChunks`.
+Three chunks—`testChunk`, `childChunk1`, and `childChunk2`—are created as objects implementing the `IStoredChunk` interface. `testChunk` is designated as `parentChunk` for reference.
 
-The function `testChunkRetriever` retrieves a chunk by its ID, returning the corresponding object or `undefined` if there's no match.
+A function `testChunkRetriever` is defined to retrieve a chunk based on its ID, returning the corresponding chunk or `undefined` if the ID doesn't match known keys.
 
+**Important classes/functions:**
+- `IStoredChunk`
+- `testChunkRetriever`
 
 **chunkview.test.tsx**
 
-This JavaScript code defines a test suite for the `ChunkView` React component.
+This code defines automated tests for a `ChunkView` React component using Mocha and Expect libraries.
 
-Using Mocha's `describe` function, a test suite named "ChunkView" is created. The `it` function defines an individual test case within this suite. This test, called "Renders sample Chunk", checks if `ChunkView` renders correctly when provided with a `testChunk` object.
+First, it imports necessary modules and the `ChunkView` component along with the `testChunk` data. 
 
-The test uses `@testing-library/react` to render the `ChunkView` component and `screen` utilities to query and validate elements within the rendered output. It verifies the presence of elements containing the texts "Summary", "Title", and "microsoft".
+The `describe` function sets up a test suite named "ChunkView". 
 
-**Important classes or functions:** `describe`, `it`, `render`, `screen`, `ChunkView`.
+Within this suite, the `it` function describes a test case "Renders sample Chunk". 
+
+Inside the test case, `render` is used to render the `ChunkView` component with the provided `testChunk` data. 
+
+The `screen.getByText` method checks if certain text elements ("Summary", "Title", "microsoft") are present in the rendered component.
+
+`expect` assertions confirm that these elements are correctly rendered.
 

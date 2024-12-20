@@ -1,142 +1,153 @@
 **AnimatedIconButton.tsx**
 
-This code defines a React component `AnimatedIconButton` that displays an animated button with a lightbulb icon and a dropdown menu.
+The code defines an animated icon button in React.
 
-The `AnimatedIconButton` component uses React hooks such as `useState` and `useEffect` to manage state and side effects. It animates the icon color using a sequence of colors and a timer with `setInterval` to update the icon color at regular intervals.
+Key Classes/Functions:
+- `animatedGlowIcon`
+- `useForceUpdate`
+- `AnimatedIconButton`
+- `EAnimatedIconButtonTypes`
+- `EUIStrings` (imported, not defined here)
 
-The button’s icon color animation is managed by the `animateColours` function and is tied to the `animate` prop. When the button is clicked, props `onClick` and `onCancel` capture the events.
+**animatedGlowIcon:** Contains styles for a glowing icon.
+**EAnimatedIconButtonTypes:** Enum for icon types; currently supports 'kLightBulb'.
+**useForceUpdate:** Custom hook to force component re-render.
+**AnimatedIconButton:** Main functional component that renders an animated icon using Fluent UI components.
 
-Important functions and hooks: `useForceUpdate`, `AnimatedIconButton`, `animateColours`, `onClick`, `onCancel`. Important class: `animatedGlowIcon`.
+**State Management:** Uses `useState` for animation sequence management.
+**Effect Hook:** `useEffect` sets up an interval that updates the animation sequence.
+**onClick/onCancel:** Handler functions passed in through props to manage click events.
+
+**Rendering:** The component renders a `Menu` from Fluent UI with a clickable, animated icon button.
 
 **AppEntry.tsx**
 
-The code defines a React application using functional components and hooks from the `react` library, with styling provided by Fluent UI.
+This React component, `App`, initializes and manages states for user information, session details, and message handling.
 
-Key Interfaces and Classes:
-- `IAppProps`: Interface for application properties.
-- `Persona`, `EIcon`, `JoinDetails`, `SessionKey`, and `ConversationKey`: Imported classes from the local project directories.
+`App` uses several helper classes and components: `Persona` for user information, `JoinDetails` to parse join paths, `MainPageMessageRow` for message display, `ConversationControllerRow` for managing conversations, and `JoinPane` for join-related functionality.
 
-Key Hooks and Functions:
-- `useState` hooks to manage state for messages, session keys, and conversation keys.
-- `onConnect`, `onConnectError`, `onFluidError`, `onAiError`, and `onDismissMessage` functions to handle various events in the application.
+CSS-in-JS styles are defined using `makeStyles` from Fluent UI for layout and styling.
 
-Styling:
-- `makeStyles` from Fluent UI to apply styling to components (`fluidFillPageStyles`, `pageOuterStyles`, and `innerColumnStyles`).
+Event handling functions such as `onConnect`, `onConnectError`, `onFluidError`, `onAiError`, and `onDismissMessage` manage different states and actions.
 
-Rendering:
-- The `App` component renders `MainPageMessageRow`, `ConversationControllerRow`, and `JoinPane`, handling state and user interactions.
-- Conditionally renders the React application using `ReactDOM.createRoot` if DOM elements are available in the environment.
+The component is wrapped in `FluentProvider` with `teamsDarkTheme` and renders conditionally if `document` is defined.
 
 **ColumnStyles.tsx**
 
-This code defines styles for a user interface using Fluent UI components and the `makeStyles` function from `@fluentui/react-components`.
+The code imports necessary components and hooks from the `@fluentui/react-components` library, such as `FluentProvider`, `teamsDarkTheme`, `makeStyles`, and `Text`.
 
-**Classes/Functions:**
-- `makeStyles`: This function is used to create style objects.
-- `innerColumnStyles`: Defines styles for a column layout, making it a vertical flex container with centered alignment and a maximum width.
-- `innerColumnMidStyles`: Defines styles for a row layout, creating a horizontal flex container.
-- `innerColumnFooterStyles`: Configures a footer style with horizontal layout, auto margin on top, and aligning itself at the end of the flex container.
-- `textFieldStyles`: Styles a text field to have a full-width layout.
+It also imports `EUIStrings` from a local module `./UIStrings` to use predefined UI string constants.
 
-`EUIStrings` holds constant values used in styling.
+The `innerColumnStyles` function creates styles for a root element with a flexible column layout, starting at the top and centered, with a maximum width defined by `kMaxColumnWidth`.
+
+The `innerColumnMidStyles` function creates styles for a root element following a flexible row layout.
+
+The `innerColumnFooterStyles` function defines styles for a root element that follows a flexible row layout, aligns to the end with a margin-top set to auto.
+
+The `textFieldStyles` function creates styles for a root element to occupy 100% width.
 
 **ConversationController.tsx**
 
-**Summary of Code Functionality:**
+The `ConversationController` class manages conversations by leveraging data structures and APIs to maintain the conversation view and update states.
 
-This code is for a `ConversationController` module responsible for managing user interactions and shared data structures in a live conversation. It drives the `ConversationView` for rendering visual elements.
+Key interfaces and classes include `IConversationControllerProps` to define component properties, and `BraidFluidConnection` to handle connections and participant data.
 
-**Important Components:**
-- **IConversationControllerProps Interface**: Specifies required properties like session information, user details, and error-handling callbacks.
-- **ConversationControllerRow Component**: React functional component that handles conversation state, connects to Fluid data structures, and manages interaction logic.
+State initialization and user role verification use `useState` and `isAdmin` respectively. Functions update local states with messages, participants, and embeddings.
 
-**State Management and Initialization:**
-- Uses `useState`, `useReducer`, and `useCallback` hooks for state management.
-- Initializes connection state by setting up Fluid connection and observes data changes for messages, participants, and embeddings.
+Essential functions are:
+1. `addMessage` for adding messages.
+2. `hasRecentHelpfulStart` to find recent helpful messages.
+3. `makeInitialSuggestion` for initial message suggestions.
+4. `initialiseConnectionState` to establish the initial state.
 
-**Functions and Methods:**
-1. **addMessage**: Adds a new message.
-2. **hasRecentHelpfulStart**: Checks for recent helpful start messages.
-3. **makeInitialSuggestion**: Generates initial conversation suggestions.
-4. **initialiseConnectionState**: Sets up connection state and data observers.
-5. **refreshLocalState**: Updates local state with Fluid connection data.
-6. **onSetBraidChattiness, onExitConversation, onTrimConversation**: Handle chat level changes, exiting, and trimming conversations.
-7. **onSend**: Constructs and sends new messages, manages connection, and interacts with the Fluid Framework and LLM.
-8. **onStreamedUpdate**: Event handler for streaming updates.
-9. **onAddSuggestedContent, onCancelSuggestedContent**: Manages suggested content.
-10. **onClickUrl, onLikeUrl, onUnlikeUrl**: Handle URL interactions in the conversation.
-11. **onDeleteMessage**: Deletes a message.
-
-The module imports classes and functions for shared data structures, utility functions, Fluid connection management, notifications, AI interactions, and environment setup. It ensures real-time collaboration using the Fluid Framework.
+The `ConversationController` also manages UI updates, message streaming with `onStreamedUpdate`, and interaction with an LLM via `onSend`. Error handling is implemented with `catch` blocks. `AIConnection` manages LLM-related tasks, and `JoinPageValidator` ensures proper conversation participation.
 
 **ConversationMessagePrompt.tsx**
 
-This React component `MessagePrompt` facilitates user input via a textarea. It uses `useState` and `useLayoutEffect` hooks to manage the textarea width dynamically. It includes essential props: `message`, `onSend`, and `onChange`, to handle message states and actions.
+This code defines a React component `MessagePrompt` which is used for sending and editing messages in a text area. The component uses Fluent UI's `Textarea` and custom styling defined using `makeStyles`.
 
-`wrapText` is a utility function for managing multiline text on a canvas, calculating the required height based on text width and line separations. 
+`IMessagePromptProps` interface defines the `props` the component expects, including `message`, `onSend`, and `onChange` functions.
 
-The `calculateDyNeeded` function leverages this utility to compute the necessary height for the wrapped text in the textarea.
+The `wrapText` function calculates the height required to display wrapped text within a given width, considering line separation.
 
-`onKeyChange` and `onSend` methods handle text changes and sending actions triggered via keyboard events, with specific handling for Ctrl+Enter to send and Escape to clear the text. The code employs Fluent UI's `makeStyles` for styling.
+The `calculateDyNeeded` function measures the vertical space needed for the text input, using an offscreen canvas to ensure precise measurements.
+
+In `MessagePrompt`, `useLayoutEffect` ensures the component adjusts to the width of the text area, and `onKeyChange` and `onSend` handle text changes and sending the message on Ctrl + Enter.
+
+Important functions:
+- `wrapText`
+- `calculateDyNeeded`
+- `MessagePrompt` component and its lifecycle methods.
+
+Essential classes and hooks:
+- `IMessagePromptProps`
+- `makeStyles`
+- `useLayoutEffect`
+- `useState`
 
 **ConversationPane.tsx**
 
-This module primarily uses React and Fluent UI libraries to create an interactive conversation interface with user roles, chat control functionalities, and rich UI components.
+1. **`IConversationHeaderProps` and `IConversationViewProps`**:
+   - These interfaces define the properties required for `ConversationHeaderRow` and `ConversationView` components, involving session details, user status, connection status, chat content, and user actions such as sending, liking, and deleting messages.
 
-Important classes and functions include:
+2. **`ConversationHeaderRow`**:
+   - A React component displaying conversation header functionalities like copying the conversation link, adjusting chat settings, and exiting the conversation. It uses Fluent UI components for the layout.
 
-1. **`IConversationHeaderProps`**: Defines properties for the `ConversationHeaderRow` component, detailing various user roles, session and conversation keys, and event handler functions.
+3. **`ConversationView`**:
+   - The main React component rendering the conversation thread, managing state and side effects with hooks. It includes features for sending messages and handling automatic scrolling.
 
-2. **`IConversationViewProps`**: Outlines the properties for the `ConversationView` component, including connection status, conversation details, audience, and event handlers.
+4. **CSS-in-JS styling**:
+   - Styles are applied consistently across components using `makeStyles`. Specific styling hooks include `inputGroupStyles`, `toolbarButtonStyles`, and others.
 
-3. **`ConversationHeaderRow`**: Renders the header of the conversation view with audience avatars, control buttons, and various functionalities like copying URLs and adjusting chat levels.
+5. **Utility Function - `splitByDoubleNewline`**:
+   - A function that splits a string into an array using double newlines as the delimiter and removes empty strings.
 
-4. **`ConversationView`**: Renders the full conversation view, with a header, list of messages, and an input area for new messages.
+6. **Component - `RelevantChunkView`**:
+   - Displays relevant chunks of text, managing user interactions like link clicks and likes. It utilizes `splitByDoubleNewline` for processing text.
 
-5. **`AuthorIcon`**: Displays an icon based on the message author.
+7. **Component - `SingleMessageView`**:
+   - Displays a single message with associated author information and relevant chunks. Allows for message deletion if the user is authorized.
 
-6. **`splitByDoubleNewline`**: Splits a string into an array using double newlines as delimiters and filters out any empty strings.
+8. **Component - `InputView`**:
+   - Provides a text input field and send button for composing new messages, handling text input changes and user interactions. Applies custom stylings for the layout.
 
-7. **`RelevantChunkView`**: Renders information related to a relevant text chunk with handlers for link clicking, liking, and unliking functionalities. Uses `splitByDoubleNewline` to process summary texts.
+9. **Additional Components**:
+   - `DefaultSpinner` for loading indicators and `AuthorIcon` for displaying author icons.
 
-8. **`SingleMessageView`**: Renders individual messages with author information and provides functionalities like message deletion, and AI warning and source handling via `RelevantChunkView`.
-
-9. **`InputView`**: Manages the message input area, handling message changes, sending, and additional suggested content using `makeStyles` for styling.
+This module effectively manages and displays conversation threads using React components and Fluent UI for styling, while incorporating functionalities for user interactions within a chat context.
 
 **JoinPane.tsx**
 
-**Key Components:**
-1. **JoinPane Component**: Manages the state and UI for joining a conversation through a session key. It uses React hooks to manage state and events.
-2. **State Management**: `useState` hooks manage sessionKey, selected conversation name, and conversationName.
-3. **Styles**: Custom hook-based styling from `makeStyles` for different sections like buttons, dropdowns, and form rows.
-4. **onConversationSelect Function**: Updates conversation based on user selection.
-5. **onKeyChange Function**: Handles changes to the session key input.
-6. **onTryJoin Function**: Triggers the attempt to join the session on button click.
-7. **tryToJoin Function**: Validates and processes the join request, handling environment-specific logic.
-8. **UI Elements**: Text, Input, Dropdown, Button, Tooltip, and Image components from Fluent UI for handling user inputs and interactions.
-9. **joinValidator**: Validates the saved secret to ensure the join process is consistent with the stored credentials.
+This code defines a React component `JoinPane` used to facilitate user connections to conversation sessions. It imports several UI components and utility functions from libraries like `@fluentui/react-components` and internal modules. `JoinPane` accepts `IJoinPageProps` with properties including `sessionKey`, `conversationKey`, `secret`, `joinPersona`, `onConnect`, and `onConnectError`.
 
-This module is designed to provide an interactive form for joining sessions, managing user inputs, validating them, and handling the join process efficiently.
+Various styles are created using `makeStyles` to style different elements of the form. The `JoinPane` component uses state hooks to manage values for `sessionKey`, `selectedConversationNames`, and `conversationName`. The component's UI contains input fields and dropdowns to join a session and validates the provided key using the `tryToJoin` function.
+
+Important functions and classes:
+- **`JoinPane`**: Main React component.
+- **`conversationKeyFromName`**: Function to map conversation names to `ConversationKey`.
+- **`tryToJoin`**: Function to validate and handle join logic.
+- **`onConversationSelect`, `onKeyChange`, `onTryJoin`**: Event handlers.
+- **`JoinPageValidator`**: Validation class.
 
 **MainPageMessage.tsx**
 
-This code defines a React component named `MainPageMessageRow` for displaying various types of messages on a webpage. It imports necessary modules from `@fluentui/react-components` and uses React functions and hooks.
+This code defines a `MainPageMessageRow` React functional component designed to display a message bar with different intents like information, warning, error, and success. 
 
-The `EMainPageMessageTypes` enum lists possible message types like `kInformation`, `kWarning`, `kError`, `kSuccess`, and `kNothing`.
+The `EMainPageMessageTypes` enum specifies the possible message types, including an option to display no message (`kNothing`).
 
-The `messageBarStyles` constant is a set of styles created using `makeStyles` from Fluent UI.
+The `IMainPageMessageProps` interface outlines the props for the `MainPageMessageRow` component, including the message intent, text, a dismissable flag, and an onDismiss callback function.
 
-The `IMainPageMessageProps` interface defines the expected props for the `MainPageMessageRow` component, including `intent`, `text`, `dismissable`, and `onDismiss`.
+The `MainPageMessageRow` component utilizes styles created by `makeStyles` and conditionally renders a `MessageBar` with or without a dismiss button, depending on the dismissable prop. 
 
-The `MainPageMessageRow` component renders differently based on whether the message is dismissable or not. If dismissable, it includes a dismiss button; otherwise, it simply displays the message text. It incorporates conditional rendering and accepts user interactions for message dismissal.
+Key classes/modules: `MainPageMessageRow`, `EMainPageMessageTypes`, `IMainPageMessageProps`, and `messageBarStyles`.
 
 **UIStrings.ts**
 
-This code defines an enumerated type `EUIStrings` that holds various user interface strings used across the application. Each enum member maps to a specific message or label text to standardize the UI content, including prompts, errors, placeholders, conversation names, and instructional messages.
+This code defines a TypeScript module for user interface strings and initial AI-related questions. The `EUIStrings` enum stores various string constants used across an application, encompassing user prompts, error messages, conversation-related statements, AI interaction instructions, and more. These are likely utilized for ensuring consistent messaging in the UI.
 
-Additionally, there is a variable `initialQuestions` which is an array of strings. This array includes a list of thought-provoking questions related to generative AI, large language models (LLMs), and their usage, which can be used for initiating discussions, generating content, or onboarding users in an educational context.
+The `initialQuestions` variable is an array of strings containing questions about generative AI and Large Language Models (LLMs). These questions cover use cases, techniques, terminologies, processes, and best practices in the context of AI.
 
-Important class/function:
-- `export enum EUIStrings`
-- `export var initialQuestions`
+**Important Classes/Functions:**
+1. `EUIStrings` (enum): Stores user interface strings.
+2. `initialQuestions` (variable): Lists initial questions about AI and LLMs.
 

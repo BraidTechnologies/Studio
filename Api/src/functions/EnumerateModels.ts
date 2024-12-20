@@ -10,7 +10,7 @@ import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "../../../Commo
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 
 
@@ -27,14 +27,14 @@ export async function enumerateModels(request: HttpRequest, context: InvocationC
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let model = getDefaultModel();
+         const model = getDefaultModel();
 
-         let spec = (jsonRequest as any).request as IEnumerateModelsRequest;        
+         const spec = (jsonRequest as any).request as IEnumerateModelsRequest;        
 
-         let body: IEnumerateModelsResponse = {
+         const body: IEnumerateModelsResponse = {
             defaultId: model.deploymentName,
             defaultEmbeddingId: model.embeddingDeploymentName,
             largeId: model.deploymentName,

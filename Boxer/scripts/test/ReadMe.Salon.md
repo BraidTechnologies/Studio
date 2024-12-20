@@ -1,55 +1,70 @@
 **test_3chunks_web_pipeline.py**
 
-This Python module uses the pytest framework to test functions related to text chunking and processing.
+The module imports necessary libraries and sets up the testing environment by adding the parent directory to the Python path. 
 
-The main functions tested include `download_html`, which downloads HTML content and processes it into JSON, `append_text_to_previous_chunk` for appending text with overlap, `add_new_chunk` to add new text chunks based on certain criteria, `parse_json_mdd_transcript` which parses MDD file transcripts, and `enrich_text_chunks` to ensure correct chunking of text.
+It defines constants for chunking texts and creates configuration and metadata mocks. 
 
-Important classes and functions in the module include:
-- `Config`: A namedtuple for chunking configurations.
-- `calculate_exact_text_length`: Calculates needed characters for chunking.
-- `generate_mock_mdd_content`: Creates mock MDD content for testing.
-- `create_tokenizer_mock`: Creates a mock tokenizer.
-- `mock_file_system`: A pytest fixture for creating a mock file system.
-- pytest's `patch` function is used extensively to mock external dependencies such as file I/O and web requests.
+The `calculate_exact_text_length` function calculates the exact number of characters needed for generating chunks, while the `generate_mock_mdd_content` function creates mock content in JSON to simulate an MDD file.
+
+The `create_tokenizer_mock` function mocks the tokenizer for realistic token encoding. 
+
+Test functions like `test_download_html`, `test_append_text_to_previous_chunk`, `test_add_new_chunk`, `test_parse_json_mdd_transcript`, and `test_enrich_text_chunks` validate the functions `download_html`, `append_text_to_previous_chunk`, `add_new_chunk`, `parse_json_mdd_transcript`, and `enrich_text_chunks`, respectively. 
+
+The `mock_file_system` fixture creates a mock file system structure for testing.
 
 **test_utility.py**
 
-### Important Classes and Functions
-- `test_result`: Stores test results for each question.
-- `get_enriched_question`: Enhances a question with additional context using OpenAI.
-- `get_text_embedding`: Retrieves the text embedding of given content using OpenAI.
-- `get_followup_question`: Generates a follow-up question based on the summarized content.
-- `assess_followup_question`: Determines if a follow-up question is related to AI.
-- `run_tests`: Runs a series of tests with provided questions, processing and storing the results as JSON.
+This script processes a list of questions through an AI-powered test pipeline.
 
-### Summary
-This script processes questions through an AI test pipeline. It enriches questions, generates text embeddings, and determines similarity with stored content to find relevant matches. Follow-up questions are generated and assessed for relevance to AI. Results are logged and saved to a JSON file.
+The main class, `test_result`, stores information about each question, such as the original question, an enriched version, a relevance score, and a follow-up question.
+
+Functions include `get_enriched_question`, `get_text_embedding`, `get_followup_question`, and `assess_followup_question`, all using OpenAI's Azure API to generate and evaluate enriched questions and follow-ups.
+
+The `cosine_similarity` function calculates the similarity between embeddings.
+The `run_tests` function orchestrates the entire process: loading data, generating embeddings, comparing them, and logging results.
+
+Important classes and functions:
+1. `test_result`
+2. `get_enriched_question`
+3. `get_text_embedding`
+4. `get_followup_question`
+5. `assess_followup_question`
+6. `cosine_similarity`
+7. `run_tests`
 
 **test_web_pipeline.py**
 
-This script employs Python's testing framework `pytest` to test the functionality of text enrichment processes.
+This code sets up a series of unit tests using Pytest for validating web scraping and data processing functionalities. It utilizes logging to track the execution and ensure troubleshooting capability.
 
-The `create_mock_html_files` function generates mock HTML files and corresponding metadata for testing. The `test_chunk_addition` function verifies the process of chunking text.
+`create_mock_html_files` creates mock HTML files imitating real downloads for test purposes. 
 
-The script sets up fixtures like `test_output_dir` to create temporary directories for test outputs and `config` to provide an instance of `ApiConfiguration`.
+The `test_chunk_addition` validates the file creation and chunk enrichment processes by ensuring specific content and structure in the generated JSON file.
 
-Functions like `check_content` validate the existence and correctness of expected content within files. The `run_pipeline` function orchestrates the entire text enrichment process.
+Fixtures like `test_output_dir` and `config` help to set up and clean up the test environment, creating necessary instances and directories.
 
-The script also includes a comprehensive test `test_web_pipeline`, ensuring the end-to-end functionality by downloading, processing content from multiple sources, and verifying hit counts.
+`check_content` verifies the presence of specific content in master JSON files.
+
+`run_pipeline` runs a series of text enrichment processes.
+
+`verify_hit_counts` ensures the hit counts are accurate.
+
+Significant classes/functions: `create_mock_html_files`, `test_chunk_addition`, `check_content`, `run_pipeline`, `verify_hit_counts`, `test_web_pipeline`.
 
 **test_youtube_pipeline.py**
 
-This script is a comprehensive test suite for a YouTube transcript processing pipeline. 
+This Python code is for testing a YouTube transcript processing pipeline using pytest. 
 
-Key components include:
-1. `IgnoreSpecificWarningsFilter`: A custom logging filter class to ignore specific warning messages.
-2. `test_output_dir`: A pytest fixture that creates a temporary directory to store test output and cleans it up afterward.
-3. `config`: A pytest fixture that creates an instance of the `ApiConfiguration` class.
-4. `check_content`: A function to verify if specific content from a source URL is present in a JSON file.
-5. `run_pipeline`: A function to run multiple stages of the transcript enrichment pipeline.
-6. `verify_hit_counts`: A function to verify the hit counts for an expected number of sources.
-7. `test_youtube_pipeline`: A pytest function to test the entire YouTube pipeline process.
-8. Tests for `get_transcript`: Functions to test both exceptional and successful cases of `get_transcript` functionality.
+The `IgnoreSpecificWarningsFilter` class is used to filter out specific warning messages. 
 
-Additionally, it imports and uses several third-party libraries and modules from within the project for different operations.
+The `test_output_dir` and `config` functions are pytest fixtures for setting up temporary directories and configuration objects.
+
+`check_content` checks JSON files for specific content based on source IDs.
+
+`run_pipeline` orchestrates a series of data enrichment processes on transcripts.
+
+`verify_hit_counts` verifies the correctness of URL hit counts in the output data.
+
+`test_youtube_pipeline` tests the entire pipeline, ensuring the downloading, processing, and verification steps work correctly.
+
+`test_get_transcript_exceptions` and `test_get_transcript_success` test the `get_transcript` function’s behavior under various scenarios, including exceptions and successful runs.
 

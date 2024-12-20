@@ -1,3 +1,15 @@
+"""
+Integration tests for the Page Repository API endpoints.
+
+This module contains test cases for the /getpage endpoint, verifying:
+- Successful page retrieval with valid parameters
+- Error handling for missing parameters
+- API authentication using session keys
+
+The tests require a running local API instance on port 7071 and
+a valid session key in the environment variables.
+"""
+
 import pytest
 import requests
 import os

@@ -1,4 +1,4 @@
-'''Module to store data in the Page table of the Braid Apis '''
+'''API to store data in the Page table of the Braid Apis '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports

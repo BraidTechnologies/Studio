@@ -48,8 +48,8 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
       }    
 
       try {
-         let jsonRequest = await request.json();
-         let fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
+         const jsonRequest = await request.json();
+         const fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
 
          // tenantId, documentId, userId and userName are required parameters
          const documentId = fluidRequest.documentId;
@@ -57,7 +57,7 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
          const userName = fluidRequest.userName;
          const local = fluidRequest.local;
 
-         let user = { name: userName, id: userId };
+         const user = { name: userName, id: userId };
 
          context.log ("Generating token for:" + JSON.stringify(fluidRequest) + " tenantId:" + tenantId);
 

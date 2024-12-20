@@ -14,8 +14,8 @@ import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
 
-let model = getDefaultModel();
-let minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
+const model = getDefaultModel();
+const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
 
 /**
  * Asynchronously sends an enriched query to a model for processing and returns an enriched response.
@@ -34,16 +34,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       }
    });
 
-   let systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   let questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
-   let enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
+   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
+   const enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
 
    let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt = fullPrompt.concat(query.history);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {
@@ -59,7 +59,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
    enrichmentPrompt = enrichmentPrompt.concat(query.history);
    enrichmentPrompt.push(enrichedElement);
 
-   let enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: enrichmentPrompt,
    },
       {
@@ -72,16 +72,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
 
    const [directResponse, enrichedResponse] = await Promise.all ([directPromise, enrichmentPromise]);
 
-   let answer = (directResponse.data.choices[0].message.content);
-   let imagined = (enrichedResponse.data.choices[0].message.content);
+   const answer = (directResponse.data.choices[0].message.content);
+   const imagined = (enrichedResponse.data.choices[0].message.content);
 
-   let tokens = model.estimateTokens (imagined);
+   const tokens = model.estimateTokens (imagined);
    let chunks = new Array<IRelevantEnrichedChunk>();
 
    if (tokens >= minimumEnrichmentTokens) {
-      let repository = getEnrichedChunkRepository(query.repositoryId);
+      const repository = getEnrichedChunkRepository(query.repositoryId);
 
-      let spec = {
+      const spec = {
          repositoryId: query.repositoryId,
          summary: imagined,
          maxCount: query.maxCount,
@@ -91,7 +91,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       chunks = await repository.lookupRelevantFromSummary (spec);
    }
 
-   let queryResponse: IEnrichedResponse = {
+   const queryResponse: IEnrichedResponse = {
       answer: answer,
       chunks: chunks
    }
@@ -107,16 +107,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
  */
 export async function queryModelWithEnrichment(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let jsonRequest = await request.json();
+   const jsonRequest = await request.json();
 
    if (isSessionValid(request, context)) {
 
       try {
-         let query = (jsonRequest as any)?.data as IEnrichedQuery;
+         const query = (jsonRequest as any)?.data as IEnrichedQuery;
 
          context.log (query);
-         let response = await askModel(query);
-         let responseText = JSON.stringify(response);
+         const response = await askModel(query);
+         const responseText = JSON.stringify(response);
          context.log (responseText);
 
          return {

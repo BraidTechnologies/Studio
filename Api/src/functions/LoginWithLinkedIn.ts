@@ -55,14 +55,14 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
    const queryAsObject = Object.fromEntries(request.query.entries());
    const stringifiedQuery = JSON.stringify(queryAsObject);
 
-   let environment = getDefaultEnvironment();
+   const environment = getDefaultEnvironment();
 
    // https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin%2Fcontext&tabs=HTTPS1
-   var clientID = process.env.LinkedInAppId;
-   var redirectUrl = environment.authFromLinkedInApi();
-   var scope = 'openid profile email';
-   var state = stringifiedQuery;
-   var redirect = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="
+   const clientID = process.env.LinkedInAppId;
+   const redirectUrl = environment.authFromLinkedInApi();
+   const scope = 'openid profile email';
+   const state = stringifiedQuery;
+   const redirect = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="
       + clientID + "&redirect_uri=" + redirectUrl + "&scope=" + scope + "&state=" + state;
 
    return {
@@ -86,7 +86,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
  */
 async function redirectBackHomeWithFullPath(code: string, session: string, conversation: string, secret: string, context: InvocationContext) {
 
-   let environment = getDefaultEnvironment();
+   const environment = getDefaultEnvironment();
 
    try {
 
@@ -103,7 +103,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
       // client_secret	string	The Secret Key value generated in Step 1. See the Best Practices Guide for ways to keep your client_secret value secure.	Yes
       // redirect_uri	url	The same redirect_uri value that you passed in the previous step.	Yes
 
-      var data = {
+      const data = {
          grant_type: 'authorization_code',
          code: code,
          client_id: process.env.LinkedInAppId,
@@ -113,7 +113,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
 
       const accessRes = await axios.post('https://www.linkedin.com/oauth/v2/accessToken', QueryString.stringify(data), accessConfig);
 
-      var access_token = accessRes.data.access_token;
+      const access_token = accessRes.data.access_token;
 
       const profileConfig = {
          headers: {
@@ -124,7 +124,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
 
       const profileRes = await axios.get(' https://api.linkedin.com/v2/userinfo', profileConfig);
 
-      var redirect = environment.boxerHome() + "#&session=" + session +
+      const redirect = environment.boxerHome() + "#&session=" + session +
          "&conversation=" + encodeURIComponent(conversation) +
          "&email=" + encodeURIComponent(profileRes.data.email) +
          "&name=" + encodeURIComponent(profileRes.data.name) +

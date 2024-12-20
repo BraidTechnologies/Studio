@@ -14,7 +14,7 @@ import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
 
 function makeIconPath (url: string) : string {
    // https://dev.to/derlin/get-favicons-from-any-website-using-a-hidden-google-api-3p1e
-   var urlParts = new URL(url);
+   const urlParts = new URL(url);
    return 'https://www.google.com/s2/favicons?domain=' + urlParts.hostname + '&sz=32';
 }
 
@@ -35,7 +35,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          context.log(question);
 
          // Translate from the simple MSTeams API to the one we use in Boxer app allowing more enrichments
-         let passOnSpec: IEnrichedQuery = {
+         const passOnSpec: IEnrichedQuery = {
 
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,
@@ -47,12 +47,12 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          }
 
          // Call common function - common the Boxer back end and to Teams API
-         let passedResponse = await askModel (passOnSpec);
+         const passedResponse = await askModel (passOnSpec);
       
          // Translate back from the enriched Boxer app format to simpler MSTeams API 
-         let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
+         const enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
 
-         let answer: IStudioBoxerResponseEnrichment = { 
+         const answer: IStudioBoxerResponseEnrichment = { 
             id: "1",
             url: "",
             summary: passedResponse.answer,
@@ -62,7 +62,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          enrichments.push(answer);      
 
          for (let i = 0; i < passedResponse.chunks.length; i++) {
-            let enrichment: IStudioBoxerResponseEnrichment = { 
+            const enrichment: IStudioBoxerResponseEnrichment = { 
                id: (i+2).toString(),
                url:  passedResponse.chunks[i].chunk.url,
                summary: passedResponse.chunks[i].chunk.summary,

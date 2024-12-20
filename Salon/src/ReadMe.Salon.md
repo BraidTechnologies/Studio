@@ -1,26 +1,41 @@
 **api_to_test_code.py**
 
-This code is a script designed to generate Pytest test cases from API data provided in either JSON or YAML format.
+This script generates Pytest code from API data provided in JSON or YAML format using OpenAI's API.
 
-**Classes/Functions:**
-1. **parse_arguments**: Parses command-line arguments to get the input file path.
-2. **extract_code**: Extracts Python code snippets from content using specified markers.
-3. **load_api_data**: Loads API data from a provided JSON or YAML file and returns it as a dictionary.
-4. **main**: Coordinates the workflow, including parsing arguments, loading data, initializing the OpenAI assistant, and generating and saving test code.
+**Key functions and classes:**
+- `parse_arguments()`: Parses command-line arguments to get the input file path.
+- `extract_code(content)`: Extracts Python code snippets from the provided content using predefined markers.
+- `load_api_data(file_path)`: Loads and returns API data from a JSON or YAML file.
+- `main()`: Orchestrates the script by parsing arguments, loading API data, generating test code using OpenAI, and saving the output.
 
-Logging is configured to handle different levels of messages, and the OpenAI client is used for generating Pytest test cases.
+**Additional components:**
+- Configures logging to capture different log levels.
+- Utilizes OpenAI client with API key.
+- Handles JSON and YAML file formats.
+- Error handling for file operations, JSON/YAML parsing, and OpenAI API interactions.
 
 **repo_to_text.py**
 
-The `repo_to_text.py` script processes a local GitHub repository by concatenating the contents of its files into text files, with a specified word limit per file. The usage and options for running this script are provided through command-line arguments.
+This script processes a local GitHub repository, concatenating files into text files within set word limits and summarizing source files. Users can specify configurations, repository paths, output directories, and files or directories to skip via command-line arguments.
 
-Key classes and functions:
+**Key Classes/Functions:**
 
-1. **SummarisedDirectory**: Represents summaries of directory contents.
-2. **RepoContentProcessor**: Handles the processing of the repository files, including skipping certain files/directories, summarizing source files, and saving the concatenated content.
-3. **load_yaml**: Loads configuration from a YAML file.
-4. **summarise_code**: Summarizes the content of source files using an API call.
-5. **parse_arguments** and **validate_args**: Handle command-line argument parsing and validation.
+- **RepoContentProcessor**: This is the main class responsible for processing repository files. 
+  - **`__init__()`**: Initializes with repository and configuration paths.
+  - **`make_common_file_name()`**: Generates a common file name format.
+  - **`format_file_block()`**: Formats a block of file content.
+  - **`count_words()`**: Counts words in a file.
+  - **`process_file()`**: Reads and processes individual files.
+  - **`process_repo()`**: Walks through the repository and processes files.
+  - **`save_current_content()`**, **`save_directory_content()`**: Save accumulated contents to output files.
 
-Important methods within `RepoContentProcessor` manage formatting file content, counting words, checking paths, saving directory summaries, processing files, and processing the entire repository. The script also handles different configuration options and verbose output.
+- **SummarisedDirectory**: Stores directory names and their summaries.
+
+- **load_yaml()**: Loads the configuration file.
+
+- **summarise_code()**: Summarizes code content via an endpoint.
+
+- **parse_arguments()**, **validate_args()**: Parse and validate command-line arguments.
+
+The script respects word limits and allows skipping irrelevant files/directories. The construct `if __name__ == "__main__":` ensures `main()` runs only when the script is executed directly, not imported. The return `1` signifies an error or non-successful conclusion, meaning new developers should check the `main()` function for full context.
 

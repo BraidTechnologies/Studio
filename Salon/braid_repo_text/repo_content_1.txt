@@ -1216,6 +1216,20 @@ node_modules/typescript/
 ****************************************
 
 ****************************************
+Api\eslint.config.mjs
+****************************************
+// @ts-check
+
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+);
+****************************************
+
+****************************************
 Api\README.md
 ****************************************
 **Api** is a set of Azure-hosted functions. All calls to OpenAI and to the CosmoDB database are made via this layer, which includes logging, and allows us to centralize key management. 
@@ -2138,6 +2152,63 @@ done
 ****************************************
 
 ****************************************
+Build\check_module_comments_subdirs.sh
+****************************************
+#!/bin/bash
+
+# List of directories to process
+#ts_directories=("CommonTs" "Api" "Cascade" "WaterfallBrowser" "Boxer" "Teams")
+ts_directories=("CommonTs")
+
+py_directories=("CommonPy" "ApiTest" "Waterfall" "BoxerEval")
+
+
+# Iterate through the specified directories
+for dir in "${ts_directories[@]}"; do
+    if [ -d "$dir" ]; then
+        echo "Entering directory: $dir"
+        
+        # Change to the directory
+        cd "$dir"
+        
+        # Check if package.json exists
+        if [ -f "package.json" ]; then
+            echo "Running typescript linter..."
+            for file in $(find . -name "*.ts" -not -path "./node_modules/*" -not -path "./dist/*"); do      
+                #echo "Linting file: $file"                  
+                if !(grep -q "@module" $file); then
+                    echo "No module comment found in file: $file"
+                fi
+            done         
+        else
+            echo "No package.json found, skipping..."
+        fi
+        
+        # Go back to the original directory
+        cd ..
+    else
+        echo "Directory $dir not found, skipping..."
+    fi
+done
+
+
+for dir in "${py_directories[@]}"; do
+    if [ -d "$dir" ]; then
+        echo "Entering directory: $dir"
+        cd "$dir"
+        echo "Running python linter..."
+        for file in $(find . -name "*.py"); do
+            #echo "Linting file: $file"
+            if grep -q "missing-module-docstring" <(pylint "$file"); then
+                echo "No module comment found in file: $file"
+            fi
+        done
+        cd ..
+    fi
+done
+****************************************
+
+****************************************
 Build\clean_subdirs.sh
 ****************************************
 #!/bin/bash
@@ -2308,12 +2379,6 @@ For support, please open an issue in the GitHub repository.
 ****************************************
 
 ****************************************
-CommonPy\__init__.py
-****************************************
-
-****************************************
-
-****************************************
 CommonTs\README.md
 ****************************************
 **Common** contains typescript compoents that are used by both front end (Browser, Mocha test) and back end (Api) components. It also contains types that define the contract between client and server for APIS, which are used by the 'Salon' component to generate test code.
@@ -2323,17 +2388,25 @@ CommonTs\README.md
 Salon\config.yaml
 ****************************************
 source_patterns:
-    - "*.py"
     - "*.ts"
     - "*.tsx"
+    - "*.py"
+
+common_directories_patterns:
+    - "CommonTs"
+    - "CommonPy"
 
 skip_dirs:
     - "__pycache__"
     - "node_modules"
     - "venv"
     - ".idea"
+    - ".pytest_cache"
     - ".vscode"
+    - ".coverage"
     - "data"    
+    - "env"
+    - ".nyc_output"
         
 skip_patterns:
     - "*.pyc"
@@ -2363,6 +2436,10 @@ skip_patterns:
     - "*.mdd"       
     - "*.vtt"       
     - "*.html"
+    - "__init__.py"
+    - ".coverage"    
+    - "*.xlsx"
+    - "*.zip"
 ****************************************
 
 ****************************************
@@ -2716,176 +2793,6 @@ publish:
     writeToEnvironmentFile:
       publishedAppId: TEAMS_APP_PUBLISHED_APP_ID
 projectId: c64e8ace-e99d-444b-bd99-6373ca681243
-****************************************
-
-****************************************
-Waterfall\classes.mmd
-****************************************
-classDiagram
-  class ClusterAnalyser {
-    clusters : int
-    analyse(items: list[PipelineItem]) list[PipelineItem]
-  }
-  class Embedder {
-    embed(pipeline_item: PipelineItem) PipelineItem
-    test_to_float(embedding: str) list[float]
-  }
-  class EmbeddingFinder {
-    embeddings : list[float]
-    output_location : str
-    find_nearest(target_text: str) list[float]
-  }
-  class EmbeddingRespositoryFacade {
-    extension : str
-    file__repository
-    output_location : str
-    exists(path: str) bool
-    list() list[str]
-    load(path: str) str
-    save(path: str, text: str) None
-    spec() str
-  }
-  class FileRespository {
-    output_location : str
-    exists(path: str, extension: str) bool
-    load(path: str, extension: str) str
-    save(path: str, extension: str, text: str) None
-  }
-  class Freezable {
-  }
-  class HtmlFileDownloader {
-    download(pipeline_item: PipelineItem) PipelineItem
-  }
-  class HtmlLinkCrawler {
-    max_depth : int
-    crawl(pipeline_item: PipelineItem) list[PipelineItem]
-    crawl_links_recursively(path: str, output_location: str, pipeline_items: list[PipelineItem], current_depth: int)
-  }
-  class PipelineItem {
-    cluster : NoneType
-    embedding : NoneType
-    path : NoneType
-    summary : NoneType
-    text : NoneType
-  }
-  class PipelineSpec {
-    clusters : int
-    clusters_in_summary : int
-    description : NoneType
-    output_chart_name : NoneType
-    output_data_name : NoneType
-    pages : int
-    search_key : NoneType
-    themes : NoneType
-  }
-  class PipelineStep {
-    output_location : str
-  }
-  class Summariser {
-    summarise(pipeline_item: PipelineItem) PipelineItem
-  }
-  class SummaryRespositoryFacade {
-    extension : str
-    file__repository
-    output_location : str
-    exists(path: str) bool
-    load(path: str) str
-    save(path: str, text: str) None
-    spec() str
-  }
-  class TextRespositoryFacade {
-    extension : str
-    file__repository
-    output_location : str
-    exists(path: str) bool
-    load(path: str) str
-    save(path: str, text: str) None
-    spec() str
-  }
-  class Theme {
-    example_pipeline_items : NoneType
-    long_description : NoneType
-    member_pipeline_items : NoneType
-    short_description : NoneType
-  }
-  class ThemeFinder {
-    find_theme(text: str, length: int) str
-  }
-  class WaterfallDataPipeline {
-    output_location : str
-    create_report(items: list[PipelineItem], themes: list[Theme], spec: PipelineSpec) list[Theme]
-    create_themes(items: list[PipelineItem], spec: PipelineSpec) list[Theme]
-    search(spec: PipelineSpec) list[Theme]
-    search_and_cluster(spec: PipelineSpec) list[PipelineItem]
-  }
-  class WebSearcher {
-    output_location : str
-    search(pipeline: PipelineSpec) list[PipelineItem]
-  }
-  PipelineItem --|> Freezable
-  PipelineSpec --|> Freezable
-  Theme --|> Freezable
-****************************************
-
-****************************************
-Waterfall\packages.mmd
-****************************************
-classDiagram
-  class src {
-  }
-  class cluster_analyser {
-  }
-  class embedder {
-  }
-  class embedder_repository_facade {
-  }
-  class embedding_finder {
-  }
-  class file_repository {
-  }
-  class html_file_downloader {
-  }
-  class html_link_crawler {
-  }
-  class make_local_file_path {
-  }
-  class search_pipeline {
-  }
-  class summariser {
-  }
-  class summary_repository_facade {
-  }
-  class text_repository_facade {
-  }
-  class theme_finder {
-  }
-  class web_searcher {
-  }
-  class workflow {
-  }
-  cluster_analyser --> workflow
-  embedder --> embedder_repository_facade
-  embedder --> workflow
-  embedder_repository_facade --> file_repository
-  embedding_finder --> embedder
-  embedding_finder --> workflow
-  file_repository --> make_local_file_path
-  html_file_downloader --> text_repository_facade
-  html_file_downloader --> workflow
-  html_link_crawler --> workflow
-  search_pipeline --> cluster_analyser
-  search_pipeline --> embedder
-  search_pipeline --> embedding_finder
-  search_pipeline --> html_file_downloader
-  search_pipeline --> summariser
-  search_pipeline --> theme_finder
-  search_pipeline --> web_searcher
-  search_pipeline --> workflow
-  summariser --> summary_repository_facade
-  summariser --> workflow
-  summary_repository_facade --> file_repository
-  text_repository_facade --> file_repository
-  web_searcher --> workflow
 ****************************************
 
 ****************************************
@@ -4391,201 +4298,6 @@ describe("QueryModel", async function () {
 ****************************************
 
 ****************************************
-Api\test\ReadMe.Salon.md
-****************************************
-**activitystore.test.ts**
-
-A series of tests were conducted on the `StorableActivity` functionality.
-
-First, a valid key was tested to ensure storing, loading, and removing a record works correctly, which passed successfully.
-
-Next, an invalid key was tested to check the failure in storage operation, which also resulted as expected in failure.
-
-Lastly, a test was performed to save multiple records and retrieve them using a query specification, which successfully returned the expected number of records.
-
-**checksession.test.ts**
-
-The code snippet is a JavaScript test suite for session key validation. 
-
-The first test checks if the session key validation succeeds with a valid key in the local environment. 
-
-The second test checks if the session key validation succeeds with a valid key in the production environment. 
-
-The third test ensures the session key validation fails with an invalid key in the local environment. 
-
-The fourth test ensures the session key validation fails with an invalid key in the production environment. 
-
-Each test has a timeout of 20000 milliseconds.
-
-**chunk.test.ts**
-
-The provided code is a test suite written in JavaScript using Mocha and Expect libraries. 
-
-One test checks if the system correctly handles a failed scenario when the session key is incorrect by expecting the function to throw an error.
-
-Another test validates that a short message is correctly chunked into one part using a valid session key.
-
-The final test ensures that a long message is chunked into multiple parts, also using a valid session key. 
-
-Both successful tests use the `validChunkCall` function to make API requests and the `invalidChunkCall` function for the failure case.
-
-**chunkstore.test.ts**
-
-Tests for the "StorableChunk" functionality are described. 
-
-One test verifies that save, load, and remove operations succeed with a valid key in the local environment. 
-
-Another test checks whether the find operation succeeds with a valid key. 
-
-A final test ensures that operations fail when using an invalid key. 
-
-Temporary objects created during tests are cleaned up after each test run.
-
-**classify.test.ts**
-
-The text provided includes a series of test cases aimed at validating the functionality of a classification API by Braid Technologies Ltd.
-
-The tests ensure:
-- The API fails if the session key is incorrect, both in local and production environments.
-- The API correctly classifies and summarizes different text samples into predefined categories like Technology, Business, Politics, and Health.
-- Each test checks if the summary returned is non-empty and includes the correct category based on the text input.
-
-These tests use the Mocha testing framework and the Axios library for making HTTP requests.
-
-**embed.test.ts**
-
-The provided script contains test cases using Mocha and Axios for validating the functionality of an embedding API. 
-
-One test ensures the API call fails when the session key is incorrect in a local environment, and another test does the same for a production environment.
-
-Tests are included to check that a simple message and a long message are successfully embedded in both local and production environments.
-
-For both valid and invalid session keys and various message lengths, the script verifies the expected outcomes by sending requests to corresponding API endpoints and checking the responses.
-
-**environment.test.ts**
-
-A test suite named "Environment" is defined using Mocha and the 'expect' library.
-
-The test checks if the default environment is the same as the local environment by comparing their names.
-
-**findenrichedchunks.test.ts**
-
-The provided script is set up to test the functionality of retrieving relevant data chunks using summaries and URLs against two different repositories, namely Boxer and Waterfall.
-
-The Boxer repository tests use both a set of URLs and various summaries covering topics like user experience design, machine learning hardware, language model augmentation, and AI prompt engineering.
-
-The Waterfall repository tests include URLs regarding BNY Mellon's AI investment.
-
-Both sets of tests use the FindEnrichedChunkApi to query for relevant chunks, ensure responses are received, and validate the number of relevant chunks found.
-
-**findtheme.test.ts**
-
-Surfing is a surface water sport involving individuals using boards to ride waves towards the shore. Suitable waves are found on ocean shores, lakes, rivers, or wave pools. 
-
-The term "surfing" covers riding waves with various boards. Historical surfing involved different cultures using alaia, paipo, or reed craft, with modern surfing mostly referring to stand-up surfing.
-
-The document describes tests for an API endpoint using `axios` in a Node.js environment. One test checks for a failed theme call with an incorrect session key, while another verifies a successful theme search with a correct session key, in both local and production environments.
-
-**generatefluidtoken.test.ts**
-
-A test suite is implemented to verify the functionalities of the Fluid token generation and connection to a Fluid container.
-
-One test confirms that an invalid session key results in a failed token generation, ensuring security and appropriate error handling.
-
-Another test verifies that a correct session key successfully generates a valid token, focusing on both local and production environments, validating the consistency and reliability of the token generation mechanism.
-
-Finally, a test confirms that a successful connection can be made to a Fluid container, initializing and updating shared data, demonstrating the real-time collaborative capabilities of Fluid Framework.
-
-**login.test.ts**
-
-The code is a set of tests for a login feature using Mocha and Expect. 
-
-The first test verifies that logging in with a valid key in the local environment succeeds. 
-
-The second test ensures that logging in with an invalid key fails in the local environment.
-
-The third test checks that logging in with a valid key in the production environment succeeds.
-
-The fourth test confirms that logging in with an invalid key fails in the production environment.
-
-**model.test.ts**
-
-The code contains a series of test cases designed to validate the behavior of a model in different scenarios.
-
-One test confirms the provision of a default model with non-empty deployment name and valid context window size.
-
-Another test verifies obtaining a specific model labeled as `kSmall`.
-
-A test checks that this specific model can correctly judge if a small text fits within its context.
-
-There is a test that determines the model's ability to judge that a very large text does not fit in its context.
-
-Additional tests ensure the model can chunk small text correctly, and different methods of chunking large text, including those with overlaps, work as expected.
-
-**pagestore.test.ts**
-
-The code is a JavaScript test suite using Mocha and Expect to test the functionality of a web page repository API.
-
-One function, `loadHtmlFromFile`, loads HTML content from a specified file and returns it as a string.
-
-The test suite, "StorablePage", performs two tests:
-1. It saves an HTML page using a valid key in a local environment and checks if the save operation succeeds.
-2. It loads the saved HTML page using the same key and verifies that the loaded HTML matches the original content from the file.
-
-The tests use a predefined API and environment settings.
-
-**querymodel.test.ts**
-
-The code defines a series of test cases for querying and interacting with a generative AI model, using specific prompts and history for context.
-
-There is a personaPrompt to help developers understand generative AI in simple language.
-
-The tests involve making simple queries to the AI model and assessing the responses for content and relevance.
-
-A second test involves making queries with prior conversation history to see how the AI model incorporates past interactions.
-
-A third test checks the model’s ability to generate relevant questions based on a summary.
-
-Each test sets expectations for the AI model’s responses and their properties.
-
-**storable.ts**
-
-The provided JavaScript code defines various functions for operating with APIs that implement the `IStorableRepostoryApiWrapper` interface.
-
-The `randomInt` function generates a random integer within a specified range.
-
-The `randomKey` function generates a random key as a string.
-
-The `saveLoadRemove` function saves, loads, and removes a record through the given API and performs several checks with `expect`.
-
-The `saveFindRemove` function performs similar actions to `saveLoadRemove` but uses the `find` method instead of `load`.
-
-The `failSave` function tests a scenario where saving a record is expected to fail.
-
-**summarise.test.ts**
-
-The code tests a summarization API. It includes multiple test cases to validate the summarization functionality.
-
-One test confirms that an incorrect session key returns an error, both locally and in production.
-
-It tests the summarization of a simple message and a long message, both locally and against production, ensuring summaries of sufficient length are generated.
-
-Different API environments and session keys are used to simulate various real-world scenarios, ensuring the API performs consistently. 
-
-Error handling and proper responses are also validated through these tests.
-
-**testforsummarisefail.test.ts**
-
-The text is a test script using Mocha and Axios to validate API functionality for different scenarios. It includes functions for making valid and invalid API calls to check the summarization service. 
-
-The tests verify:
-1. The API fails correctly when an incorrect session key is provided.
-2. The API suppresses examples of summarization failures by returning the appropriate failure code. 
-
-The tests are run in both local and production environments with different session keys and expected outcomes are validated using assertions.
-****************************************
-
-****************************************
 Api\test\storable.ts
 ****************************************
 'use strict';
@@ -4933,6 +4645,23 @@ Api\src\functions\AzureStorableApi.ts
 ****************************************
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module AzureStorableApi
+ * 
+ * Provides Azure Functions HTTP endpoints for CRUD operations on IStorable objects in Azure Cosmos DB.
+ * This module acts as a REST API layer between HTTP clients and the underlying Cosmos DB storage,
+ * handling session validation, request parsing, and response formatting.
+ * 
+ * Key features:
+ * - Session-validated endpoints for finding, getting, saving, and removing IStorable objects
+ * - Support for custom transformers to modify data before storage and after retrieval
+ * - Error handling and logging through Azure Functions context
+ * - Query support for both ID-based and functional key-based searches
+ * - Batch operations for retrieving recent storables
+ * 
+ * The module uses ICosmosStorableParams for database configuration and supports
+ * custom response transformers for flexible API responses.
+ */
 
 // 3rd party imports
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
@@ -4994,12 +4723,12 @@ export async function findStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
-         let result = await findStorable (spec.functionalSearchKey, params, logger, transformer);
+         const result = await findStorable (spec.functionalSearchKey, params, logger, transformer);
          if (result)
             context.log("Found:" + result.id);
          else
@@ -5046,8 +4775,8 @@ export async function getStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;
 
          return await getStorableApiCommon (spec, params, context, transformer, resultTransformer);
       }
@@ -5089,7 +4818,7 @@ export async function getStorableApiFromQuery(request: HttpRequest,
          requestedId = value;
    }
 
-   let spec: IStorableQuerySpec = {
+   const spec: IStorableQuerySpec = {
       id: requestedId,
       functionalSearchKey: undefined
    };
@@ -5123,9 +4852,9 @@ async function getStorableApiCommon(spec: IStorableQuerySpec,
    resultTransformer: StorableResponseTransformer | undefined = undefined): Promise<HttpResponseInit> {
 
    try {
-      let logger = new AzureLogger(context);
+      const logger = new AzureLogger(context);
 
-      let result = await loadStorable(spec.id, params, logger, transformer);
+      const result = await loadStorable(spec.id, params, logger, transformer);
       if (result)
          context.log("Loaded:" + result.id);
       else
@@ -5166,13 +4895,13 @@ export async function saveStorableApi (request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorable;   
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorable;   
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
          await saveStorable(spec, params, logger);
 
-         let result: IStorableOperationResult = {
+         const result: IStorableOperationResult = {
             ok: true
          }
          return {
@@ -5212,14 +4941,14 @@ export async function removeStorableApi(request: HttpRequest,
    if (isSessionValid(request, context)) {
 
       try {      
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableQuerySpec;   
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableQuerySpec;   
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
-         let ok = await removeStorable (spec.id, params, logger);
+         const ok = await removeStorable (spec.id, params, logger);
 
-         let result: IStorableOperationResult = {
+         const result: IStorableOperationResult = {
             ok: ok
          }
          return {
@@ -5263,10 +4992,10 @@ export async function getRecentStorablesApi(request: HttpRequest,
       let loaded: Array<IStorable> | undefined = undefined;
 
       try {
-         let jsonRequest = await request.json();
-         let spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
+         const jsonRequest = await request.json();
+         const spec = (jsonRequest as any).request as IStorableMultiQuerySpec;         
 
-         let logger = new AzureLogger(context);
+         const logger = new AzureLogger(context);
 
          loaded = await loadRecentStorables (spec, params, logger, transformer);
          for (let i = 0; loaded && i < loaded.length; i++) {
@@ -5292,6 +5021,19 @@ export async function getRecentStorablesApi(request: HttpRequest,
 ****************************************
 Api\src\functions\CheckSession.ts
 ****************************************
+/**
+ * @module CheckSession
+ * 
+ * Azure Function module that provides session validation functionality.
+ * This module exposes an HTTP endpoint that validates session keys against 
+ * environment-configured valid sessions. It supports both GET and POST methods
+ * and returns appropriate responses based on session validity.
+ * 
+ * The function is configured for anonymous access but requires a valid session key
+ * in the request parameters to succeed. This serves as a basic authentication
+ * mechanism for the Braid API.
+ */
+
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
@@ -5333,8 +5075,20 @@ Api\src\functions\Chunk.ts
 ****************************************
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-// 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+
+/**
+ * @module Chunk
+ * @description Azure Function that provides text chunking capabilities. This module splits input text
+ * into smaller, manageable chunks with configurable size and overlap settings. It's designed to work
+ * with authenticated sessions and returns chunked text as part of the Braid API infrastructure.
+ * 
+ * Usage:
+ * - Deployed via 'func azure functionapp publish Braid-Api'
+ * - Local development via 'npm start'
+ * 
+ * The chunking process respects session validation and handles errors appropriately,
+ * returning standardized API responses.
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
@@ -5343,7 +5097,7 @@ import { IChunkRequest, IChunkResponse } from "../../../CommonTs/src/ChunkApi.Ty
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 /**
  * Splits the input text into chunks based on the specified chunk size and overlap words.
@@ -5355,7 +5109,7 @@ let model = getDefaultModel();
  */
 function chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
 
-   let chunks = model.chunkText(text, chunkSize, overlapWords);
+   const chunks = model.chunkText(text, chunkSize, overlapWords);
 
    return chunks;
 }
@@ -5378,10 +5132,10 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let spec = (jsonRequest as any).request as IChunkRequest;
+         const spec = (jsonRequest as any).request as IChunkRequest;
          text = spec.text;
          chunkSize = spec.chunkSize;         
          overlapWords = spec.overlapWords;         
@@ -5389,7 +5143,7 @@ export async function chunk(request: HttpRequest, context: InvocationContext): P
          if (text)
             chunks = chunkText(text, chunkSize, overlapWords);
 
-         let body: IChunkResponse = {
+         const body: IChunkResponse = {
             chunks: chunks
          }
 
@@ -5421,8 +5175,21 @@ app.http('Chunk', {
 ****************************************
 Api\src\functions\Classify.ts
 ****************************************
-'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module Classify
+ * @description Azure Function that provides text classification services using AI.
+ * This module handles the classification of text into predefined subject areas
+ * using OpenAI's API. It includes functionality for session validation, error handling,
+ * and response formatting.
+ * 
+ * The classification process uses a single-shot approach where the AI model
+ * categorizes the input text into one of the provided classification categories.
+ * 
+ * @copyright Braid Technologies Ltd, 2024
+ */
+
+'use strict';
 // 'func azure functionapp publish Braid-Api to publish to Azure
 // 'npm start' to run locally
 
@@ -5468,7 +5235,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -5492,7 +5259,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       }
    );
 
-   let decoded = decodeClassification(response.data.choices[0].message.content, classifications);
+   const decoded = decodeClassification(response.data.choices[0].message.content, classifications);
 
    return (decoded);
 }
@@ -5512,19 +5279,19 @@ export async function classify(request: HttpRequest, context: InvocationContext)
 
    if (isSessionValid(request, context)) {
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log (jsonRequest);
          
-         let spec = (jsonRequest as any).request as IClassifyRequest;
+         const spec = (jsonRequest as any).request as IClassifyRequest;
          text = spec.text;
          classifications = spec.classifications;
 
          if ((text && text.length > 0)
          && (classifications && classifications.length > 0)) {
 
-            let summaryClassification = await singleShotClassify(text, classifications);
+            const summaryClassification = await singleShotClassify(text, classifications);
 
-            let classificationResponse : IClassifyResponse = {
+            const classificationResponse : IClassifyResponse = {
                classification: summaryClassification
             }
             
@@ -5561,11 +5328,23 @@ app.http('Classify', {
 ****************************************
 Api\src\functions\CosmosRepositoryApi.ts
 ****************************************
-'use strict';
 // Copyright Braid Technologies Ltd, 2024
+/**
+ * @module CosmosRepositoryApi
+ * @description Provides utility functions for generating authorization tokens and headers
+ * for interacting with Azure Cosmos DB. This module includes functions for:
+ * - Generating authorization tokens using master keys
+ * - Creating headers for POST, DELETE, and query operations
+ * - Managing storable tokens for various CRUD operations
+ * 
+ * All functions in this module are designed to work with Azure Cosmos DB's REST API
+ * and follow Microsoft's authentication requirements.
+ */
+
+'use strict';
 
 // 3rd party imports
-var crypto = require("crypto");
+const crypto = require("crypto");
 
 import { LooseObject } from "../../../CommonTs/src/LooseObject";
 
@@ -5581,22 +5360,22 @@ import { LooseObject } from "../../../CommonTs/src/LooseObject";
  */
 export function getAuthorizationTokenUsingMasterKey(verb: string, resourceType: string, resourceId: string, date: string, masterKey: string) {
 
-   var key = Buffer.from(masterKey, "base64");
+   const key = Buffer.from(masterKey, "base64");
 
-   var text = (verb || "").toLowerCase() + "\n" +
+   const text = (verb || "").toLowerCase() + "\n" +
       (resourceType || "").toLowerCase() + "\n" +
       (resourceId || "") + "\n" +
       date.toLowerCase() + "\n" +
       "" + "\n";
 
-   var body = Buffer.from(text, "utf8");
-   var signature = crypto.createHmac("sha256", key).update(body).digest("base64");
+   const body = Buffer.from(text, "utf8");
+   const signature = crypto.createHmac("sha256", key).update(body).digest("base64");
 
-   var MasterToken = "master";
+   const MasterToken = "master";
 
-   var TokenVersion = "1.0";
+   const TokenVersion = "1.0";
 
-   var encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);
+   const encoded = encodeURIComponent("type=" + MasterToken + "&ver=" + TokenVersion + "&sig=" + signature);
 
    return encoded;
 }
@@ -5696,7 +5475,7 @@ export function makeDeleteHeader(key: string, time: string, partitionKey: string
 export function makePostQueryHeader(key: string, time: string, partitionKey: string, 
    continuation: string | undefined = undefined): object {
 
-   let headers : LooseObject = {
+   const headers : LooseObject = {
       "Authorization": key,
       "Content-Type": "application/query+json",
       "Accept": "application/json",
@@ -5720,6 +5499,20 @@ Api\src\functions\CosmosStorableApi.ts
 ****************************************
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
+'use strict';
+/**
+* @module CosmosStorableApi
+* @description Provides a high-level API for interacting with Azure Cosmos DB storage.
+* This module implements CRUD operations (Create, Read, Update, Delete) for storable objects
+* in Cosmos DB collections, along with query capabilities and logging interfaces.
+* 
+* Key features:
+* - Storable object management (find, load, save, remove)
+* - Batch loading operations
+* - Collection-specific configurations
+* - Logging interfaces for Azure Functions and Console
+* - Support for data transformation during operations
+*/
 
 // 3rd party imports
 import { InvocationContext } from "@azure/functions";
@@ -5769,19 +5562,19 @@ export interface ILoggingContext {
    error (message: string, details: any) : void;    
 }
 
-export let chunkStorableAttributes : ICosmosStorableParams = {
+export const chunkStorableAttributes : ICosmosStorableParams = {
    partitionKey: chunkPartitionKey,
    collectionPath: chunkCollectionPath,
    collectionName: chunkCollectionName
 }
 
-export let activityStorableAttributes : ICosmosStorableParams = {
+export const activityStorableAttributes : ICosmosStorableParams = {
    partitionKey: activityPartitionKey,
    collectionPath: activityCollectionPath,
    collectionName: activityCollectionName
 }
 
-export let pageStorableAttributes : ICosmosStorableParams = {
+export const pageStorableAttributes : ICosmosStorableParams = {
    partitionKey: pagePartitionKey,
    collectionPath: pageCollectionPath,
    collectionName: pageCollectionName
@@ -5856,17 +5649,17 @@ export async function findStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+   const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -5883,8 +5676,8 @@ export async function findStorable(id: string | undefined,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecord = responseRecords[0] as IStorable;
+            const responseRecords = resp.data.Documents;
+            const storedRecord = responseRecords[0] as IStorable;
 
             context.log ("Loaded storable:", storedRecord.id);
             resolve(applyTransformer(storedRecord, transformer));
@@ -5916,17 +5709,17 @@ export async function loadStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+   const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.id = @id";
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.id = @id";
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -5943,8 +5736,8 @@ export async function loadStorable(id: string | undefined,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecord = responseRecords[0] as IStorable;
+            const responseRecords = resp.data.Documents;
+            const storedRecord = responseRecords[0] as IStorable;
 
             context.log ("Loaded storable:", storedRecord.id);
             resolve(applyTransformer(storedRecord, transformer));
@@ -5969,17 +5762,17 @@ export async function loadStorable(id: string | undefined,
  */
 export async function saveStorable(record: IStorable, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<boolean>(function (resolve, reject) {
+   const done = new Promise<boolean>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
-      let stream = JSON.stringify(record);
-      let document = JSON.parse(stream);
+      const time = new Date().toUTCString();
+      const stream = JSON.stringify(record);
+      const document = JSON.parse(stream);
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey as string);
-      let headers = makePostHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey as string);
+      const headers = makePostHeader(key, time, params.partitionKey);
 
       document.partition = params.partitionKey; // Dont need real partitions until 10 GB ... 
 
@@ -6016,16 +5809,16 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
    if (!id)
       return false;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<boolean>(function (resolve, reject) {
+   const done = new Promise<boolean>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
-      let headers = makeDeleteHeader(key, time, params.partitionKey);
+      const key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
+      const headers = makeDeleteHeader(key, time, params.partitionKey);
         
-      let deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
+      const deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
 
       axios.delete(deletePath,
          {
@@ -6059,17 +5852,17 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<Array<IStorable>>(function (resolve, reject) {
+   const done = new Promise<Array<IStorable>>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -6086,8 +5879,8 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecords = new Array<IStorable>();
+            const responseRecords = resp.data.Documents;
+            const storedRecords = new Array<IStorable>();
 
             for (let i = 0; i < responseRecords.length; i++) {
                storedRecords.push(applyTransformer(responseRecords[i], transformer));
@@ -6119,26 +5912,26 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<Array<IStorable>>(async function (resolve, reject) {
+   const done = new Promise<Array<IStorable>>(async function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
       let continuation: string | undefined = undefined;
       let more = true;
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let accumulatedRecords = new Array<IStorable>();
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const accumulatedRecords = new Array<IStorable>();
 
       while (more) {
 
          try {
-            let headers = makePostQueryHeader(key, time, params.partitionKey, continuation);
+            const headers = makePostQueryHeader(key, time, params.partitionKey, continuation);
 
-            let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC";
+            const query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC";
 
-            let resp = await axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
+            const resp = await axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
                {
                   "query": query,
                   "parameters": [
@@ -6158,7 +5951,7 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
             else {
                more = false;
             }
-            let responseRecords = resp.data.Documents;
+            const responseRecords = resp.data.Documents;
 
             for (let i = 0; i < responseRecords.length; i++) {
                accumulatedRecords.push(applyTransformer(responseRecords[i], transformer));
@@ -6196,7 +5989,7 @@ import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
 import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 /**
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
@@ -6216,7 +6009,7 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
    });
 
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
       input: text,
    },
       {
@@ -6227,7 +6020,7 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
       }
    );
 
-   let embedding = response.data.data[0].embedding as Array<number>;
+   const embedding = response.data.data[0].embedding as Array<number>;
 
    return (embedding);
 }
@@ -6247,9 +6040,9 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
-         let spec = (jsonRequest as any).request as IEmbedRequest;
+         const spec = (jsonRequest as any).request as IEmbedRequest;
          text = spec.text;
 
          if ((text && text.length > 0)) {
@@ -6261,7 +6054,7 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
                context.log("Summarised");
             }
 
-            let embeddingResponse : IEmbedResponse = {
+            const embeddingResponse : IEmbedResponse = {
                embedding: await calculateEmbedding(text)
             };
 
@@ -6413,11 +6206,11 @@ function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnri
    if (sameSource) {
 
       // If we have an entry from the same source, replace if the new one looks better
-      let comp = current[sameIndex].relevance;
+      const comp = current[sameIndex].relevance;
 
       if (typeof comp !== 'undefined' && typeof lowestRelevance !== 'undefined') {
 
-         let currentRelevance = current[sameIndex].relevance;
+         const currentRelevance = current[sameIndex].relevance;
 
          if ((typeof comp !== 'undefined' && typeof currentRelevance !== 'undefined')
             && (comp < currentRelevance)) {
@@ -6429,7 +6222,7 @@ function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnri
       // Else replace the lowest relevance entry
       for (let i = 1; i < current.length; i++) {
 
-         let comp = current[i].relevance;
+         const comp = current[i].relevance;
 
          if (typeof comp !== 'undefined' && typeof lowestRelevance !== 'undefined') {
 
@@ -6480,8 +6273,8 @@ function replaceIfBeatsCurrent(candidate: IRelevantEnrichedChunk,
    }
 
    // Else we do a search and insert the new one if it is better than a current candidate
-   let lowestIndex = lowestOfCurrent(candidate.chunk.url, current);
-   let currentLowest = current[lowestIndex];
+   const lowestIndex = lowestOfCurrent(candidate.chunk.url, current);
+   const currentLowest = current[lowestIndex];
 
    if (typeof currentLowest.relevance !== 'undefined'
       && typeof candidate.relevance !== 'undefined') {
@@ -6514,22 +6307,22 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupRelevantFromSummary(spec: IChunkQueryRelevantToSummarySpec): Promise<Array<IRelevantEnrichedChunk>> {
 
-      let enrichedChunks = this._chunks;
-      let accumulator = new Array<IRelevantEnrichedChunk>();
+      const enrichedChunks = this._chunks;
+      const accumulator = new Array<IRelevantEnrichedChunk>();
 
-      let validEmbedding = await calculateEmbedding (spec.summary);
+      const validEmbedding = await calculateEmbedding (spec.summary);
 
       for (let i = 0; i < enrichedChunks.length; i++) {
 
-         let embedding = enrichedChunks[i].embedding;
+         const embedding = enrichedChunks[i].embedding;
          if (embedding) {
             let validIndexedEmbedding: number[];
             throwIfUndefined(embedding);
             validIndexedEmbedding = embedding;
 
-            let relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
+            const relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
 
-            let candidate: IRelevantEnrichedChunk = {
+            const candidate: IRelevantEnrichedChunk = {
                chunk: {
                   url: enrichedChunks[i].url,
                   summary: enrichedChunks[i].summary,
@@ -6538,7 +6331,7 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
                relevance: relevance
             };
 
-            let changed = replaceIfBeatsCurrent(candidate, spec, undefined, accumulator);
+            const changed = replaceIfBeatsCurrent(candidate, spec, undefined, accumulator);
          }
       }
 
@@ -6557,15 +6350,15 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupRelevantFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IRelevantEnrichedChunk>> {
 
-      let enrichedChunks = this._chunks;
+      const enrichedChunks = this._chunks;
       let targetChunk: IEnrichedChunk | undefined = undefined;
-      let accumulator = new Array<IRelevantEnrichedChunk>();
+      const accumulator = new Array<IRelevantEnrichedChunk>();
 
       let validTargetChunk: IEnrichedChunk;
       let validEmbedding: number[];
 
       for (let i = 0; i < enrichedChunks.length && !targetChunk; i++) {
-         let url = enrichedChunks[i].url;
+         const url = enrichedChunks[i].url;
          if (url == spec.url) {
             targetChunk = enrichedChunks[i];
             break;
@@ -6582,15 +6375,15 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
 
       for (let i = 0; i < enrichedChunks.length && targetChunk; i++) {
 
-         let embedding = enrichedChunks[i].embedding;
+         const embedding = enrichedChunks[i].embedding;
          if (embedding) {
             let validIndexedEmbedding: number[];
             throwIfUndefined(embedding);
             validIndexedEmbedding = embedding;
 
-            let relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
+            const relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
 
-            let candidate: IRelevantEnrichedChunk = {
+            const candidate: IRelevantEnrichedChunk = {
                chunk: {
                   url: enrichedChunks[i].url,
                   summary: enrichedChunks[i].summary,
@@ -6599,7 +6392,7 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
                relevance: relevance
             };
 
-            let changed = replaceIfBeatsCurrent(candidate, spec, spec.url, accumulator);
+            const changed = replaceIfBeatsCurrent(candidate, spec, spec.url, accumulator);
          }
       }
 
@@ -6612,13 +6405,13 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<IEnrichedChunkSummary | undefined> {
 
-      let enrichedChunks = this._chunks;
+      const enrichedChunks = this._chunks;
       let accumulator : IEnrichedChunkSummary | undefined = undefined;
    
       for (let i = 0; i < enrichedChunks.length && !accumulator; i++) {
-         let url = enrichedChunks[i].url;
+         const url = enrichedChunks[i].url;
          if (url == spec.url) {
-            let targetChunk = { 
+            const targetChunk = { 
                url: enrichedChunks[i].url,
                summary: enrichedChunks[i].summary,
                text: enrichedChunks[i].text
@@ -6681,12 +6474,12 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
     */
    public constructor() {
 
-      let enrichedChunks = new Array<IEnrichedChunk>;    
+      const enrichedChunks = new Array<IEnrichedChunk>;    
       this._repositoryInMemory = new EnrichedChunkRepositoryInMemory (enrichedChunks);
 
       this._semaphore = new Promise<boolean> ((resolve) => {
    
-         let query = {
+         const query = {
             maxCount: 2,
             repositoryId: EChunkRepository.kWaterfall,
             limit: 2,
@@ -6694,16 +6487,16 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
             similarityThreshold: 0.15
          };
       
-         let logger = new ConsoleLogger();
+         const logger = new ConsoleLogger();
       
          try {
-            let loaded = loadStorables (query, chunkStorableAttributes, logger).then ((values: Array<IStorable>) => {
+            const loaded = loadStorables (query, chunkStorableAttributes, logger).then ((values: Array<IStorable>) => {
 
-               let loadedChunks = new Array<IEnrichedChunk>;
+               const loadedChunks = new Array<IEnrichedChunk>;
 
                for (let i = 0; i < values.length; i++) {
 
-                  let storedChunk: IStoredChunk = values[i] as IStoredChunk;
+                  const storedChunk: IStoredChunk = values[i] as IStoredChunk;
 
                   if (!storedChunk.url) {
                      console.error ("No URL found for chunk", storedChunk.id);
@@ -6714,7 +6507,7 @@ export class EnrichedChunkRepositoryDb implements IEnrichedChunkRepository {
                      continue;
                   }                  
 
-                  let chunk: IEnrichedChunk = {
+                  const chunk: IEnrichedChunk = {
                      id: storedChunk.id as string,
                      embedding: storedChunk.storedEmbedding?.embedding as number[],
                      url: storedChunk.url as string,
@@ -6826,7 +6619,7 @@ import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "../../../Commo
 import { sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { isSessionValid } from "./Utility";
 
-let model = getDefaultModel();
+const model = getDefaultModel();
 
 
 
@@ -6843,14 +6636,14 @@ export async function enumerateModels(request: HttpRequest, context: InvocationC
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let model = getDefaultModel();
+         const model = getDefaultModel();
 
-         let spec = (jsonRequest as any).request as IEnumerateModelsRequest;        
+         const spec = (jsonRequest as any).request as IEnumerateModelsRequest;        
 
-         let body: IEnumerateModelsResponse = {
+         const body: IEnumerateModelsResponse = {
             defaultId: model.deploymentName,
             defaultEmbeddingId: model.embeddingDeploymentName,
             largeId: model.deploymentName,
@@ -6914,12 +6707,12 @@ export async function enumerateRepositories(request: HttpRequest, context: Invoc
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let spec = (jsonRequest as any).request as IEnumerateRepositoriesRequest;        
+         const spec = (jsonRequest as any).request as IEnumerateRepositoriesRequest;        
 
-         let body: IEnumerateReposotoriesResponse = {
+         const body: IEnumerateReposotoriesResponse = {
             repositoryIds: [EChunkRepository.kBoxer, EChunkRepository.kWaterfall]            
          }
 
@@ -6966,11 +6759,11 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
+         const spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupRelevantFromSummary (spec);
+         const chunks = await repository.lookupRelevantFromSummary (spec);
 
          return {
             status: 200, // Ok
@@ -6991,11 +6784,11 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupRelevantFromUrl (spec);
+         const chunks = await repository.lookupRelevantFromUrl (spec);
 
          return {
             status: 200, // Ok
@@ -7016,11 +6809,11 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
    if (isSessionValid(request, context)) {
 
       try {
-         let spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
 
-         let repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
+         const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         let chunks = await repository.lookupFromUrl (spec);
+         const chunks = await repository.lookupFromUrl (spec);
 
          return {
             status: 200, // Ok
@@ -7072,7 +6865,7 @@ import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidReque
 import { IFindThemeRequest, IFindThemeResponse } from "../../../CommonTs/src/FindThemeApi.Types";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
 
-let minimumTextLength = 64;
+const minimumTextLength = 64;
 
 /**
  * Asynchronous function to find a common theme from a number of paragraphs of text.
@@ -7093,7 +6886,7 @@ async function findThemeCall(text: string, length: number): Promise<string> {
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -7135,21 +6928,21 @@ export async function findTheme(request: HttpRequest, context: InvocationContext
    if (isSessionValid(request, context)) {
       
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
-         let themeSpec = (jsonRequest as any).request as IFindThemeRequest;                                        
+         const themeSpec = (jsonRequest as any).request as IFindThemeRequest;                                        
 
          text = themeSpec.text;
          length = themeSpec.length;
 
          if (text && text.length >= minimumTextLength && length > 0) {
 
-            let definitelyText: string = text;
-            let definitelyLength: number = length ? length : defaultLength;
+            const definitelyText: string = text;
+            const definitelyLength: number = length ? length : defaultLength;
             theme = await findThemeCall(definitelyText, definitelyLength);
 
             throwIfUndefined (theme);
-            let themeResponse : IFindThemeResponse = {
+            const themeResponse : IFindThemeResponse = {
                theme: theme
             }
             context.log (themeResponse);
@@ -7235,8 +7028,8 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
       }    
 
       try {
-         let jsonRequest = await request.json();
-         let fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
+         const jsonRequest = await request.json();
+         const fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
 
          // tenantId, documentId, userId and userName are required parameters
          const documentId = fluidRequest.documentId;
@@ -7244,7 +7037,7 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
          const userName = fluidRequest.userName;
          const local = fluidRequest.local;
 
-         let user = { name: userName, id: userId };
+         const user = { name: userName, id: userId };
 
          context.log ("Generating token for:" + JSON.stringify(fluidRequest) + " tenantId:" + tenantId);
 
@@ -7309,14 +7102,14 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
       }
    });
 
-   let systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   let questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
+   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
 
-   let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
+   const fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {
@@ -7329,9 +7122,9 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
 
    const directResponse = await directPromise;
 
-   let question = (directResponse.data.choices[0].message.content);
+   const question = (directResponse.data.choices[0].message.content);
 
-   let queryResponse: IQuestionGenerationResponse = {
+   const queryResponse: IQuestionGenerationResponse = {
       question: question
    }
 
@@ -7344,13 +7137,13 @@ export async function generateQuestion(request: HttpRequest, context: Invocation
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
                   
-         let query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
+         const query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
 
          context.log (query);
-         let response = await askModel(query);
-         let responseText = JSON.stringify(response);
+         const response = await askModel(query);
+         const responseText = JSON.stringify(response);
          context.log (responseText);
 
          return {
@@ -7439,12 +7232,12 @@ const SurveySummariserPersona: IPromptPersona = {
 
 export function getSummariser (persona: EPromptPersona, wordTarget: number, textToSummarise: string) : IPromptPersona {
 
-   let wordString = Math.floor (wordTarget).toString();
+   const wordString = Math.floor (wordTarget).toString();
 
    switch (persona) {
       
       case EPromptPersona.kSurveySummariser:
-         let surveyTemplate = SurveySummariserPersona;
+         const surveyTemplate = SurveySummariserPersona;
          surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
          + wordString  +
          " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
@@ -7454,7 +7247,7 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
          return surveyTemplate;
 
       case EPromptPersona.kCodeSummariser:
-         let codeTemplate = CodeSummariserPersona;
+         const codeTemplate = CodeSummariserPersona;
          codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
          + wordString  +
          " words or less, to help explain the code it to new developers. Please summarise the following code in "
@@ -7466,7 +7259,7 @@ export function getSummariser (persona: EPromptPersona, wordTarget: number, text
       case EPromptPersona.kArticleSummariser:
       default:
 
-         let articleTemplate = ArticleSummariserPersona; 
+         const articleTemplate = ArticleSummariserPersona; 
          
          articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
          + wordString  +
@@ -7539,14 +7332,14 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
    const queryAsObject = Object.fromEntries(request.query.entries());
    const stringifiedQuery = JSON.stringify(queryAsObject);
 
-   let environment = getDefaultEnvironment();
+   const environment = getDefaultEnvironment();
 
    // https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin%2Fcontext&tabs=HTTPS1
-   var clientID = process.env.LinkedInAppId;
-   var redirectUrl = environment.authFromLinkedInApi();
-   var scope = 'openid profile email';
-   var state = stringifiedQuery;
-   var redirect = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="
+   const clientID = process.env.LinkedInAppId;
+   const redirectUrl = environment.authFromLinkedInApi();
+   const scope = 'openid profile email';
+   const state = stringifiedQuery;
+   const redirect = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="
       + clientID + "&redirect_uri=" + redirectUrl + "&scope=" + scope + "&state=" + state;
 
    return {
@@ -7570,7 +7363,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
  */
 async function redirectBackHomeWithFullPath(code: string, session: string, conversation: string, secret: string, context: InvocationContext) {
 
-   let environment = getDefaultEnvironment();
+   const environment = getDefaultEnvironment();
 
    try {
 
@@ -7587,7 +7380,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
       // client_secret	string	The Secret Key value generated in Step 1. See the Best Practices Guide for ways to keep your client_secret value secure.	Yes
       // redirect_uri	url	The same redirect_uri value that you passed in the previous step.	Yes
 
-      var data = {
+      const data = {
          grant_type: 'authorization_code',
          code: code,
          client_id: process.env.LinkedInAppId,
@@ -7597,7 +7390,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
 
       const accessRes = await axios.post('https://www.linkedin.com/oauth/v2/accessToken', QueryString.stringify(data), accessConfig);
 
-      var access_token = accessRes.data.access_token;
+      const access_token = accessRes.data.access_token;
 
       const profileConfig = {
          headers: {
@@ -7608,7 +7401,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
 
       const profileRes = await axios.get(' https://api.linkedin.com/v2/userinfo', profileConfig);
 
-      var redirect = environment.boxerHome() + "#&session=" + session +
+      const redirect = environment.boxerHome() + "#&session=" + session +
          "&conversation=" + encodeURIComponent(conversation) +
          "&email=" + encodeURIComponent(profileRes.data.email) +
          "&name=" + encodeURIComponent(profileRes.data.name) +
@@ -7701,8 +7494,8 @@ import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
 
-let model = getDefaultModel();
-let minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
+const model = getDefaultModel();
+const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
 
 /**
  * Asynchronously sends an enriched query to a model for processing and returns an enriched response.
@@ -7721,16 +7514,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       }
    });
 
-   let systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   let questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
-   let enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
+   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
+   const enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
 
    let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt = fullPrompt.concat(query.history);
    fullPrompt.push(questionElement);
 
-   let directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: fullPrompt,
    },
       {
@@ -7746,7 +7539,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
    enrichmentPrompt = enrichmentPrompt.concat(query.history);
    enrichmentPrompt.push(enrichedElement);
 
-   let enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: enrichmentPrompt,
    },
       {
@@ -7759,16 +7552,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
 
    const [directResponse, enrichedResponse] = await Promise.all ([directPromise, enrichmentPromise]);
 
-   let answer = (directResponse.data.choices[0].message.content);
-   let imagined = (enrichedResponse.data.choices[0].message.content);
+   const answer = (directResponse.data.choices[0].message.content);
+   const imagined = (enrichedResponse.data.choices[0].message.content);
 
-   let tokens = model.estimateTokens (imagined);
+   const tokens = model.estimateTokens (imagined);
    let chunks = new Array<IRelevantEnrichedChunk>();
 
    if (tokens >= minimumEnrichmentTokens) {
-      let repository = getEnrichedChunkRepository(query.repositoryId);
+      const repository = getEnrichedChunkRepository(query.repositoryId);
 
-      let spec = {
+      const spec = {
          repositoryId: query.repositoryId,
          summary: imagined,
          maxCount: query.maxCount,
@@ -7778,7 +7571,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       chunks = await repository.lookupRelevantFromSummary (spec);
    }
 
-   let queryResponse: IEnrichedResponse = {
+   const queryResponse: IEnrichedResponse = {
       answer: answer,
       chunks: chunks
    }
@@ -7794,16 +7587,16 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
  */
 export async function queryModelWithEnrichment(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let jsonRequest = await request.json();
+   const jsonRequest = await request.json();
 
    if (isSessionValid(request, context)) {
 
       try {
-         let query = (jsonRequest as any)?.data as IEnrichedQuery;
+         const query = (jsonRequest as any)?.data as IEnrichedQuery;
 
          context.log (query);
-         let response = await askModel(query);
-         let responseText = JSON.stringify(response);
+         const response = await askModel(query);
+         const responseText = JSON.stringify(response);
          context.log (responseText);
 
          return {
@@ -7826,251 +7619,6 @@ app.http('QueryModelWithEnrichment', {
    authLevel: 'anonymous',
    handler: queryModelWithEnrichment
 });
-****************************************
-
-****************************************
-Api\src\functions\ReadMe.Salon.md
-****************************************
-**AzureStorableApi.ts**
-
-Asynchronous functions validate session keys from HTTP requests to determine the validity of the session. Based on the session validity, these functions perform CRUD operations on a storables (records) in a database. 
-
-Function `findStorableApi` tries to find a specific storable based on the request parameters and session validity, returning the result if found.
-Function `getStorableApi` and `getStorableApiFromQuery` are used to retrieve a storable object, the latter without session validation.
-Function `saveStorableApi` saves a storable record if the session is valid.
-Function `removeStorableApi` deletes a storable record, again based on session validity.
-Function `getRecentStorablesApi` retrieves recent storables, applying optional transformations to the retrieved data. 
-
-Logs are generated throughout for debugging and error handling. Each function responds with appropriate HTTP status codes and messages based on operation outcomes.
-
-**CheckSession.ts**
-
-This code is an Azure Function that validates session keys provided in HTTP request query parameters. If the session key matches the expected values stored in environment variables, it logs a success message and returns a 200 status with the session key in the response body. If the session key does not match, it logs a failure message and returns a 401 status with an authorization failure message.
-
-**Chunk.ts**
-
-This code defines an Azure Function for chunking text based on specified chunk size and overlap words. The function validates session keys, processes the input text, and returns the text divided into chunks.
-
-The 'chunkText' function handles the actual splitting of the text.
-
-The 'chunk' function handles HTTP requests, checks session validity, processes the input JSON, and returns the response with the chunks or an error message.
-
-The HTTP endpoint 'Chunk' supports both GET and POST methods and is configured to execute the 'chunk' function.
-
-**Classify.ts**
-
-This text contains a script for handling classification of text into predefined subject areas using an AI assistant.
-
-It includes a function to decode the initial classification string into a human-readable format.
-
-The `singleShotClassify` function makes use of the OpenAI API to classify text into one of the predefined subjects, with a retry mechanism in case of rate limits.
-
-The `classify` function processes HTTP requests to classify text based on the provided session key and text content, returning the classification result or an error message.
-
-The script is designed to be deployed as an Azure Function and handles both GET and POST requests.
-
-**CosmosRepositoryApi.ts**
-
-The provided code includes several functions to generate authorization tokens and create HTTP headers for requests to Cosmos DB. 
-
-One function is `getAuthorizationTokenUsingMasterKey`, which generates an authorization token using a master key, HTTP verb, resource type, resource ID, and date. 
-
-`storableToken` uses the primary token generation method to create a token for authorization involving HTTP verbs, timestamps, and paths.
-
-`makeStorableDeleteToken` constructs a delete activity token, while `makeStorablePostToken` creates a post activity token. 
-
-`makePostHeader`, `makeDeleteHeader`, and `makePostQueryHeader` are functions to create respective headers for POST, DELETE, and query requests including authorization and necessary metadata.
-
-**CosmosStorableApi.ts**
-
-A suite of functions for handling data storage and retrieval operations in a Cosmos database.
-
-These functions include `findStorable`, `loadStorable`, `saveStorable`, `removeStorable`, `loadRecentStorables`, and `loadStorables`. They each manage different aspects of manipulating data within the database and integrate logging for debugging and operational transparency.
-
-Various interfaces and classes are defined to aid in these operations, such as `ICosmosStorableParams`, `ILoggingContext`, `AzureLogger`, and `ConsoleLogger`. These ensure structured data management and categorized logging.
-
-Helper functions and types are imported or defined, enhancing the functionality of these storage operations.
-
-**Embed.ts**
-
-The provided code defines an Azure function for embedding text using Azure AI services.
-
-If the session is valid, the embed function processes HTTP requests to embed text data.
-
-It checks the text length and summarizes it if it's too large for the model's context window.
-
-The function then calculates the text embedding with retries if rate-limited, using the calculateEmbedding function.
-
-The function returns an HTTP response with the embedding or an error message in case of invalid sessions or errors in processing.
-
-**EnrichedChunkRepository.ts**
-
-The code builds a class `EnrichedChunkRepositoryInMemory` to manage enriched content chunks and perform similarity lookups. It includes functions to compare URLs for source similarity (e.g., YouTube video IDs, GitHub repository paths) and to replace current chunks with more relevant ones based on similarity scores. 
-
-`lookupRelevantFromSummary` and `lookupRelevantFromUrl` are asynchronous functions that find relevant chunks based on summaries or URLs. These functions filter and sort relevant chunks by calculating cosine similarity between embeddings. `lookupFromUrl` returns an enriched chunk summary if it matches a specified URL.
-
-**EnrichedChunkRepositoryDb.ts**
-
-EnrichedChunkRepositoryDb is a class implementing the IEnrichedChunkRepository interface. It initializes an in-memory repository of enriched chunks and manages the asynchronous loading of chunk data from a database. The class provides methods to search for relevant enriched chunks based on a summary or URL and retrieve an enriched chunk summary by URL.
-
-The constructor initializes the in-memory repository and sets up a semaphore for asynchronous data loading. Errors during loading are logged and handled to ensure stability.
-
-**EnrichedChunkRepositoryFactory.ts**
-
-The provided code defines a function `getEnrichedChunkRepository` to return an instance of `IEnrichedChunkRepository` based on the type specified in the `EChunkRepository` enum. 
-
-If the repository type is 'kWaterfall' or 'kBoxer' (or any other value), it returns a singleton instance of `EnrichedChunkRepositoryDb`. 
-
-Singleton pattern is used to ensure that only one instance of each repository type is created due to the potential expense of creating repositories.
-
-**EnumerateModels.ts**
-
-An asynchronous function, `enumerateModels`, is designed to send details of installed models to ensure Python code consistency with Typescript. It retrieves the model details if the session is valid, extracting and logging the JSON request, then filling the response with model details. It handles errors by logging them and returning a default error response when necessary. Additionally, the `enumerateModels` function is set up to handle both GET and POST HTTP methods with anonymous authentication in the Azure function app.
-
-**EnumerateRepositories.ts**
-
-The asynchronous function `enumerateRepositories` processes HTTP requests to return details of installed repositories. It first validates the session; if valid, it attempts to parse the request and respond with repository details, specifically the repository IDs `kBoxer` and `kWaterfall`. If any errors occur during processing, an error message is logged and a default error response is returned. If session validation fails, a session failure response is generated. The function is configured to handle HTTP GET and POST requests without requiring authentication.
-
-**FindEnrichedChunks.ts**
-
-The code defines three asynchronous functions: `FindRelevantEnrichedChunksFromSummary`, `FindRelevantEnrichedChunksFromUrl`, and `FindEnrichedChunkFromUrl`. 
-
-Each function handles HTTP requests by first validating the session. If the session is valid, they attempt to parse the request, interact with an enriched chunk repository to retrieve relevant data, and return the data with a 200 status. If any error occurs, a default error response is returned. 
-
-These functions are then connected to specific HTTP endpoints using the Azure Functions framework, allowing them to handle 'GET' and 'POST' requests anonymously.
-
-**FindTheme.ts**
-
-An asynchronous function, `findThemeCall`, analyzes paragraphs of text to identify a common theme by making a POST request to an Azure endpoint, which utilizes axios for HTTP requests and retries up to 5 times in case of rate limit errors.
-
-The `findTheme` function processes HTTP requests to extract and validate text and session keys, logs the provided information, and calls `findThemeCall` to get the theme. It returns an HTTP response with the theme summary or an error message if the session validation fails or the text/length criteria are not met.
-
-The `findTheme` function is configured to handle HTTP GET and POST methods with anonymous authentication.
-
-**GenerateFluidToken.ts**
-
-The script defines the `generateFluidToken` function, which generates a token for Azure Fluid Relay service. It checks if the session is valid and verifies the required `tenantId` and `key`. It processes the incoming request to obtain `documentId`, `userId`, and `userName` from the `fluidRequest`. It then generates a token using these details and returns it. In case of errors, appropriate error messages are logged and an error response is returned. The function is set up to handle both 'GET' and 'POST' HTTP methods and requires no authentication.
-
-**GenerateQuestion.ts**
-
-The function `askModel` is designed to generate a question based on a given query. It sets up a system prompt and user question prompts, then calls an Azure OpenAI API with retries enabled for rate limits or network issues. The function processes the response to extract the generated question.
-
-The export `generateQuestion` function handles HTTP requests, verifies session validity, processes the request to extract the query, logs the query, calls `askModel`, logs the response, and returns it. If an error occurs, it returns a default error response. 
-
-The HTTP endpoint "GenerateQuestion" is configured to accept 'GET' and 'POST' requests.
-
-**IEnrichedChunkRepository.ts**
-
-The text is about an interface named `IEnrichedChunkRepository`, which contains methods for looking up relevant chunks based on summary specifications or URLs. It includes:
-
-- `lookupRelevantFromSummary`: finds similar content based on a given summary.
-- `lookupRelevantFromUrl`: finds similar content from other sources using a URL.
-- `lookupFromUrl`: retrieves a whole chunk of content given its URL.
-
-Default values for search parameters are provided, including `kDefaultSearchChunkCount` (2) and a minimum cosine similarity threshold of 0.5.
-
-**IPromptPersonaFactory.ts**
-
-Braid Technologies Ltd has developed three distinct AI summarizer personas: the Article Summariser, the Code Summariser, and the Survey Summariser.
-
-Each summarizer is tailored to a specific type of content. The Survey Summariser focuses on summarizing survey responses for a management team, maintaining a positive tone. The Code Summariser helps explain code to new developers by listing important classes or functions. The Article Summariser condenses the main body of texts, excluding navigational or script-related content, and can translate the text to English if necessary. 
-
-The suitable summarizer type is selected based on the provided persona and required word limit.
-
-**LoginWithLinkedIn.ts**
-
-The code handles LinkedIn authentication via an Azure Function.
-
-The `LoginWithLinkedIn` function checks if the session key in the request matches the environment variables and redirects to LinkedIn for authentication using the Authorization Code Flow if valid, otherwise it returns an unauthorized response.
-
-The `redirectToLinkedIn` function constructs the LinkedIn authorization URL including necessary parameters and redirects the user.
-
-The `redirectBackHomeWithFullPath` function exchanges the authorization code for an access token, fetches user info from LinkedIn, and redirects the user back to the home page with user details.
-
-The `processAuthFromLinkedIn` function processes the LinkedIn authentication, validates session and authorization code, and redirects the user with their details.
-
-**QueryModelWithEnrichment.ts**
-
-The code defines an Azure function to handle and process enriched queries using the OpenAI model. It retries failed API requests up to five times in case of rate limits or network errors.
-
-The main function, `askModel`, sends enriched query data to the OpenAI model and retrieves responses: one directly from the model and one from an enrichment process. Depending on the content of the responses, it queries a repository for relevant data chunks and returns the results.
-
-The `queryModelWithEnrichment` function validates incoming HTTP requests, logs query details, invokes the `askModel` function, and returns a structured response. The Azure Function is exposed via HTTP with GET and POST methods.
-
-
-
-**StorableActivity.ts**
-
-The code snippet provided is for Azure Functions dealing with activities related to the Braid-Api.
-
-The `getActivity` function handles HTTP POST requests to retrieve activity records. It validates a session key, processes the request, and returns an appropriate HTTP response.
-
-The `saveActivity` function processes HTTP POST requests to save activity records. It also involves session key validation, JSON request processing, and saving the activity. 
-
-The `removeActivity` function manages HTTP POST requests to delete activity records with relevant context handling.
-
-The `getRecentActivities` function supports GET and POST requests to fetch recent activity records, ensuring they are processed and returned in the response.
-
-**StorableChunk.ts**
-
-This script sets up an Azure Function App to handle various chunk-related HTTP requests. 
-
-It defines several handlers for endpoints, including:
-- **GetChunk**: Loads a Chunk based on the provided request and context, validating the session key.
-- **FindChunk**: Similar to GetChunk, searches for a Chunk record.
-- **SaveChunk**: Saves a Chunk and validates the session key in the request.
-- **RemoveChunk**: Removes a specified Chunk asynchronously.
-- **GetChunks**: Retrieves recent chunks asynchronously based on the provided request and context.
-
-Each handler processes the request, validates the session key, logs status, and returns an HTTP response with a status code and message.
-
-**StorablePage.ts**
-
-Two main functions are presented:
-
-The `getPage` function loads a Page record based on the provided request and context. It validates the session key, processes the JSON request, decomposes HTML if present, and returns an HTTP response with the HTML content.
-
-The `savePage` function saves a Page record based on the request and context. It validates the session key, processes the JSON request, and returns an HTTP response with the status and session key or an error message.
-
-Both functions verify session key validity, log validation status, and handle JSON requests.
-
-**StudioForTeams.ts**
-
-Handling a boxer query request involves first extracting the question from the HTTP request. If a question is found, it will be processed to create an enriched query format compatible with the Boxer app, which includes items like repositoryId, similarityThreshold, and personaPrompt.
-
-The question is passed to a model for processing, which generates a response with enrichments. These enrichments are transformed into a format suitable for the response, including an answer and additional links with summarized content.
-
-If no question parameter is found, or if there's an error during processing, appropriate error responses are returned.
-
-**Summarize.ts**
-
-This document details an Azure function for summarizing text using AI.
-
-Chunks of text are separated for efficient processing, ensuring optimal summarization by splitting into manageable parts.
-
-The singleShotSummarize function handles retries and sends requests to Azure OpenAI for generating summaries.
-
-The recursiveSummarize function oversees recursive summarization, where long text gets divided and summarized iteratively.
-
-The summarize function verifies session validity and processes HTTP requests to summarize input text, generating and returning a summary if valid inputs are provided.
-
-Necessary error handling and session validation mechanisms are also included.
-
-**TestForSummariseFail.ts**
-
-An asynchronous function analyzes text for a common theme using a POST request to an Azure endpoint, employing `axios` for HTTP requests and retrying up to five times in case of errors.
-
-It verifies the session key and returns an HTTP response with a theme summary or error message. If the text fails certain criteria or is too short, it returns a fail summary. If valid, it calls the analysis function, processes the response, and formats it before returning.
-
-The app has HTTP routes that handle GET and POST methods at the endpoint 'TestForSummariseFail' with anonymous authentication.
-
-**Utility.ts**
-
-This code defines functions for managing HTTP responses in an Azure Function application. 
-
-One function, `isSessionValid`, checks if a session is valid based on session keys stored in environment variables. If valid, it logs a success message; otherwise, it logs a failure.
-
-Other functions generate different types of HTTP responses: `sessionFailResponse` returns a 401 status for unauthorized requests, `defaultOkResponse` returns a 200 status for successful requests, `defaultErrorResponse` returns a 500 status for server errors, `invalidRequestResponse` returns a 400 status for invalid requests, and `notFoundResponse` returns a 404 status for not found errors.
 ****************************************
 
 ****************************************
@@ -8293,7 +7841,7 @@ import { decompressString } from "../../../CommonTs/src/Compress";
 // A transformer function that can be applied to a storable to transform it to decompress the html field
 function decompressHtml (storable: IStorable) : IStorable {
 
-   let storedPage: IStoredPage = storable as IStoredPage;
+   const storedPage: IStoredPage = storable as IStoredPage;
 
    if (storedPage.html)
       storedPage.html = decompressString (storedPage.html);
@@ -8304,7 +7852,7 @@ function decompressHtml (storable: IStorable) : IStorable {
 // A transformer function that can be applied to a storable to transform it to send the html field as the HTTP response
 function sendHtml (storable: IStorable) : HttpResponseInit {
 
-   let storedPage: IStoredPage = storable as IStoredPage;
+   const storedPage: IStoredPage = storable as IStoredPage;
 
    return {
       status: 200,
@@ -8377,7 +7925,7 @@ import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
 
 function makeIconPath (url: string) : string {
    // https://dev.to/derlin/get-favicons-from-any-website-using-a-hidden-google-api-3p1e
-   var urlParts = new URL(url);
+   const urlParts = new URL(url);
    return 'https://www.google.com/s2/favicons?domain=' + urlParts.hostname + '&sz=32';
 }
 
@@ -8398,7 +7946,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          context.log(question);
 
          // Translate from the simple MSTeams API to the one we use in Boxer app allowing more enrichments
-         let passOnSpec: IEnrichedQuery = {
+         const passOnSpec: IEnrichedQuery = {
 
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,
@@ -8410,12 +7958,12 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          }
 
          // Call common function - common the Boxer back end and to Teams API
-         let passedResponse = await askModel (passOnSpec);
+         const passedResponse = await askModel (passOnSpec);
       
          // Translate back from the enriched Boxer app format to simpler MSTeams API 
-         let enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
+         const enrichments: Array<IStudioBoxerResponseEnrichment> = new Array<IStudioBoxerResponseEnrichment> ();
 
-         let answer: IStudioBoxerResponseEnrichment = { 
+         const answer: IStudioBoxerResponseEnrichment = { 
             id: "1",
             url: "",
             summary: passedResponse.answer,
@@ -8425,7 +7973,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          enrichments.push(answer);      
 
          for (let i = 0; i < passedResponse.chunks.length; i++) {
-            let enrichment: IStudioBoxerResponseEnrichment = { 
+            const enrichment: IStudioBoxerResponseEnrichment = { 
                id: (i+2).toString(),
                url:  passedResponse.chunks[i].chunk.url,
                summary: passedResponse.chunks[i].chunk.summary,
@@ -8481,8 +8029,8 @@ import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/Sum
 import { getSummariser } from "./IPromptPersonaFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
-let minimumTextLength = 64;
-let model = getDefaultModel();
+const minimumTextLength = 64;
+const model = getDefaultModel();
 
 /**
  * Splits the input text into chunks of maximum size defined by the model
@@ -8493,7 +8041,7 @@ let model = getDefaultModel();
  */
 function chunkText(text: string, overlapWords: number): Array<string> {
 
-   let chunks = model.chunkText(text, undefined, overlapWords);
+   const chunks = model.chunkText(text, undefined, overlapWords);
 
    return chunks;
 }
@@ -8517,14 +8065,14 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
       }
    });
 
-   let summariser = getSummariser(persona, words, text);
+   const summariser = getSummariser(persona, words, text);
 
-   let systemPrompt = summariser.systemPrompt;
-   let userPrompt = summariser.itemPrompt;
+   const systemPrompt = summariser.systemPrompt;
+   const userPrompt = summariser.itemPrompt;
 
    console.log(systemPrompt)
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -8559,28 +8107,28 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
 export async function recursiveSummarize(persona: EPromptPersona, text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
-   let chunks = chunkText(text, 0);
-   let summaries = new Array<string>();
+   const chunks = chunkText(text, 0);
+   const summaries = new Array<string>();
 
-   let recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
+   const recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
    if (chunks.length > 1) {
       // If the text was > threshold, we break it into chunks.
       // Here we look over each chunk to generate a summary for each
-      for (var i = 0; i < chunks.length; i++) {
+      for (let i = 0; i < chunks.length; i++) {
 
-         let summary = await singleShotSummarize(persona, chunks[i], recursizeSummarySize);
+         const summary = await singleShotSummarize(persona, chunks[i], recursizeSummarySize);
          summaries.push(summary);
       }
    }
    else {
-      let summary = await singleShotSummarize(persona, chunks[0], words);
+      const summary = await singleShotSummarize(persona, chunks[0], words);
       summaries.push(summary);
    }
 
    // If we made multiple summaries, we join them all up 
    if (chunks.length > 1) {
-      let joinedSummaries = summaries.join(" ");
+      const joinedSummaries = summaries.join(" ");
       overallSummary = await recursiveSummarize(persona, joinedSummaries, level + 1, words);
    }
    else {
@@ -8606,20 +8154,20 @@ export async function summarize(request: HttpRequest, context: InvocationContext
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ISummariseRequest;
+         const summariseSpec = (jsonRequest as any).request as ISummariseRequest;
 
          text = summariseSpec.text;
          words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
-         let persona = summariseSpec.persona;
+         const persona = summariseSpec.persona;
 
          if (text && text.length >= minimumTextLength && words > 0) {
-            let definitelyText: string = text;
+            const definitelyText: string = text;
             overallSummary = await recursiveSummarize(persona, definitelyText, 0, words);
 
-            let summariseResponse: ISummariseResponse = {
+            const summariseResponse: ISummariseResponse = {
                summary: overallSummary
             }
 
@@ -8668,7 +8216,7 @@ import axiosRetry from 'axios-retry';
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
 import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../../CommonTs/src/TestForSummariseFailApi.Types";
 
-let minimumTextLength = 64;
+const minimumTextLength = 64;
 
 /**
  * Asynchronous function to find a common theme from a number of paragraphs of text.
@@ -8689,7 +8237,7 @@ async function testForSummariseFailCall(text: string, length: number): Promise<E
       }
    });
 
-   let response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
       messages: [
          {
             role: 'system',
@@ -8730,10 +8278,10 @@ export async function testForSummariseFail(request: HttpRequest, context: Invoca
    if (isSessionValid(request, context)) {
 
       try {
-         let jsonRequest = await request.json();
+         const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         let summariseSpec = (jsonRequest as any).request as ITestForSummariseFailRequest;   
+         const summariseSpec = (jsonRequest as any).request as ITestForSummariseFailRequest;   
          text = summariseSpec.text;
          length = summariseSpec.lengthInWords;
 
@@ -8742,12 +8290,12 @@ export async function testForSummariseFail(request: HttpRequest, context: Invoca
          }
          else {
 
-            let definitelyText: string = text;
-            let definitelyLength: number = length ? length : defaultLength;
+            const definitelyText: string = text;
+            const definitelyLength: number = length ? length : defaultLength;
             overallSummary = await testForSummariseFailCall(definitelyText, definitelyLength);
          }
 
-         let summariseResponse : ITestForSummariseFailResponse = {
+         const summariseResponse : ITestForSummariseFailResponse = {
             isValidSummary: overallSummary
          }
 
@@ -8865,28 +8413,6 @@ export function notFoundResponse(): HttpResponseInit {
       body: ""
    };
 }
-****************************************
-
-****************************************
-ApiTest\.pytest_cache\CACHEDIR.TAG
-****************************************
-Signature: 8a477f597d28d172789f06886806bc55
-# This file is a cache directory tag created by pytest.
-# For information about cache directory tags, see:
-#	https://bford.info/cachedir/spec.html
-****************************************
-
-****************************************
-ApiTest\.pytest_cache\README.md
-****************************************
-# pytest cache directory #
-
-This directory contains data from the pytest's cache plugin,
-which provides the `--lf` and `--ff` options, as well as the `cache` fixture.
-
-**Do not** commit this to version control.
-
-See [the docs](https://docs.pytest.org/en/stable/how-to/cache.html) for more information.
 ****************************************
 
 ****************************************
@@ -9363,6 +8889,18 @@ if __name__ == "__main__":
 ****************************************
 ApiTest\test\page_repository_test.py
 ****************************************
+"""
+Integration tests for the Page Repository API endpoints.
+
+This module contains test cases for the /getpage endpoint, verifying:
+- Successful page retrieval with valid parameters
+- Error handling for missing parameters
+- API authentication using session keys
+
+The tests require a running local API instance on port 7071 and
+a valid session key in the environment variables.
+"""
+
 import pytest
 import requests
 import os
@@ -9391,103 +8929,6 @@ def test_get_page_missing_param():
     # Missing required 'id' parameter
     response = requests.get(url, timeout=request_timeout)
     assert response.status_code == 404
-****************************************
-
-****************************************
-ApiTest\test\ReadMe.Salon.md
-****************************************
-**chunk_test.py**
-
-This module tests the text chunking API endpoint, covering various scenarios like valid requests with specified size and overlap, invalid requests with missing parameters, and edge cases with very small or large chunk sizes. 
-
-Tests verify the /chunk endpoint's functionality and response format. 
-
-Environment Variable "SessionKey" is required for API access. 
-
-A fixture provides example test data for the chunk request. 
-
-The test function sends a POST request to the chunk endpoint and checks that the response status code is 200 and that the response JSON contains expected keys like "chunks" with a valid length.
-
-**classify_test.py**
-
-This module contains test cases for the /classify API endpoint.
-
-It includes tests for successful classification requests with valid data, error handling for invalid classification requests, and validation of response format and content.
-
-Tests require a valid session key and a running API server.
-
-The `test_classification_request` function checks successful requests.
-
-The `test_invalid_classification_request` function tests the API's response to various invalid data scenarios.
-
-Both tests use the `requests` library to send POST requests to the API and validate the responses.
-
-**embed_test.py**
-
-This module includes test cases to verify the functionality of the embedding API endpoint. The tests validate both valid and invalid request scenarios, ensuring proper response structures and error handling.
-
-In the `test_embedding_request_structure`, a valid request payload is defined, and upon sending, the response should have a status code of 200. It checks if the resulting embedding is a list of numeric elements.
-
-The `test_invalid_request_structure` defines an invalid request and expects a 400 status code, indicating proper handling of malformed requests.
-
-**enumerate_models_test.py**
-
-This module tests the `enumerate_models` API endpoint. 
-
-It validates:
-- Request and response schemas (`IEnumerateModelsRequest`, `IEnumerateModelsResponse`).
-- API functionality for handling requests and responses.
-- Error handling for invalid responses.
-
-Tests include:
-- Valid and missing fields in the `IEnumerateModelsResponse` object.
-- Checking for additional disallowed fields in the response.
-- Actual request handling by sending a request to the API and validating the response.
-
-The tests use `pytest` and `jsonschema` for validation.
-
-**enumerate_repositories_test.py**
-
-This module tests the EnumerateRepositories API endpoint, which returns a list of repository IDs. The tests include schema validation and HTTP response testing. 
-
-The necessary environment variable, SessionKey, must be set. The base URL for the API is configured, and schema definitions for request and response are provided.
-
-A helper function validates responses against the schema. The main test function (test_enumerate_repositories) sends a request to the API endpoint, checks for a 200 OK status, and validates the response's structure.
-
-To run the tests, execute `pytest.main()`.
-
-**find_theme_test.py**
-
-This module tests the /findtheme API endpoint to verify its functionality and ensure it handles both valid and invalid requests. Test cases include validating request parameters and ensuring appropriate response formats.
-
-- The /findtheme endpoint analyzes text to identify themes.
-- One test confirms valid requests return a status code of 200 and include a "theme" in the response.
-- Another test ensures a request missing the "text" field returns a status code of 400.
-- A further test checks that a missing "length" field also yields a status code of 400.
-
-**page_repository_test.py**
-
-The provided script is for testing an API endpoint using pytest. 
-
-The base URL for the API is configured, and the session key is retrieved from the environment variable 'SESSION_KEY'.
-
-The script defines two tests: 
-1. `test_get_page_success` confirms that a request to the `/getpage` endpoint with a valid 'id' parameter returns a 200 status code.
-2. `test_get_page_missing_param` checks that a request without the required 'id' parameter returns a 404 status code.
-
-**studio_test.py**
-
-The provided code is a test module for the Studio Boxer API endpoints. It includes test cases and helper functions to validate various aspects of the API such as response schema validation, enrichment structure validation, and error handling for invalid requests. 
-
-The module uses pytest, requests, and jsonschema as dependencies. It defines helper functions to validate responses against schema definitions and to check the structure of API responses and enrichment data. The module also includes tests for valid and invalid API requests, ensuring proper error handling and response structure compliance.
-
-**summarise_test.py**
-
-The provided module tests a text summarization API endpoint under various scenarios including valid requests with and without specified lengths, and invalid or empty requests. Each test constructs a payload, sends a request, and verifies the response status and presence of a 'summary' field in the response.
-
-The module includes functions to generate the endpoint URL and read the current source code. It addresses specific summarization personas like 'SurveySummariser' and 'CodeSummariser' and ensures proper error handling for invalid scenarios such as missing text and empty requests.
-
-Test cases validate the API's functionality, ensuring it handles different inputs correctly.
 ****************************************
 
 ****************************************
@@ -9609,22 +9050,34 @@ if __name__ == '__main__':
 ****************************************
 ApiTest\test\summarise_test.py
 ****************************************
-'''
-The module tests the text summarization API endpoint for various scenarios, including
-valid requests with and without specified lengths, requests with missing text, and
-empty requests.
+"""
+Test module for the text summarization API endpoint.
 
-Each test case constructs a payload and sends a request to the summarization
-endpoint, then verifies the response status and the presence of a 'summary' field
-in the response.
+This module contains integration tests for the summarization functionality,
+covering various use cases and scenarios including:
 
-The module includes functions for generating the summarization endpoint URL and
-reading the current source code for a summarization request.
+- Standard text summarization with specified length
+- Survey response summarization using specialized personas
+- Code summarization using specialized personas
+- Edge cases and error handling:
+  - Missing length parameter
+  - Missing text parameter
+  - Empty requests
+  - Invalid requests
 
-The source includes tests for specific summarization personas like
-'SurveySummariser' and 'CodeSummariser', and ensures proper error handling for
-invalid and empty requests.
-'''
+The tests verify both successful responses (200) and error conditions (400, 500),
+ensuring the API endpoint handles different input scenarios appropriately.
+
+Dependencies:
+    - pytest: Testing framework
+    - requests: HTTP client for API calls
+    - pathlib: File path handling
+    - os: Environment variable access
+
+Environment Variables:
+    - SessionKey: Required for API authentication
+    - BASE_URL: API endpoint (defaults to http://localhost:7071/api)
+"""
 
 import os
 import pathlib
@@ -9779,61 +9232,6 @@ def get_current_source():
 
 if __name__ == '__main__':
     pytest.main()
-****************************************
-
-****************************************
-ApiTest\.pytest_cache\v\cache\lastfailed
-****************************************
-{
-  "test/summarise_test.py::test_valid_summarise_request": true,
-  "test/summarise_test.py::test_valid_summarise_survey_request": true,
-  "test/summarise_test.py::test_valid_summarise_code_request": true,
-  "test/summarise_test.py::test_summarise_request_without_length": true,
-  "test/summarise_test.py::test_summarise_request_missing_text": true,
-  "test/summarise_test.py::test_empty_summarise_request": true
-}
-****************************************
-
-****************************************
-ApiTest\.pytest_cache\v\cache\nodeids
-****************************************
-[
-  "test/chunk_test.py::test_chunk_endpoint",
-  "test/classify_test.py::test_classification_request",
-  "test/classify_test.py::test_invalid_classification_request[invalid_data0]",
-  "test/classify_test.py::test_invalid_classification_request[invalid_data1]",
-  "test/classify_test.py::test_invalid_classification_request[invalid_data2]",
-  "test/classify_test.py::test_invalid_classification_request[invalid_data3]",
-  "test/embed_test.py::test_embedding_request_structure",
-  "test/embed_test.py::test_invalid_request_structure",
-  "test/enumerate_models_test.py::test_enumerate_request",
-  "test/enumerate_models_test.py::test_ienumerate_models_request_valid",
-  "test/enumerate_models_test.py::test_ienumerate_models_response_additional_fields",
-  "test/enumerate_models_test.py::test_ienumerate_models_response_missing_fields",
-  "test/enumerate_models_test.py::test_ienumerate_models_response_valid",
-  "test/enumerate_repositories_test.py::test_enumerate_repositories",
-  "test/find_theme_test.py::test_find_theme_with_missing_length",
-  "test/find_theme_test.py::test_find_theme_with_missing_text",
-  "test/find_theme_test.py::test_find_theme_with_valid_request",
-  "test/page_repository_test.py::test_get_page_missing_param",
-  "test/page_repository_test.py::test_get_page_success",
-  "test/studio_test.py::test_IStudioBoxerResponseEnrichment_structure",
-  "test/studio_test.py::test_IStudioBoxerResponse_structure",
-  "test/studio_test.py::test_invalid_studio_request",
-  "test/studio_test.py::test_studio_boxer",
-  "test/summarise_test.py::test_empty_summarise_request",
-  "test/summarise_test.py::test_summarise_request_missing_text",
-  "test/summarise_test.py::test_summarise_request_without_length",
-  "test/summarise_test.py::test_valid_summarise_code_request",
-  "test/summarise_test.py::test_valid_summarise_request",
-  "test/summarise_test.py::test_valid_summarise_survey_request"
-]
-****************************************
-
-****************************************
-ApiTest\.pytest_cache\v\cache\stepwise
-****************************************
-[]
 ****************************************
 
 ****************************************
@@ -13294,339 +12692,6 @@ export class Queue<T> {
 ****************************************
 
 ****************************************
-Boxer\core\ReadMe.Salon.md
-****************************************
-**ActivityRecord.ts**
-
-The code defines various interfaces for different types of activity records used within an application. 
-
-The `IStoredActivity` interface signifies a general activity record. 
-
-The `IStoredUrlActivity` interface extends `IStoredActivity` and includes a URL tied to the activity. 
-
-The `IStoredLikeUrlActivity` interface further extends `IStoredUrlActivity` by including a 'like' flag indicating whether the URL was liked. 
-
-The `IStoredMessageActivity` interface extends `IStoredActivity` to include an activity message. 
-
-Additionally, the code provides a `makeDateUTC` function that adjusts a given date to Universal Time Coordinated (UTC) format by setting milliseconds to zero.
-
-**ActivityRepository.ts**
-
-The `ActivityRepositoryCosmos` class implements the `IActivityRepository` interface. It relies on a session key and uses the `ActivityRepositoryApi` for saving, loading, and removing activity records.
-
-The `save` method saves a given activity record.
-
-The `loadRecentUrlActivity` method loads recent URL-related activities such as clicks and likes.
-
-The `loadRecentMessages` method loads recent message activities.
-
-The `loadRecent` method loads a specified number of recent activities based on a class name.
-
-The `removeMessageRecord` method removes a message record based on its ID.
-
-These methods utilize the default environment settings.
-
-**AIConnection.ts**
-
-The `AIConnection` class from Braid Technologies Ltd facilitates AI interactions using Axios for web requests and includes various functions to enhance user queries and manage responses.
-
-The constructor initializes an AI connection with a session key and sets active calls count to zero.
-
-The `makeEnrichedCall` method performs an API call to enrich responses with relevant articles corresponding to the query.
-
-The `makeFollowUpCall` method generates follow-up questions to maintain context-based conversations.
-
-The `streamResponse` method simulates real-time responses by periodically updating chunks and text.
-
-The `buildEnrichmentQuery`, `buildQueryForQuestionPrompt`, and `buildTranscript` methods structure AI queries and compile conversation histories, maintaining a token limit for managing response size.
-
-The `isFromLLM`, `isRequestForLLM`, and `mightBeMissTypedRequestForLLM` methods identify LLM-generated messages and requests.
-
-**ApiCalls.ts**
-
-The code is a JavaScript function named `makeSummaryCall`, designed to create a summary of a given text by calling an API. It defines a URL using parameters from the environment and builds a request object with the text and desired summary length. It then sends a POST request to the API. If successful, it retrieves and returns the summary from the API response. If an error occurs, it logs the error using `logApiError`.
-
-**Asserts.ts**
-
-The provided JavaScript code includes two utility functions: `throwIfUndefined` and `throwIfNull`.
-
-`throwIfUndefined` checks if a given variable is undefined and throws an `AssertionFailedError` if it is.
-
-`throwIfNull` checks if a given variable is null and throws an `AssertionFailedError` if it is.
-
-**BoxerFluidConnection.ts**
-
-BraidFluidConnection is a derived class of FluidConnection designed to function with two local caucuses: one for participants and another for messages.
-
-The class constructor initializes objects for different types of caucuses and sets an interval to update these caucuses periodically.
-
-The setupLocalCaucuses function initializes different caucuses and sets periodic updates for local user information.
-
-The disconnectLocalCaucuses function clears the interval set for periodic updates.
-
-The resetMessages function removes all data from caucuses and resets them with initial values.
-
-The setInitialValues function ensures the local user and a bot persona are added to the participant caucus if they aren't already present. 
-
-The checkAddAddSelfToAudience function verifies or updates the local user's information in the participant caucus.
-
-**CaucusFramework.ts**
-
-The `CaucusOf` class is a notification framework that handles adding, updating, and removing elements in a shared map. It triggers three types of notifications for these actions: `caucusMemberAdded`, `caucusMemberChanged`, and `caucusMemberRemoved`.
-
-The class maintains a local cache, which it updates based on changes in the shared map. When elements are changed, it synchronizes the cache and triggers notifications for observers.
-
-It contains methods to manage elements, such as adding, removing, updating, and retrieving elements, as well as synchronizing from an external map. It supports a binary search for efficient element lookups based on a provided comparator function.
-
-**ConfigStrings.ts**
-
-This text defines various configuration constants for a software application. It includes categories for logging, font names, URLs, Azure configuration, and language model designations. 
-
-It also provides mappings for prompt replacements and markers for irrelevant or unknown responses. 
-
-Additional configurations include parameters for sessions, conversations, and other identifiers, as well as a list of admin usernames.
-
-The numerical settings cover delays, message guidelines, chat limits, and other limits related to user interaction and data handling. 
-
-Finally, there are stub environment variables intended for local development only, and instructions to avoid placing production secrets within this section.
-
-**Debounce.ts**
-
-The provided code defines a debounce function, which delays the execution of a given function (`fn_`) until after a specified period (`ms_`) has passed since the last time the debounced function was invoked. 
-
-Within the debounce function, a nested function `nested` is created to handle the timing logic, ensuring that if the timer is not null, it clears the existing timeout before setting a new one.
-
-The `debounce` function returns another function which, when called, will clear any existing timers and set a new timeout for the specified duration, ultimately executing the given function.
-
-**Embedding.ts**
-
-The JavaScript function `lookLikeSameSource` checks if two URLs appear to be from the same source. 
-
-For YouTube URLs, it compares the `v` parameter to see if they refer to the same video.
-
-For GitHub URLs, it compares the first two path parameters to determine if they refer to the same repository.
-
-For other web URLs, it compares the first path parameters to check for a match. 
-
-If the comparisons are true in any of these cases, the function returns true. Otherwise, it returns false.
-
-**EmbeddingFormats.ts**
-
-This code defines two data structures, `FullEmbedding` and `LiteEmbedding`, which store information including titles, descriptions, and URLs for various content types.
-
-It includes functions to generate URLs for YouTube, GitHub, and web pages. The `makeYouTubeUrlFromFullEmbedding`, `makeGithubUrlFromFullEmbedding`, and `makeHtmlUrlfromFullEmbedding` functions take a `FullEmbedding` object as input and return corresponding URLs for YouTube, GitHub, and generic web pages, respectively. These URLs are constructed using helper functions `makeYouTubeUrl`, `makeGithubUrl`, and `makeWebUrl`.
-
-**Errors.ts**
-
-This code defines a set of custom error classes in TypeScript, each extending the built-in `Error` class.
-
-Each custom error class includes a constructor that sets the error name and logs the error message using appropriate logging functions (`logCoreError` or `logApiError`). The classes include `InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError`.
-
-The constructors restore the prototype chain to ensure stack traces display correctly, and each error logs its specific type along with an optional message and cause.
-
-**FluidConnection.ts**
-
-This code defines an abstract class `FluidConnection` for handling connections to a remote data service using the Fluid Framework and Azure Client.
-
-- The `createNew` method sets up a new connection, creating a new container and attaching it to the service, returning a `ConversationKey`.
-- The `attachToExisting` method connects to an existing container using a given `ConversationKey`.
-- The `canDisconnect` and `isConnected` methods check the connection state of the container.
-- The `disconnect` method disconnects the container if it's connected.
-- `setupBeforeConnection` configures client properties necessary for establishing a connection.
-- `setupAfterConnection` sets up local caucuses after a connection is established.
-
-The code handles errors and maintains the state of connections appropriately.
-
-**IActivityRepository.ts**
-
-This code is part of Braid Technologies Ltd and defines an interface for an activity repository.
-
-The interface includes methods to save an activity record, load recent URL activities, load recent messages, and remove a message record.
-
-Each method returns a promise indicating whether the action was successful and retrieves the required data.
-
-**IActivityRepositoryFactory.ts**
-
-The code defines and exports a function `getRecordRepository` that takes a `SessionKey` object as an argument.
-
-This function returns an instance of `ActivityRepositoryCosmos`, which implements the `IActivityRepository` interface.
-
-**IAdminRepository.ts**
-
-The text outlines a code implementation defining an interface, `IAdminRepository`, with a method `isAdmin` that checks if a `Persona` is an admin.
-
-A class, `DefaultAdminRepository`, implements this interface by checking if the `Persona` name is included in a predefined admin username list, returning a boolean result in a promise.
-
-**Icons.ts**
-
-The code defines an enumeration (enum) named `EIcon` with five values: `kPersonPersona`, `kLLMPersona`, `kBotPersona` (for backwards compatibility), `kUnknownPersona`, and `kFromBcd`. This enum potentially identifies different types of personas represented by their respective string values.
-
-**IKeyGenerator.ts**
-
-The **IKeyGenerator** interface defines the structure for classes responsible for generating and handling unique keys and secrets. 
-
-It includes the following methods:
-- `generateKey()`: Generates and returns a unique key.
-- `generateSecret()`: Generates and returns a secret.
-- `couldBeAKey(key: string)`: Checks if a given string could be a valid key.
-- `saveSecret(secret: string)`: Saves a given secret.
-- `matchesSavedSecret(secret: string)`: Checks if a given secret matches the saved secret.
-- `haveSavedSecret()`: Indicates whether a secret has been saved.
-- `savedSecret()`: Retrieves the saved secret.
-
-**IKeyGeneratorFactory.ts**
-
-The code defines a function `getDefaultKeyGenerator`, which returns an instance of `UuidKeyGenerator`.
-
-This instance adheres to the `IKeyGenerator` interface, indicating that `UuidKeyGenerator` provides the required functionalities specified by `IKeyGenerator`.
-
-**JoinDetails.ts**
-
-The `JoinDetails` class facilitates the creation and handling of join details structured as 'email=xxx@yyy.com&session=guid&conversation=guid'. The email, session key, and conversation key are crucial identifiers and security elements, requiring validation. The class includes getters for its private members and a method `canAttemptJoin` to check if joining is permissible, considering the environment. It parses the input string to extract relevant details and supports conversion to and from strings.
-
-**JoinPageValidator.ts**
-
-The JoinPageValidator class is designed to manage and validate the details required to join a conversation. It includes methods to check if a provided name and keys are ready for joining, if a secret matches a stored secret, and to retrieve the stored secret. The class uses an imported key generator to perform these operations.
-
-**KeyRetriever.ts**
-
-The KeyRetriever class is designed to request a key from an API. It tracks the number of active calls using the `activeCallCount` variable. The `requestKey` method makes an HTTP GET request to retrieve a key, using Axios. If an error occurs during the request, it logs the error and throws a ConnectionError. The function assumes a local environment configuration is commented out. The `isBusy` method returns whether there are any active calls left.
-
-**Keys.ts**
-
-The provided code defines two classes, `SessionKey` and `ConversationKey`. 
-
-The `SessionKey` class creates a session key object, which acts as a type wrapper around a string and verifies whether a given string is a valid UUID through the `looksValidSessionKey` method. The `toString` method returns the session key string representation.
-
-Similarly, the `ConversationKey` class creates a conversation key object, a type wrapper around a string, and verifies if the string is a valid UUID using the `looksValidConversationKey` method. The `toString` method returns the conversation key string representation.
-
-**Like.ts**
-
-The Like class in TypeScript is designed to manage "like" objects, which include a name and a date. 
-
-The class supports multiple constructors: an empty constructor, a constructor with name and date parameters, and a copy constructor. 
-
-It includes methods to serialize the object to a JSON string (`streamOut()`) and to deserialize an object from a JSON string (`streamIn()`).
-
-There are getter and setter methods for both the name and date fields. 
-
-The `equals` method checks if two Like objects are equal by comparing their fields. 
-
-The `assign` method assigns one Like object's values to another.
-
-**Logging.ts**
-
-This code snippet provides a logging handling mechanism. It defines different logging levels such as ERROR, WARN, INFO, TRACE, and DEBUG, each with an associated function to display the message appropriately (using `console.error`, `console.warn`, and `console.log`).
-
-Logging is initialized with a configuration that sets the logging levels for the application and notifications to DEBUG.
-
-Four functions are provided to log errors and information: `logCoreError`, `logDbError`, `logApiError`, and `logApiInfo`, each taking a description and details, and using the logger to log the messages under specified categories from `EConfigStrings`.
-
-**Media.ts**
-
-The provided code defines a `Media` class in JavaScript.
-
-The constructor initializes an array of listeners and sets up a media query to detect when the display width is 1023 pixels or less, adding an event listener for changes in this media query.
-
-The `isSmallFormFactor` method returns `true` if the media query matches (indicating a mobile form factor), otherwise `false`.
-
-The `onMobileFormFactorChange` method notifies all registered listeners if the display transitions across the mobile form factor boundary.
-
-The `addMobileFormFactorChangeListener` method allows external functions to register as listeners for mobile form factor changes.
-
-**Message.ts**
-
-The `Message` class represents a text message, including properties such as IDs, the author, response ID, message text, timestamp, and relevant enriched chunks. It includes multiple constructors to handle different initialization scenarios, and various methods for streaming, token management, and checking properties.
-
-Streaming methods include `hookLiveAppend`, `unhookLiveAppend`, `liveUpdateText`, and `liveUpdateChunks`, which help manage live updating of message properties.
-
-The class also includes methods for serialization (`streamOut` and `streamIn`), equality checks (`equals`), and assignment (`assign`). The `isValidId` method checks for valid message IDs.
-
-**NotificationFramework.ts**
-
-The Interest class in TypeScript encapsulates a specific notification ID and includes constructors for creating interest objects from scratch, by copying, or with individual arguments. It includes methods to get the notification ID, test equality, and assign values.
-
-Notification class represents the base class for events, carrying references to Interest. It includes constructors for initialization, copying, and allows checking for equality.
-
-NotificationFor class extends Notification by including event data. It supports creating notifications with data, copying, and includes methods to retrieve event data, test equality, and assign values.
-
-ObserverInterest class combines an observer with an Interest object and includes methods for equality checking and assigning values.
-
-NotificationRouter and NotificationRouterFor classes act as intermediaries, connecting function signatures to notifications and implementing equality checks and assignment operator.
-
-Notifier class manages sending notifications to registered observers, adding observers, removing them, and clearing all observers.
-
-**Persona.ts**
-
-The Persona class represents an entity with fields such as ID, name, email, icon, thumbnail, and lastSeenAt timestamp. It can be serialized and deserialized for transmission.
-
-The class provides constructors to initialize instances in different ways: with no parameters, with specified parameters, or by copying another Persona object.
-
-It includes validation methods to ensure the correctness of the ID, name, email, and thumbnail fields.
-
-Setters and getters are available for accessing and modifying the private fields of the class.
-
-There are additional methods to check equality between Persona instances, assign values from another instance, and handle unknown Persona cases.
-
-**Queue.ts**
-
-The provided code defines a Queue class in TypeScript.
-
-The Queue class initializes with an empty queue and an offset of zero.
-
-The `getLength` method returns the number of items in the queue.
-
-The `isEmpty` method checks if the queue is empty and returns a boolean.
-
-The `enqueue` method adds an item to the end of the queue.
-
-The `dequeue` method removes and returns the item at the front of the queue, or `undefined` if the queue is empty.
-
-The `peek` method returns the item at the front of the queue without removing it, or `undefined` if the queue is empty.
-
-**SharedEmbedding.ts**
-
-The `SharedEmbedding` class in the provided code is a part of a serialization framework used to create, manage, and manipulate objects that store data about URLs, conversations, and like counts. 
-
-### Key Features
-- **Constructors**: It supports three different constructors, allowing initialization from either individual parameters, another `SharedEmbedding` object, or an empty state.
-- **Instance Methods**:
-  - `streamOut` and `streamIn`: Serialize and deserialize the object.
-  - `like` and `unlike`: Methods to add or remove likes.
-  - `isLikedBy`: Check if a specific user has liked.
-  - `equals` and `assign`: Compare or assign values from another instance of `SharedEmbedding`.
-- **Static Methods**: 
-  - `createDynamicInstance`: Used within dynamic streaming.
-  - `isValidId`: Validate the ID of an object.
-- **Utility Function**:
-  - `findInMap`: Search within a map for an object with a specified URL.
-
-**StreamingFramework.ts**
-
-MStreamable is an abstract class that allows derived types to stream to and from JSON. It requires implementation of `streamOut` and `streamIn` methods.
-
-MDynamicStreamable extends MStreamable and introduces the ability to stream with dynamic creation based on the class name stored in the stream. It adds a `dynamicClassName` method and a `flatten` method to serialize the object, and a static `resurrect` method to deserialize the object and recreate it.
-
-DynamicStreamableFactory is designed to create MDynamicStreamable instances based on a class name, using a linked list of factory methods to find the appropriate creator method based on the class name.
-
-**Utilities.ts**
-
-The code includes functions for comparing dates and arrays. 
-
-`areSameDate` checks if two date objects are either both undefined or represent the same moment in time.
-
-`areSameShallowArray` compares two arrays for equality by checking if they have the same length and identical elements at each index.
-
-`areSameDeepArray` compares two arrays by converting each element to a JSON string and comparing these strings, ensuring true deep equality.
-
-**UuidKeyGenerator.ts**
-
-The provided code defines a module for generating and managing UUIDs and secrets. The `UuidKeyGenerator` class implements the `IKeyGenerator` interface. It includes methods to generate a UUID key, generate a secure random state value encoded in base64, check if a string could be a key, and manage secrets by saving, matching, and checking saved secrets either in localStorage or a mock storage.
-
-A helper function `NumberToUint32Array` converts a number to a `Uint32Array`. The `generateUUID` function creates UUIDs based on the current time. The `uuid` function generates a new UUID, featuring browser environment-specific logic. The `looksLikeUuid` function checks if a string resembles a UUID format.
-****************************************
-
-****************************************
 Boxer\core\SharedEmbedding.ts
 ****************************************
 // Copyright (c) 2024 Braid Technologies Ltd
@@ -14838,50 +13903,6 @@ describe("Make new container", function () {
 ****************************************
 
 ****************************************
-Boxer\scripts\ReadMe.Salon.md
-****************************************
-**eval_pipeline.py**
-
-The provided script imports local modules and sets up configurations for testing using `ApiConfiguration`. It defines directories for test data and chunk sources. It lists numerous questions categorized into off-topic questions concerning general knowledge and detailed questions about Large Language Models (LLMs) including their components, training, ethical considerations, and applications across various industries.
-
-The script checks if the test destination directory exists and creates it if not. Finally, it runs tests using the function `run_tests` with appropriate parameters including configurations, test directories, chunk source directories, and off-topic questions for the test utility.
-
-**github_pipeline.py**
-
-Braid Technologies Ltd has implemented a script to manage GitHub data. It involves downloading Markdown files from specified URLs and saving them in a designated directory.
-
-The script configures the API, downloads markdown data, and ensures the destination directory exists beforehand.
-
-Multiple enrichment functions are applied to the text chunks, summaries, and embeddings within the downloaded Markdown files.
-
-Finally, the script counts URL hits and stores the results in JSON files in an output directory.
-
-**make_api_embeddings.ts**
-
-A script for testing the consolidation of embeddings from different sources (HTML, GitHub, YouTube) into a single file. The function `makeLite` processes embedding data and assigns it to chunks. The test then writes the consolidated data to `data/api_embeddings_lite.json` and ensures no errors occur during this process.
-
-**make_new_container.ts**
-
-The text describes a test suite for creating a new container using Mocha and Expect libraries. It initializes an unknown `Persona`, sets up a `BraidFluidConnection`, and ensures the `SessionKey` environment variable is defined. The `createNew` method of `BraidFluidConnection` is then tested to create a new conversation and log the results, handling any errors by logging them accordingly. The test expects a successful creation result.
-
-**web_pipeline.py**
-
-The script imports necessary libraries and modules, sets a destination directory "data/web" for HTML files, and ensures it exists. It then configures the API and downloads HTML content from specified URLs for processing. The script enriches the downloaded text by running functions to enhance text chunks, summaries, and embeddings and performs lite enrichment. Finally, it sets an output directory and counts URL hits, saving the results into a JSON file.
-
-**youtube_pipeline.py**
-
-The script focuses on processing and enriching YouTube video transcripts. 
-
-First, it sets up logging, ensures the transcript destination directory exists, and downloads transcripts from a list of YouTube URLs. 
-
-Then, it processes the downloaded transcripts by enriching individual chunks, summaries, and embeddings. 
-
-Afterward, it further enriches these transcripts using a lite enrichment method. 
-
-Finally, it counts URL hits and saves the results in an output directory.
-****************************************
-
-****************************************
 Boxer\scripts\web_pipeline.py
 ****************************************
 # Copyright (c) 2024 Braid Technologies Ltd
@@ -14984,12 +14005,6 @@ output_dir = os.path.join(TRANSCRIPT_DESTINATION_DIR, "output")
 countUrlHits(output_dir, youTubeUrls, "master_transcriptions.json","hit_test_results.json")
 
 logger.info("Script finished.")
-****************************************
-
-****************************************
-Boxer\scripts\__init__.py
-****************************************
-
 ****************************************
 
 ****************************************
@@ -16969,197 +15984,6 @@ describe("Queue", function () {
       expect(queue.peek()).toEqual("Two");
    });
 });
-****************************************
-
-****************************************
-Boxer\test\ReadMe.Salon.md
-****************************************
-**activityrecord.test.ts**
-
-The described test suite covers several functionalities of an ActivityRepository. 
-
-First, it verifies that a URL record can be saved successfully. A URL activity object is created and saved, and the save operation is expected to return true.
-
-Second, it tests the saving of a LikeDislike record. Similar to the URL record test, a like activity object is created, saved, and the result is checked for success.
-
-Third, it validates the saving of a Message record. A message activity object is prepared and saved, with an expectation of a successful operation.
-
-Fourth, the suite tests the loading of records. After saving a like activity, it attempts to load recent URL activities and checks that the loaded count is greater than zero.
-
-Finally, it includes a test for the removal of Message records. After saving a message activity, a subsequent removal operation is performed and checked for successful removal.
-
-**adminrespository.test.ts**
-
-The provided code block is a test suite for the `AdminRepository` feature using Mocha and Expect libraries. 
-
-One test verifies that the repository correctly identifies Jon Verrier as an administrator.
-
-Another test ensures that the repository does not recognize other names as administrators.
-
-**aiconnection.test.ts**
-
-The `AIConnection` tests verify various functionalities of the AI framework, including:
-
-- Detecting message types (bot message, bot request, near-miss bot request).
-- Handling reference errors and returning false when necessary.
-- Building a request object correctly.
-- Generating valid responses from the Open AI web endpoint using both streaming and basic API.
-
-The framework also ensures token limits are adhered to, with specific tests for scenarios where the limit is within acceptable range and when it overflows.
-
-Additionally, a test is in place to call the summarizer function to confirm it works as expected without exceptions and returns a valid summary.
-
-**caucus.test.ts**
-
-The code sets up a series of unit tests using Mocha for the "Caucus" functionality of a system involving personas and messages.
-
-Before each test, the environment is set up with a new `BraidFluidConnection` and `Persona`. After each test, connections are disconnected, and environment settings reverted.
-
-There are tests to:
-1. **Create a valid caucus**, add, amend, and remove a persona.
-2. **Detect invalid operations** by trying to retrieve a non-existent persona.
-3. **Synchronize** the caucus with an external map and verify synchronization.
-4. **Remove all elements** from the caucus and verify.
-5. **Return an ordered array** of messages based on the sent time.
-6. **Manage a large volume of members**, adding and reading 1000 messages, and logs execution phases.
-
-**chunk.test.ts**
-
-The code provided includes unit tests that check the functionality of identifying URLs from the same or different sources.
-
-It tests whether URLs from the same YouTube video, different YouTube videos, the same GitHub repo, and different GitHub repos can be correctly identified.
-
-Additional tests are included for identifying related content given an input URL, and for identifying starter content based on a summary, using the FindEnrichedChunkApi.
-
-The tests use the Mocha framework and the Expect assertion library to validate the outcomes.
-
-**debounce.test.ts**
-
-The text is a JavaScript code that tests the `debounce` function from Braid Technologies Ltd. 
-
-1. The `wait` function is an asynchronous function that delays execution by 1000 milliseconds.
-2. In the first test, `debounced` executes `doSomethingAsync` asynchronously, and the test checks if the `count` increments to be greater than 0 after a delay.
-3. In the second test, `debounced` executes `doSomethingAsync` multiple times, and again checks if the `count` increments to be greater than 0 after a delay.
-
-**embedding.test.ts**
-
-The text describes a series of tests for the "Embedding" functionality using the "FindEnrichedChunkApi" to find the closest matching chunks of data from different types of documents. 
-
-Each test scenario aims to match the query against existing data repositories:
-1. Finding the closest match for an existing YouTube document.
-2. Finding the closest match for an existing HTML document.
-3. Finding the closest match for a simple text query.
-4. Finding the closest match for an irrelevant text query.
-5. Finding the closest match for a detailed Markdown query.
-
-Each test ensures that the result has a sufficient similarity threshold and successfully retrieves at least one match.
-
-**errors.test.ts**
-
-This JavaScript code uses the Mocha testing framework to test error handling by creating and validating custom error types such as InvalidParameterError, InvalidOperationError, ConnectionError, EnvironmentError, and InvalidStateError. Each test checks if the error message is correctly set to a predefined message "What" and verifies this with the `expect` function.
-
-**joinpagevalidator.test.ts**
-
-The document contains tests for the `JoinPageValidator` and `JoinDetails` classes.
-
-The `JoinPageValidator` tests include:
-1. Detecting invalid names.
-2. Detecting invalid session keys.
-3. Detecting invalid conversation keys.
-4. Confirming all components are valid and can join.
-
-The `JoinDetails` tests include:
-1. Classifying an empty string as invalid for joining.
-2. Detecting invalid names.
-3. Detecting invalid session keys.
-4. Detecting invalid conversation keys.
-5. Confirming the ability to join when all components (email, session, conversation, secret) are valid.
-
-**like.test.ts**
-
-The document contains a code block testing the functionality of a `Like` class in JavaScript.
-
-The `describe` function contains several test cases:
-1. It tests the construction of an empty `Like` object, expecting the `name` attribute to be an empty string.
-2. It compares `Like` objects for equality and inequality based on `name` and `when` attributes.
-3. It checks for inequality specifically on the `when` attribute when the dates are different.
-4. It verifies the correct storage and retrieval of attributes in `Like` objects.
-5. It tests the functionality of copy construction to ensure the new object is equal to the original.
-6. It performs attribute changes correctly.
-7. It checks the conversion of a `Like` object to and from JSON format to ensure data consistency.
-
-**message.test.ts**
-
-The text describes tests for the `Message` class in a JavaScript/TypeScript environment using Mocha.
-
-One test checks if an empty `Message` object is correctly constructed.
-
-Another test verifies that the constructor allows an undefined ID without throwing an error.
-
-A test ensures that an invalid ID throws an error.
-
-Tests confirm `Message` objects can be compared for equality and inequality, including differences in dates.
-
-A test examines if attributes are correctly stored and can be changed.
-
-It tests JSON conversion and includes handling scenarios with attached knowledge sources.
-
-It checks the ability to dynamically create `Message` objects from JSON.
-
-**notification.test.ts**
-
-Tests were conducted to evaluate the functionalities of the Notification Framework. 
-
-Firstly, the creation, testing, and assignment of `Interest` objects were validated, confirming their ability to check equality and assignment accurately.
-
-Secondly, `Notification` and `NotificationFor<EventData>` objects were tested, showing they can be correctly created, compared, and assigned.
-
-Thirdly, `ObserverInterest` objects, which link observers to specific interests, were verified for accurate creation, comparison, and assignment.
-
-Notification routing through `NotificationRouter` and `NotificationRouterFor` was tested to ensure correct functionality.
-
-Lastly, the flow of notifications from `Notifier` to `Observer` was validated, confirming observers only receive the correct notifications.
-
-**persona.test.ts**
-
-Tests were conducted on the "Persona" class to verify the correct behavior of its methods. Several key points were covered:
-
-- The "Persona" class should be able to construct an empty object with default values.
-- The class should accept undefined IDs and handle invalid IDs and names by throwing errors.
-- The class should handle required attributes such as thumbnail and should throw errors for invalid thumbnails.
-- Equality checks between "Persona" instances should work correctly, including comparisons involving date attributes.
-- The class should support copying of attributes and allow modification, with appropriate error detection for invalid changes.
-- The tests also examined the conversion of a "Persona" to and from JSON format, including dynamic creation.
-
-**queue.test.ts**
-
-The provided code is a set of unit tests for a `Queue` class using Mocha and Expect libraries. 
-
-- The first test checks that a newly initialized queue is empty.
-- The second test verifies that the queue can enqueue and dequeue a single item correctly.
-- The third test ensures that the queue can handle enqueuing and dequeuing multiple items, maintaining the correct order.
-
-**sharedembedding.test.ts**
-
-The text is a test suite for the `SharedEmbedding` class using the Mocha testing framework and the `expect` assertion library.
-
-First, it checks that a `SharedEmbedding` can be constructed with undefined properties and valid IDs. 
-
-It tests if undefined and invalid IDs are properly handled.
-
-It verifies that objects of `SharedEmbedding` can be correctly compared for equality and inequality.
-
-Tests include ensuring proper error handling when attempting to perform actions on objects with undefined URLs and validating that attributes such as URL and likes are stored correctly.
-
-Further tests ensure the class supports copying, dynamic creation via JSON, and the functionality of "like" and "unlike" features.
-
-**uuid.test.ts**
-
-The provided code tests the functionalities of a key generator specifically focused on UUID generation. 
-
-The first set of tests verify that UUIDs are correctly created, ensuring they are of the appropriate length (36 characters), valid, and handle invalid inputs effectively. Another test confirms that the key generator can produce a non-empty secret value.
-
-The second set of tests repeats the UUID validation process, specifically verifying the UUID generation and validation functionalities without the global Blob object. The Blob is temporarily removed and restored during these tests.
 ****************************************
 
 ****************************************
@@ -19889,96 +18713,6 @@ export const MainPageMessageRow = (props: IMainPageMessageProps) => {
 ****************************************
 
 ****************************************
-Boxer\ui\ReadMe.Salon.md
-****************************************
-**AnimatedIconButton.tsx**
-
-The code defines a React component named `AnimatedIconButton`, which displays a button with an animated color sequence using the `Lightbulb24Filled` icon from Fluent UI.
-
-The component accepts several props, including `animate`, `icon`, `promptAnimated`, `promptUnamimated`, `onClick`, and `onCancel`. These determine the button's behavior.
-
-It uses a state to manage the color sequence animation, updating the sequence every 100 milliseconds. The `forceUpdate` hook is employed to force the component to re-render.
-
-The component renders a menu with `MenuTrigger`, `MenuButton`, `MenuPopover`, and `MenuList` components, handling click events to trigger `onClick` and `onCancel` callbacks.
-
-**AppEntry.tsx**
-
-The application renders a React component called `App` that sets up a layout for a conversational interface using Fluent UI for styling. The application retrieves join details from the URL hash to pre-populate a joining form if valid. It maintains state for various session and message information using React hooks.
-
-The `App` integrates components like `MainPageMessageRow` for displaying messages, `ConversationControllerRow` for managing conversations, and `JoinPane` for handling join actions. Various functions handle different error types and dismiss messages as required. 
-
-Upon successful join, the application redirects users to a login API based on the current session keys and secrets.
-
-**ColumnStyles.tsx**
-
-Braid Technologies Ltd has created various CSS-in-JS styling for a user interface using the Fluent UI library. 
-
-They have defined styles for:
-- A column layout that starts at the top, is center-aligned, and has a maximum width constraint.
-- A mid-column layout that uses a row-based, flexible direction.
-- A footer layout with a row direction, auto top margin, and end-alignment.
-- A text field that spans the full width of its container.
-
-These styles are built using `makeStyles` from Fluent UI and are part of the library's component-based theming.
-
-**ConversationController.tsx**
-
-The `ConversationControllerRow` React component manages the state of an online conversation by storing messages, participants, and shared embeddings. It handles setting up and maintaining a connection to a service for data interaction.
-
-An asynchronous check verifies administrator status. It prevents sending repeated unsolicited messages and provides initial suggestions under specific conditions. 
-
-The system synchronizes local state with changes to messages, participants, and embeddings, and allows users to like/unlike URLs.
-
-Functions include summarizing conversations, handling session administration, adding suggested content, and deleting messages. Errors stop live updates and reset the busy status.
-
-Validation is done for displaying conversations, failing which an empty div is shown.
-
-**ConversationMessagePrompt.tsx**
-
-The code defines a `MessagePrompt` React component utilizing Fluent UI and custom styles for a text area input. It auto-adjusts its height based on the text length and includes event handlers to handle text input changes and send messages on specific key events (Ctrl-Enter for sending, Escape to clear the text). The `wrapText` function helps measure and wrap text for proper alignment, and `calculateDyNeeded` estimates the height required for the text area. The component makes extensive use of React hooks like `useState` and `useLayoutEffect` to manage state and side effects.
-
-**ConversationPane.tsx**
-
-The `ConversationHeaderRow` component provides administrative functionalities including displaying participant avatars, copying conversation URLs, adjusting participant chattiness levels, trimming conversation history, and exiting the conversation.
-
-The `ConversationView` component manages the overall conversation interface, featuring a control header, a message display section, and input options for sending new messages.
-
-The `RelevantChunkView` component highlights relevant text chunks with functional options like opening URLs, liking/unliking chunks, and processing chunk summaries into paragraphs.
-
-The `SingleMessageView` displays messages with the author’s name, text, optional deletion controls, content warnings, and information sources.
-
-The `InputView` component enables users to compose and send messages, integrating suggested content and maintaining message state.
-
-**JoinPane.tsx**
-
-The provided code is for a React component named `JoinPane` designed for a web page that allows users to join a conversation using session and conversation keys. 
-
-When running in the local environment, it automatically creates a new container with predefined keys. 
-
-The user interface includes input fields for the session key and a dropdown for selecting predefined conversation names. 
-
-A button is enabled or disabled based on the validity of the session key. 
-
-When the user attempts to join, the application checks the conversation key and generates a secret if not already saved, then uses the provided onConnect function to proceed.
-
-**MainPageMessage.tsx**
-
-This code defines a React component for displaying messages on a main page. It uses Fluent UI components to show different types of messages such as information, warning, error, and success. The component supports dismissible messages, where a button is provided to close the message. If there is no message to display, the component returns an empty `<div />`. The styles and functionality are encapsulated, ensuring a clean and responsive interface. The message types are defined using an enumeration to maintain consistency across the application.
-
-**UIStrings.ts**
-
-To join a conversation with @Boxer, you need a key from your Braid contact, select a conversation, and log in with LinkedIn.
-
-Types of conversations include the Paris Olympics 2024, the 4x100m swim, Triathlon, and Judo.
-
-Common errors include difficulty connecting to conversations or AI and login security issues.
-
-To interact with @Boxer, type a message and include '@Boxer' for a response. Messages are public and should not include confidential information.
-
-Initial questions for learning include common use cases for generative AI, using Python with LLMs, tokenization, embeddings, fine-tuning, generating text, decoding strategies, prompt engineering, learning methods, LLM management, training challenges, and ethical considerations.
-****************************************
-
-****************************************
 Boxer\ui\UIStrings.ts
 ****************************************
 // Copyright (c) 2024 Braid Technologies Ltd
@@ -20180,37 +18914,6 @@ def get_embedding(text : str, client : AzureOpenAI, config : ApiConfiguration):
 ****************************************
 
 ****************************************
-Boxer\scripts\common\ReadMe.Salon.md
-****************************************
-**ApiConfiguration.py**
-
-The script sets configurations for different API setups, particularly between Azure and OpenAI.
-
-The class `ApiConfiguration` initializes important parameters such as:
-- API key and version.
-- Resource endpoints.
-- Azure deployment and embedding deployment names.
-- Model and embedding model names.
-- Processing threads, request timeout, summary word count, chunk duration for processing video clips, token limits, and a discard threshold based on token count.
-
-**common_functions.py**
-
-The script imports necessary libraries and modules, including `os` and `AzureOpenAI`, and uses a function `ensure_directory_exists(directory)` to check for and create directories if they do not exist. 
-
-The script sets the path `HTML_DESTINATION_DIR` as "data/web" and ensures its existence by calling the function.
-
-It defines a function `get_embedding(text, client, config)` to generate text embeddings using the AzureOpenAI client, replacing newline characters in the text, and making a request to create embeddings using specified configurations.
-
-**Urls.py**
-
-This code imports necessary libraries and initializes logging for output. It defines URLs related to YouTube, GitHub, and other web resources, which are categorized within various lists for later processing.
-
-A class `UrlHit` is created to store information such as path, description, and hit count for each URL.
-
-The function `countUrlHits()` processes JSON data to count hits for URLs. It reads input data, checks and counts occurrences of each URL path within the input, updates the hit count, and then saves the results into an output file. Logging is used throughout for debugging and error-checking.
-****************************************
-
-****************************************
 Boxer\scripts\common\Urls.py
 ****************************************
 # Standard library imports
@@ -20359,12 +19062,6 @@ def countUrlHits(destinationDir, urls, input_filename, output_filename):
     except Exception as e:
         logger.error("Error saving output file: %s", str(e))
         exit(1)
-****************************************
-
-****************************************
-Boxer\scripts\common\__init__.py
-****************************************
-
 ****************************************
 
 ****************************************
@@ -20520,32 +19217,6 @@ def download_markdown(repoSourceDir, repoName, markdownDestinationDir):
 ****************************************
 
 ****************************************
-Boxer\scripts\github\ReadMe.Salon.md
-****************************************
-**download_markdown.py**
-
-The script downloads the content of markdown files from a specified GitHub repository and converts them into plain text. 
-
-The class `Counter` is a thread-safe counter used to track progress. 
-
-The `makeSourceId` function constructs a unique source identifier from the repository directory, name, and file path.
-
-The `md_to_plain_text` function converts markdown content into plain text using the Markdown and BeautifulSoup libraries.
-
-The `get_markdown` function reads a markdown file, converts its content to plain text, and writes the output to a JSON file along with metadata.
-
-The `process_queue` function processes a queue of markdown filenames using multiple threads.
-
-The `download_markdown` function orchestrates the entire process, including setting up logging, creating a file queue, and launching threads to process the markdown downloads.
-****************************************
-
-****************************************
-Boxer\scripts\github\__init__.py
-****************************************
-from .download_markdown import download_markdown
-****************************************
-
-****************************************
 Boxer\scripts\test\README.md
 ****************************************
 # Test Scripts README
@@ -20642,54 +19313,6 @@ If you encounter any issues while running the tests:
 2. Check that your `.env` file contains the necessary API keys.
 3. Verify that you're running the tests from the correct directory.
 4. If a specific test is failing, review the error message and stack trace for more information.
-****************************************
-
-****************************************
-Boxer\scripts\test\ReadMe.Salon.md
-****************************************
-**test_3chunks_web_pipeline.py**
-
-This code is structured for testing Python scripts utilizing `pytest` and involves mocking various functionalities. It includes the importation of essential modules for the execution of the tests. Predefined constants and mock configurations are used for chunk size calculations in the script's context. The code defines functions for generating mock data, creating mock tokenizers, and simulating file read/write operations.
-
-Several test functions are present: 
-
-1. **test_download_html**: Verifies downloading and processing of HTML content.
-2. **test_append_text_to_previous_chunk**: Checks correct text appending behavior with overlap.
-3. **test_add_new_chunk**: Ensures new chunks are added correctly.
-4. **test_parse_json_mdd_transcript**: Validates parsing by manually creating a test MDD file.
-5. **test_enrich_text_chunks**: Ensures text chunking and file output are correctly handled.
-
-**test_utility.py**
-
-This script uses the OpenAI API and Azure services to run a series of AI-related tests based on given questions. It enriches the provided questions, converts them to vector embeddings, and matches them with pre-stored data chunks based on cosine similarity. 
-
-The best matches are then followed up with additional questions, which are assessed for relevance to AI by the AI itself. The test results, including enriched questions, relevance scores, and follow-up assessments, are saved to a JSON file for further analysis. The script employs retries with exponential backoff to handle request errors.
-
-**test_web_pipeline.py**
-
-The script sets up logging and imports necessary modules for testing purposes. It includes a function to create mock HTML files for testing enrichment processes. 
-
-Test functions are defined to ensure proper creation of chunks, checking content, verifying hit counts, and running the entire enrichment pipeline. 
-
-Fixtures are provided to create temporary directories for test output and instantiate an `ApiConfiguration` object. 
-
-The `test_chunk_addition` function creates mock HTML files, mocks `download_html` to avoid web requests, runs the enrichment process, and verifies output. 
-
-The `test_web_pipeline` function tests the entire web pipeline by downloading sources, running the pipeline, confirming content, and verifying URL hits.
-
-**test_youtube_pipeline.py**
-
-The text sets up a script for testing and logging various functions, using a combination of standard library imports and third-party packages. 
-
-Logging is configured to manage different levels of logs and a custom filter is created to ignore specific warning messages.
-
-Temporary directories are created for test output, cleaned up post-test, and various API configuration instances are set up.
-
-Functions for the YouTube transcript download and enrichment pipeline processes (downloading transcripts, chunk enrichment, summary enrichment, embedding enrichment, and lite enrichment) are provided.
-
-Tests are included for ensuring the pipeline runs successfully, validates content, verifies hit counts, and handles exceptions properly during the transcript retrieval process. 
-
-The main function initiates pytest to run these tests.
 ****************************************
 
 ****************************************
@@ -21851,12 +20474,6 @@ if __name__ == "__main__":
 ****************************************
 
 ****************************************
-Boxer\scripts\test\__init__.py
-****************************************
-
-****************************************
-
-****************************************
 Boxer\scripts\text\enrich_lite.py
 ****************************************
 """ This script removes the text from the enriched transcript and saves it as a new json file."""
@@ -22537,54 +21154,6 @@ def enrich_text_summaries(config, destinationDir):
 ****************************************
 
 ****************************************
-Boxer\scripts\text\ReadMe.Salon.md
-****************************************
-**enrich_lite.py**
-
-The script removes the "text" and "description" fields from dictionaries in a JSON list. This modified list is then saved as a new JSON file. The script includes error handling for missing output directory input and employs logging to track errors and debug information.
-
-**enrich_text_chunks.py**
-
-This script generates a master CSV file from transcript files, primarily handling .json and .mdd formats. It uses libraries such as os, json, and logging, as well as third-party packages like tiktoken and rich.progress. 
-
-The MddSegment class initializes segments of the mdd files. Functions like gen_metadata_master, clean_text, append_text_to_previous_chunk, and add_new_chunk manage and process the text. 
-
-The parse_json_mdd_transcript function handles parsing json for transcript generation, while the get_transcript function retrieves this data from specified directories. 
-
-Finally, the enrich_text_chunks function manages the overall process, ensuring proper logging, handling directory structure, and saving chunks to a master json file.
-
-**enrich_text_embeddings.py**
-
-The script creates embeddings for text using the OpenAI API. It includes several helper functions and uses a queue and threading for parallel processing.
- 
-The `normalize_text()` function standardizes text by removing extra spaces and newlines.
- 
-The `get_text_embedding()` function retrieves text embeddings from the OpenAI API and retries up to 5 times if it encounters errors.
- 
-The `process_queue()` function processes text chunks in a queue, tries to find existing summaries and embeddings, and fetches new embeddings if needed.
-  
-The main function, `enrich_text_embeddings()`, sets up logging, initializes the OpenAI client, loads input data, and starts threads to process chunks, finally saving the enriched data.
-
-**enrich_text_summaries.py**
-
-To summarize a YouTube transcript using ChatGPT, you can follow the following steps:
-
-1. **Counter Class**: Implement a thread-safe counter to keep track of processed chunks.
-2. **ChatGPT Summary Function**: Define a function with a retry mechanism that sends a transcript text to ChatGPT and returns the generated summary.
-3. **Process Queue Function**: Create a function that processes transcript chunks from a queue, using multiple threads to concurrently handle tasks. It retrieves existing summaries from cache or generates new ones using ChatGPT.
-4. **Enrich Text Summaries**: Set up the main function that initializes the OpenAI client, loads transcript chunks from a file, processes the chunks using the queue function, and saves the enriched summaries to a file.
-****************************************
-
-****************************************
-Boxer\scripts\text\__init__.py
-****************************************
-from .enrich_text_chunks import enrich_text_chunks
-from .enrich_text_summaries import enrich_text_summaries
-from .enrich_text_embeddings import enrich_text_embeddings
-from .enrich_lite import enrich_lite
-****************************************
-
-****************************************
 Boxer\scripts\web\download_html.py
 ****************************************
 """ This script downloads the text content for all sub pages of a URL. """
@@ -22830,24 +21399,6 @@ def download_html (sourceUrl, recurse, htmlDesitinationDir, minimumPageTokenCoun
 
    finish_time = time.time()
    logger.debug("Total time taken: %s", finish_time - start_time)
-****************************************
-
-****************************************
-Boxer\scripts\web\ReadMe.Salon.md
-****************************************
-**download_html.py**
-
-This script is designed to download and process the HTML content from all sub-pages of a given URL. It sets various configurations such as the maximum number of links per page, maximum search depth, and user-agent headers for web requests. 
-
-A thread-safe counter is implemented to keep track of the number of processed pages. The script defines functions to make URLs fully qualified, fetch and clean HTML content, and save it along with metadata.
-
-The main function `download_html` starts by building a list of URLs to be processed and uses multiple threads to download and process each page concurrently.
-****************************************
-
-****************************************
-Boxer\scripts\web\__init__.py
-****************************************
-from .download_html import download_html
 ****************************************
 
 ****************************************
@@ -23870,83 +22421,6 @@ logger.debug(
 ****************************************
 
 ****************************************
-Boxer\scripts\youtube\ReadMe.Salon.md
-****************************************
-**download_transcripts.py**
-
-This script downloads transcripts for all videos in a YouTube playlist using Python.
-
-It uses the Google Developer API to retrieve videos from a playlist and the YouTube Transcript API to fetch transcripts.
-
-Metadata for each video, including title, description, and IDs, is saved in a JSON file.
-
-To handle multiple videos, the script employs threading and a queue to process video transcripts concurrently.
-
-Logs and directories are properly handled, and exceptions are caught for cases where transcripts are unavailable, disabled, or errors occur.
-
-**enrich_transcript_chunks.py**
-
-The script generates a master CSV file from transcript files. It reads all `.json` files and their associated `.vtt` files from the transcript folder. 
-
-The script includes functions for metadata generation, text cleaning, appending text to previous chunks, and adding new text chunks. 
-
-It parses JSON VTT files to extract and process text segments, handling metadata, text length, and tokenization.
-
-Progress is tracked via logging and a progress bar. 
-
-Processed chunks are stored and saved into an output file. The directory structure is checked, and created if necessary, to ensure the output can be saved properly.
-
-**enrich_transcript_embeddings.py**
-
-The script normalizes text by removing extra spaces and newlines. 
-
-It uses a retry strategy to get text embeddings from Azure OpenAI, handling certain exceptions and limiting to five attempts. 
-
-A function processes a queue of text chunks, checking if a chunk already has an existing embedding before attempting to fetch a new one, and logging errors. 
-
-There is a function to convert time strings to seconds. 
-
-The main function enriches transcript embeddings by loading transcript data, processing them using multiple threads, and finally saving the enriched data to a JSON file, ensuring the output directory exists.
-
-**enrich_transcript_summaries.py**
-
-The code imports necessary libraries and modules for handling operations like logging, threading, and working with APIs.
-
-A `Counter` class is defined to manage a thread-safe counter.
-
-The `chatgpt_summary` function is designed to generate text summaries using Azure's OpenAI.
-
-The `process_queue` function processes a queue to generate and store text summaries, using multi-threading for efficiency.
-
-The `convert_time_to_seconds` function converts time strings into seconds.
-
-The `enrich_transcript_summaries` function retrieves transcript data, processes it to generate summaries, and saves the enriched data to a file, using multiple threads to handle the workload. This function also handles logging and error management.
-
-**not_used_enrich_transcript_speaker.py**
-
-This script extracts the speaker name from YouTube video metadata and the first minute of the transcript using OpenAI Functions entity extraction.
-
-The script sets up logging, reads the API key and other necessary configurations, and initializes various settings including the transcript folder and the number of processing threads.
-
-It defines a function to retrieve speaker information using OpenAI's ChatCompletion, which involves sending a system message to the model to extract speaker names from the text.
-
-It processes each transcript file in the specified folder, updating metadata with the retrieved speaker names, and runs this process across multiple threads for efficiency.
-
-**__init__.py**
-
-The text provided is a list of import statements for a Python script. These imports suggest that the script has functionalities for downloading transcripts, enriching transcript chunks, enriching transcript summaries, and enriching transcript embeddings. There are no additional content or points to summarize further.
-****************************************
-
-****************************************
-Boxer\scripts\youtube\__init__.py
-****************************************
-from .download_transcripts import download_transcripts
-from .enrich_transcript_chunks import enrich_transcript_chunks
-from .enrich_transcript_summaries import enrich_transcript_summaries
-from .enrich_transcript_embeddings import enrich_transcript_embeddings
-****************************************
-
-****************************************
 BoxerEval\common\ApiConfiguration.py
 ****************************************
 # Copyright (c) 2024 Braid Technologies Ltd
@@ -24065,30 +22539,4 @@ def get_embedding(text: str, embedding_client: AzureOpenAI, config: ApiConfigura
     )
     
     return response.data[0].embedding
-****************************************
-
-****************************************
-BoxerEval\common\ReadMe.Salon.md
-****************************************
-**ApiConfiguration.py**
-
-The script highlights the initialization of API settings for both Azure OpenAI and Gemini APIs. It uses environment variables to secure sensitive information like API keys and endpoints. The ApiConfiguration class sets up default values, including API versions, endpoints, model names, and other parameters like chunk duration, maximum tokens, and processing threads.
-
-Depending on the `azure` flag, the configuration switches between Azure and OpenAI endpoints and keys. The Gemini API parameters are also fetched and set within the class. This configuration ensures the smooth functioning of the application with different API sources.
-
-**common_functions.py**
-
-The script ensures that a specified directory exists, creating it if necessary. 
-
-It defines a function to create or verify the existence of a directory, ensuring cross-platform compatibility with `os.path.join()`.
-
-A default directory path is set to "data/web".
-
-It includes another function to generate embeddings using Azure's OpenAI service, with the ability to specify a model or fallback to a default configuration option. This function also handles replacing newline characters in the text with spaces before creating the embedding.
-****************************************
-
-****************************************
-BoxerEval\common\__init__.py
-****************************************
-
 ****************************************

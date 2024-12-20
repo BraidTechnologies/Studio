@@ -115,11 +115,11 @@ function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnri
    if (sameSource) {
 
       // If we have an entry from the same source, replace if the new one looks better
-      let comp = current[sameIndex].relevance;
+      const comp = current[sameIndex].relevance;
 
       if (typeof comp !== 'undefined' && typeof lowestRelevance !== 'undefined') {
 
-         let currentRelevance = current[sameIndex].relevance;
+         const currentRelevance = current[sameIndex].relevance;
 
          if ((typeof comp !== 'undefined' && typeof currentRelevance !== 'undefined')
             && (comp < currentRelevance)) {
@@ -131,7 +131,7 @@ function lowestOfCurrent(urlIn: string | undefined, current: Array<IRelevantEnri
       // Else replace the lowest relevance entry
       for (let i = 1; i < current.length; i++) {
 
-         let comp = current[i].relevance;
+         const comp = current[i].relevance;
 
          if (typeof comp !== 'undefined' && typeof lowestRelevance !== 'undefined') {
 
@@ -182,8 +182,8 @@ function replaceIfBeatsCurrent(candidate: IRelevantEnrichedChunk,
    }
 
    // Else we do a search and insert the new one if it is better than a current candidate
-   let lowestIndex = lowestOfCurrent(candidate.chunk.url, current);
-   let currentLowest = current[lowestIndex];
+   const lowestIndex = lowestOfCurrent(candidate.chunk.url, current);
+   const currentLowest = current[lowestIndex];
 
    if (typeof currentLowest.relevance !== 'undefined'
       && typeof candidate.relevance !== 'undefined') {
@@ -216,22 +216,22 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupRelevantFromSummary(spec: IChunkQueryRelevantToSummarySpec): Promise<Array<IRelevantEnrichedChunk>> {
 
-      let enrichedChunks = this._chunks;
-      let accumulator = new Array<IRelevantEnrichedChunk>();
+      const enrichedChunks = this._chunks;
+      const accumulator = new Array<IRelevantEnrichedChunk>();
 
-      let validEmbedding = await calculateEmbedding (spec.summary);
+      const validEmbedding = await calculateEmbedding (spec.summary);
 
       for (let i = 0; i < enrichedChunks.length; i++) {
 
-         let embedding = enrichedChunks[i].embedding;
+         const embedding = enrichedChunks[i].embedding;
          if (embedding) {
             let validIndexedEmbedding: number[];
             throwIfUndefined(embedding);
             validIndexedEmbedding = embedding;
 
-            let relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
+            const relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
 
-            let candidate: IRelevantEnrichedChunk = {
+            const candidate: IRelevantEnrichedChunk = {
                chunk: {
                   url: enrichedChunks[i].url,
                   summary: enrichedChunks[i].summary,
@@ -240,7 +240,7 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
                relevance: relevance
             };
 
-            let changed = replaceIfBeatsCurrent(candidate, spec, undefined, accumulator);
+            const changed = replaceIfBeatsCurrent(candidate, spec, undefined, accumulator);
          }
       }
 
@@ -259,15 +259,15 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupRelevantFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<Array<IRelevantEnrichedChunk>> {
 
-      let enrichedChunks = this._chunks;
+      const enrichedChunks = this._chunks;
       let targetChunk: IEnrichedChunk | undefined = undefined;
-      let accumulator = new Array<IRelevantEnrichedChunk>();
+      const accumulator = new Array<IRelevantEnrichedChunk>();
 
       let validTargetChunk: IEnrichedChunk;
       let validEmbedding: number[];
 
       for (let i = 0; i < enrichedChunks.length && !targetChunk; i++) {
-         let url = enrichedChunks[i].url;
+         const url = enrichedChunks[i].url;
          if (url == spec.url) {
             targetChunk = enrichedChunks[i];
             break;
@@ -284,15 +284,15 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
 
       for (let i = 0; i < enrichedChunks.length && targetChunk; i++) {
 
-         let embedding = enrichedChunks[i].embedding;
+         const embedding = enrichedChunks[i].embedding;
          if (embedding) {
             let validIndexedEmbedding: number[];
             throwIfUndefined(embedding);
             validIndexedEmbedding = embedding;
 
-            let relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
+            const relevance = Number(cosineSimilarity(validEmbedding, validIndexedEmbedding).toPrecision(2));
 
-            let candidate: IRelevantEnrichedChunk = {
+            const candidate: IRelevantEnrichedChunk = {
                chunk: {
                   url: enrichedChunks[i].url,
                   summary: enrichedChunks[i].summary,
@@ -301,7 +301,7 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
                relevance: relevance
             };
 
-            let changed = replaceIfBeatsCurrent(candidate, spec, spec.url, accumulator);
+            const changed = replaceIfBeatsCurrent(candidate, spec, spec.url, accumulator);
          }
       }
 
@@ -314,13 +314,13 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
     */
    async lookupFromUrl(spec: IChunkQueryRelevantToUrlSpec): Promise<IEnrichedChunkSummary | undefined> {
 
-      let enrichedChunks = this._chunks;
+      const enrichedChunks = this._chunks;
       let accumulator : IEnrichedChunkSummary | undefined = undefined;
    
       for (let i = 0; i < enrichedChunks.length && !accumulator; i++) {
-         let url = enrichedChunks[i].url;
+         const url = enrichedChunks[i].url;
          if (url == spec.url) {
-            let targetChunk = { 
+            const targetChunk = { 
                url: enrichedChunks[i].url,
                summary: enrichedChunks[i].summary,
                text: enrichedChunks[i].text

@@ -1,5 +1,19 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
+'use strict';
+/**
+* @module CosmosStorableApi
+* @description Provides a high-level API for interacting with Azure Cosmos DB storage.
+* This module implements CRUD operations (Create, Read, Update, Delete) for storable objects
+* in Cosmos DB collections, along with query capabilities and logging interfaces.
+* 
+* Key features:
+* - Storable object management (find, load, save, remove)
+* - Batch loading operations
+* - Collection-specific configurations
+* - Logging interfaces for Azure Functions and Console
+* - Support for data transformation during operations
+*/
 
 // 3rd party imports
 import { InvocationContext } from "@azure/functions";
@@ -49,19 +63,19 @@ export interface ILoggingContext {
    error (message: string, details: any) : void;    
 }
 
-export let chunkStorableAttributes : ICosmosStorableParams = {
+export const chunkStorableAttributes : ICosmosStorableParams = {
    partitionKey: chunkPartitionKey,
    collectionPath: chunkCollectionPath,
    collectionName: chunkCollectionName
 }
 
-export let activityStorableAttributes : ICosmosStorableParams = {
+export const activityStorableAttributes : ICosmosStorableParams = {
    partitionKey: activityPartitionKey,
    collectionPath: activityCollectionPath,
    collectionName: activityCollectionName
 }
 
-export let pageStorableAttributes : ICosmosStorableParams = {
+export const pageStorableAttributes : ICosmosStorableParams = {
    partitionKey: pagePartitionKey,
    collectionPath: pageCollectionPath,
    collectionName: pageCollectionName
@@ -136,17 +150,17 @@ export async function findStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+   const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.functionalSearchKey = @id";
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -163,8 +177,8 @@ export async function findStorable(id: string | undefined,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecord = responseRecords[0] as IStorable;
+            const responseRecords = resp.data.Documents;
+            const storedRecord = responseRecords[0] as IStorable;
 
             context.log ("Loaded storable:", storedRecord.id);
             resolve(applyTransformer(storedRecord, transformer));
@@ -196,17 +210,17 @@ export async function loadStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<IStorable | undefined>(function (resolve, reject) {
+   const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.id = @id";
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.id = @id";
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -223,8 +237,8 @@ export async function loadStorable(id: string | undefined,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecord = responseRecords[0] as IStorable;
+            const responseRecords = resp.data.Documents;
+            const storedRecord = responseRecords[0] as IStorable;
 
             context.log ("Loaded storable:", storedRecord.id);
             resolve(applyTransformer(storedRecord, transformer));
@@ -249,17 +263,17 @@ export async function loadStorable(id: string | undefined,
  */
 export async function saveStorable(record: IStorable, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<boolean>(function (resolve, reject) {
+   const done = new Promise<boolean>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
-      let stream = JSON.stringify(record);
-      let document = JSON.parse(stream);
+      const time = new Date().toUTCString();
+      const stream = JSON.stringify(record);
+      const document = JSON.parse(stream);
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey as string);
-      let headers = makePostHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey as string);
+      const headers = makePostHeader(key, time, params.partitionKey);
 
       document.partition = params.partitionKey; // Dont need real partitions until 10 GB ... 
 
@@ -296,16 +310,16 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
    if (!id)
       return false;
    
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<boolean>(function (resolve, reject) {
+   const done = new Promise<boolean>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key. 
-      let key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
-      let headers = makeDeleteHeader(key, time, params.partitionKey);
+      const key = makeStorableDeleteToken (time, params.collectionPath, dbkey, id);
+      const headers = makeDeleteHeader(key, time, params.partitionKey);
         
-      let deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
+      const deletePath = 'https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/'+ id;
 
       axios.delete(deletePath,
          {
@@ -339,17 +353,17 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<Array<IStorable>>(function (resolve, reject) {
+   const done = new Promise<Array<IStorable>>(function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let headers = makePostQueryHeader(key, time, params.partitionKey);
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const headers = makePostQueryHeader(key, time, params.partitionKey);
 
-      let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
+      const query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC OFFSET 0 LIMIT " + querySpec.limit.toString();
 
       axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
          {
@@ -366,8 +380,8 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
          })
          .then((resp: any) => {
 
-            let responseRecords = resp.data.Documents;
-            let storedRecords = new Array<IStorable>();
+            const responseRecords = resp.data.Documents;
+            const storedRecords = new Array<IStorable>();
 
             for (let i = 0; i < responseRecords.length; i++) {
                storedRecords.push(applyTransformer(responseRecords[i], transformer));
@@ -399,26 +413,26 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   let dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.CosmosApiKey;
 
-   let done = new Promise<Array<IStorable>>(async function (resolve, reject) {
+   const done = new Promise<Array<IStorable>>(async function (resolve, reject) {
 
-      let time = new Date().toUTCString();
+      const time = new Date().toUTCString();
       let continuation: string | undefined = undefined;
       let more = true;
 
       throwIfUndefined(dbkey); // Keep compiler happy, should not be able to get here with actual undefined key.       
-      let key = makeStorablePostToken(time, params.collectionPath, dbkey);
-      let accumulatedRecords = new Array<IStorable>();
+      const key = makeStorablePostToken(time, params.collectionPath, dbkey);
+      const accumulatedRecords = new Array<IStorable>();
 
       while (more) {
 
          try {
-            let headers = makePostQueryHeader(key, time, params.partitionKey, continuation);
+            const headers = makePostQueryHeader(key, time, params.partitionKey, continuation);
 
-            let query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC";
+            const query = "SELECT * FROM " + params.collectionName + " a WHERE a.className = @className ORDER BY a.created DESC";
 
-            let resp = await axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
+            const resp = await axios.post('https://braidstudio.documents.azure.com:443/' + params.collectionPath + '/docs/',
                {
                   "query": query,
                   "parameters": [
@@ -438,7 +452,7 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
             else {
                more = false;
             }
-            let responseRecords = resp.data.Documents;
+            const responseRecords = resp.data.Documents;
 
             for (let i = 0; i < responseRecords.length; i++) {
                accumulatedRecords.push(applyTransformer(responseRecords[i], transformer));

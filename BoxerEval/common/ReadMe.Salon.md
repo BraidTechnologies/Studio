@@ -1,19 +1,28 @@
 **ApiConfiguration.py**
 
-This code enables the configuration of the Azure OpenAI and Gemini APIs. Initially, the script sets up environment-specific variables based on whether the Azure flag is set to True or False. It retrieves the appropriate API keys, versions, and endpoints which are needed to interface with these services.
+This module sets up API configurations for both Azure and OpenAI, with conditional logic to differentiate settings based on the `azure` flag.
 
-The `ApiConfiguration` class is used to initialize default values for various parameters associated with Azure OpenAI and Gemini APIs. These include API keys, endpoints, deployment names, model configurations, and request parameters such as timeouts, token limits, and summarization settings. 
+- **API_TYPE**: Set according to the `azure` flag.
+- **API_KEY**: Retrieved safely from environment variables using `os.getenv`.
+- **API_VERSION** and **RESOURCE_ENDPOINT**: Defined specifically for both Azure and OpenAI.
 
-Important functions or classes:
-1. `ApiConfiguration` class and its `__init__` method for initializing default API configurations.
+The script also fetches the Gemini API key and endpoint.
+
+### Important Class:
+- **ApiConfiguration**: Initializes default values for Azure OpenAI and Gemini API parameters, including API keys, resource endpoints, model names, and various settings like `processingThreads`, `openAiRequestTimeout`, and `maxTokens`.
+
+### Constructor:
+- **__init__()**: Sets initial values for the class attributes upon creating an instance.
 
 **common_functions.py**
 
-The code imports necessary libraries including `os` for file operations and `AzureOpenAI` for interacting with the Azure OpenAI service. It also imports a custom `ApiConfiguration` class from `common.ApiConfiguration`.
+This module manages directories and generates text embeddings using the OpenAI API.
 
-The `ensure_directory_exists` function checks if a specified directory exists; if not, it creates the directory using `os.makedirs`.
+The `ensure_directory_exists` function checks if a specified directory exists and creates it if it doesn't. It takes a directory path as an argument.
 
-The global variable `HTML_DESTINATION_DIR` is set to the path "data/web" for cross-platform compatibility, and the `ensure_directory_exists` function is called to ensure this directory exists.
+The path "data/web" is constructed and passed to `ensure_directory_exists` to ensure the directory structure is present.
 
-The `get_embedding` function takes text, an AzureOpenAI client, an API configuration, and an optional model name to generate text embeddings. Text is cleaned by replacing newlines with spaces, and the embedding is generated using the specified (or default) model and configuration. The function then returns the embedding data.
+The `get_embedding` function takes text, an embedding client, configuration, and an optional model name. It replaces newlines in the text with spaces and selects a model for generating embeddings using the OpenAI API, returning the embedding result.
+
+Key classes/functions: `ensure_directory_exists`, `get_embedding`, `ApiConfiguration`. 
 
