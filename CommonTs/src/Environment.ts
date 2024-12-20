@@ -1,4 +1,11 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * @module Environment
+ * 
+ * This module provides a base class for interacting with an environment.
+ */
+
 import {EEnvironment, IEnvironment} from './IEnvironment';
 
 /**

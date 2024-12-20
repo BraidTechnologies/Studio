@@ -1,4 +1,15 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Model
+ * @description Provides a class for managing AI models and their deployment settings.
+ * 
+ * This module contains the GPT4 class, which implements the IModel interface.
+ * It provides methods for:
+ * - Checking if a text fits within the context window size with buffer
+ * - Chunking text into smaller pieces with optional overlap
+ * - Estimating the number of tokens in a given text
+ */
+
 import { InvalidParameterError } from './Errors';
 import { IModel } from './IModel';
 import GPT4Tokenizer from 'gpt4-tokenizer';

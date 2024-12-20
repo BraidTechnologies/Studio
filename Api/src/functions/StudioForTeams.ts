@@ -2,7 +2,7 @@
 // Copyright Braid Technologies Ltd, 2024
 
 /**
- * StudioForTeams Module
+ * @module StudioForTeams
  * 
  * This module provides Azure Functions endpoints for integrating Boxer's AI capabilities with Microsoft Teams.
  * It handles query requests from Teams, processes them through the Boxer backend, and returns enriched responses

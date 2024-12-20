@@ -1,5 +1,5 @@
 /**
- * Factory module for creating prompt personas used in text summarization.
+ * @module IPromptPersonaFactory
  * 
  * This module provides functionality to generate specialized AI prompt personas
  * for different types of content summarization (articles, code, surveys).

@@ -1,4 +1,14 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module LoginApi
+ * @description Provides an API for handling login operations.
+ * 
+ * This module contains the LoginApi class, which handles the login process
+ * using LinkedIn API. It provides methods for:
+ * - Logging in using LinkedIn API
+ * - Handling errors and retries for login operations
+ */
+
 import axios from 'axios';
 
 import { Api } from './Api';

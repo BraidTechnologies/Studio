@@ -1,3 +1,17 @@
+/**
+ * @module FluidTokenProvider
+ * @description Provides token management and connection configuration for Azure Fluid Relay services.
+ * 
+ * This module implements the necessary components to establish and manage connections
+ * to Azure Fluid Relay, including:
+ * - Token generation and management via FluidTokenProvider
+ * - Connection configuration via FluidConnectionConfig
+ * - Client properties setup via FluidClientProps
+ * 
+ * The implementation supports both local and remote environments, with configurable
+ * authentication through session keys and user contexts.
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
 // Implementation of the Fluid connection API
 

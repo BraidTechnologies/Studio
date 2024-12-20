@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # List of directories to process
-#ts_directories=("CommonTs" "Api" "Cascade" "WaterfallBrowser" "Boxer" "Teams")
-ts_directories=("CommonTs")
+ts_directories=("CommonTs" "Api" "Cascade" "WaterfallBrowser" "Boxer" "Teams")
+#ts_directories=("CommonTs")
 
 py_directories=("CommonPy" "ApiTest" "Waterfall" "BoxerEval")
 
@@ -18,7 +18,7 @@ for dir in "${ts_directories[@]}"; do
         # Check if package.json exists
         if [ -f "package.json" ]; then
             echo "Running typescript linter..."
-            for file in $(find . -name "*.ts" -not -path "./node_modules/*" -not -path "./dist/*"); do      
+            for file in $(find . -name "*.ts" -not -path "./node_modules/*" -not -path "./dist/*"  -not -path "./src/CommonTs/*"); do      
                 #echo "Linting file: $file"                  
                 if !(grep -q "@module" $file); then
                     echo "No module comment found in file: $file"

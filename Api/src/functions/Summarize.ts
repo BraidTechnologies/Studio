@@ -2,6 +2,23 @@
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
+/**
+ * @module Summarize
+ * 
+ * This module provides functionality for text summarization using AI models.
+ * It handles chunking large texts, processing them through AI models, and
+ * generating concise summaries based on different personas (article, code, survey).
+ * 
+ * Key features:
+ * - Splits large texts into processable chunks with configurable overlap
+ * - Supports multiple summarization personas for different content types
+ * - Handles rate limiting and retries for API calls
+ * - Validates input text length and session requirements
+ * 
+ * Deployment:
+ * - 'func azure functionapp publish Braid-Api' to publish to Azure
+ * - 'npm start' to run locally
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
