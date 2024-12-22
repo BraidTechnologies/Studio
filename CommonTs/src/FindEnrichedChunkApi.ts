@@ -1,4 +1,20 @@
+/**
+ * @module   FindEnrichedChunkApi
+ * @description Provides an API for finding and retrieving enriched chunks.
+ * 
+ * This module contains the FindEnrichedChunkApi class which handles various API calls
+ * related to finding enriched chunks based on URLs and summaries. It provides methods
+ * for retrieving both individual chunk summaries and arrays of relevant chunks.
+ * 
+ * The API supports:
+ * - Finding single enriched chunk summaries by URL
+ * - Finding relevant enriched chunks by URL
+ * - Finding relevant enriched chunks by summary
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
+
+
 import axios from 'axios';
 
 import { Api } from './Api';

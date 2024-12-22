@@ -1,6 +1,6 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
-'use strict';
+
 /**
 * @module CosmosStorableApi
 * @description Provides a high-level API for interacting with Azure Cosmos DB storage.

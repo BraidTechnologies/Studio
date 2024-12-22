@@ -1,5 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
+/**
+ * @module EnrichedChunkRepositoryFactory
+ * @description Factory for creating instances of IEnrichedChunkRepository.
+ * This module provides a way to create and manage instances of IEnrichedChunkRepository
+ * based on the specified repository type. It ensures that only one instance of each
+ * repository type is created (singleton pattern) to optimize performance.
+ */
+
 // Internal imports
 import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";

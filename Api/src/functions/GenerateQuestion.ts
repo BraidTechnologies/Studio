@@ -3,6 +3,14 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module GenerateQuestion
+ * @description Azure Function module that provides a method for generating a question based on a summary.
+ * This module handles the generation of a question based on a summary,
+ * and returns it in a structured format. It includes validation for session authentication
+ * and error handling for any issues encountered during the request processing.
+ */
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';

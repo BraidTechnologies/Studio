@@ -3,6 +3,14 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module FindTheme
+ * @description Azure Function module that provides a method for finding a common theme from a number of paragraphs of text.
+ * This module handles the retrieval of a common theme from a number of paragraphs of text,
+ * and returns it in a structured format. It includes validation for session authentication
+ * and error handling for any issues encountered during the request processing.
+ */
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';

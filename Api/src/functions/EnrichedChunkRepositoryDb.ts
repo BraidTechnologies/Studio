@@ -1,3 +1,21 @@
+/**
+ * @module EnrichedChunkRepositoryDb
+ * 
+ * Database-backed implementation of the EnrichedChunk repository.
+ * 
+ * This module provides a persistent storage implementation for enriched chunks,
+ * combining an in-memory cache with database backing. It handles asynchronous
+ * loading of chunks from the database while providing a consistent interface
+ * for chunk queries and lookups.
+ * 
+ * The repository supports:
+ * - Loading and caching chunks from a database
+ * - Looking up chunks relevant to a given summary
+ * - Finding chunks relevant to a specific URL
+ * - Retrieving chunk summaries by URL
+ * 
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";

@@ -2,6 +2,21 @@
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
+/**
+ * @module Utility
+ * 
+ * This module provides common utility functions used across the Azure Functions endpoints.
+ * It handles session validation, error responses, and standard HTTP response formatting.
+ * 
+ * Key features:
+ * - Session key validation against environment variables
+ * - Standard HTTP response generators for common scenarios
+ * - Error handling and response formatting utilities
+ * 
+ * Deployment:
+ * - 'func azure functionapp publish Braid-Api' to publish to Azure
+ * - 'npm start' to run locally
+ */
 
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 

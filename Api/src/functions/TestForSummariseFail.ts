@@ -2,6 +2,24 @@
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
+/**
+ * @module TestForSummariseFail
+ * 
+ * This module provides functionality to validate the quality of AI-generated summaries.
+ * It uses an AI model to detect cases where the summarization process has failed,
+ * such as when the summarizer cannot find the main body of text or produces
+ * error messages instead of actual summaries.
+ * 
+ * Key features:
+ * - Validates summary quality using AI analysis
+ * - Detects common failure patterns in summarization attempts
+ * - Handles rate limiting and retries for API calls
+ * - Returns clear pass/fail status for summary validation
+ * 
+ * Deployment:
+ * - 'func azure functionapp publish Braid-Api' to publish to Azure
+ * - 'npm start' to run locally
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from 'axios';

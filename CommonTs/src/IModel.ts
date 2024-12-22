@@ -1,3 +1,10 @@
+/**
+ * @module IModel
+ * @description Defines the core model interfaces and enums used for AI model management.
+ * Contains the model size enumeration and the base interface for model implementations,
+ * including deployment configuration and text processing capabilities.
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
 
 /**

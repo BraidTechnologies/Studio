@@ -1,5 +1,18 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 import axios from 'axios';
+/**
+ * @module StorableRepositoryApi
+ * @description Provides base classes and interfaces for storable object repositories.
+ * 
+ * This module contains the StorableRepositoryApi class and related interfaces which handle
+ * generic storage operations for objects implementing the IStorable interface. It provides:
+ * - Base repository API implementation for saving, loading, and querying storable objects
+ * - Interface definitions for repository wrappers with different capabilities
+ * - Common patterns for interacting with storage APIs
+ * 
+ * The module serves as a foundation for specific repository implementations like
+ * PageRepositoryApi while ensuring consistent storage patterns across the application.
+ */
 
 import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
 

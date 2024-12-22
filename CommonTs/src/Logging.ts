@@ -1,4 +1,19 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Logging
+ * @description Provides logging functionality for different parts of the application.
+ * 
+ * This module contains utility functions for logging errors and information across
+ * different domains of the application, including:
+ * - Core system errors
+ * - Database errors 
+ * - API errors and information
+ * 
+ * Each logging function follows a consistent pattern of accepting a description
+ * and details parameter, formatting them appropriately for the logging context.
+ * The module helps maintain consistent logging practices across the application
+ * while differentiating between error domains for easier debugging.
+ */
 
 /**
  * Logs a core error with the provided description and details.

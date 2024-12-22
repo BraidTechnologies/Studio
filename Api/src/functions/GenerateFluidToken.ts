@@ -3,6 +3,12 @@
 // 'func azure functionapp publish Braid-Api' to publish to Azure
 // 'npm start' to run locally
 
+/**
+ * @module GenerateFluidToken
+ * @description Azure Function module that provides a method for generating a Fluid token.
+ * This module handles the generation of a Fluid token, which is used to authenticate requests to the Fluid framework.
+ * It includes validation for session authentication and error handling for any issues encountered during the request processing.
+ */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 //import { ScopeType } from "@fluidframework/protocol-definitions/lib";

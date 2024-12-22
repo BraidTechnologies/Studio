@@ -1,4 +1,16 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module IModelFactory
+ * @description Factory module for creating AI model instances.
+ * 
+ * This module provides factory functions to create appropriate model instances
+ * based on the requested model type. It supports:
+ * - Default model creation through getDefaultModel()
+ * - Specific model creation through getModel() based on EModel type
+ * 
+ * The factory ensures consistent model instantiation across the application
+ * while abstracting the concrete model implementation details.
+ */
 
 // Internal imports
 import {EModel, IModel} from './IModel';

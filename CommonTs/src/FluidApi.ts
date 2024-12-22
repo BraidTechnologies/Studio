@@ -1,4 +1,16 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+
+/**
+ * @module FluidApi
+ * @description Provides an API wrapper for generating Fluid Framework tokens.
+ * This module contains the FluidApi class, which handles the generation of Fluid
+ * Framework tokens using the provided environment and session key.
+ * 
+ * The class supports:
+ * - Generating a Fluid token using a request object containing documentId, userId, and userName.
+ * - Handling errors and retries for token generation.
+ */
+
 import axios, {AxiosInstance, AxiosStatic} from 'axios';
 import axiosRetry from 'axios-retry';
 

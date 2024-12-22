@@ -1,3 +1,17 @@
+/**
+ * @module IPromptPersonaFactory
+ * 
+ * This module provides functionality to generate specialized AI prompt personas
+ * for different types of content summarization (articles, code, surveys).
+ * Each persona includes a system prompt and an item prompt tailored to the
+ * specific summarization task.
+ * 
+ * The module exports:
+ * - Predefined persona templates for Article, Code, and Survey summarization
+ * - getSummariser function to generate configured prompt personas with
+ *   customized word count targets
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
 
 
