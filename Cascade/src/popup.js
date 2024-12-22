@@ -1,5 +1,5 @@
 /*
-# Popup Module (popup.js)
+@module Cascade/src/popup.js  
 
 This module handles the extension's popup UI functionality and communication with the Braid API. Here are its key responsibilities:
 

@@ -1,3 +1,28 @@
+"""
+TestRunner Module
+
+This module provides functionality for running automated tests on LLM-based systems.
+It supports both static question testing and persona-based testing approaches using
+different strategies (Developer, Tester, and Business Analyst personas).
+
+The module handles:
+- Configuration of Azure OpenAI clients for chat and embedding
+- Test execution with configurable output directories
+- Multiple testing modes through a command-line interface
+- Logging of test execution and results
+- Error handling and directory management
+
+Dependencies:
+    - BoxerDataTest_v5
+    - common.ApiConfiguration
+    - PersonaStrategy
+    - openai
+
+Usage:
+    Run the script directly to start the interactive test runner:
+    $ python TestRunner.py
+"""
+
 # Copyright (c) 2024 Braid Technologies Ltd
 
 import logging

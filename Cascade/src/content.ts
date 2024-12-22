@@ -1,5 +1,5 @@
 /*
-# Content Script Module (content.ts)
+@module Cascade/src/content.ts
 
 ## Overview
 This TypeScript module serves as a content script for a Chrome extension that performs web scraping, text summarization, and content classification. It runs in the context of web pages and communicates with both the extension's background script and an external API service.

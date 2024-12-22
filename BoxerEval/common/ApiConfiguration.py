@@ -1,4 +1,22 @@
-# Copyright (c) 2024 Braid Technologies Ltd
+"""
+Configuration module for API settings and parameters.
+
+This module manages configuration settings for various API services including Azure OpenAI
+and Google's Gemini API. It provides a centralized location for API endpoints, keys,
+and other configuration parameters used throughout the application.
+
+The module includes:
+- Environment-specific configurations for Azure and OpenAI
+- API version management
+- Endpoint URLs
+- The ApiConfiguration class for structured access to all API-related settings
+
+Note:
+    Sensitive information like API keys should be stored in environment variables
+    and accessed via os.getenv() for security purposes.
+
+Copyright (c) 2024 Braid Technologies Ltd
+"""
 
 # Standard library imports
 import os

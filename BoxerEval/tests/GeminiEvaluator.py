@@ -1,3 +1,23 @@
+"""
+GeminiEvaluator Module
+
+This module provides functionality for evaluating the quality of LLM-generated summaries using Google's Gemini model.
+It assesses how well summaries capture core information from original content and address user queries.
+
+The module includes:
+- GeminiEvaluator class: Handles the evaluation process using Gemini's API
+- Scoring system: 1 (poor) to 4 (excellent) rating scale
+- Authentication: Uses GEMINI_API_KEY environment variable
+
+Dependencies:
+    - google.generativeai
+    - os
+
+Example:
+    evaluator = GeminiEvaluator()
+    score = evaluator.evaluate(original_content, summary)
+"""
+
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Imports
