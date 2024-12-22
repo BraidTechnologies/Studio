@@ -1,78 +1,63 @@
-# Cascade
+# Cascade Chrome Extension
 
-Cascade is an Edge browser extension that uses Braid API calls to summarize and classify web pages. It serves as a technology demonstrator for enterprise use cases, such as ticket summarization systems where you can automatically analyze and categorize content before closing tickets.
+A Chrome extension for web scraping, text summarization, and content classification. This extension helps users extract, analyze, and classify web content efficiently.
 
-## Features
+## 🚀 Features
+ - Web content scraping using artoo.js
+ - Text summarization
+ - Content classification
+ - Session-based authentication
+ - Real-time visual feedback
+ - Rate limiting for API calls
+ - Fallback scraping strategies
 
-- 🔍 Automatically summarizes web page content
-- 🏷️ Classifies pages into relevant categories
-- 🌐 Works as a Microsoft Edge browser extension
-- 🚀 Demonstrates enterprise-ready AI capabilities
-- 🔒 Integrates with Braid API for secure processing
+## 🛠️ Technical Architecture
+The extension consists of two main components:
 
-## Installation
+### 1. Content Script (`content.ts`)
+ Handles web scraping operations
+ Manages text extraction with fallback mechanisms
+ Implements text length limitations (100KB max)
+ Provides visual feedback during operations
+ Communicates with external APIs for processing
 
+### 2. Popup Interface (`popup.js`)
+ Manages user authentication via session keys
+ Implements debounced input handling
+ Validates session GUIDs (36-character format)
+ Displays processing results and feedback
+ Communicates with Braid API
+
+## 🔧 Setup & Installation
 1. Clone this repository
-2. Open Microsoft Edge and navigate to `edge://extensions/`
-3. Enable "Developer mode" in the bottom-left corner
-4. Click "Load unpacked" and select the project directory
+. Install dependencies (if any)
+. Load the extension in Chrome:
+  - Open Chrome and navigate to `chrome://extensions/`
+  - Enable "Developer mode"
+  - Click "Load unpacked" and select the extension directory
 
-## Usage
+## 🔑 Authentication
+The extension requires a valid session key (GUID format) to operate. Users must:
+ Enter a 36-character session key in the popup interface
+ Wait for validation from the Braid API
+ Receive confirmation before proceeding with operations
 
-1. Click the Cascade icon in your browser toolbar while on any webpage
-2. View the generated summary and classifications
-3. Use the insights to quickly understand page content and context
+## 🌐 API Integration
+The extension communicates with:
+ Braid API (`braid-api.azurewebsites.net`) for session validation
+ External APIs for text summarization and classification
 
-## Development
+## 🔄 Message Flow
+. User inputs session key in popup
+. Popup validates format and communicates with Braid API
+. On validation, messages are sent to content scripts
+. Content script performs scraping and processing
+. Results are displayed in popup interface
 
-### Prerequisites
+## ⚠️ Error Handling
+. Unhandled promise rejection suppression
+. Input validation
+. API call error handling
+. Graceful fallbacks for scraping operations
+. Rate limiting protection
 
-- Microsoft Edge browser
-- Edge Developer Mode enabled
-- Braid API access credentials
-
-### Setup
-
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/cascade.git
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Configure your Braid API credentials in the extension settings
-
-### Building
-
-```bash
-npm run build
-```
-
-## Technical Architecture
-
-Cascade leverages the Braid API to process webpage content through:
-- Content extraction
-- Natural language processing
-- Classification algorithms
-- Summary generation
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## **Licence**
-GNU AFFERO GENERAL PUBLIC LICENSE.
-
-This is intentionally a restrictive licence. The source is  available for non-commercial use (subject to the licence terms as listed, which enable use for learning, self study etc). Commercial use either must abide by the licence terms, which are strong, or a separate licence that enables more normal commercial use & distribution is available from Braid. Contact us for more details mailto:info@braidtech.io.
-
-## Acknowledgments
-
-- Built with Braid API
-- Developed for Microsoft Edge
-
-## Support
-
-For support, please open an issue in the GitHub repository.
