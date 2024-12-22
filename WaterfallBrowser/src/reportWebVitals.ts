@@ -1,3 +1,9 @@
+/**
+ * @module WaterfallBrowser/src/reportWebVitals.ts
+ * 
+ * This module provides a function to report web vitals metrics.
+ */
+
 import { ReportHandler } from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {

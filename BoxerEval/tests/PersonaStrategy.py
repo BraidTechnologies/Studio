@@ -1,3 +1,20 @@
+"""
+This module implements the Strategy pattern for generating persona-specific questions using LLM technology.
+
+It provides an abstract base class PersonaStrategy and concrete implementations for different user personas
+(Developer, Tester, and Business Analyst). Each strategy generates relevant questions based on the
+persona's perspective and interests in LLM technology.
+
+Classes:
+    PersonaStrategy (ABC): Abstract base class defining the interface for persona strategies
+    DeveloperPersonaStrategy: Generates questions from a developer's perspective
+    TesterPersonaStrategy: Generates questions from a tester's perspective
+    BusinessAnalystPersonaStrategy: Generates questions from a business analyst's perspective
+
+The module uses Azure OpenAI services to generate contextually relevant questions and includes
+proper error handling and logging mechanisms.
+"""
+
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Import necessary modules and libraries
