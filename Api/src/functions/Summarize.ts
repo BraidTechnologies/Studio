@@ -111,7 +111,7 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
    const chunks = chunkText(text, 0);
    const summaries = new Array<string>();
 
-   const recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
+   const recursizeSummarySize = model.defaultChunkSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
    if (chunks.length > 1) {
       // If the text was > threshold, we break it into chunks.

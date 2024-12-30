@@ -15,7 +15,7 @@ describe("Model", async function () {
       let model = getDefaultModel();
 
       expect (model.deploymentName.length > 0).toBe (true) ;   
-      expect (model.contextWindowSize > 0).toBe (true) ;             
+      expect (model.defaultChunkSize > 0).toBe (true) ;             
 
    });
 
@@ -24,7 +24,7 @@ describe("Model", async function () {
       let model = getModel(EModel.kSmall);
 
       expect (model.deploymentName.length > 0).toBe (true) ;   
-      expect (model.contextWindowSize > 0).toBe (true) ;   
+      expect (model.defaultChunkSize > 0).toBe (true) ;   
 
    });
 
@@ -33,7 +33,7 @@ describe("Model", async function () {
       let model = getModel(EModel.kSmall);
       let text = "small text";
 
-      expect (model.fitsInContext(text)).toBe (true) ;     
+      expect (model.fitsInDefaultChunk(text)).toBe (true) ;     
 
    });   
 
@@ -45,7 +45,7 @@ describe("Model", async function () {
       for (let i = 0; i < 12; i++)
           text = text + text;
 
-      expect (model.fitsInContext(text)).toBe (false) ;   
+      expect (model.fitsInDefaultChunk(text)).toBe (false) ;   
 
    });  
 

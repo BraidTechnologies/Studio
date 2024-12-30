@@ -14,50 +14,15 @@
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultModel, } from "../../../CommonTs/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
 import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";
+import { getEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
 
 const model = getDefaultModel();
-
-/**
- * Asynchronously calculates the embedding for the given text using the Azure AI service.
- * 
- * @param text The text for which the embedding needs to be calculated.
- * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
- */
-export async function calculateEmbedding(text: string): Promise<Array<number>> {
-
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
-
-
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
-      input: text,
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
-
-   const embedding = response.data.data[0].embedding as Array<number>;
-
-   return (embedding);
-}
-
+const driver = getEmbeddingModelDriver(model.implementsModel);
 
 /**
  * Embed function processes a request to embed text data using CalculateEmbedding function.
@@ -81,14 +46,14 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
          if ((text && text.length > 0)) {
 
             // If the text is bigger than available context, we have to summarise it
-            if (!model.fitsInContext(text)) {
-               text = await recursiveSummarize(spec.persona, text, 0, model.contextWindowSize)
+            if (!model.fitsInEmbeddingChunk(text)) {
+               text = await recursiveSummarize(spec.persona, text, 0, model.embeddingChunkSize)
 
-               context.log("Summarised");
+               context.log("Summarised to fit in maximum chunk.");
             }
 
             const embeddingResponse : IEmbedResponse = {
-               embedding: await calculateEmbedding(text)
+               embedding: await driver.embed(text)
             };
 
             return {

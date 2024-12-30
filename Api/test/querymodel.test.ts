@@ -11,7 +11,8 @@ import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
 import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
-import { IConversationElement, IEnrichedResponse, EConversationRole, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { IModelConversationElement, EModelConversationRole } from '../../CommonTs/src/IModelDriver';
 
 
 let personaPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.";
@@ -35,7 +36,7 @@ describe("QueryModel", async function () {
          repositoryId: EChunkRepository.kBoxer,
          personaPrompt: personaPrompt,
          enrichmentDocumentPrompt: enrichmentDocumentPrompt,
-         history: new Array<IConversationElement>(),
+         history: new Array<IModelConversationElement>(),
          question: question,
          similarityThreshold: 0.4,
          maxCount: 2
@@ -60,10 +61,10 @@ describe("QueryModel", async function () {
          repositoryId: EChunkRepository.kBoxer,
          personaPrompt: personaPrompt,
          enrichmentDocumentPrompt: enrichmentDocumentPrompt,
-         history: [{role: EConversationRole.kUser, content: priorQuestions[0]}, 
-                   {role: EConversationRole.kAssistant, content: priorAnswers[0]}, 
-                   {role: EConversationRole.kUser, content: priorQuestions[1]},
-                   {role: EConversationRole.kAssistant, content: priorAnswers[1]}],
+         history: [{role: EModelConversationRole.kUser, content: priorQuestions[0]}, 
+                   {role: EModelConversationRole.kAssistant, content: priorAnswers[0]}, 
+                   {role: EModelConversationRole.kUser, content: priorQuestions[1]},
+                   {role: EModelConversationRole.kAssistant, content: priorAnswers[1]}],
          question: question,
          similarityThreshold: 0.5,
          maxCount: 2

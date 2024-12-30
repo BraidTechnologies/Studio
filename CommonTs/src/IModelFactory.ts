@@ -14,7 +14,9 @@
 
 // Internal imports
 import {EModel, IModel} from './IModel';
-import {GPT4} from './Model';
+import { IEmbeddingModelDriver } from './IModelDriver';
+import {GPT4} from './Model.OAI';
+import { OpenAIEmbeddingModelDriver } from './IModelDrivers.OAI';
 
 /**
  * Returns the default model which is an instance of GPT4oMini.
@@ -40,3 +42,22 @@ export function getModel (model: EModel) : IModel  {
 }
 
 
+
+export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
+
+   return new OpenAIEmbeddingModelDriver();   
+}
+
+/**
+ * Returns an instance of IModel based on the provided EModel type.
+ * 
+ * @param model - The EModel type to determine the model.
+ * @returns An instance of IModel corresponding to the specified EModel type.
+ */
+export function getEmbeddingModelDriver (model: EModel) : IEmbeddingModelDriver  {
+
+   switch (model) {
+      default:
+         return new OpenAIEmbeddingModelDriver();
+   }
+}

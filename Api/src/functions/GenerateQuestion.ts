@@ -15,8 +15,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { EConversationRole, IConversationElement,IQuestionGenerationResponse, IGenerateQuestionQuery} from "../../../CommonTs/src/EnrichedQuery";
-
+import { IQuestionGenerationResponse, IGenerateQuestionQuery} from "../../../CommonTs/src/EnrichedQuery";
+import { IModelConversationElement, EModelConversationRole } from "../../../CommonTs/src/IModelDriver";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
 
 async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerationResponse> {
@@ -30,10 +30,10 @@ async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerat
       }
    });
 
-   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
+   const systemPromptElement: IModelConversationElement = { role: EModelConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IModelConversationElement = { role: EModelConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
 
-   const fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
+   const fullPrompt: Array<IModelConversationElement> = new Array<IModelConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt.push(questionElement);
 

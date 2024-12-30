@@ -22,7 +22,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
+import { IModelConversationElement, EModelConversationRole } from "../../../CommonTs/src/IModelDriver";
+import { IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
 import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 
@@ -49,11 +50,11 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       }
    });
 
-   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
-   const enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
+   const systemPromptElement: IModelConversationElement = { role: EModelConversationRole.kSystem, content: query.personaPrompt };
+   const questionElement: IModelConversationElement = { role: EModelConversationRole.kUser, content: query.question };
+   const enrichedElement: IModelConversationElement = { role: EModelConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
 
-   let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
+   let fullPrompt: Array<IModelConversationElement> = new Array<IModelConversationElement>();
    fullPrompt.push(systemPromptElement);
    fullPrompt = fullPrompt.concat(query.history);
    fullPrompt.push(questionElement);
@@ -69,7 +70,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
       }
    );
 
-   let enrichmentPrompt: Array<IConversationElement> = new Array<IConversationElement>();
+   let enrichmentPrompt: Array<IModelConversationElement> = new Array<IModelConversationElement>();
    enrichmentPrompt.push(systemPromptElement);
    enrichmentPrompt = enrichmentPrompt.concat(query.history);
    enrichmentPrompt.push(enrichedElement);

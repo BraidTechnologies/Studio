@@ -33,6 +33,7 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
          };
       }
       catch (e) {
+         context.error (e);         
          return defaultErrorResponse();
       }      
    }
@@ -58,6 +59,7 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
          };
       }
       catch (e) {
+         context.error (e);         
          return defaultErrorResponse();
       }
    }
@@ -75,14 +77,15 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
 
          const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
-         const chunks = await repository.lookupFromUrl (spec);
+         const chunk = await repository.lookupFromUrl (spec);
 
          return {
             status: 200, // Ok
-            body: JSON.stringify (chunks)
+            body: JSON.stringify (chunk)
          };
       }
       catch (e) {
+         context.error (e);
          return defaultErrorResponse();
       }
    }

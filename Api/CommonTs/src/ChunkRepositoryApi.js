@@ -11,6 +11,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChunkRepostoryApi = void 0;
+/**
+ * @module ChunkRepositoryApi
+ *
+ * This module provides an API wrapper for managing text chunking operations.
+ * It extends the base Api class and implements IStorableRepostoryApiWrapper interface
+ * to provide CRUD operations for text chunking.
+ *
+ * The module handles:
+ * - Loading individual text chunks
+ * - Finding text chunks by search key
+ * - Saving new or updated text chunks
+ * - Removing text chunks
+ * - Retrieving recent text chunks with query specifications
+ *
+ * All operations require proper authentication via session key and communicate
+ * with the appropriate environment-specific API endpoints.
+ */
 const Api_1 = require("./Api");
 const StorableRepositoryApi_1 = require("./StorableRepositoryApi");
 /**

@@ -1,18 +1,20 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
-// Definitions for the data elements of the Query API
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EStandardPrompts = exports.EConversationRole = void 0;
 /**
- * Defines the structure of a conversation element.
+ * @module EnrichedQuery
+ *
+ * This module defines the core interfaces and enums for the Query API, which handles
+ * enriched conversations with AI assistants. It includes:
+ *
+ * - Conversation roles and elements
+ * - Standard system prompts for different AI interactions
+ * - Query and response interfaces for enriched conversations
+ * - Structures for question generation and responses
+ *
+ * The interfaces defined here are used throughout the application to maintain
+ * type safety when working with AI-enriched conversations and queries.
  */
-var EConversationRole;
-(function (EConversationRole) {
-    EConversationRole["kSystem"] = "system";
-    EConversationRole["kAssistant"] = "assistant";
-    EConversationRole["kUser"] = "user";
-})(EConversationRole || (exports.EConversationRole = EConversationRole = {}));
-;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EStandardPrompts = void 0;
 /**
  * Enum representing standard prompts for an AI assistant helping an application developer understand generative AI.
  * Includes prompts for initial questions, enrichment, follow-up questions, and generating questions.

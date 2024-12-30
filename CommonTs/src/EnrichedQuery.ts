@@ -17,17 +17,7 @@
 // Definitions for the data elements of the Query API
 
 import { EChunkRepository, IRelevantEnrichedChunk} from "./EnrichedChunk";
-
-
-/**
- * Defines the structure of a conversation element.
- */
-export enum EConversationRole {
-
-   kSystem = "system",
-   kAssistant = "assistant",
-   kUser = "user"
-};
+import { IModelConversationElement } from "./IModelDriver";
 
 /**
  * Enum representing standard prompts for an AI assistant helping an application developer understand generative AI.
@@ -45,14 +35,6 @@ export enum EStandardPrompts {
 
 
 /**
- * Defines the structure of a conversation element.
- */
-export interface IConversationElement {
-   role: EConversationRole,
-   content: string
-}
-
-/**
  * Defines the structure of an enriched query object.
  * Contains information about the repository, persona prompt, question prompt,
  * enrichment document prompt, and conversation history.
@@ -64,7 +46,7 @@ export interface IEnrichedQuery {
    enrichmentDocumentPrompt: string;
    similarityThreshold: number;
    maxCount: number;
-   history: Array<IConversationElement>;
+   history: Array<IModelConversationElement>;
    question: string;
 }
 
