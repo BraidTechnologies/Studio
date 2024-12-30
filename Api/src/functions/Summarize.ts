@@ -27,7 +27,7 @@ import axiosRetry from 'axios-retry';
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
 import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
-import { getSummariser } from "./IPromptPersonaFactory";
+import { getSummariser } from "../../../CommonTs/src/IPromptPersonaFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 const minimumTextLength = 64;

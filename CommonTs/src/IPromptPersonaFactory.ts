@@ -15,7 +15,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
 
-import { EPromptPersona, IPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { EPromptPersona, IPromptPersona } from "./IPromptPersona";
 
 const ArticleSummariserPersona: IPromptPersona = {
 

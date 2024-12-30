@@ -13,6 +13,7 @@
 
 // Copyright (c) 2024 Braid Technologies Ltd
 
+import { EPromptPersona } from './IPromptPersona';
 /**
  * Enum representing the roles in a conversation with a model.
  * 
@@ -51,8 +52,37 @@ export interface IModelConversationPrompt {
    prompt: string;
 }
 
-
+/**
+ * Interface for drivers that provide text embedding capabilities.
+ * Text embeddings are vector representations of text that capture semantic meaning,
+ * allowing for operations like semantic search and similarity comparisons.
+ * 
+ * @interface IEmbeddingModelDriver
+ */
 export interface IEmbeddingModelDriver {
+    /**
+     * Converts text into a vector embedding representation.
+     * 
+     * @param {string} text - The input text to be embedded
+     * @returns {Promise<Array<number>>} A promise that resolves to an array of numbers 
+     *         representing the text embedding vector
+     */
+    embed(text: string): Promise<Array<number>>;
+}
 
-   embed(text: string): Promise<Array<number>>;
+/**
+ * Interface for drivers that provide chat model capabilities.
+ * 
+ * @interface IChatModelDriver
+ */
+export interface IChatModelDriver {
+   /**
+    * Generates a response to a given conversation prompt.
+    * 
+    * @param {EPromptPersona} persona - The persona to use for the response
+    * @param {number} words - The (indicative) number of words to use for the response
+    * @param {IModelConversationPrompt} prompt - The conversation prompt to be processed
+    * @returns {Promise<IModelConversationElement>} A promise that resolves to the generated response
+    */
+   generateResponse(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement>;
 }

@@ -13,7 +13,6 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EModelConversationRole = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
 /**
  * Enum representing the roles in a conversation with a model.
  *

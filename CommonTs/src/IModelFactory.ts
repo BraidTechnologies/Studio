@@ -14,9 +14,9 @@
 
 // Internal imports
 import {EModel, IModel} from './IModel';
-import { IEmbeddingModelDriver } from './IModelDriver';
+import { IEmbeddingModelDriver, IChatModelDriver } from './IModelDriver';
 import {GPT4} from './Model.OAI';
-import { OpenAIEmbeddingModelDriver } from './IModelDrivers.OAI';
+import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver } from './IModelDrivers.OAI';
 
 /**
  * Returns the default model which is an instance of GPT4oMini.
@@ -42,6 +42,10 @@ export function getModel (model: EModel) : IModel  {
 }
 
 
+/**
+ * Returns an instance of IEmbeddingModelDriver for the default embedding model.
+ * @returns {IEmbeddingModelDriver} The default embedding model driver.
+ */
 
 export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
 
@@ -49,15 +53,32 @@ export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
 }
 
 /**
- * Returns an instance of IModel based on the provided EModel type.
- * 
+ * Returns an instance of IEmbeddingModelDriver based on the provided EModel type.
  * @param model - The EModel type to determine the model.
- * @returns An instance of IModel corresponding to the specified EModel type.
+ * @returns {IEmbeddingModelDriver} An instance of IEmbeddingModelDriver corresponding to the specified EModel type.
  */
 export function getEmbeddingModelDriver (model: EModel) : IEmbeddingModelDriver  {
 
    switch (model) {
       default:
          return new OpenAIEmbeddingModelDriver();
+   }
+}
+
+export function getDefaultChatModelDriver () : IChatModelDriver  {
+
+   return new OpenAIChatModelDriver();   
+}
+
+/**
+ * Returns an instance of IChatModelDriver based on the provided EModel type.
+ * @param model - The EModel type to determine the model.
+ * @returns {IChatModelDriver} An instance of IChatModelDriver corresponding to the specified EModel type.
+ */
+export function getChatModelDriver (model: EModel) : IChatModelDriver  {
+
+   switch (model) {
+      default:
+         return new OpenAIChatModelDriver();
    }
 }
