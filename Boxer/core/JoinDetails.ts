@@ -1,4 +1,15 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module JoinDetails
+ * @description Provides a class for managing join details in the Boxer application.
+ * 
+ * This module includes the JoinDetails class which handles:
+ * - Parsing join details from a string
+ * - Validating join details
+ * - Creating join details from parts
+ * - Converting join details to a string
+ */
+
 import { EConfigStrings } from "./ConfigStrings";
 import { SessionKey, ConversationKey } from "./Keys";
 

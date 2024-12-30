@@ -19,7 +19,7 @@ import axiosRetry from 'axios-retry';
 
 import { IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt } from './IModelDriver';
 import { EPromptPersona } from './IPromptPersona';
-import { getSummariser } from "./IPromptPersonaFactory";
+import { getChatPersona } from "./IPromptPersonaFactory";
 
 /**
  * Class representing an OpenAI embedding model driver.
@@ -75,19 +75,20 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
 export class OpenAIChatModelDriver implements IChatModelDriver {
 
    generateResponse(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
-      return chat(persona, prompt.prompt, words);
+      return chat(persona, words, prompt);
    }
 }
 
 /**
- * Asynchronously summarizes the given text using an AI assistant.
+ * Asynchronously generates a chat response using the Azure OpenAI service.
  * 
- * @param persona - The persona to use for the chat
- * @param text The text to be summarized.
- * @param words The number of words to use for the summary.
- * @returns A Promise that resolves to the new conversation element.
+ * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
+ * @param words The target number of words for the response
+ * @param prompt The conversation prompt containing the system and user messages
+ * @returns A Promise that resolves to a model conversation element containing the AI response
  */
-async function chat (persona: EPromptPersona, text: string, words: number): Promise<IModelConversationElement> {
+
+async function chat (persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -98,7 +99,7 @@ async function chat (persona: EPromptPersona, text: string, words: number): Prom
       }
    });
 
-   const summariser = getSummariser(persona, words, text);
+   const summariser = getChatPersona(persona, words, prompt.prompt);
 
    const systemPrompt = summariser.systemPrompt;
    const userPrompt = summariser.itemPrompt;

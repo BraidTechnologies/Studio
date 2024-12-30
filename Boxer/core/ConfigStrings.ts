@@ -1,4 +1,12 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module ConfigStrings
+ * @description Provides constants for configuration strings used in the Boxer application.
+ * 
+ * This module includes strings for logging categories, font names, URLs, Azure settings, and more.
+ * It also includes constants for various IDs and keys used in the application, such as session keys,
+ * conversation keys, and AI model IDs.
+ */
 
 export enum EConfigStrings {
 

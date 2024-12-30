@@ -17,7 +17,8 @@ export enum EPromptPersona {
 
    kArticleSummariser = "ArticleSummariser", 
    kCodeSummariser = "CodeSummariser",
-   kSurveySummariser = "SurveySummariser"
+   kSurveySummariser = "SurveySummariser",
+   kDeveloperAssistant = "DeveloperAssistant"
 };
 
 export interface IPromptPersona {

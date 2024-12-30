@@ -16,7 +16,7 @@
 import {EModel, IModel} from './IModel';
 import { IEmbeddingModelDriver, IChatModelDriver } from './IModelDriver';
 import {GPT4} from './Model.OAI';
-import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver } from './IModelDrivers.OAI';
+import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver } from './ModelDrivers.OAI';
 
 /**
  * Returns the default model which is an instance of GPT4oMini.

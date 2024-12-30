@@ -1,4 +1,17 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module ActivityRepository
+ * @description Provides repository implementation for storing and retrieving user activities in Braid.
+ * 
+ * This module implements the IActivityRepository interface to handle persistence of different
+ * types of activity records (URLs visited, likes/unlikes, messages) to Cosmos DB. It provides:
+ * - Activity saving through the ActivityRepositoryApi
+ * - Loading of recent URL-based activities
+ * - Loading of recent message activities
+ * 
+ * The repository requires a session key for authentication and uses the environment configuration
+ * to determine the appropriate API endpoints for storage operations.
+ */
 
 // 3rd party imports
 import axios from "axios";

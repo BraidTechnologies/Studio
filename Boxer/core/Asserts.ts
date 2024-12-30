@@ -1,4 +1,12 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Asserts
+ * @description Provides utility functions for asserting the validity of objects.
+ * 
+ * This module includes functions for checking if an object is undefined or null,
+ * and throwing an error if it is. It is used to enforce type safety and prevent
+ * runtime errors in the application.
+ */
 
 import { AssertionFailedError} from './Errors';
 

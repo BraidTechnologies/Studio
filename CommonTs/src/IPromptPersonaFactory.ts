@@ -38,7 +38,7 @@ const SurveySummariserPersona: IPromptPersona = {
    itemPrompt: ""
 };
 
-export function getSummariser (persona: EPromptPersona, wordTarget: number, textToSummarise: string) : IPromptPersona {
+export function getChatPersona (persona: EPromptPersona, wordTarget: number, textToSummarise: string) : IPromptPersona {
 
    const wordString = Math.floor (wordTarget).toString();
 

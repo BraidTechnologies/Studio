@@ -1,4 +1,18 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module BoxerFluidConnection
+ * @description Manages the Fluid connection for the Boxer application.
+ * 
+ * This module provides the BraidFluidConnection class which handles:
+ * - Setting up and managing local caucuses for participants and messages
+ * - Adding the Boxer persona to the participant caucus
+ * - Tracking active call state
+ * - Building enriched queries from message history
+ * 
+ * The connection requires a session key for authentication and uses the environment 
+ * configuration to determine appropriate API endpoints. It works with the QueryModelApi
+ * to make actual API calls while providing higher-level conversation management.
+ */
 
 import { SharedMap } from "fluid-framework/legacy";
 import { Persona } from './Persona';

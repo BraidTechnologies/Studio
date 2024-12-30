@@ -1,4 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Message
+ * @description Provides a class for managing messages in the Boxer application.
+ * 
+ * This module includes the Message class which handles:
+ * - Creating and managing message objects with text, author, responseTo, and timestamp
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying message objects from JSON or constructed sources
+ */
 
 import GPT4Tokenizer from 'gpt4-tokenizer';
 
