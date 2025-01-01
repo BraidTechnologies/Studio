@@ -20,7 +20,7 @@ exports.getEmbeddingModelDriver = getEmbeddingModelDriver;
 exports.getDefaultChatModelDriver = getDefaultChatModelDriver;
 exports.getChatModelDriver = getChatModelDriver;
 const Model_OAI_1 = require("./Model.OAI");
-const IModelDrivers_OAI_1 = require("./IModelDrivers.OAI");
+const ModelDrivers_OAI_1 = require("./ModelDrivers.OAI");
 /**
  * Returns the default model which is an instance of GPT4oMini.
  * @returns {IModel} The default model.
@@ -45,7 +45,7 @@ function getModel(model) {
  * @returns {IEmbeddingModelDriver} The default embedding model driver.
  */
 function getDefaultEmbeddingModelDriver() {
-    return new IModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
+    return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
 }
 /**
  * Returns an instance of IEmbeddingModelDriver based on the provided EModel type.
@@ -55,11 +55,11 @@ function getDefaultEmbeddingModelDriver() {
 function getEmbeddingModelDriver(model) {
     switch (model) {
         default:
-            return new IModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
+            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
     }
 }
 function getDefaultChatModelDriver() {
-    return new IModelDrivers_OAI_1.OpenAIChatModelDriver();
+    return new ModelDrivers_OAI_1.OpenAIChatModelDriver();
 }
 /**
  * Returns an instance of IChatModelDriver based on the provided EModel type.
@@ -69,7 +69,7 @@ function getDefaultChatModelDriver() {
 function getChatModelDriver(model) {
     switch (model) {
         default:
-            return new IModelDrivers_OAI_1.OpenAIChatModelDriver();
+            return new ModelDrivers_OAI_1.OpenAIChatModelDriver();
     }
 }
 //# sourceMappingURL=IModelFactory.js.map

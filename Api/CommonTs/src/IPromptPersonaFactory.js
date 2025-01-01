@@ -13,7 +13,7 @@
  *   customized word count targets
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSummariser = getSummariser;
+exports.getChatPersona = getChatPersona;
 // Copyright (c) 2024 Braid Technologies Ltd
 const IPromptPersona_1 = require("./IPromptPersona");
 const ArticleSummariserPersona = {
@@ -31,7 +31,7 @@ const SurveySummariserPersona = {
     systemPrompt: "",
     itemPrompt: ""
 };
-function getSummariser(persona, wordTarget, textToSummarise) {
+function getChatPersona(persona, wordTarget, textToSummarise) {
     const wordString = Math.floor(wordTarget).toString();
     switch (persona) {
         case IPromptPersona_1.EPromptPersona.kSurveySummariser:

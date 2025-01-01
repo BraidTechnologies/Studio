@@ -60,6 +60,14 @@ export interface IModelConversationPrompt {
  * @interface IEmbeddingModelDriver
  */
 export interface IEmbeddingModelDriver {
+   /**
+    * Gets the type identifier of the model being driven.
+    * 
+    * @returns {string} A string identifier representing the type of the underlying model
+    */
+   getDrivenModelType(): string;
+   
+   
     /**
      * Converts text into a vector embedding representation.
      * 
@@ -76,6 +84,14 @@ export interface IEmbeddingModelDriver {
  * @interface IChatModelDriver
  */
 export interface IChatModelDriver {
+
+      /**
+    * Gets the type identifier of the model being driven.
+    * 
+    * @returns {string} A string identifier representing the type of the underlying model
+    */
+   getDrivenModelType(): string;
+
    /**
     * Generates a response to a given conversation prompt.
     * 

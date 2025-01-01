@@ -16,10 +16,16 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 // Internal imports
-
-import { IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt } from './IModelDriver';
+import { IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole } from './IModelDriver';
 import { EPromptPersona } from './IPromptPersona';
 import { getChatPersona } from "./IPromptPersonaFactory";
+
+interface OpenAIChatElement {
+   role: string;
+   content: string;
+}
+
+let modelType = "OpenAI";
 
 /**
  * Class representing an OpenAI embedding model driver.
@@ -31,6 +37,10 @@ import { getChatPersona } from "./IPromptPersonaFactory";
  * @throws {Error} Throws an error if the method is not implemented.
  */
 export class OpenAIEmbeddingModelDriver implements IEmbeddingModelDriver {
+
+   getDrivenModelType(): string {
+      return modelType;
+   }
 
    embed(text: string): Promise<Array<number>> {
       return calculateEmbedding(text);
@@ -55,24 +65,40 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
       }
    });
 
-
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
-      input: text,
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
+   try {
+      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+         input: text,
+      },
+         {
+            headers: {
+               'Content-Type': 'application/json',
+               'api-key': process.env.AzureAiKey
+            }
          }
-      }
-   );
+      );
 
-   const embedding = response.data.data[0].embedding as Array<number>;
+      const embedding = response.data.data[0].embedding as Array<number>;
 
-   return (embedding);
+      return (embedding);
+
+   }
+   catch (error) {
+      console.error(error);
+      throw error;
+   }
 }
 
+/**
+ * Class representing a driver for OpenAI chat models.
+ * Implements the IChatModelDriver interface to provide methods for
+ * retrieving the model type and generating responses to conversation prompts.
+ */
 export class OpenAIChatModelDriver implements IChatModelDriver {
+
+
+   getDrivenModelType(): string {
+      return modelType;
+   }
 
    generateResponse(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
       return chat(persona, words, prompt);
@@ -85,10 +111,10 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
  * @param words The target number of words for the response
  * @param prompt The conversation prompt containing the system and user messages
- * @returns A Promise that resolves to a model conversation element containing the AI response
+ * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
-async function chat (persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
+async function chat(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -104,27 +130,42 @@ async function chat (persona: EPromptPersona, words: number, prompt: IModelConve
    const systemPrompt = summariser.systemPrompt;
    const userPrompt = summariser.itemPrompt;
 
-   console.log(systemPrompt)
+   let messages: Array<OpenAIChatElement> = [];
 
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: [
-         {
-            role: 'system',
-            content: systemPrompt
-         },
-         {
-            role: 'user',
-            content: userPrompt
-         }
-      ],
-   },
+   messages.push({
+      role: 'system',
+      content: systemPrompt
+   });
+
+   for (const message of prompt.history) {
+      messages.push({
+         role: message.role,
+         content: message.content
+      });
+   }
+
+   messages.push({
+      role: 'user',
+      content: userPrompt
+   });
+
+   try {
+      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+         messages: messages
+      },
       {
          headers: {
             'Content-Type': 'application/json',
             'api-key': process.env.AzureAiKey
          }
-      }
-   );
+      });
 
-   return (response.data.choices[0].message.content);
+      return {role: EModelConversationRole.kAssistant, 
+         content: response.data.choices[0].message.content};
+   }
+   catch (error) {
+      console.error(error);
+      throw error;
+   }
+
 }
