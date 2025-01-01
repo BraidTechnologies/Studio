@@ -6,7 +6,7 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
 import { EModel } from '../../CommonTs/src/IModel';
-import { IModelConversationPrompt} from '../../CommonTs/src/IModelDriver';
+import { IModelConversationPrompt, EModelConversationRole} from '../../CommonTs/src/IModelDriver';
 import { getChatModelDriver, getDefaultChatModelDriver } from '../../CommonTs/src/IModelFactory';
 import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
 
@@ -30,10 +30,21 @@ describe("Chat Driver", function () {
       let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
 
       let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, 100, prompt);
-      console.log (response.content);
       expect(response.content.length > 0).toEqual(true);   
 
    }).timeout(10000);
+
+   it("Needs pass a multi line prompt", async function () {
+
+      let driver = getChatModelDriver (EModel.kLarge);
+
+      let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
+         history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, 100, prompt);
+      expect(response.content.includes("10:30")).toEqual(true);   
+
+   }).timeout(10000);   
 
 });
 
