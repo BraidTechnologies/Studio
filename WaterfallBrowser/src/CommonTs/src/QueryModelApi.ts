@@ -1,4 +1,14 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module QueryModelApi
+ * @description Provides an API for querying models with enrichment and generating questions.
+ * 
+ * This module contains the QueryModelApi class, which handles the interaction with the specified environment
+ * to query models with enrichment and generate questions. It provides methods for:
+ * - Querying models with enrichment
+ * - Generating questions
+ */
+
 import axios from 'axios';
 
 import { Api } from './Api';

@@ -1,3 +1,14 @@
+/**
+ * @module Fluid
+ * @description Defines the core interfaces for Fluid Framework token authentication.
+ * Contains type definitions for user authentication, token requests, and token responses
+ * used in the Fluid Framework integration.
+ * 
+ * These interfaces facilitate the token-based authentication flow between the client
+ * application and the Fluid service, supporting both local development and production
+ * environments.
+ */
+
 // Copyright (c) 2024 Braid Technologies Ltd
 // Definitions for the data elements of the Fluid Token API
 

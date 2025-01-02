@@ -12,7 +12,6 @@ import axios from "axios";
 // Local
 import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
-import { EConfigStrings } from "./ConfigStrings";
 import { EConfigNumbers } from "./ConfigStrings";
 import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
 import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/SummariseApi.Types"

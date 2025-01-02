@@ -1,6 +1,17 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Model
+ * @description Provides a class for managing AI models and their deployment settings.
+ * 
+ * This module contains the GPT4 class, which implements the IModel interface.
+ * It provides methods for:
+ * - Checking if a text fits within the context window size with buffer
+ * - Chunking text into smaller pieces with optional overlap
+ * - Estimating the number of tokens in a given text
+ */
+
 import { InvalidParameterError } from './Errors';
-import { IModel } from './IModel';
+import { EModel, IModel } from './IModel';
 import GPT4Tokenizer from 'gpt4-tokenizer';
 
 const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
@@ -14,14 +25,24 @@ export class GPT4 implements IModel {
 
    deploymentName: string;
    embeddingDeploymentName: string;
-   contextWindowSize: number;
-   contextWindowSizeWithBuffer: number;
+   defaultChunkSize: number;
+   maximumChunkSize: number;
+   embeddingChunkSize: number;
+   defaultChunkSizeWithBuffer: number;
+   maximumChunkSizeWithBuffer: number;
+   embeddingChunkSizeWithBuffer: number;
+
+   implementsModel: EModel = EModel.kLarge;
 
    public constructor() {
       this.deploymentName = "GPT4o";
       this.embeddingDeploymentName = "Embed-3";
-      this.contextWindowSize = 8192;
-      this.contextWindowSizeWithBuffer = (8192 - 256)
+      this.defaultChunkSize = 8192;
+      this.maximumChunkSize = 65536;
+      this.embeddingChunkSize = 8191;
+      this.defaultChunkSizeWithBuffer = (8192 - 256)
+      this.embeddingChunkSizeWithBuffer = (8191 - 256)
+      this.maximumChunkSizeWithBuffer = (65536 - 256)      
    }
 
    /**
@@ -30,15 +51,45 @@ export class GPT4 implements IModel {
     * @param text The text to check if it fits within the context window size with buffer.
     * @returns True if the text fits within the context window size with buffer, false otherwise.
     */
-   fitsInContext(text: string): boolean {
+   fitsInDefaultChunk(text: string): boolean {
 
       let estimatedTokens = tokenizer.estimateTokenCount(text);
 
-      if (estimatedTokens < this.contextWindowSizeWithBuffer)
+      if (estimatedTokens < this.defaultChunkSizeWithBuffer)
          return true;
       return false;
    }
 
+   /**
+    * Checks if the given text fits within the maximum context window size with buffer.
+    * 
+    * @param text The text to check if it fits within the context window size with buffer.
+    * @returns True if the text fits within the context window size with buffer, false otherwise.
+    */
+   fitsInMaximumChunk(text: string): boolean {
+
+         let estimatedTokens = tokenizer.estimateTokenCount(text);
+   
+         if (estimatedTokens < this.maximumChunkSizeWithBuffer)
+            return true;
+         return false;
+      }
+
+   /**
+    * Checks if the given text fits within the embedding context window size with buffer.
+    * 
+    * @param text The text to check if it fits within the context window size with buffer.
+    * @returns True if the text fits within the context window size with buffer, false otherwise.
+    */
+   fitsInEmbeddingChunk(text: string): boolean {
+
+      let estimatedTokens = tokenizer.estimateTokenCount(text);
+
+      if (estimatedTokens < this.embeddingChunkSizeWithBuffer)
+         return true;
+      return false;
+   }      
+   
    /**
     * Splits the input text into chunks based on the specified overlap of words.
     * 
@@ -49,8 +100,8 @@ export class GPT4 implements IModel {
    chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
 
       let effectiveChunkSize = chunkSize
-         ? Math.min(this.contextWindowSizeWithBuffer, chunkSize)
-         : this.contextWindowSizeWithBuffer;
+         ? Math.min(this.defaultChunkSizeWithBuffer, chunkSize)
+         : this.defaultChunkSizeWithBuffer;
 
       if (overlapWords) {
 
