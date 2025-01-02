@@ -1,20 +1,20 @@
 **FindThemeApi.Types_test.py**
 
-This code defines JSON Schemas for request and response data structures (`IFindThemeRequestSchema` and `IFindThemeResponseSchema`). These schemas specify required properties, data types, and prohibit additional properties.
+This code defines and validates JSON schemas for request and response using the `jsonschema` library and tests these schemas using the `pytest` framework.
 
-The `test_valid_ifind_theme_request`, `test_invalid_ifind_theme_request_missing_text`, `test_invalid_ifind_theme_request_missing_length`, `test_invalid_ifind_theme_request_additional_properties`, and `test_invalid_ifind_theme_request_wrong_type` functions define test cases for validating instances against `IFindThemeRequestSchema`.
+The `IFindThemeRequestSchema` specifies a request schema requiring `text` as a string and `length` as a number, with no additional properties allowed.
 
-Similarly, the `test_valid_ifind_theme_response`, `test_invalid_ifind_theme_response_missing_theme`, `test_invalid_ifind_theme_response_additional_properties`, and `test_invalid_ifind_theme_response_wrong_type` functions define test cases for validating instances against `IFindThemeResponseSchema`.
+The `IFindThemeResponseSchema` outlines a response schema needing a `theme` as a string, disallowing any extra properties.
 
-These tests utilize `pytest` and `jsonschema` libraries to ensure correct schema implementation and validate payload correctness.
+There are also test functions to validate the adherence to schemas. Functions like `test_valid_ifind_theme_request`, `test_invalid_ifind_theme_request_missing_text`, etc., check for valid and different invalid payloads, ensuring exceptions are raised when validations fail.
 
 **PagerepositoryApi.Types_test.py**
 
-This module provides unit tests for a web API using the `pytest` framework and mocks HTTP requests with `unittest.mock.patch`.
+This code is designed for testing an API endpoint at `http://api.example.com/functions` using the `pytest` framework and `unittest.mock` for mocking. 
 
-**Important functions:**
-- `test_get_page_success()`: This function tests if an API call to fetch a page with the given URL and parameters returns a successful response (status code 200) and the expected HTML content.
-- `test_get_page_missing_param()`: This function tests if an API call without required parameters returns a 400 status code and an appropriate error message indicating missing parameters.
+The `test_get_page_success` function tests a successful request with a dummy parameter, verifying a 200 status code and checking the response contains the expected HTML content.
 
-`BASE_URL` is a constant holding the base URL for the API, and `sample_successful_html` provides sample HTML for a successful test response.
+The `test_get_page_missing_param` function tests an unsuccessful request due to a missing required parameter, expecting a 400 status code and an appropriate error message in the response.
+
+The important methods in this module are `test_get_page_success` and `test_get_page_missing_param`.
 

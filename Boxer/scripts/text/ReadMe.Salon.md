@@ -1,54 +1,76 @@
 **enrich_lite.py**
 
-- The script removes text and description fields from dictionaries in a JSON list and saves the modified list to a new JSON file.
-- The `remove_text` function processes each dictionary in the list to exclude the "text" and "description" keys.
-- The `enrich_lite` function logs any errors, loads the JSON file, processes its content using `remove_text`, and saves the modified data to a new JSON file.
-- The `enrich_lite` function expects a `destinationDir` argument indicating where to find and save the files.
-- Key elements include the `remove_text` function for filtering data and the `enrich_lite` function for orchestrating the file operations and logging.
+This script processes a JSON file by removing specific fields ("text" and "description") from each dictionary within a list of dictionaries, and then saves the modified version as a new JSON file.
+
+**Key components**:
+- `remove_text(segments)`: Function that iterates through a list of dictionaries and removes the keys "text" and "description".
+- `enrich_lite(destinationDir)`: Main function that reads the input JSON file, uses `remove_text` to process the data, and writes the result to a new JSON file.
+
+It also includes error logging if the destination directory is not provided and logs the total number of segments processed.
 
 **enrich_text_chunks.py**
 
-This script converts markdown-based JSON transcript files into a master CSV file. 
+The script generates a master CSV file from transcript files by processing JSON files.
 
-The `MddSegment` class represents segments of the transcript, including text, start time, and duration. The `gen_metadata_master` function generates metadata for these segments, while `clean_text` removes unwanted characters from the text. The functions `append_text_to_previous_chunk` and `add_new_chunk` help transition between chunks smoothly and add new chunks if certain conditions are met. 
+`MddSegment`: A class that represents a segment of an MDD file, containing text, start time, and duration.
 
-The `parse_json_mdd_transcript` function parses the JSON file, breaking down the transcript into smaller chunks while calculating token lengths and segment time duration. 
+`gen_metadata_master`: Cleans and generates metadata for each transcript.
 
-The `get_transcript` function processes each `.mdd` file to extract the transcript chunks. 
+`clean_text`: Cleans text by removing unwanted characters and formatting issues.
 
-The `enrich_text_chunks` function coordinates the entire process and saves the extracted and processed chunks into a master JSON file. It uses the Tiktoken library to manage tokenization and the Rich library for progress tracking.
+`append_text_to_previous_chunk`: Ensures smooth context transition by appending a portion of the text to the previous chunk.
+
+`add_new_chunk`: Adds a new chunk of text to the list of chunks if it meets the required length.
+
+`parse_json_mdd_transcript`: Parses the JSON MDD file to extract text, segment it appropriately, and handle token limits and transitions between chunks.
+
+`get_transcript`: Retrieves and processes the transcript from an MDD file, checking the file's existence and updating the total processed files.
+
+`enrich_text_chunks`: Manages the entire process, setting up logging, initializing variables, iterating over JSON files in the specified directory, and saving the processed chunks to a master JSON file.
+
+Important global variables: `PERCENTAGE_OVERLAP`, `AVERAGE_CHARACTERS_PER_TOKEN`, `AVERAGE_WORDS_PER_MINUTE`, `AVERAGE_TOKENS_PER_WORD`, `total_files`.
 
 **enrich_text_embeddings.py**
 
-1. This script creates text embeddings using the OpenAI API, specifically integrating with Azure's variant of OpenAI.
+### Summary:
+
+The script creates text embeddings using the OpenAI API and enriches text data stored in JSON files.
+
+**Important Classes/Functions:**
+
+- **normalize_text:** Cleans and normalizes input text by removing extra spaces and newlines.
   
-2. The `normalize_text` function cleans and normalizes text by removing unwanted spaces, newlines, and incorrect punctuation formats.
+- **get_text_embedding:** Attempts to fetch text embeddings from the OpenAI API with retry logic for handling exceptions.
+    
+- **process_queue:** Processes chunks of text in a queue to retrieve embeddings or retrieve cached embeddings, then stores the results.
+    
+- **enrich_text_embeddings:** Configures logging, sets up the OpenAI client, reads chunks from a JSON file, initializes processing threads, and outputs the enriched data back to a JSON file.
 
-3. The `get_text_embedding` function retrieves embeddings for the provided text using the OpenAI API, with retry logic for error handling.
+### Points:
 
-4. The `process_queue` function processes chunks of text by either fetching saved embeddings or generating new ones if necessary, then updates the output queue.
+1. **Imports:** The script imports necessary libraries and modules including logging, threading, progress tracking, and OpenAI's API.
+   
+2. **Normalization:** Sanitizes input texts to remove extra spaces, newlines, and other unwanted characters.
+   
+3. **Retry Logic:** Implements retry mechanisms for OpenAI API calls with exponential backoff to handle transient errors.
 
-5. The `enrich_text_embeddings` function orchestrates the preparation and processing of text chunks, manages logging, configures threading, and ensures chunks are processed and saved correctly.
+4. **Text Embeddings:** Retrieves or computes text embeddings and updates the processed data with embeddings.
 
-6. Key imports include `AzureOpenAI` for API calls, `tenacity` for retry logic, `rich.progress` for progress tracking, and various standard libraries for file handling and logging.
+5. **Queue and Threads:** Uses multi-threading to efficiently handle large sets of text data, processes a queue of tasks, and manages task completion.
 
-Classes/Functions:
-- `normalize_text`
-- `get_text_embedding`
-- `process_queue`
-- `enrich_text_embeddings`
+6. **Caching:** Checks for existing cached data to prevent redundant processing.
+
+7. **File I/O:** Reads and writes JSON files to store the input and output data, ensuring that the directory exists.
 
 **enrich_text_summaries.py**
 
-This code is designed to process and summarize YouTube transcripts using ChatGPT provided by Azure OpenAI. The key functions and classes in the module are `Counter`, `chatgpt_summary`, `process_queue_for_summaries`, and `enrich_text_summaries`.
+1. **Classes and Imports**: The code uses various standard (json, os, threading, queue, logging) and third-party libraries (openai, tenacity, rich) to interact with APIs, handle errors, manage threads, and create progress bars. It defines a thread-safe `Counter` class to manage a shared counter across threads.
 
-**Classes:**
-- **Counter**: A thread-safe counter used to keep track of processed chunks.
-    
-**Functions:**
-- **chatgpt_summary**: Generates a summary of input text using ChatGPT, with retry logic to handle rate limiting and transient errors.
-- **process_queue_for_summaries**: Processes a queue containing text chunks, summarizing each chunk with ChatGPT and handling existing summaries.
-- **enrich_text_summaries**: Configures the Azure OpenAI client, loads input data, and starts multiple threads to process text chunks in parallel. The summaries are saved in an output JSON file.
+2. **chatgpt_summary Function**: This function generates a summary using OpenAI's ChatGPT API. It uses a retry mechanism to handle transient failures, calling the API to generate a summary for the provided text and returning it if successful.
 
-The code also includes necessary imports, setting up logging, and ensuring the existence of output directories.
+3. **process_queue_for_summaries Function**: This function processes items from a queue, calling `chatgpt_summary` to generate summaries. It manages threading to concurrently process multiple chunks of text and updates the progress.
+
+4. **enrich_text_summaries Function**: This function initializes necessary configurations, sets up logging, and loads text chunks from a JSON file. It employs multithreading to process these chunks, generating summaries and appending them to a list.
+
+5. **Main Flow**: The main function processes text chunks, manages multiple threads for concurrent execution, and writes the enriched summaries to a JSON output file, ensuring the output directory exists.
 

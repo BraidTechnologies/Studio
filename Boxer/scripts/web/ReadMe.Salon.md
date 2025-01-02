@@ -1,17 +1,18 @@
 **download_html.py**
 
-This script downloads the text content of all subpages from a specified URL and saves it in JSON format.
+This script downloads and processes all textual content from sub-pages of a given URL up to a specified depth. The important functions and classes are: 
 
-Important classes and functions include:
-- `Counter` class: A thread-safe counter.
-- `makePathOnly`: Generates a clean path from a URL.
-- `makeFullyQualified`: Forms a fully-qualified URL from a base and relative path.
-- `get_html`: Downloads HTML content of a URL, processes it to extract text, and saves it in a JSON file.
-- `process_queue`: Processes a queue of URLs, downloading HTML content in multiple threads.
-- `deduplicate`: Removes duplicate links.
-- `remove_exits`: Removes links pointing out of the main site.
-- `add_prefix`: Adds prefixes to relative URLs.
-- `recurse_page_list`: Recursively crawls pages starting from a URL.
-- `build_page_list`: Builds a list of pages from a URL.
-- `download_html`: Main function to manage the downloading process with multi-threading.
+- `Counter`: A thread-safe counter class to keep track of the number of processed pages.
+  
+- `get_html()`: Fetches the HTML content of a URL, extracts its text, saves the content in JSON format if it meets a minimum token count, and stores metadata.
+
+- `process_queue()`: Processes a queue of URLs for downloading HTML content utilizing multiple threads.
+
+- `recurse_page_list()`: Recursively identifies sub-URLs starting from the initial URL.
+
+- `build_page_list()`: Initiates the recursive page search and populates a queue with URLs.
+
+- `download_html()`: Sets up logging and directories, starts the queue processing with multithreading, and records the total time taken. 
+
+Helper functions like `makePathOnly()`, `makeFullyQualified()`, `deduplicate()`, `remove_exits()`, and `add_prefix()` perform various actions like URL normalization and deduplication.
 

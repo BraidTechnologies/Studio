@@ -1,16 +1,12 @@
 **download_markdown.py**
 
-- **Imports**: The script imports standard libraries like `os`, `json`, `logging`, `time`, `threading`, `queue`, and `pathlib`, and third-party packages like `markdown` and `BeautifulSoup`.
+This script downloads Markdown file transcripts from a specified GitHub repository and converts them to plain text, saving both the text and metadata in JSON format.
 
-- **Counter Class**: Defines a thread-safe counter for tracking processed files, which uses a threading lock to ensure synchronization.
-
-- **makeSourceId Function**: Constructs a unique source ID for each file based on the repository directory, repository name, and file path.
-
-- **md_to_plain_text Function**: Converts Markdown content to plain text using `markdown` and `BeautifulSoup`.
-
-- **get_markdown Function**: Reads the Markdown content of a file, converts it to plain text, and saves it as a `.json` file along with metadata. It also skips files that already exist.
-
-- **process_queue Function**: Processes a queue of files, increments the counter, and calls the `get_markdown` function for each file.
-
-- **download_markdown Function**: Main function that sets up the logging, initializes the queue, searches for `.md` files recursively, and processes these files with multiple threads.
+### Important Classes and Functions:
+- **Counter**: A thread-safe counter to keep track of processed files.
+- **makeSourceId(repoSourceDir, repoName, filePath)**: Constructs a unique source ID for each Markdown file.
+- **md_to_plain_text(md)**: Converts Markdown content to plain text using BeautifulSoup.
+- **get_markdown(fileName, counter_id, repoSourceDir, repoName, markdownDestinationDir, logger)**: Reads and converts Markdown files to plain text, then saves them with metadata in JSON format.
+- **process_queue(q, repoSourceDir, repoName, markdownDestinationDir, logger)**: Processes a queue of files using multiple threads.
+- **download_markdown(repoSourceDir, repoName, markdownDestinationDir)**: Main function to manage downloading and processing Markdown files.
 

@@ -1,6 +1,6 @@
 # Salon
 
-Salon is a technology demonstrator for automated softwareevelopment tools using Large Language Models (LLMs). It provides a suite of tools to assist in API testing and code analysis.
+Salon is a technology demonstrator for automated software development tools using Large Language Models (LLMs). It provides a suite of tools to assist in API testing and code analysis.
 ## Key Components
 
 ### api_to_test_code

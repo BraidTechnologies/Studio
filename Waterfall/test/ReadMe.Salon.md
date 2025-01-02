@@ -1,287 +1,304 @@
 **test_boxer_pipeline.py**
 
-This script is a test module for the Boxer Data Pipeline implementation provided by Braid Technologies. It imports necessary libraries and specifies paths for the test environment. Logging is configured to show detailed information about script execution.
+This module tests the Boxer Pipeline implementation by setting up different pipeline configurations and ensuring they produce the expected outputs.
 
-Three test functions are defined:
-
-1. `test_youtube_boxer_pipeline()`: This function tests the Boxer Pipeline for YouTube content. It creates a short playlist from the first YouTube entry and asserts whether the pipeline has successfully fetched items.
-
-2. `test_html_boxer_pipeline()`: This function tests the Boxer Pipeline for HTML content. It uses data from HTML pages and verifies if the pipeline can retrieve the items successfully.
-
-3. `test_full_boxer_pipeline()`: This function is intended for a full pipeline test with both YouTube and HTML content combined. It is currently set to return immediately for quick testing purposes.
-
-Important classes and functions:
-- `BoxerDataPipeline`
-- `YouTubePipelineSpec`
-- `HtmlDirectedPipelineSpec`
-- `PipelineFileSpec`
-- `test_youtube_boxer_pipeline()`
-- `test_html_boxer_pipeline()`
-- `test_full_boxer_pipeline()`
+- **Imports**: It imports necessary standard libraries and specific modules like `YouTubePipelineSpec`, `HtmlDirectedPipelineSpec`, `PipelineFileSpec`, `youtube_playlists`, `html_pages`, and `BoxerDataPipeline` for pipeline specification and data sources.
+- **Logging**: It configures logging to capture and display error-level logs for debugging purposes.
+- **Classes and Functions**:
+  - `test_youtube_boxer_pipeline()`: Tests the pipeline with YouTube data source.
+  - `test_html_boxer_pipeline()`: Tests the pipeline with HTML pages as data sources.
+  - `test_full_boxer_pipeline()`: Intended to perform a full pipeline test combining YouTube playlists and HTML pages; currently, it returns immediately to prevent full execution.
 
 **test_chunker.py**
 
-This code sets up a test environment and defines multiple pytest functions to test a text Chunker and an HTML file downloader.
+This module is a pytest suite that tests the functionality of three main classes: `PipelineItem`, `Chunker`, and `HtmlFileDownloader` from the `src` directory.
 
-It begins by importing necessary modules and configuring logging. It proceeds by altering the system path to include the parent and source directories to ensure that the modules are importable.
+The `test_output_dir` fixture creates a temporary directory for test output, and ensures it is cleaned up after tests run.
 
-The code defines a pytest fixture, `test_output_dir`, which creates and later cleans a temporary directory for test outputs.
+The `test_basic` function verifies if the `Chunker` is correctly initialized with the test output directory.
 
-Five test functions are then defined: `test_basic`, `test_with_output`, `test_long`, `test_long_with_overlap`, and `test_long_overlap`. These tests mainly check the functionality of `Chunker` and `HtmlFileDownloader` classes and the `PipelineItem` class by asserting proper output or behaviors, such as chunking of text.
+The `test_with_output` function tests the downloading and chunking of a simple HTML file to ensure the chunker produces the expected number of chunks.
+
+The `test_long` function checks how the `Chunker` handles very long text content by verifying multiple chunks are created.
+
+The `test_long_with_overlap` and `test_long_overlap` functions specifically test chunking with overlapping words, ensuring that overlapping is correctly managed by checking the boundaries and overlaps between chunks.
+
+Logging is configured at the beginning of the module to capture ERROR level logs, to facilitate debugging the test execution process.
 
 **test_cluster_analyser.py**
 
-This Python code is a test suite using the `pytest` framework. It begins by setting up necessary imports and path configurations to ensure the script can access the modules in the 'src' directory.
+This code is a test suite using the `pytest` framework to verify the functionality of a pipeline involving several components from the `src` directory.
 
-A logging configuration is established to capture and display log messages, with a specific logger set to the ERROR level.
+The `test_output_dir` function is a `pytest` fixture that creates a temporary directory for test outputs and ensures cleanup after the test execution.
 
-The script employs `pytest` fixtures to create and clean up a temporary directory for storing test outputs. 
+The `test_basic` function tests the basic creation and attributes of a `ClusterAnalyser` object using a single `PipelineItem`.
 
-Two test functions are defined: `test_basic` and `test_with_output`. 
+The `test_with_output` function tests the full pipeline by iterating over a list of HTML test files, processing them through `HtmlFileDownloader`, `Summariser`, and `Embedder`, and finally analyzing them with `ClusterAnalyser`.
 
-- `test_basic` creates a `PipelineItem` and verifies that the `ClusterAnalyser` is configured with the correct output location.
-- `test_with_output` simulates a pipeline where `PipelineItem` objects are downloaded, summarised, embedded, and then analysed using `ClusterAnalyser`.
-
-Important classes and functions:
+Important classes or functions:
+- `test_output_dir` (fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
 - `PipelineItem`
 - `ClusterAnalyser`
 - `HtmlFileDownloader`
 - `Summariser`
 - `Embedder`
-- `test_output_dir` (fixture)
-- `test_basic`
-- `test_with_output`
 
 **test_db_repository.py**
 
-This code consists of tests for the DB API utilizing the Python `unittest` framework.
+This code contains unit tests for the `DbRepository` class from the `src.db_repository` module.
 
-The `test_basic` function verifies the basic construction of a `DbRepository` object with an `application_id` and `test_context`.
+The `test_basic` function assesses the creation of a `DbRepository` object and checks if its context ID is set correctly.
 
-The `test_does_not_exist` function checks if a specific path does not exist in the repository.
+The `test_does_not_exist` function verifies that the `exists` method of `DbRepository` accurately identifies a non-existing item.
 
-The `test_save` function tests the saving functionality of an item in the repository, asserting that the save operation returns `true`.
+The `test_save` function tests the `save` method by attempting to save a `PipelineItem` instance and checking if the operation is successful.
 
-The `test_save_exists` function saves an item and verifies its existence afterward.
+The `test_save_exists` function first saves a `PipelineItem` and then verifies its existence with the `exists` method.
 
-The `test_save_load` function saves an item and then checks if the item can be correctly loaded, confirming that the saved and loaded data match.
+The `test_save_load` function saves a `PipelineItem` and then confirms that it can be loaded back correctly with the `find` method.
 
-Important Classes/Functions:
-- `test_basic()`
-- `test_does_not_exist()`
-- `test_save()`
-- `test_save_exists()`
-- `test_save_load()`
-- `DbRepository`
-- `PipelineItem`
+Key classes and functions: `DbRepository`, `PipelineItem`, `test_basic`, `test_does_not_exist`, `test_save`, `test_save_exists`, and `test_save_load`.
 
 **test_embedder.py**
 
-This code is a test module using pytest, focusing on integrating and testing components of a workflow.
+This code involves setting up and executing pytest cases to test the functionality of classes `Embedder` and `HtmlFileDownloader` from a source directory.
 
-The `test_output_dir` fixture creates a temporary directory for test outputs, ensuring a clean environment for each test. It logs the creation and deletion of this directory.
+Logging is configured to capture and display script execution details above the warning level, with an error level for the module-specific logger.
 
-The `test_basic` function initializes an `Embedder` with the temporary output directory and verifies that the embedder's output location is set correctly.
+A pytest fixture creates a temporary directory for test outputs, and ensures cleanup after tests run.
 
-The `test_with_output` function tests the integration of `PipelineItem`, `HtmlFileDownloader`, and `Embedder`. It changes the working directory, sets up a pipeline item with a test HTML path, downloads the HTML file, processes the text, and embeds it, asserting that the output is not empty.
+The `test_basic` function ensures the `Embedder` class correctly sets its output location.
 
-Important classes and functions include `test_output_dir`, `test_basic`, `test_with_output`, `PipelineItem`, `Embedder`, and `HtmlFileDownloader`.
+The `test_with_output` function tests the process of downloading HTML content using `HtmlFileDownloader`, enriching it, and then embedding that content using `Embedder`, verifying that the embedding is successfully generated.
+
+Important classes/functions:
+- `test_output_dir` (pytest fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
 
 **test_embedding_finder.py**
 
-The code imports several standard libraries such as `pytest`, `os`, `shutil`, `sys`, and `logging`. 
+This code is for testing a workflow involving text processing and embeddings:
 
-It configures the logging utility to display messages at the WARNING level by default and sets the logger to ERROR level for the current module.
+- `test_output_dir` is a pytest fixture that sets up and cleans up a temporary directory for test output. It logs the directory creation and cleanup.
+- `test_basic` checks that an `EmbeddingFinder` instance is correctly initialized with a list of embeddings.
+- `test_with_output` tests the full flow of processing HTML files: downloading them using `HtmlFileDownloader`, summarizing them with `Summariser`, embedding them with `Embedder`, and finally finding the nearest embeddings using `EmbeddingFinder`.
 
-The code extends the system path to include the parent directory and the `src` directory for importing custom modules.
-
-It defines a pytest fixture `test_output_dir` to create and clean up a temporary directory for storing test outputs. 
-
-The `test_basic` function tests an instance of `EmbeddingFinder` using a proxy embedding array.
-
-The `test_with_output` function tests downloading, summarising, and embedding HTML files, and then uses `EmbeddingFinder` to find the nearest embedding to a given text.
-
-Important classes and functions include `PipelineItem`, `EmbeddingFinder`, `HtmlFileDownloader`, `Summariser`, `Embedder`, `test_output_dir`, `test_basic`, and `test_with_output`.
+Key components:
+- `test_output_dir` (fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
+- `EmbeddingFinder`
+- `HtmlFileDownloader`
+- `PipelineItem`
+- `Summariser`
+- `Embedder`
 
 **test_embedding_repository.py**
 
-This script uses the pytest framework to test functionalities of an `EmbeddingRespositoryFacade` class from the `src.embedder_repository_facade` module.
+This Python script uses the pytest framework to perform unit tests for the `EmbeddingRespositoryFacade` class from the `embedder_repository_facade` module.
 
-It sets up logging configuration to capture and print log messages. The log level is set to ERROR to minimize log output during test runs.
+Logging is set up to log warnings and errors, helping diagnose issues during test execution.
 
-A pytest fixture `test_output_dir` creates a temporary directory for test output and ensures cleanup after the tests.
+The `test_output_dir` fixture creates a temporary directory for test outputs and ensures its cleanup post-test.
 
-Three test functions are provided:
-1. `test_basic` ensures that the `EmbeddingRespositoryFacade` instance correctly sets the output location.
-2. `test_with_output` tests saving and loading functionality, ensuring data is correctly saved and retrievable.
-3. `test_with_no_output` tests loading a non-existent file, ensuring the process catches exceptions as expected.
+The `test_basic` function verifies that the `EmbeddingRespositoryFacade` initializes correctly with a given output location.
+
+The `test_with_output` function ensures that saving, checking existence, and loading embeddings work correctly.
+
+The `test_with_no_output` function tests that loading a non-existent file raises an exception.
 
 **test_errors.py**
 
-**Classes and Functions:**
+This script sets up the environment for importing from the 'src' directory, including adjusting the system path.
 
-- `PipelineItem`
-- `Summariser`
-- `test_basic`
-- `test_with_output`
+The logging module is configured to record information about script execution, with the default logging level set to ERROR.
 
-Firstly, the script modifies the system path to ensure it can import modules from the parent and source directories. It sets up logging configuration to capture error messages with a specific format.
+The script imports and utilises the 'PipelineItem' and 'Summariser' classes from the 'workflow' and 'summariser' modules respectively.
 
-The `test_basic` function creates log entries with different severity levels (error, warning, info, and debug) and asserts `True`. 
+The `test_basic()` function contains assertions and log statements for different logging levels to test logging.
 
-The `test_with_output` function changes the current working directory to the test's root directory and defines the input and output locations. It then initializes a `PipelineItem` instance, assigns text to it, and uses a `Summariser` instance to process the text. Finally, it asserts that the summary generated by the `Summariser` is not empty.
+The `test_with_output()` function sets the working directory, creates a `PipelineItem`, populates it with text, uses a `Summariser` to summarize the text, and verifies the summary is generated.
 
 **test_file_repository.py**
 
-This code sets up tests for a File System API, specifically targeting the `FileRepository` class located in `src/file_repository.py`.
+This code tests the File System API, particularly the `FileRespository` class from the `file_repository` module.
 
-Logging is configured to record warnings and higher severity messages, with the logger set to capture error level logs.
+The script sets up the test environment by importing necessary modules, configuring logging, and extending the Python path to include the source directory.
 
-There are three primary test functions defined using `pytest`: 
-- `test_basic` validates that the repository's output location is correctly set.
-- `test_with_output` checks if a file can be saved, its existence verified, and its content correctly retrieved.
-- `test_with_no_output` verifies that non-existent files are correctly identified and don't erroneously retrieve expected content.
+The `test_output_dir` fixture creates a temporary directory for test outputs, logs its creation, and ensures cleanup by removing the directory after tests run.
 
-A fixture, `test_output_dir`, creates a temporary directory for test output and ensures cleanup after tests.
+The `test_basic` function tests that the repository’s output location is correctly set upon initialization.
+
+The `test_with_output` function verifies that a file can be saved to and loaded from the repository correctly.
+
+The `test_with_no_output` function ensures that the repository correctly handles attempts to load non-existent files.
 
 **test_html_file_downloader.py**
 
-This module sets up a testing environment for a web-scraping application using the `pytest` framework. It configures the environment to include necessary directories in the system path for module imports.
+This module sets up an environment for testing with pytest, and includes the following key functions and classes:
 
-Logging configurations are set up to assist in monitoring the script execution and capturing potential errors.
+1. **test_output_dir (fixture)**: Creates a temporary directory for test output and ensures cleanup after tests run, logging the creation and deletion of the directory.
 
-A `test_output_dir` fixture is created to generate a temporary directory for storing test results. This fixture also ensures cleanup after test completion.
+2. **test_basic**: Tests if the `HtmlFileDownloader` instance has the correct output location by asserting equality of expected and actual output location paths.
 
-The module tests the functionality of `HtmlFileDownloader` from `src.html_file_downloader`, ensuring it correctly handles downloading HTML files and processing them through `PipelineItem` from `src.workflow`.
+3. **test_with_output**: Tests the `HtmlFileDownloader` by downloading an HTML file ('simple_test.html') and checking that the downloaded content has text. Uses the `PipelineItem` class to manage the path of the file.
 
-Important functions and classes:
-- `test_output_dir`: A pytest fixture for managing temporary directories.
-- `test_basic`: Tests basic functionality of `HtmlFileDownloader`.
-- `test_with_output`: Tests downloading a local HTML file.
-- `test_connected`: Tests downloading an HTML file from a URL.
+4. **test_connected**: Similar to `test_with_output`, but downloads content from a URL ('https://openai.com/') to ensure online functionality.
+
+The important classes are `PipelineItem` and `HtmlFileDownloader`.
 
 **test_html_link_crawler.py**
 
-This code sets up a testing environment using pytest for a web-crawling application.
+This code is a pytest module designed for testing the `HtmlLinkCrawler` from the `src.html_link_crawler` module and `PipelineItem` from the `src.workflow` module.
 
-It configures logging to capture errors and declares important directories to be included in the system path. The main classes involved are `PipelineItem` and `HtmlLinkCrawler` from `src.workflow` and `src.html_link_crawler` respectively.
+Logging is set up to report execution details, configured at the ERROR level.
 
-A fixture, `test_output_dir`, is defined to create and clean up a temporary directory for test outputs. Several test functions are defined (e.g., `test_basic`, `test_with_output`, `test_with_one_recursion`, etc.) to validate various functionalities of `HtmlLinkCrawler`, such as handling different recursion depths and crawling specific web pages. Each test asserts the correctness of the crawler’s behavior.
+`test_output_dir` is a pytest fixture that creates and cleans up a temporary directory for test outputs.
+
+There are several test functions: `test_basic`, `test_with_output`, `test_with_one_recursion`, `test_with_two_recursions`, `test_many_sublinks`, and `test_mad_page`, all of which create an `HtmlLinkCrawler` instance and verify its functionality by asserting the number of links it finds during a crawl.
 
 **test_summariser.py**
 
-This Python script is a test module for `PipelineItem`, `Summariser`, and `HtmlFileDownloader` classes. It uses `pytest` for testing and includes setup for a temporary test output directory.
+This code is a Python module containing tests for a summarisation workflow, utilising the `pytest` framework.
 
-Logging is configured to display warnings and errors in a specified format.
+It sets up the paths and logging configuration for the tests. The `sys.path` is extended to include the parent and `src` directories to ensure that module imports work correctly.
 
-A fixture function `test_output_dir` is defined to create and clean up a temporary directory for test outputs.
+The `test_output_dir` fixture creates a temporary directory for test outputs, provides its path to the tests, and ensures clean-up by deleting the directory post-test.
 
-The `test_basic` function verifies that a `Summariser` instance correctly sets its output location.
+Two test functions are defined: `test_basic` creates a `Summariser` instance and checks the designated output location, `test_with_output` simulates the complete summarisation workflow by downloading an HTML file and then summarising it.
 
-The `test_with_output` function tests the process of downloading an HTML file using the `HtmlFileDownloader` and then summarizing it with the `Summariser`.
-
-Key Classes/Functions: `PipelineItem`, `Summariser`, `HtmlFileDownloader`, `test_output_dir`, `test_basic`, `test_with_output`.
+Important classes/functions:
+- `test_output_dir` (fixture)
+- `test_basic` (function)
+- `test_with_output` (function)
 
 **test_summarise_fail_suppressor.py**
 
-- The code sets up a testing environment using the pytest framework for a Python project.
-- The `test_output_dir` fixture creates a temporary directory for test outputs and ensures its cleanup after the test.
-- Logging is configured to display warnings and errors, aiding in debugging.
-- Path adjustments are done to include parent and source directories in the system paths.
-- The code imports necessary classes including `PipelineItem` from `workflow`, `SummariseFailSuppressor` from `summarise_fail_suppressor`, and `HtmlFileDownloader`.
-- `test_basic`, `test_with_no_suppression`, and `test_with_suppression` are defined to validate `SummariseFailSuppressor` functionality.
-- These tests check the summariser's output location, its behavior with valid summaries, and scenarios where suppression is applied.
+This script is a set of tests for components in a Python project, which uses the `pytest` framework.
+
+The logging module is configured to report warnings and errors, ensuring the script's execution is logged comprehensively.
+
+A pytest fixture `test_output_dir` creates a temporary directory for test outputs and ensures clean-up after tests.
+
+Functions `test_basic`, `test_with_no_suppression`, and `test_with_suppression` test the functionality of the `SummariseFailSuppressor` class. `test_basic` verifies the assignment of the output location. The other two tests assess how summaries are handled when suppressing conditions are and aren't met.
+
+Important classes/functions:
+- SummariseFailSuppressor
+- PipelineItem
+- test_output_dir (fixture)
+- test_basic (test function)
+- test_with_no_suppression (test function)
+- test_with_suppression (test function)
 
 **test_summary_repository.py**
 
-This code is a set of tests for the `SummaryRepositoryFacade` class from the `summary_repository_facade` module, using the `pytest` framework. 
+This code is a test module for a repository system that handles summaries, using `pytest` for testing. The essential classes and functions are:
 
-The code imports necessary libraries, sets up paths for module imports, and configures logging.
-
-A `pytest` fixture named `test_output_dir` is defined to create and clean up a temporary directory for test outputs.
-
-The `test_basic` function tests the creation of a `SummaryRepositoryFacade` object and verifies its output location.
-
-The `test_with_output` function tests saving, checking existence, and loading of a file, ensuring the file's content is correctly saved and retrieved.
-
-The `test_with_no_output` function tests that a non-existent file is correctly reported as not existing and not containing expected text.
+- **`test_output_dir` fixture**: This creates a temporary directory for test outputs, provides its path to the tests, and cleans up the directory afterward.
+- **`test_basic` function**: It tests the basic creation of a `SummaryRepositoryFacade` object and verifies that the output location is set correctly.
+- **`test_with_output` function**: It verifies that a repository can save, check the existence of, and load a text file correctly.
+- **`test_with_no_output` function**: It tests the repository's behavior when trying to access a file that wasn't saved, ensuring proper handling of non-existent entries.
 
 **test_text_repository.py**
 
-This script sets up tests for the `TextRepositoryFacade` API, which involves operations like saving, loading, and checking the existence of text files in a repository.
+This module contains tests for the text repository API, primarily using the pytest framework.
 
-A logging system is configured to track the execution at the ERROR level.
+The `test_output_dir` is a pytest fixture that creates a temporary directory for test output and ensures cleanup after tests.
 
-A pytest fixture, `test_output_dir`, creates and then cleans up a temporary directory used for test outputs.
+`TextRespositoryFacade` is the class from the module `text_repository_facade` that's being tested.
 
-Three test functions (`test_basic`, `test_with_output`, and `test_with_no_output`) verify different functionalities of the `TextRepositoryFacade` class:
-- `test_basic` checks the initialization of the repository.
-- `test_with_output` verifies saving and loading text with successful file existence.
-- `test_with_no_output` validates behavior with non-existent files.
+`test_basic` checks that a `TextRespositoryFacade` instance correctly identifies the output location.
 
-Key Component:
-- `TextRepositoryFacade`: Primary class for managing text file operations in the repository.
+`test_with_output` verifies that text can be saved and retrieved correctly from the repository.
+
+`test_with_no_output` checks that attempting to retrieve non-existent text properly indicates failure.
+
+Logging is set up at the ERROR level to capture execution details.
 
 **test_theme_finder.py**
 
-This code sets up the environment for testing by configuring the script's path and logging settings.
+This script is a test module for a summarisation pipeline using classes from the `src` library.
 
-The logging is configured to display messages with a severity level of ERROR, while the log format includes timestamps, logger name, log level, and message content.
+**Logging setup**: Configures logging to display warnings and higher-level messages, while the script logs errors specifically.
 
-The important classes imported from the 'src' module are `PipelineItem`, `ThemeFinder`, `Summariser`, and `HtmlFileDownloader`.
+**test_basic function**: It verifies the instantiation of the `ThemeFinder` class to ensure it is not `None`.
 
-Two test functions are defined: `test_basic()` and `test_with_output()`. `test_basic()` creates an instance of `ThemeFinder` and ensures it is not None. `test_with_output()` processes a list of HTML files, downloading them using `HtmlFileDownloader`, summarising them with `Summariser`, and then finding the theme using `ThemeFinder`. The final theme is asserted to be non-empty.
+**test_with_output function**: 
+- Changes the current working directory to the script's location.
+- Defines test HTML file paths and an output location.
+- Iterates through each test file, creating `PipelineItem` objects.
+- Downloads the HTML content and then summarises it using the `HtmlFileDownloader` and `Summariser` classes, respectively.
+- Combines the summaries, finds common themes via the `ThemeFinder` class, and asserts that the themes are generated.
+
+**Key Classes/Functions**: `PipelineItem`, `HtmlFileDownloader`, `Summariser`, `ThemeFinder`, `test_basic`, `test_with_output`.
 
 **test_waterfall_pipeline.py**
 
-This module consists of test cases for the `WaterfallDataPipeline` system. The tests employ the `pytest` framework to verify various functionalities of the pipeline:
+The code is designed to test the Waterfall data pipeline from Braid Technologies Ltd. 
 
-- `test_basic`: Checks if a `WaterfallDataPipeline` object is correctly initialized with the specified output location.
+It starts with necessary imports, sets up logging, and defines a root directory for tests. The main class used is `WaterfallDataPipeline`, and it is tested using `pytest`.
 
-- `test_with_search_supply`, `test_with_search_demand`, `test_with_search_telecom`, `test_with_search_nationwide`, and `test_with_search_bny`: Each test configures a `WebSearchPipelineSpec` object with specific search keys and other parameters, running dynamic searches for different datasets while ensuring at least one link is returned.
+The `test_basic()` function checks if the pipeline outputs to the specified location. 
 
-- `test_with_search_vf_survey_01`: Tests a static search using predefined file lists with `PipelineSpec` and `FileDirectedPipelineSpec` to ensure the links returned are as expected.
+Several tests (`test_with_search_supply`, `test_with_search_demand`, `test_with_search_telecom`, `test_with_search_nationwide`, `test_with_search_bny`) initialize the pipeline, create a `WebSearchPipelineSpec` with search configurations, and assert if links are retrieved. 
 
-Logging is configured to aid in debugging and monitoring the execution. Key classes and functions include `WaterfallDataPipeline`, `WebSearchPipelineSpec`, `PipelineSpec`, and `FileDirectedPipelineSpec`.
+One test (`test_with_search_vf_survey_01`) uses `PipelineSpec` and `FileDirectedPipelineSpec` for file-based data.
+
+Key classes/functions include `WaterfallDataPipeline`, `WebSearchPipelineSpec`, `PipelineSpec`, and `FileDirectedPipelineSpec`.
 
 **test_web_searcher.py**
 
-This script sets up basic configurations for testing a web search functionality.
+The code imports several standard libraries such as `os`, `sys`, and `logging`, and adjusts the `sys.path` to include parent and source directories.
 
-It modifies the system path to include the parent and 'src' directories so that modules can be imported easily.
+Logging is configured to show messages of level WARNING or higher and the logger is set to the ERROR level to log only errors.
 
-Logging is configured to display warning and error messages.
+The `WebSearcher` class and the `AI_SUPPLY_STACK_SEARCH_ENGINE_ID` constant are imported from `src.waterfall_pipeline` and `src.web_searcher`, respectively.
 
-There are two test functions: 
-- `test_basic()` initializes a `WebSearcher` object with a specified output location and checks if the output location is set correctly.
-- `test_with_search()` changes the working directory to the test root, initializes a `WebSearcher` and a `WebSearchPipelineSpec` object, sets up the search configurations, and verifies that at least one item is returned in the search results.
+There are two test functions, `test_basic` and `test_with_search`. `test_basic` checks if a `WebSearcher` object's `output_location` attribute is correctly set. `test_with_search` sets up a web search pipeline, initiates a search with one page, and verifies that at least one item is returned.
 
 Important classes/functions:
-- `WebSearcher`
 - `WebSearchPipelineSpec`
+- `WebSearcher`
 - `test_basic`
 - `test_with_search`
 
 **test_workflow.py**
 
-This code tests components of a web search pipeline. 
+The script sets up a test environment by modifying the system path to include the parent and source directories, enabling module imports. It also configures logging to handle errors and display warning level logs.
 
-**Important Classes/Functions:**
-1. **PipelineItem**: Initializes an object with a URL, summary, and an embedding vector. Contains tests for its property assignments and TypeError handling.
-   
-2. **Theme**: Creates a theme with descriptions and example pipeline items. Includes tests for item assignments and verifying proper error handling for incorrect properties.
+Three testing functions are defined: `test_pipeline_item`, `test_theme`, and `test_pipeline`.
 
-3. **WebSearchPipelineSpec**: Sets up a web search pipeline with a search key, description, themes, and an output chart name. Verifies the proper configuration and error handling.
+- `test_pipeline_item` creates a `PipelineItem` object, sets attributes, and verifies that invalid attribute assignment raises a `TypeError`.
+- `test_theme` creates a `Theme` object with associated `PipelineItem` objects, sets descriptions, and tests for correct attribute behavior.
+- `test_pipeline` configures a `WebSearchPipelineSpec` object, links `Theme` objects, and verifies invalid attribute assignment raises a `TypeError`.
 
-Additionally, it configures logging to display errors and modifies the system path to include the source directory for module imports.
+Important classes include `WebSearchPipelineSpec`, `PipelineItem`, and `Theme`.
 
 **test_youtube_playlist.py**
 
-The script imports various modules, setting up paths and configurations essential for the subsequent code execution.
+1. The script handles various imports including `os`, `sys`, and `logging` from the standard library and several module-specific imports such as `YouTubePipelineSpec`, `YoutubePlaylistSearcher`, `YouTubeTranscriptDownloader`, and `youtube_playlists`.
 
-Logging is configured to warn of any issues during script execution, with errors being prominently logged to facilitate debugging.
+2. The script sets up the system paths to include parent directories, making it possible to access specific modules in the `src` directory.
 
-The `YouTubePipelineSpec`, `YoutubePlaylistSearcher`, and `YouTubeTranscriptDownloader` classes are imported from their respective modules in the `src` directory.
+3. Logging is configured to display warnings and errors, and a logger named `__name__` logs error-level messages.
 
-It includes three test functions: `test_basic()` verifies the proper initialization of the `YoutubePlaylistSearcher`, `test_with_search()` ensures that searches yield results using predefined YouTube playlists, and `test_download()` checks the functionality of downloading transcripts from search results and ensures they contain text.
+4. The script contains three test functions: `test_basic`, `test_with_search`, and `test_download`.
+
+5. `test_basic` tests the initialization of `YoutubePlaylistSearcher` by verifying the output location.
+
+6. `test_with_search` changes the working directory, sets up an output location, uses `YoutubePlaylistSearcher` to search through playlists, and asserts that at least one item is found.
+
+7. `test_download` initializes both `YoutubePlaylistSearcher` and `YouTubeTranscriptDownloader`, performs searches and downloads transcripts, then asserts the length of the retrieved items and ensures there is at least one item in the results.
+
+Key Classes/Functions: 
+- `YoutubePlaylistSearcher`
+- `YouTubePipelineSpec`
+- `YouTubeTranscriptDownloader`
+- `youtube_playlists`
+- `test_basic`
+- `test_with_search`
+- `test_download`
 
