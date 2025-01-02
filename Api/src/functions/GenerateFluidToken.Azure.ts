@@ -14,7 +14,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 //import { ScopeType } from "@fluidframework/protocol-definitions/lib";
 import { generateToken } from "@fluidframework/server-services-client";
 
-import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { IFluidTokenRequest } from "../../../CommonTs/src/Fluid";
 
 const key = process.env.ConversationKey;

@@ -16,7 +16,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 // Internal imports
-import { IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole } from './IModelDriver';
+import { IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams} from './IModelDriver';
 import { EPromptPersona } from './IPromptPersona';
 import { getChatPersona } from "./IPromptPersonaFactory";
 
@@ -101,9 +101,9 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
    }
 
    generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
-      wordTarget: number): Promise<IModelConversationElement> {
+      params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
-      return chat(persona, prompt, wordTarget);
+      return chat(persona, prompt, params);
    }
 }
 
@@ -112,12 +112,12 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * 
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
  * @param prompt The conversation prompt containing the system and user messages
- * @param {number} wordTarget - The target number of words for the response
+ * @param params The parameters for the prompt
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
 async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt, 
-   wordTarget: number): Promise<IModelConversationElement> {
+   params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -128,7 +128,7 @@ async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt,
       }
    });
 
-   const summariser = getChatPersona(persona, prompt.prompt, wordTarget);
+   const summariser = getChatPersona(persona, prompt.prompt, params);
 
    const systemPrompt = summariser.systemPrompt;
    const userPrompt = summariser.itemPrompt;

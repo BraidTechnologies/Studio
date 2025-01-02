@@ -23,7 +23,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../../CommonTs/src/TestForSummariseFailApi.Types";
 import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
 import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";

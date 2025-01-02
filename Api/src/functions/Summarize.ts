@@ -56,7 +56,7 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
       prompt: text
    }
 
-   let response = await modelDriver.generateResponse (persona, prompt, words);
+   let response = await modelDriver.generateResponse (persona, prompt, {wordTarget: words});
 
    return response.content;
 }

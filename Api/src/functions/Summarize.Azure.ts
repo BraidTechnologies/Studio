@@ -23,7 +23,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
 import { recursiveSummarize } from "./Summarize";
 

@@ -15,7 +15,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { getDefaultModel, } from "../../../CommonTs/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
 import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";

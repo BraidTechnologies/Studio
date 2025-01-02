@@ -21,9 +21,9 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IStudioBoxerRequest, IStudioBoxerResponseEnrichment} from "../../../CommonTs/src/StudioApi.Types";
-import { IEnrichedQuery, EStandardPrompts } from "../../../CommonTs/src/EnrichedQuery";
-import { defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { IStudioBoxerResponseEnrichment} from "../../../CommonTs/src/StudioApi.Types";
+import { IEnrichedQuery } from "../../../CommonTs/src/EnrichedQuery";
+import { defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { askModel } from "./QueryModelWithEnrichment";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
@@ -56,8 +56,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,
             maxCount: 4,
-            personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-            enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
+            wordTarget: 50,
             question: question,
             history: []
          }

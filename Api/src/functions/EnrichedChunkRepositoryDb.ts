@@ -23,10 +23,10 @@ import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrich
 import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
 import { EnrichedChunkRepositoryInMemory } from "./EnrichedChunkRepository";
 import { throwIfFalse } from "../../../CommonTs/src/Asserts";
-import { ConsoleLogger, loadStorables } from "./CosmosStorableApi";
+import { ConsoleLogger, loadStorables } from "./StorableApi.Cosmos";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
 import { storedChunkClassName } from "../../../CommonTs/src/ChunkRepositoryApi.Types";
-import { chunkStorableAttributes } from "./CosmosStorableApi";
+import { chunkStorableAttributes } from "./StorableApi.Cosmos";
 import { IStorable } from "../../../CommonTs/src/IStorable";
 import { IStoredChunk } from "../../../CommonTs/src/ChunkRepositoryApi.Types";
 

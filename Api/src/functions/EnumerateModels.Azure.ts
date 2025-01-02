@@ -15,8 +15,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "../../../CommonTs/src/EnumerateModelsApi.Types"
-import { sessionFailResponse, defaultErrorResponse } from "./Utility";
-import { isSessionValid } from "./Utility";
+import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
+import { isSessionValid } from "./Utility.Azure";
 
 const model = getDefaultModel();
 

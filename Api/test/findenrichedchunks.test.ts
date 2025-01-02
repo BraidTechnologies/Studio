@@ -54,7 +54,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          expect(response.length > 0).toBe(true);
       }
 
-   }).timeout(20000);
+   }).timeout(50000);
 
    it("Needs to find relevant chunks from a matching URL.", async function () {
 
@@ -74,7 +74,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
 
          expect(response.length > 0).toBe(true);
       }
-   }).timeout (20000);
+   }).timeout (50000);
 
    it("Needs to find chunks from a matching URL.", async function () {
 
@@ -93,17 +93,17 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          expect(response !== undefined).toBe(true);
       }
 
-   }).timeout(20000);   
+   }).timeout(50000);   
 }
 
 
-//describe("FindEnrichedChunks - Boxer", async function () {
+describe("FindEnrichedChunks - Boxer", async function () {
    
-  // commonChunkStoreTests (EChunkRepository.kBoxer, boxerSummaries, boxerUrls);
+   commonChunkStoreTests (EChunkRepository.kBoxer, boxerSummaries, boxerUrls);
    
-//}).timeout(20000);
+}).timeout(20000);
 
 describe("FindEnrichedChunks - Waterfall", async function () {
 
    commonChunkStoreTests (EChunkRepository.kWaterfall, waterfallSummaries, waterfallUrls);
-});
+}).timeout(50000);

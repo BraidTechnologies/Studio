@@ -94,8 +94,8 @@ class OpenAIChatModelDriver {
     getDrivenModelType() {
         return modelType;
     }
-    generateResponse(persona, prompt, wordTarget) {
-        return chat(persona, prompt, wordTarget);
+    generateResponse(persona, prompt, params) {
+        return chat(persona, prompt, params);
     }
 }
 exports.OpenAIChatModelDriver = OpenAIChatModelDriver;
@@ -104,10 +104,10 @@ exports.OpenAIChatModelDriver = OpenAIChatModelDriver;
  *
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
  * @param prompt The conversation prompt containing the system and user messages
- * @param {number} wordTarget - The target number of words for the response
+ * @param params The parameters for the prompt
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
-function chat(persona, prompt, wordTarget) {
+function chat(persona, prompt, params) {
     return __awaiter(this, void 0, void 0, function* () {
         // Up to 5 retries if we hit rate limit
         (0, axios_retry_1.default)(axios_1.default, {
@@ -118,7 +118,7 @@ function chat(persona, prompt, wordTarget) {
                 return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || axios_retry_1.default.isNetworkOrIdempotentRequestError(error);
             }
         });
-        const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, prompt.prompt, wordTarget);
+        const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, prompt.prompt, params);
         const systemPrompt = summariser.systemPrompt;
         const userPrompt = summariser.itemPrompt;
         let messages = [];

@@ -78,6 +78,11 @@ export interface IEmbeddingModelDriver {
     embed(text: string): Promise<Array<number>>;
 }
 
+export interface IChatModelDriverParams {
+   wordTarget?: number | undefined;
+   promptParam1?: string | undefined;
+}
+
 /**
  * Interface for drivers that provide chat model capabilities.
  * 
@@ -97,9 +102,10 @@ export interface IChatModelDriver {
     * 
     * @param {EPromptPersona} persona - The persona to use for the response
     * @param {IModelConversationPrompt} prompt - The conversation prompt to be processed
-    * @param {number} wordTarget - The target number of words for the response. Optional.
+    * @param {IChatModelDriverParams} params - The parameters for the prompt (optional)
     * @returns {Promise<IModelConversationElement>} A promise that resolves to the generated response
     */
-   generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
-      wordTarget?: number | undefined): Promise<IModelConversationElement>;
+   generateResponse(persona: EPromptPersona, 
+      prompt: IModelConversationPrompt, 
+      params?: IChatModelDriverParams): Promise<IModelConversationElement>;
 }

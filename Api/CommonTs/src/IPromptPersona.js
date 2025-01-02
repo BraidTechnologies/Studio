@@ -16,11 +16,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EPromptPersona = void 0;
 var EPromptPersona;
 (function (EPromptPersona) {
+    EPromptPersona["kDefault"] = "Default";
     EPromptPersona["kArticleSummariser"] = "ArticleSummariser";
     EPromptPersona["kCodeSummariser"] = "CodeSummariser";
     EPromptPersona["kSurveySummariser"] = "SurveySummariser";
-    EPromptPersona["kDeveloperAssistant"] = "DeveloperAssistant";
     EPromptPersona["kTestForSummariseFail"] = "TestForSummariseFail";
+    EPromptPersona["kClassifier"] = "Classifier";
+    EPromptPersona["kThemeFinder"] = "ThemeFinder";
+    EPromptPersona["kDeveloperAssistant"] = "DeveloperAssistant";
+    EPromptPersona["kDeveloperImaginedAnswerGenerator"] = "DeveloperImaginedAnswerGenerator";
+    EPromptPersona["kDeveloperQuestionGenerator"] = "DeveloperQuestionGenerator";
 })(EPromptPersona || (exports.EPromptPersona = EPromptPersona = {}));
 ;
 //# sourceMappingURL=IPromptPersona.js.map

@@ -28,7 +28,6 @@ import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
 import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository, IRelevantEnrichedChunk} from '../../CommonTs/src/EnrichedChunk';
-import { EStandardPrompts } from "../../CommonTs/src/EnrichedQuery";
 
 import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
 import { EModelConversationRole, IModelConversationElement } from "../../CommonTs/src/IModelDriver";
@@ -228,12 +227,11 @@ export class AIConnection {
 
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-         enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
          question : question,
          history: history,
          maxCount: 2,
-         similarityThreshold : 0.4
+         similarityThreshold : 0.4,
+         wordTarget: 50
       } 
 
       return query; 
@@ -242,8 +240,7 @@ export class AIConnection {
    static buildQueryForQuestionPrompt (summary: string): IGenerateQuestionQuery {
 
       let query = {
-         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-         questionGenerationPrompt: EStandardPrompts.kGenerateAQuestionPrompt,
+         wordTarget: 10,
          summary: summary
       } 
 

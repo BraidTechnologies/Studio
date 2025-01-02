@@ -15,11 +15,16 @@
 
 export enum EPromptPersona {
 
+   kDefault = "Default",
    kArticleSummariser = "ArticleSummariser", 
    kCodeSummariser = "CodeSummariser",
    kSurveySummariser = "SurveySummariser",
-   kDeveloperAssistant = "DeveloperAssistant",
-   kTestForSummariseFail = "TestForSummariseFail"
+   kTestForSummariseFail = "TestForSummariseFail",
+   kClassifier = "Classifier",
+   kThemeFinder = "ThemeFinder",
+   kDeveloperAssistant = "DeveloperAssistant", 
+   kDeveloperImaginedAnswerGenerator = "DeveloperImaginedAnswerGenerator",
+   kDeveloperQuestionGenerator = "DeveloperQuestionGenerator"
 };
 
 export interface IPromptPersona {

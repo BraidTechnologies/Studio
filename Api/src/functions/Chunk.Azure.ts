@@ -19,8 +19,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { IChunkRequest, IChunkResponse } from "../../../CommonTs/src/ChunkApi.Types"
-import { sessionFailResponse, defaultErrorResponse } from "./Utility";
-import { isSessionValid } from "./Utility";
+import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
+import { isSessionValid } from "./Utility.Azure";
 
 const model = getDefaultModel();
 

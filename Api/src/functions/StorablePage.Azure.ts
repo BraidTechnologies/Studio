@@ -14,8 +14,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { pageStorableAttributes } from './CosmosStorableApi';
-import { getStorableApiFromQuery, saveStorableApi } from "./AzureStorableApi";
+import { pageStorableAttributes } from './StorableApi.Cosmos';
+import { getStorableApiFromQuery, saveStorableApi } from "./StorableApi.Azure";
 import { IStorable } from "../../../CommonTs/src/IStorable";
 import { IStoredPage } from "../../../CommonTs/src/PageRepositoryApi.Types";
 import { decompressString } from "../../../CommonTs/src/Compress";

@@ -15,10 +15,13 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility";
+import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility.Azure";
 
 import { IFindThemeRequest, IFindThemeResponse } from "../../../CommonTs/src/FindThemeApi.Types";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 const minimumTextLength = 64;
 
@@ -32,38 +35,16 @@ const minimumTextLength = 64;
  */
 async function findThemeCall(text: string, length: number): Promise<string> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
+   
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: text
+   }
 
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: [
-         {
-            role: 'system',
-            content: "You are an AI asistant that finds a common theme from a number of pararaphs of text in "
-               + length.toString() + " words or less. Please find the most common theme in the following text in "
-               + length.toString() + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. "
-         },
-         {
-            role: 'user',
-            content: text
-         }
-      ],
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
+   let response = await modelDriver.generateResponse (EPromptPersona.kClassifier, prompt, {wordTarget: length});
 
-   return (response.data.choices[0].message.content);
+   return (response.content);
 }
 
 /**

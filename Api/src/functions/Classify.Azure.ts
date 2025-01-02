@@ -17,10 +17,11 @@
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
-import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { IClassifyRequest, IClassifyResponse } from "../../../CommonTs/src/ClassifyApi.Types";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 /**
  * Decodes the initial classification string to a human-readable format.
@@ -49,40 +50,16 @@ function decodeClassification(initial: string, classifications: Array<string>): 
  */
 async function singleShotClassify(text: string, classifications: Array<string>): Promise<string> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
+   
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: text
+   }
 
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: [
-         {
-            role: 'system',
-            content: "You are an asistant that can classify text into one of the following subjects: "
-               + classifications.join(",") + "."
-               + "Try to classify the subject of the following text. The classification is a single word from the list "
-               + classifications.join(",")
-               + ". If you cannot classify it well, answer 'Unknown'."
-         },
-         {
-            role: 'user',
-            content: text
-         }
-      ]
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
+   let response = await modelDriver.generateResponse (EPromptPersona.kClassifier, prompt, {promptParam1: classifications.join(",")});
 
-   const decoded = decodeClassification(response.data.choices[0].message.content, classifications);
+   const decoded = decodeClassification(response.content, classifications);
 
    return (decoded);
 }
@@ -136,7 +113,7 @@ export async function classify(request: HttpRequest, context: InvocationContext)
       }
    }
    else {
-      context.error ("Sessionvalidation failed.");         
+      context.error ("Session validation failed.");         
       return sessionFailResponse();
    }
 };
