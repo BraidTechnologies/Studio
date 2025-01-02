@@ -35,6 +35,13 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compressString = compressString;
 exports.decompressString = decompressString;
+/**
+ * @module Compress
+ *
+ * This module provides functions for compressing and decompressing strings using the deflate algorithm.
+ * It supports both Node.js and browser environments.
+ */
+// Copyright (c) 2024 Braid Technologies Ltd
 const pako = __importStar(require("pako"));
 /**
  * Compresses a string using deflate algorithm

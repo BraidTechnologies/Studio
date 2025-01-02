@@ -1,4 +1,14 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module JoinPageValidator
+ * @description Provides a class for validating join details in the Boxer application.
+ * 
+ * This module includes the JoinPageValidator class which handles:
+ * - Validating join details
+ * - Checking if a user can attempt to join a conversation
+ * - Managing saved secrets
+ */
+
 import { SessionKey, ConversationKey } from "./Keys";
 import { JoinDetails } from "./JoinDetails";
 import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";

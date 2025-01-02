@@ -12,48 +12,25 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
-import { EConversationRole, IConversationElement,IQuestionGenerationResponse, IGenerateQuestionQuery} from "../../../CommonTs/src/EnrichedQuery";
-
-import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
+import { IQuestionGenerationResponse, IGenerateQuestionQuery} from "../../../CommonTs/src/EnrichedQuery";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
+import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerationResponse> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: query.summary
+   }
 
-   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.questionGenerationPrompt + " " + query.summary};
-
-   const fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
-   fullPrompt.push(systemPromptElement);
-   fullPrompt.push(questionElement);
-
-   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: fullPrompt,
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
-
-   const directResponse = await directPromise;
-
-   const question = (directResponse.data.choices[0].message.content);
+   let response = await modelDriver.generateResponse (EPromptPersona.kDeveloperQuestionGenerator, prompt, {wordTarget: query.wordTarget});
 
    const queryResponse: IQuestionGenerationResponse = {
-      question: question
+      question: response.content
    }
 
    return queryResponse;

@@ -22,11 +22,12 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
-import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "../../../CommonTs/src/TestForSummariseFailApi.Types";
+import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 const minimumTextLength = 64;
 
@@ -40,37 +41,15 @@ const minimumTextLength = 64;
  */
 async function testForSummariseFailCall(text: string, length: number): Promise<ETestForSummariseFail> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: text
+   }
 
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: [
-         {
-            role: 'system',
-            content: "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. The summariser may apologise for this, or may say there is not enough relevant information to summarise, or may state the text contains only web page navigation, all of which are failed summaries."
-               + " Please review the following summary and reply 'No' if the summariser has not been able to create a good summary of a body of text, otherwise reply 'Yes'."
-         },
-         {
-            role: 'user',
-            content: text
-         }
-      ],
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
+   let response = await modelDriver.generateResponse (EPromptPersona.kTestForSummariseFail, prompt);
 
-   return (response.data.choices[0].message.content === 'No' ? ETestForSummariseFail.kSummaryFailed : ETestForSummariseFail.kSummarySucceeded);
+   return (response.content === 'No' ? ETestForSummariseFail.kSummaryFailed : ETestForSummariseFail.kSummarySucceeded);
 }
 
 /**

@@ -81,7 +81,7 @@ export function defaultErrorResponse(): HttpResponseInit {
 
    return {
       status: 500, // Server error
-      body: "The server encountered an unpexcted problem."
+      body: "The server encountered an unexpected problem."
    };
 }
 

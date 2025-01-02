@@ -1,4 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module KeyRetriever
+ * @description Provides a class for retrieving keys from the Braid backend.
+ * 
+ * This module includes the KeyRetriever class which handles:
+ * - Making API calls to retrieve keys
+ * - Tracking active call state
+ * - Logging errors
+ */
 
 import axios from "axios";
 

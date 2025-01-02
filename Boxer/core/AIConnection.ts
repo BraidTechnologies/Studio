@@ -1,5 +1,20 @@
 // Copyright (c) 2024 Braid Technologies Ltd
-import axios from "axios";
+/**
+ * @module AIConnection
+ * @description Manages communication with AI/LLM services in the Boxer application.
+ * 
+ * This module provides the AIConnection class which handles:
+ * - Making enriched queries to LLM models with context
+ * - Streaming responses back to the UI
+ * - Managing conversation history and token limits
+ * - Tracking active call state
+ * - Building enriched queries from message history
+ * 
+ * The connection requires a session key for authentication and uses the environment 
+ * configuration to determine appropriate API endpoints. It works with the QueryModelApi
+ * to make actual API calls while providing higher-level conversation management.
+ */
+
 
 // Local
 import { SessionKey } from "./Keys";
@@ -13,9 +28,9 @@ import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
 import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository, IRelevantEnrichedChunk} from '../../CommonTs/src/EnrichedChunk';
-import { EStandardPrompts } from "../../CommonTs/src/EnrichedQuery";
 
-import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { EModelConversationRole, IModelConversationElement } from "../../CommonTs/src/IModelDriver";
 import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
 
 // We allow for the equivalent of 10 minutes of chat. 10 mins * 60 words = 600 words = 2400 tokens. 
@@ -156,7 +171,7 @@ export class AIConnection {
 
    static buildEnrichmentQuery (messages: Array<Message>, authors: Map<string, Persona>): IEnrichedQuery {
 
-      let history = new Array<IConversationElement> ();
+      let history = new Array<IModelConversationElement> ();
       let question = "";    
 
       var start = AIConnection.findEarliestMessageIndexWithinTokenLimit(messages, authors);
@@ -192,18 +207,18 @@ export class AIConnection {
             else {
                // else we just remove the name of our LLM
                let edited = message.text.replace (EConfigStrings.kLLMRequestSignature, "");
-               let entry = { role: EConversationRole.kUser, content: edited };
+               let entry = { role: EModelConversationRole.kUser, content: edited };
                history.push (entry);
             }
          }
 
          if (AIConnection.isFromLLM(message, authors)) {
             
-            let entry = { role: EConversationRole.kAssistant, content: message.text };
+            let entry = { role: EModelConversationRole.kAssistant, content: message.text };
             history.push (entry);     
 
             for (let j = 0; j < message.chunks.length; j++) {
-               let entry = { role: EConversationRole.kAssistant, content: message.chunks[j].chunk.summary };
+               let entry = { role: EModelConversationRole.kAssistant, content: message.chunks[j].chunk.summary };
                history.push (entry);
             }                   
          }         
@@ -212,12 +227,11 @@ export class AIConnection {
 
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-         enrichmentDocumentPrompt: EStandardPrompts.kEnrichmentPrompt,
          question : question,
          history: history,
          maxCount: 2,
-         similarityThreshold : 0.4
+         similarityThreshold : 0.4,
+         wordTarget: 50
       } 
 
       return query; 
@@ -226,8 +240,7 @@ export class AIConnection {
    static buildQueryForQuestionPrompt (summary: string): IGenerateQuestionQuery {
 
       let query = {
-         personaPrompt: EStandardPrompts.kOpenAiPersonaPrompt,
-         questionGenerationPrompt: EStandardPrompts.kGenerateAQuestionPrompt,
+         wordTarget: 10,
          summary: summary
       } 
 

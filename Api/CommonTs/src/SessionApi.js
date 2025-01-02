@@ -15,6 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionApi = void 0;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
+/**
+ * @module SessionApi
+ * @description Provides an API for managing user sessions and authentication.
+ *
+ * This module contains the SessionApi class which handles session validation
+ * and authentication operations. It provides methods for:
+ * - Checking session key validity
+ * - Managing session authentication state
+ *
+ * The module extends the base Api class to provide consistent authentication
+ * patterns while handling session-specific requirements.
+ */
 const Api_1 = require("./Api");
 class SessionApi extends Api_1.Api {
     /**

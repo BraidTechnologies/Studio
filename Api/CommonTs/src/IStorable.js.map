@@ -1,1 +1,1 @@
-{"version":3,"file":"IStorable.js","sourceRoot":"","sources":["../../src/IStorable.ts"],"names":[],"mappings":";AAAA,4CAA4C;;;AAE5C;;;;GAIG;AACH,IAAY,uBAIX;AAJD,WAAY,uBAAuB;IAEhC,2CAAgB,CAAA;IAChB,mDAAwB,CAAA;AAC3B,CAAC,EAJW,uBAAuB,uCAAvB,uBAAuB,QAIlC;AAAA,CAAC"}
+{"version":3,"file":"IStorable.js","sourceRoot":"","sources":["../../src/IStorable.ts"],"names":[],"mappings":";AAAA,4CAA4C;AAC5C;;;;;;;;;;;;GAYG;;;AAEH;;;;GAIG;AACH,IAAY,uBAIX;AAJD,WAAY,uBAAuB;IAEhC,2CAAgB,CAAA;IAChB,mDAAwB,CAAA;AAC3B,CAAC,EAJW,uBAAuB,uCAAvB,uBAAuB,QAIlC;AAAA,CAAC"}

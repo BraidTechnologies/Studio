@@ -1,4 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module SharedEmbedding
+ * @description Provides a class for managing shared embeddings in the Boxer application.
+ * 
+ * This module includes the SharedEmbedding class which handles:
+ * - Creating and managing shared embedding objects with URLs, conversation IDs, and like counts
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying shared embedding objects from JSON or constructed sources
+ */
 
 import { InvalidParameterError } from './Errors';
 import { throwIfUndefined } from './Asserts'; 

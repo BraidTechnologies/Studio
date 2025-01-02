@@ -1,4 +1,15 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module UuidKeyGenerator
+ * @description Provides a class for generating UUIDs and secrets in the Boxer application.
+ * 
+ * This module includes the UuidKeyGenerator class which handles:
+ * - Generating UUIDs
+ * - Generating secrets
+ * - Checking if a key could be a valid key
+ * - Saving and matching secrets
+ * - Managing saved secrets
+ */
 import { throwIfNull } from './Asserts';
 import { EnvironmentError } from './Errors';
 import { IKeyGenerator } from './IKeyGenerator';

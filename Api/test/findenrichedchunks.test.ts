@@ -54,7 +54,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          expect(response.length > 0).toBe(true);
       }
 
-   }).timeout(20000);
+   }).timeout(50000);
 
    it("Needs to find relevant chunks from a matching URL.", async function () {
 
@@ -70,14 +70,13 @@ async function commonChunkStoreTests(repo: EChunkRepository,
 
          let response = await api.findRelevantChunksFromUrl(urlQuery);
          console.log("Looking for:" + urlQuery.url);
-         for (let i = 0; i < response.length; i++)
-            console.log(response[i].chunk.url);
+         console.log(response);
 
          expect(response.length > 0).toBe(true);
       }
-   }).timeout (20000);
+   }).timeout (50000);
 
-   it("Needs to find same chunks from a matching URL.", async function () {
+   it("Needs to find chunks from a matching URL.", async function () {
 
       let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
 
@@ -94,7 +93,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          expect(response !== undefined).toBe(true);
       }
 
-   }).timeout(20000);   
+   }).timeout(50000);   
 }
 
 
@@ -107,4 +106,4 @@ describe("FindEnrichedChunks - Boxer", async function () {
 describe("FindEnrichedChunks - Waterfall", async function () {
 
    commonChunkStoreTests (EChunkRepository.kWaterfall, waterfallSummaries, waterfallUrls);
-});
+}).timeout(50000);

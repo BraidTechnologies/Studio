@@ -5,6 +5,22 @@ exports.getDefaultEnvironment = getDefaultEnvironment;
 exports.getDefaultFluidEnvironment = getDefaultFluidEnvironment;
 exports.getDefaultLoginEnvironment = getDefaultLoginEnvironment;
 exports.getEnvironment = getEnvironment;
+/**
+ * @module IEnvironmentFactory
+ *
+ * Factory module for creating environment instances that define application behavior
+ * across different deployment contexts (Development, Staging, Production).
+ *
+ * This module provides factory functions to create appropriate environment instances
+ * based on the current execution context (browser vs Node.js) and configuration.
+ * It supports automatic environment detection and explicit environment selection
+ * through the getEnvironment function.
+ *
+ * The module handles three main scenarios:
+ * - Default environment detection
+ * - Fluid-specific environment configuration
+ * - Login-specific environment configuration
+ */
 // Internal imports
 const IEnvironment_1 = require("./IEnvironment");
 const Environment_1 = require("./Environment");

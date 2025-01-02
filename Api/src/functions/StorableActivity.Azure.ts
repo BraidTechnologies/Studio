@@ -12,8 +12,8 @@
 
 // 3rd party imports
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { activityStorableAttributes } from "./CosmosStorableApi";
-import { getStorableApi as getStorableApi, removeStorableApi, saveStorableApi, getRecentStorablesApi } from "./AzureStorableApi";
+import { activityStorableAttributes } from "./StorableApi.Cosmos";
+import { getStorableApi as getStorableApi, removeStorableApi, saveStorableApi, getRecentStorablesApi } from "./StorableApi.Azure";
 
 app.http('GetActivity', {
    methods: ['POST'],

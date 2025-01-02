@@ -1,7 +1,12 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductionEnvironment = exports.StagingEnvironment = exports.DevelopmentEnvironment = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Environment
+ *
+ * This module provides a base class for interacting with an environment.
+ */
 const IEnvironment_1 = require("./IEnvironment");
 /**
  * Class representing the Development Environment with methods to retrieve various API endpoints.

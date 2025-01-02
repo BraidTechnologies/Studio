@@ -1,4 +1,5 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FluidApi = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module FluidApi
+ * @description Provides an API wrapper for generating Fluid Framework tokens.
+ * This module contains the FluidApi class, which handles the generation of Fluid
+ * Framework tokens using the provided environment and session key.
+ *
+ * The class supports:
+ * - Generating a Fluid token using a request object containing documentId, userId, and userName.
+ * - Handling errors and retries for token generation.
+ */
 const axios_1 = __importDefault(require("axios"));
 const axios_retry_1 = __importDefault(require("axios-retry"));
 const Api_1 = require("./Api");

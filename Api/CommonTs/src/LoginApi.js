@@ -1,4 +1,14 @@
 "use strict";
+// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module LoginApi
+ * @description Provides an API for handling login operations.
+ *
+ * This module contains the LoginApi class, which handles the login process
+ * using LinkedIn API. It provides methods for:
+ * - Logging in using LinkedIn API
+ * - Handling errors and retries for login operations
+ */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +23,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginApi = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
 const Api_1 = require("./Api");
 /**

@@ -14,8 +14,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { chunkStorableAttributes } from './CosmosStorableApi';
-import { findStorableApi, removeStorableApi, saveStorableApi, getStorableApi, getRecentStorablesApi } from "./AzureStorableApi";
+import { chunkStorableAttributes } from './StorableApi.Cosmos';
+import { findStorableApi, removeStorableApi, saveStorableApi, getStorableApi, getRecentStorablesApi } from "./StorableApi.Azure";
 
 app.http('GetChunk', {
    methods: ['GET', 'POST'],

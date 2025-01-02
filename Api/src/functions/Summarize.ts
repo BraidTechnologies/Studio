@@ -20,17 +20,10 @@
  * - 'npm start' to run locally
  */
 
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
-
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
-import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility";
-import { ISummariseRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
-import { getSummariser } from "./IPromptPersonaFactory";
+import { getDefaultChatModelDriver, getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
 
-const minimumTextLength = 64;
 const model = getDefaultModel();
 
 /**
@@ -57,43 +50,15 @@ function chunkText(text: string, overlapWords: number): Array<string> {
  */
 async function singleShotSummarize(persona: EPromptPersona, text: string, words: number): Promise<string> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: text
+   }
 
-   const summariser = getSummariser(persona, words, text);
+   let response = await modelDriver.generateResponse (persona, prompt, {wordTarget: words});
 
-   const systemPrompt = summariser.systemPrompt;
-   const userPrompt = summariser.itemPrompt;
-
-   console.log(systemPrompt)
-
-   const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: [
-         {
-            role: 'system',
-            content: systemPrompt
-         },
-         {
-            role: 'user',
-            content: userPrompt
-         }
-      ],
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
-
-   return (response.data.choices[0].message.content);
+   return response.content;
 }
 
 /**
@@ -111,7 +76,7 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
    const chunks = chunkText(text, 0);
    const summaries = new Array<string>();
 
-   const recursizeSummarySize = model.contextWindowSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
+   const recursizeSummarySize = model.defaultChunkSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
    if (chunks.length > 1) {
       // If the text was > threshold, we break it into chunks.
@@ -138,66 +103,4 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
 
    return overallSummary;
 }
-
-/**
- * Asynchronous function to summarize text based on the requested session key and input text.
- * 
- * @param request - The HTTP request object containing the text to be summarized.
- * @param context - The context object for the function invocation.
- * @returns A promise that resolves to an HTTP response with the summarized text or an error message.
- */
-export async function summarize(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
-
-   let text: string | undefined = undefined;
-   let words: number = 50;
-   let overallSummary: string | undefined = undefined;
-
-   if (isSessionValid(request, context)) {
-
-      try {
-         const jsonRequest = await request.json();
-         context.log(jsonRequest);
-
-         const summariseSpec = (jsonRequest as any).request as ISummariseRequest;
-
-         text = summariseSpec.text;
-         words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
-         const persona = summariseSpec.persona;
-
-         if (text && text.length >= minimumTextLength && words > 0) {
-            const definitelyText: string = text;
-            overallSummary = await recursiveSummarize(persona, definitelyText, 0, words);
-
-            const summariseResponse: ISummariseResponse = {
-               summary: overallSummary
-            }
-
-            context.log(summariseResponse);
-
-            return {
-               status: 200, // Ok
-               body: JSON.stringify(summariseResponse)
-            };
-         }
-         else {
-            context.error("Text is below minimum length or invalid length for summary.");
-            return invalidRequestResponse("Text is below minimum length or invalid length for summary.")
-         }
-      }
-      catch (e: any) {
-         context.error(e);
-         return defaultErrorResponse();
-      }
-   }
-   else {
-      context.error("Session validation failed.");
-      return sessionFailResponse();
-   }
-};
-
-app.http('Summarize', {
-   methods: ['GET', 'POST'],
-   authLevel: 'anonymous',
-   handler: summarize
-});
 

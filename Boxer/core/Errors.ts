@@ -1,4 +1,12 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Errors
+ * @description Provides error classes for the Boxer application.
+ * 
+ * This module includes classes for invalid parameters, invalid operations, invalid states,
+ * connection errors, environment errors, and assertion failures. Each class extends the Error
+ * class and provides a constructor that logs the error to the console.
+ */
 
 import { logApiError, logCoreError } from "./Logging";
 

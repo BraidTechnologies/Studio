@@ -24,10 +24,15 @@ export enum EModel {
  */
 export interface IModel {
 
+   implementsModel: EModel
    deploymentName : string;
    embeddingDeploymentName: string;
-   contextWindowSize : number;
-   fitsInContext(text: string): boolean;
+   defaultChunkSize : number;
+   maximumChunkSize : number;
+   embeddingChunkSize : number;
+   fitsInDefaultChunk(text: string): boolean;
+   fitsInMaximumChunk(text: string): boolean;
+   fitsInEmbeddingChunk(text: string): boolean;
    chunkText (text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string>;
    estimateTokens (text: string): number;
 }

@@ -9,8 +9,45 @@ import axios from 'axios';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { IChunkRequest, IChunkResponse } from '../../CommonTs/src/ChunkApi.Types';
+import { lookLikeSameSource } from '../src/functions/EnrichedChunkRepository';
 
 declare var process: any;
+
+describe("Chunk URLs", function () {
+
+   it("Needs to identify URLs from same YouTube video", function () {
+
+      var url1 = "https://www.youtube.com/watch?v=roEKOzxilq4&t=00h00m00s";
+      var url2 = "https://www.youtube.com/watch?v=roEKOzxilq4&t=00h05m00s";
+
+      expect(lookLikeSameSource (url1, url2)).toEqual(true);     
+   });
+
+   it("Needs to identify URLs from different YouTube videos", function () {
+
+      var url1 = "https://www.youtube.com/watch?v=roEKOzxilq4&t=00h00m00s";
+      var url2 = "https://www.youtube.com/watch?v=xoEKOzailq4&t=00h00m00s";
+
+      expect(lookLikeSameSource (url1, url2)).toEqual(false);        
+   });
+
+   it("Needs to identify URLs from same GitHub repo", function () {
+
+      var url1 = "https://github.com/jonverrier/BraidEng";
+      var url2 = "https://github.com/jonverrier/BraidEng/issues";
+
+      expect(lookLikeSameSource (url1, url2)).toEqual(true);     
+   });
+
+   it("Needs to identify URLs from different GitHub repos", function () {
+
+      var url1 = "https://github.com/jonverrier/BraidEng";
+      var url2 = "https://github.com/jonverrier/BraidWeb";
+
+      expect(lookLikeSameSource (url1, url2)).toEqual(false);        
+   });
+
+});
 
 describe("Chunk", async function () {
 

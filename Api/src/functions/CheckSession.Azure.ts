@@ -17,7 +17,7 @@
 // 'npm start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultOkResponse } from "./Utility.Azure";
 
 /**
  * Validates the session key provided in the request query parameters.

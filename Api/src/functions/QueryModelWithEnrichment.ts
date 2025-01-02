@@ -19,15 +19,15 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
-import { EConversationRole, IConversationElement, IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
+import { IModelConversationElement, EModelConversationRole, IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
 import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultChatModelDriver, getDefaultModel } from "../../../CommonTs/src/IModelFactory";
 
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
-import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility";
+import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
+import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
 const model = getDefaultModel();
 const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
@@ -40,55 +40,26 @@ const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half 
  */
 export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
 
-   // Up to 5 retries if we hit rate limit
-   axiosRetry(axios, {
-      retries: 5,
-      retryDelay: axiosRetry.exponentialDelay,
-      retryCondition: (error) => {
-         return error?.response?.status === 429 || axiosRetry.isNetworkOrIdempotentRequestError(error);
-      }
-   });
+   let modelDriver = getDefaultChatModelDriver();
 
-   const systemPromptElement: IConversationElement = { role: EConversationRole.kSystem, content: query.personaPrompt };
-   const questionElement: IConversationElement = { role: EConversationRole.kUser, content: query.question };
-   const enrichedElement: IConversationElement = { role: EConversationRole.kUser, content: query.enrichmentDocumentPrompt + " " + query.question };
+   let directPrompt : IModelConversationPrompt = {
+      history: query.history,
+      prompt: query.question
+   }
 
-   let fullPrompt: Array<IConversationElement> = new Array<IConversationElement>();
-   fullPrompt.push(systemPromptElement);
-   fullPrompt = fullPrompt.concat(query.history);
-   fullPrompt.push(questionElement);
+   let directPromise = await modelDriver.generateResponse (EPromptPersona.kDeveloperAssistant, directPrompt, {wordTarget: query.wordTarget});
 
-   const directPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: fullPrompt,
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
+   let enrichedPrompt : IModelConversationPrompt = {
+      history: query.history,
+      prompt: query.question
+   }
 
-   let enrichmentPrompt: Array<IConversationElement> = new Array<IConversationElement>();
-   enrichmentPrompt.push(systemPromptElement);
-   enrichmentPrompt = enrichmentPrompt.concat(query.history);
-   enrichmentPrompt.push(enrichedElement);
-
-   const enrichmentPromise = axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-      messages: enrichmentPrompt,
-   },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
-         }
-      }
-   );
+   let enrichmentPromise = await modelDriver.generateResponse (EPromptPersona.kDeveloperImaginedAnswerGenerator, enrichedPrompt, {wordTarget: query.wordTarget});
 
    const [directResponse, enrichedResponse] = await Promise.all ([directPromise, enrichmentPromise]);
 
-   const answer = (directResponse.data.choices[0].message.content);
-   const imagined = (enrichedResponse.data.choices[0].message.content);
+   const answer = (directResponse.content);
+   const imagined = (enrichedResponse.content);
 
    const tokens = model.estimateTokens (imagined);
    let chunks = new Array<IRelevantEnrichedChunk>();

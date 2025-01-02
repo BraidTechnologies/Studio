@@ -22,10 +22,10 @@
 import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // Internal imports
-import { isSessionValid, sessionFailResponse, notFoundResponse } from "./Utility";
+import { isSessionValid, sessionFailResponse, notFoundResponse } from "./Utility.Azure";
 import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "../../../CommonTs/src/IStorable";
 import {AzureLogger, findStorable, loadStorable, saveStorable, removeStorable, 
-        loadRecentStorables, ICosmosStorableParams, StorableTransformer} from './CosmosStorableApi';
+        loadRecentStorables, ICosmosStorableParams, StorableTransformer} from './StorableApi.Cosmos';
 
 // A transformer function that can be applied to a storable to transform it in some way to the HTTP response
 export type StorableResponseTransformer = (storable: IStorable) => HttpResponseInit;

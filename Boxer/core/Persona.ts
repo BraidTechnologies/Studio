@@ -1,4 +1,13 @@
 // Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Persona
+ * @description Provides a class for managing personas in the Boxer application.
+ * 
+ * This module includes the Persona class which handles:
+ * - Creating and managing persona objects with names, icons, and timestamps
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying persona objects from JSON or constructed sources
+ */
 
 import { InvalidParameterError } from './Errors';
 import { EIcon } from './Icons';
