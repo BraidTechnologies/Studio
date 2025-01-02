@@ -96,9 +96,10 @@ export interface IChatModelDriver {
     * Generates a response to a given conversation prompt.
     * 
     * @param {EPromptPersona} persona - The persona to use for the response
-    * @param {number} words - The (indicative) number of words to use for the response
     * @param {IModelConversationPrompt} prompt - The conversation prompt to be processed
+    * @param {number} wordTarget - The target number of words for the response
     * @returns {Promise<IModelConversationElement>} A promise that resolves to the generated response
     */
-   generateResponse(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement>;
+   generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+      wordTarget: number): Promise<IModelConversationElement>;
 }

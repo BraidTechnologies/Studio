@@ -31,7 +31,7 @@ const SurveySummariserPersona = {
     systemPrompt: "",
     itemPrompt: ""
 };
-function getChatPersona(persona, wordTarget, textToSummarise) {
+function getChatPersona(persona, textToSummarise, wordTarget) {
     const wordString = Math.floor(wordTarget).toString();
     switch (persona) {
         case IPromptPersona_1.EPromptPersona.kSurveySummariser:

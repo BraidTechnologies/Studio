@@ -100,8 +100,10 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
       return modelType;
    }
 
-   generateResponse(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
-      return chat(persona, words, prompt);
+   generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+      wordTarget: number): Promise<IModelConversationElement> {
+
+      return chat(persona, prompt, wordTarget);
    }
 }
 
@@ -109,12 +111,13 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * Asynchronously generates a chat response using the Azure OpenAI service.
  * 
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
- * @param words The target number of words for the response
  * @param prompt The conversation prompt containing the system and user messages
+ * @param {number} wordTarget - The target number of words for the response
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
-async function chat(persona: EPromptPersona, words: number, prompt: IModelConversationPrompt): Promise<IModelConversationElement> {
+async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+   wordTarget: number): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -125,7 +128,7 @@ async function chat(persona: EPromptPersona, words: number, prompt: IModelConver
       }
    });
 
-   const summariser = getChatPersona(persona, words, prompt.prompt);
+   const summariser = getChatPersona(persona, prompt.prompt, wordTarget);
 
    const systemPrompt = summariser.systemPrompt;
    const userPrompt = summariser.itemPrompt;

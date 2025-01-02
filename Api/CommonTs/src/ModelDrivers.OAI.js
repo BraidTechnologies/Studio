@@ -28,7 +28,10 @@ exports.calculateEmbedding = calculateEmbedding;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
 const axios_retry_1 = __importDefault(require("axios-retry"));
+// Internal imports
+const IModelDriver_1 = require("./IModelDriver");
 const IPromptPersonaFactory_1 = require("./IPromptPersonaFactory");
+let modelType = "OpenAI";
 /**
  * Class representing an OpenAI embedding model driver.
  * Implements the IEmbeddingModelDriver interface.
@@ -39,6 +42,9 @@ const IPromptPersonaFactory_1 = require("./IPromptPersonaFactory");
  * @throws {Error} Throws an error if the method is not implemented.
  */
 class OpenAIEmbeddingModelDriver {
+    getDrivenModelType() {
+        return modelType;
+    }
     embed(text) {
         return calculateEmbedding(text);
     }
@@ -61,21 +67,35 @@ function calculateEmbedding(text) {
                 return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || axios_retry_1.default.isNetworkOrIdempotentRequestError(error);
             }
         });
-        const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
-            input: text,
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': process.env.AzureAiKey
-            }
-        });
-        const embedding = response.data.data[0].embedding;
-        return (embedding);
+        try {
+            const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+                input: text,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': process.env.AzureAiKey
+                }
+            });
+            const embedding = response.data.data[0].embedding;
+            return (embedding);
+        }
+        catch (error) {
+            console.error(error);
+            throw error;
+        }
     });
 }
+/**
+ * Class representing a driver for OpenAI chat models.
+ * Implements the IChatModelDriver interface to provide methods for
+ * retrieving the model type and generating responses to conversation prompts.
+ */
 class OpenAIChatModelDriver {
-    generateResponse(persona, words, prompt) {
-        return chat(persona, words, prompt);
+    getDrivenModelType() {
+        return modelType;
+    }
+    generateResponse(persona, prompt, wordTarget) {
+        return chat(persona, prompt, wordTarget);
     }
 }
 exports.OpenAIChatModelDriver = OpenAIChatModelDriver;
@@ -83,11 +103,11 @@ exports.OpenAIChatModelDriver = OpenAIChatModelDriver;
  * Asynchronously generates a chat response using the Azure OpenAI service.
  *
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
- * @param words The target number of words for the response
  * @param prompt The conversation prompt containing the system and user messages
+ * @param {number} wordTarget - The target number of words for the response
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
-function chat(persona, words, prompt) {
+function chat(persona, prompt, wordTarget) {
     return __awaiter(this, void 0, void 0, function* () {
         // Up to 5 retries if we hit rate limit
         (0, axios_retry_1.default)(axios_1.default, {
@@ -98,7 +118,7 @@ function chat(persona, words, prompt) {
                 return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || axios_retry_1.default.isNetworkOrIdempotentRequestError(error);
             }
         });
-        const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, words, prompt.prompt);
+        const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, prompt.prompt, wordTarget);
         const systemPrompt = summariser.systemPrompt;
         const userPrompt = summariser.itemPrompt;
         let messages = [];
@@ -116,15 +136,22 @@ function chat(persona, words, prompt) {
             role: 'user',
             content: userPrompt
         });
-        const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
-            messages: messages
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': process.env.AzureAiKey
-            }
-        });
-        return (response.data.choices[0].message.content);
+        try {
+            const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+                messages: messages
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': process.env.AzureAiKey
+                }
+            });
+            return { role: IModelDriver_1.EModelConversationRole.kAssistant,
+                content: response.data.choices[0].message.content };
+        }
+        catch (error) {
+            console.error(error);
+            throw error;
+        }
     });
 }
 //# sourceMappingURL=ModelDrivers.OAI.js.map
