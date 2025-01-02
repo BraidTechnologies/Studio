@@ -31,6 +31,11 @@ const SurveySummariserPersona = {
     systemPrompt: "",
     itemPrompt: ""
 };
+const TestForSummariseFailPersona = {
+    name: IPromptPersona_1.EPromptPersona.kTestForSummariseFail,
+    systemPrompt: "",
+    itemPrompt: ""
+};
 function getChatPersona(persona, textToSummarise, wordTarget) {
     const wordString = Math.floor(wordTarget).toString();
     switch (persona) {
@@ -50,6 +55,12 @@ function getChatPersona(persona, textToSummarise, wordTarget) {
                 + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
             codeTemplate.itemPrompt = textToSummarise;
             return codeTemplate;
+        case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
+            const testForSummariseFailTemplate = TestForSummariseFailPersona;
+            testForSummariseFailTemplate.systemPrompt = "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. The summariser may apologise for this, or may say there is not enough relevant information to summarise, or may state the text contains only web page navigation, all of which are failed summaries."
+                + " Please review the following summary and reply 'No' if the summariser has not been able to create a good summary of a body of text, otherwise reply 'Yes'.";
+            testForSummariseFailTemplate.itemPrompt = textToSummarise;
+            return testForSummariseFailTemplate;
         case IPromptPersona_1.EPromptPersona.kArticleSummariser:
         default:
             const articleTemplate = ArticleSummariserPersona;
