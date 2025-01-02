@@ -1,241 +1,238 @@
 **activityrecord.test.ts**
 
-This module sets up a testing suite using Mocha and Expect to validate the operations of ActivityRepository.
+This code defines a set of Mocha tests for the `ActivityRepository` module of an application.
 
-The `describe` block contains several `it` tests which ensure various records (`URL`, `LikeDislike`, and `Message`) can be saved, loaded, and removed successfully from the repository.
+The `describe` function from Mocha is used to group these tests under the "ActivityRepository" label. Within this function, individual tests are defined using the `it` function.
 
-It imports necessary classes/functions such as `IStoredUrlActivity`, `IStoredLikeUrlActivity`, `IStoredMessageActivity`, as well as necessary helpers like `SessionKey`, `getRecordRepository`, and `getDefaultKeyGenerator`.
+Before running the tests, the code retrieves a `SessionKey` from the environment variables, verifies it, and then obtains a record repository using `getRecordRepository`.
 
-The `throwIfUndefined` function checks for a valid `sessionKey` and `keyGenerator` generates unique keys. Different record types are expected to save and load correctly, ensuring repository integrity with the setup and expected outcomes.
+Key classes and functions include: `IStoredUrlActivity`, `IStoredLikeUrlActivity`, `IStoredMessageActivity`, `getDefaultKeyGenerator`, `getRecordRepository`, `throwIfUndefined`, and the Mocha constructs `describe` and `it`.
+
+Each test case covers different functionalities such as saving, loading, and removing records for different types of activities. These activities include URL records, like/dislike records, and message records.
 
 **adminrespository.test.ts**
 
-This code is a unit test module for testing the `DefaultAdminRepository` in an application.
+The code is a test module using Mocha and Expect to verify the behavior of the DefaultAdminRepository class within an admin repository context.
 
-It uses the Mocha testing framework (`describe` and `it` functions) and the `expect` assertion library.
+The `describe` function creates a test suite named "AdminRespository".
 
-Two test cases are defined to check if the `isAdmin` method correctly identifies an administrator.
+The `it` functions define two test cases:
+1. The first test checks if a persona named "Jon Verrier" is recognized as an administrator by calling the `isAdmin` method of the `DefaultAdminRepository` class and expecting the result to be true.
+2. The second test checks if a persona with a different name does not get recognized as an administrator, expecting the result to be false.
 
-The first test checks if `isAdmin` returns `true` for a persona named "Jon Verrier".
+`doSomethingAsync` is a helper function that increments a counter variable. 
 
-The second test checks if `isAdmin` returns `false` for any other name.
-
-The `DefaultAdminRepository`, `Persona`, and `EIcon` classes are important within this module.
-
-A variable `count` and an asynchronous function `doSomethingAsync` are defined but not utilized in the tests.
+Important classes/functions are `DefaultAdminRepository`, `Persona`, and `EIcon`.
 
 **aiconnection.test.ts**
 
-This code consists of multiple tests structured under two describe blocks to test AIConnection and APIs functionalities.
+The code provided sets up a test suite using Mocha for the `AIConnection` and various utility functions imported from the '../core' and '../../CommonTs/src' directories.
 
-The module imports necessary dependencies such as core classes, external libraries, and configuration strings. It declares message data variables for a person and a bot, and defines an async sleep function.
+**Important Classes/Functions:**
+1. **Persona**: Represents an author or bot within the messaging system.
+2. **Message**: Represents messages exchanged in the communication system.
+3. **AIConnection**: Performs operations related to AI such as identifying bot messages or requests.
+4. **SessionKey**: Used for authenticated interactions with external services.
+5. **makeSummaryCall**: An API call to summarize text via an external service.
 
-The `AIConnection` describe block sets authors and message instances before running the tests. It tests various methods like `isFromLLM`, `isRequestForLLM`, `mightBeMissTypedRequestForLLM`, and `buildEnrichmentQuery` to validate message detection and request handling.
+**Tests:**
+- Determine whether a message is from a bot or a human.
+- Identify requests intended for the bot.
+- Handle near-miss bot requests.
+- Handle reference errors safely.
+- Build request objects from messages.
+- Interface with an OpenAI endpoint using streaming and basic APIs.
+- Validate API responses and handle token limits correctly.
+- Call summarization with appropriate session keys.
 
-The `APIs` describe block includes a test for `makeSummaryCall`, verifying if the summary is correctly generated from the input text.
-
-Main functions and classes:
-- `sleep`
-- `makeLongMessage`
-- `Persona`
-- `Message`
-- `AIConnection`
-- `makeSummaryCall`
-
-Main test cases:
-- Detect Bot message type
-- Detect Bot request type
-- Handle reference errors
-- Build valid request object
-- Generate valid responses from streaming and basic API
-- Detect token limit constraints
-
+Each `describe` and `it` section defines specific tests to ensure these functionalities work as expected.
 
 **caucus.test.ts**
 
-The module tests various functionalities of the `Caucus` component, which involves managing `Persona` and `Message` objects within a `BraidFluidConnection`.
+### Summary
 
-The `MockLocation` class is defined to create mock fields for `location`.
+1. **Classes and Functions**:
+   - `MockLocation`: Mocks the browser's location object.
+   - `wait`: An asynchronous function that delays execution for 500 milliseconds.
+   - Event handlers `onAdd`, `onChange`, and `onRemove` for certain operations.
+   - `describe`, `it`: Mocha functions used for structuring tests.
 
-There are test lifecycle methods `beforeEach` and `afterEach` that set up and tear down the environment for each test. 
+2. **Test Setup & Cleanup**:
+   - `describe("Caucus")`: Defines a series of tests for the "Caucus" functionality.
+   - `beforeEach` and `afterEach`: Hooks to set up and tear down the test environment.
+   - Initialization involves creating `persona` and `newConnection`, and replacing `global.location` with `mockLocation`.
 
-The `it` blocks define individual test cases. They cover creating a `Caucus`, detecting invalid operations, synchronizing objects, removing objects, returning ordered arrays, and handling a large volume of members.
+3. **Test Cases**:
+   - `"Can create a valid caucus"`: Tests creation, addition, modification, and removal of `Persona` objects.
+   - `"Can detect invalid operations"`: Verifies error handling for invalid operations.
+   - `"Can synchronise"`: Tests synchronizing a `caucus` with a `synchMap` containing `Persona` objects.
+   - `"Can remove all"`: Tests the ability to remove all `Persona` objects from the `caucus`.
+   - `"Can return an ordered array"`: Ensures messages in the `caucus` are ordered by `sentAt` timestamp.
+   - `"Can manage a large volume of members"`: Stresses the system by managing a large number of `Message` objects, and measures performance.
 
-Important classes/functions: `MockLocation`, `wait`, `onAdd`, `onChange`, `onRemove`, and various Mocha functions (`describe`, `it`, `beforeEach`, `afterEach`).
+4. **Important Classes**:
+   - `Persona`, `Message`, `Interest`, `NotificationFor`, `BraidFluidConnection`, `EIcon`, `SessionKey`, `ConversationKey` from the core module.
+
+5. **Assertions**:
+   - Used `expect` for various assertions to validate test outcomes. 
+
+This code comprehensively tests various functionalities of the `Caucus` system, including creation, synchronization, large volume management, and error handling.
 
 **chunk.test.ts**
 
-The test suite uses the Mocha framework for organizing tests (`describe` and `it`), and the Expect library for assertions (`expect`). 
+The code tests the functionality of the ChunkRepository module.
 
-### Important Functions and Classes:
-- `describe`: Groups related tests.
-- `it`: Defines individual test cases.
-- `expect`: Makes assertions about code behavior.
-- `lookLikeSameSource`: A function tested for identifying if two URLs originate from the same source.
-- `FindEnrichedChunkApi`: An API class used for querying enriched content.
+**describe("ChunkRepository", function () {})**: This is a Mocha test suite that groups related tests for the ChunkRepository.
 
-### Test Cases:
-1. Tests if `lookLikeSameSource` correctly identifies URLs from the same or different YouTube videos and GitHub repositories.
-2. Uses `FindEnrichedChunkApi` to test for finding relevant content based on URL or summary from a specified repository, checking the API returns appropriate results.
+**it("Needs to identify related content given an input URL", async function () {})**: This test verifies that given a YouTube URL, the FindEnrichedChunkApi can find related content with a specified similarity threshold. It expects the response to contain one relevant chunk.
+
+**it("Needs to identify starter content", async function () {})**: This test checks if the FindEnrichedChunkApi can find starter content given a summary of an article, ensuring the response contains one relevant chunk.
+
+**Key classes/functions**:
+- **FindEnrichedChunkApi**: Interface for querying related content.
+- **getEnvironment**: Retrieves the environment configuration.
+- **EChunkRepository**: Enum for content repositories.
+- **findRelevantChunksFromUrl**: Finds related content from a given URL.
+- **findRelevantChunksFromSummary**: Finds related content from a given summary.
+
+**Dependencies**:
+- **expect**: Assertion library.
+- **mocha**: Testing framework.
+- **EEnvironment** and **KStubEnvironmentVariables**: For environment setup.
 
 **debounce.test.ts**
 
-- The code imports necessary testing modules: `expect` from the `expect` library and `describe`, `it` from the `mocha` testing framework.
-- It imports the `debounce` function from the '../core/Debounce' module.
-- The `wait` function utilizes a `Promise` with `setTimeout` to create an asynchronous delay of 1 second.
-- The code tests the `debounce` function within a `describe` block named "Debounce".
-- The `doSomethingAsync` function increments the `count` variable.
-- The first test case (`it`) checks that `debounce` works asynchronously by ensuring `count` increases after `debounced` is called once followed by a wait.
-- The second test case checks that `debounce` works even when called multiple times rapidly by ensuring `count` increases.
+This code is a test suite for the `debounce` function, written in JavaScript using Mocha and Expect.js for testing.
+
+It starts by importing necessary modules, including the `debounce` function, `expect`, `describe`, and `it`.
+
+An `async` function `wait` is defined to pause execution for 1 second.
+
+A test suite named "Debounce" is defined using `describe`, which contains two test cases.
+
+The first test case checks if the debounce function works asynchronously by ensuring a function is called after a pause.
+
+The second test case ensures that multiple calls to the debounced function still result in the function being called at least once.
 
 **embedding.test.ts**
 
-This code primarily contains tests for the `FindEnrichedChunkApi` class, which is used to find the closest matching chunks of content from several types of documents or summaries given certain criteria.
+This code is a set of automated tests for the `FindEnrichedChunkApi` using the Mocha testing framework and the Expect assertion library.
 
-The important classes/functions in the module are:
-- `describe`: Used to group related tests.
-- `it`: Defines individual test cases.
-- `FindEnrichedChunkApi`: This class is instantiated with environment settings and session keys to make API calls for finding relevant content chunks.
-- Functions `findRelevantChunksFromUrl` and `findRelevantChunksFromSummary`: These functions within `FindEnrichedChunkApi` are used to find matched content based on URL and text summary, respectively.
-  
-Each test initializes a query with specific parameters—repository ID, URL or summary, maximum count of results, and similarity threshold—and then checks if exactly one relevant chunk is found within a specified timeout.
+The `describe` block "Embedding" contains several `it` tests that check if the API can find relevant document chunks.
+
+The tests query different types of documents (YouTube link, HTML document, simple text, and markdown text). Each query specifies parameters like `repositoryId`, `url` or `summary`, `maxCount`, and `similarityThreshold`.
+
+The `expect` statement asserts that the API returns exactly one relevant chunk for each query, indicating the function works as intended.
+
+**Important classes/functions:**
+- `describe`
+- `it`
+- `FindEnrichedChunkApi`
+- `getEnvironment`
+- `expect`
 
 **errors.test.ts**
 
-This code is a set of unit tests for custom error classes using the Mocha testing framework and the Expect assertion library.
+This code imports necessary testing modules, `expect` from 'expect' and `describe, it` from 'mocha', to set up test cases. 
 
-The `import` statements include custom error classes like `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, `InvalidStateError` from a core errors module.
+It imports custom error classes: `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, and `InvalidStateError` from '../core/Errors'. 
 
-The `describe` function defines a test suite named "Errors".
+The `describe` block outlines a series of tests named "Errors". 
 
-Each `it` function within the test suite checks the instantiation of the custom error classes and verifies that the `message` property is set correctly.
+Each `it` block tests the creation of a specific custom error object, validates that the `message` property of each error object equals the predefined message "What". 
 
-Key classes/functions: `describe`, `it`, `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, `InvalidStateError`.
+Important functions and classes: `describe`, `it`, `expect`, `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, and `InvalidStateError`.
 
 **joinpagevalidator.test.ts**
 
-This module performs validation tests on joining a page, ensuring that all required components (name, session key, and conversation key) are valid.
+This code is a set of unit tests using Mocha, Expect, and various other modules to validate the functionality of `JoinPageValidator` and `JoinDetails` classes.
 
-The `JoinPageValidator` class is tested through `describe` and `it` blocks to check if invalid names, session keys, and conversation keys are detected correctly. It also verifies that valid inputs return true for a join attempt.
+Key functions and classes:
+1. `describe`: Groups related tests.
+2. `it`: Individual test specifications.
+3. `JoinPageValidator`: Validates the components needed to join a session.
+4. `JoinDetails`: Parses and validates join details from a string.
+5. `SessionKey` and `ConversationKey`: Represent unique keys for sessions and conversations.
+6. `IKeyGenerator`: Interface for key generation.
+7. `getDefaultKeyGenerator`: Provides a default implementation of `IKeyGenerator`.
 
-The `JoinDetails` class is tested to ensure it recognizes empty strings, invalid names, and invalid session or conversation keys. It verifies that valid components collectively ensure a join attempt is successful.
-
-Key classes or functions: `JoinPageValidator`, `JoinDetails`, `SessionKey`, `ConversationKey`, `IKeyGenerator`, `getDefaultKeyGenerator`.
+The tests check for invalid and valid name, session key, conversation key, and overall validation.
 
 **like.test.ts**
 
-This code is a set of unit tests for the `Like` class, using the Mocha testing framework and the Expect assertion library.
+This code tests the `Like` class from the `../core/Like` module using the Mocha testing framework and Expect module for assertions. 
 
-1. **Imports**: It imports required modules from 'expect' for assertions, 'mocha' for describing and structuring tests, and it imports the `Like` class from a relative path.
+It initializes variables with sample data, defining `me` and `them`, and their corresponding dates. 
 
-2. **Test Setup**: Variables for testing, such as 'me', 'now', 'them', and 'nowThem' are initialized along with instances of `Like`.
+The `describe` function is used to group tests for the `Like` class. 
 
-3. **Test Cases**: Each test case verifies different functionalities of the `Like` class:
-   - Construction of an empty `Like` object.
-   - Equality and inequality comparisons between `Like` instances.
-   - Inequality detection when the date is different.
-   - Proper storage of attributes.
-   - Copy construction of `Like` objects.
-   - Changing attributes.
-   - JSON conversion (stream in and out).
-
-Main classes/functions: `Like`, `describe`, `it`, `expect`.
+Within this block, the `it` function defines individual tests:
+- Verifying the construction of an empty `Like` object.
+- Testing equality and inequality comparisons between `Like` objects.
+- Detecting inequality based on the `when` attribute (dates).
+- Ensuring the correct storage of attributes.
+- Checking the copy constructor functionality.
+- Testing the modification of `Like` object's attributes.
+- Converting `Like` objects to and from JSON format.
 
 **message.test.ts**
 
-This code defines several tests for a `Message` class using the Mocha testing framework.
+This module tests the functionality of the `Message` class using the Mocha testing framework along with the Expect library for assertions. The primary classes and functions used are `Message`, `IKeyGenerator`, `getDefaultKeyGenerator`, `MDynamicStreamable`, and `describe` & `it` from Mocha.
 
-The `Message` class is tested for its ability to:
-1. Create empty messages and ensure default values are set.
-2. Handle undefined ID without throwing errors and detect invalid IDs.
-3. Compare two messages for equality and inequality.
-4. Detect differences specifically in message timestamps.
-5. Handle constraints on the `responseToId` attribute.
-6. Accurately store and retrieve its attributes.
+The `Message` class is instantiated with various parameters like `id`, `authorId`, `responseToId`, `text`, and `sentAt`. Test cases verify the construction of empty objects, allow undefined IDs, detect invalid IDs, and test attribute storage, equality, and inequality, especially focusing on dates.
 
-Additionally, the `Message` class is tested for:
-1. Copy-construction capabilities.
-2. Proper mutation of its attributes.
-3. Conversion to and from JSON, with and without attached `KnowledgeSources`.
-4. Dynamic resurrection from JSON.
-
-The code also involves a key generator utility that validates message IDs.
-
-Important functions: `describe`, `it`, and utility functions from `expect`. 
+Additional tests ensure the `Message` class handles JSON serialization/deserialization, dynamic creation, and copying, and correctly manages attributes, including those with Knowledge Sources attached. Furthermore, tests also check changing attributes, detecting errors when modifying IDs, and token counting with Knowledge Sources attached.
 
 **notification.test.ts**
 
-This code is a test suite for a notification framework using the Mocha testing library along with the Expect assertion library.
+This code is a test suite for testing a notification framework written using Mocha and Expect. It imports and tests various functionalities including `Interest`, `Notification`, `NotificationFor`, `ObserverInterest`, `Notifier`, `IObserver`, `NotificationRouter`, and `NotificationRouterFor` from the `NotificationFramework`. 
 
-**Classes and Functions:**
-- `MockObserver`: A mock implementation of the `IObserver` interface, storing the last notification received.
-- `describe`: Defines a test suite for the notification framework.
-- `it`: Defines individual test cases within the test suite.
-- `Interest`: Represents a type of interest that can be associated with notifications.
-- `Notification`, `NotificationFor`: Represents notifications with or without payload data.
-- `ObserverInterest`: Represents an observer's interest in a particular type of notification.
-- `Notifier`: Manages notifying observers who have expressed interest.
-- `NotificationRouter`, `NotificationRouterFor`: Routes notifications to their respective destinations.
+A mock observer `MockObserver` implementing the `IObserver` interface is created, which stores the last notification received.
 
-The test suite verifies the creation, assignment, and comparison of various elements within the notification framework, including interests, notifications, observer interests, and notification routers. It also tests the flow of notifications from notifiers to observers, handling different payloads and scenarios.
+The test cases ensure that `Interest`, `Notification`, `ObserverInterest`, `NotificationRouter`, and `NotificationRouterFor` objects can be created, compared for equality, and assigned correctly. 
+
+The final test confirms that notifications are properly sent from `Notifier` to observers through various routes, including standard notifications and those with payloads.
 
 **persona.test.ts**
 
-This code defines unit tests for the `Persona` class using the Mocha testing framework and the `expect` assertion library. 
+This code is a set of unit tests for the `Persona` class using Mocha and Expect frameworks. 
 
-**Classes/Functions:**
-- `Persona`: Represents an individual with attributes like `id`, `name`, `email`, `thumbnail`, and `lastSeenAt`.
-- `EIcon`: Enum used for defining icon types.
-- `IKeyGenerator`: Interface for key generation utility.
-- `getDefaultKeyGenerator`: Function to get the default key generator instance.
-- `MDynamicStreamable`: Provides methods for serializing and deserializing objects.
+Functions `describe`, `it`, and `expect` are used to structure and assert the tests. 
 
-**Important Points:**
-- Tests check the construction of `Persona` objects both with and without parameters.
-- Validates attributes such as `id`, `name`, `thumbnail`, and `email`.
-- Ensures object equality and inequality based on attributes.
-- Verifies JSON serialization and deserialization.
-- Tests the handling of invalid inputs and dynamic creation of `Persona` objects from a serialized string.
+Tests include constructing a `Persona` object, validating fields, and checking object methods such as equality, JSON conversion, and setting attributes.
+
+Several attributes of `Persona` are initialized and tested, including `id`, `name`, `email`, `thumbnail`, and `lastSeenAt`.
+
+Functions tested include equality checks, error handling, and JSON serialization/deserialization.
+
+Key classes and functions mentioned are `Persona`, `EIcon`, `IKeyGenerator`, `MDynamicStreamable`, `getDefaultKeyGenerator`, and `Persona.unknown`.
 
 **queue.test.ts**
 
-This module tests the `Queue` class from the `../core/Queue` module using Mocha testing framework and the Expect assertion library.
+This code is a test module for the `Queue` class located in the `../core/Queue` file. It uses the testing libraries `expect` and `mocha`.
 
-The `describe` function groups multiple tests related to the `Queue` class into a single suite.
+Three test cases are defined within the `describe` block:
+1. `"returns empty when initialised."`: This test checks if a newly instantiated `Queue` object is empty by asserting that `peek` returns `undefined`.
+2. `"Enqueues & dequeues single item."`: This test ensures that the queue behaves correctly when a single item is enqueued and then dequeued. It checks the values returned by `peek` before and after the dequeue operation.
+3. `"Enqueues & dequeues multiple items."`: This test verifies that the queue handles multiple items by checking the order of items returned by `peek` before and after dequeue operations.
 
-The first test (`it` function) verifies that a newly initialized Queue is empty by checking if `peek()` returns `undefined`.
-
-The second test checks the functionality of enqueuing and dequeuing a single item, ensuring `enqueue` adds an item and `dequeue` correctly removes it.
-
-The third test examines the Queue's behavior with multiple items, ensuring items maintain proper order after multiple enqueue and dequeue operations. 
-
-Key functions and methods include `describe`, `it`, `expect`, `Queue.initialize()`, `Queue.enqueue()`, `Queue.dequeue()`, and `Queue.peek()`.
+Key functions are `describe`, `it`, `enqueue`, `dequeue`,  and `peek`.
 
 **sharedembedding.test.ts**
 
-The code is a unit test module for the `SharedEmbedding` class.
+The code tests the `SharedEmbedding` class using the Mocha framework and the `expect` assertion library. It performs various test cases to ensure the class functions correctly under different scenarios.
 
-**Core Functionalities:**
-1. **Initialization**: Verifies that `SharedEmbedding` instances can be created with various constructs including with undefined or invalid IDs.
-2. **Equality Comparison**: Tests the `equals` method for determining equality between `SharedEmbedding` instances.
-3. **Attribute Handling**: Assesses the ability to set, copy, and validate attributes.
-4. **Serialization**: Validates the methods for converting an instance to and from JSON.
-5. **Like/Unlike Processing**: Inspects the functionality for handling likes, including avoiding duplicates.
+The `describe` block defines the suite of tests for `SharedEmbedding`, within which multiple `it` blocks define individual test cases. These tests include constructing objects, handling undefined and invalid IDs, equality checks, attribute storage and modification, JSON serialization/deserialization, dynamic creation, and processing of likes and unlikes.
 
-**Important Classes/Functions:**
-- `SharedEmbedding`
-- `describe`, `it` from Mocha
-- `expect` from the `expect` module
-- `MDynamicStreamable` for dynamic creation from JSON
-- `keyGenerator` and `getDefaultKeyGenerator` for ID generation
+Important classes and functions include `SharedEmbedding`, `IKeyGenerator`, `getDefaultKeyGenerator`, and `MDynamicStreamable.resurrect`.
 
 **uuid.test.ts**
 
-This code is a set of unit tests written in JavaScript using Mocha framework and Expect assertion library.
+This code is a test suite for UUID generation and validation functionality.
 
-It imports necessary dependencies including `expect` from 'expect', test functions from 'mocha', and key generator interfaces and implementations from local modules.
+The main classes and functions used are `IKeyGenerator` and `getDefaultKeyGenerator`. The key generator is obtained using the `getDefaultKeyGenerator` function.
 
-The `describe` and `it` functions define test suites and individual test cases for the `IKeyGenerator` instance, focusing on generating valid UUIDs and checking their validity.
+The test suite is divided into two `describe` blocks. The first block tests UUID creation, validation, and secret generation using the `IKeyGenerator`. Key functions include `generateKey` for creating UUIDs and `generateSecret` for generating secret values.
 
-The `beforeEach` and `afterEach` methods temporarily redefine the global `Blob` object to `undefined` for testing purposes, ensuring the key generator functions correctly even if `Blob` is not defined globally.
+The second `describe` block tests UUID functionality when `Blob` is undefined. It includes `beforeEach` and `afterEach` hooks to modify and reset the global `Blob` object.
 

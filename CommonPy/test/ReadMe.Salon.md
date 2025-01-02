@@ -1,44 +1,32 @@
 **chunk_repository_test.py**
 
-This script contains tests for the `ChunkRepository` class from the `chunk_repository_api` module.
+This script contains tests for the DB API interfacing with chunk repository concepts.
 
-The setup includes importing necessary libraries, configuring the `sys.path` to include the source directory, and setting up logging to capture error messages.
+A set of classes is imported from `src.chunk_repository_api`, including `ChunkRepository`, `IStoredChunk`, `IStoredEmbedding`, and `IStoredTextRendering`.
 
-Several essential data structures are instantiated, including `embedding` (an instance of `IStoredEmbedding`), `summary`, and `title` (both instances of `IStoredTextRendering`), and `master_chunk` (an instance of `IStoredChunk`).
+Logging is configured to display warning and error messages.
 
-The tests defined are:
-1. `test_basic`: Ensures the `ChunkRepository` can be instantiated without errors.
-2. `test_does_not_exist`: Verifies that a non-existent path returns false on existence check.
-3. `test_save`: Checks that a chunk can be saved successfully.
-4. `test_save_exists`: Confirms that a saved chunk can be checked for existence.
-5. `test_save_find`: Ensures that a saved chunk can be correctly loaded and its data verified.
+It establishes instances of `IStoredEmbedding`, `IStoredTextRendering` for summary and title, and `IStoredChunk` with various attributes initialized.
 
-Classes and functions involved:
-- `ChunkRepository`
-- `IStoredChunk`
-- `IStoredEmbedding`
-- `IStoredTextRendering`
-- `test_basic`
-- `test_does_not_exist`
-- `test_save`
-- `test_save_exists`
-- `test_save_find`.
+Five test functions are defined: `test_basic` checks the basic instantiation of `ChunkRepository`; `test_does_not_exist` checks path non-existence; `test_save` verifies saving a chunk; `test_save_exists` checks saving and subsequent existence; `test_save_find` ensures a saved chunk can be fetched and matches the saved content.
 
 **page_repository_test.py**
 
-This code tests a Database (DB) API, specifically focusing on the "PageRepository" class and "make_page_from_file" function.
+This script implements tests for a database API.
 
-It sets up the necessary imports and configurations, including setting up paths and extending 'sys.path' for module access.
+Imports include standard libraries such as `os`, `sys`, `logging`, `uuid`, and specific functions and classes from `src.page_repository_api`.
 
-Logging is set up to display error-level messages for debugging purposes.
+The script dynamically adjusts the system path to ensure the required modules can be imported and sets up logging configurations to output warnings and errors.
 
-A page object is created using the "make_page_from_file" function.
+A `page` object is created using the `make_page_from_file` function with some test parameters.
 
-The `test_basic` function verifies construction of a PageRepository instance.
+The `test_basic` function verifies the successful creation of a `PageRepository` instance.
 
-The `test_does_not_exist` function checks that loading a non-existent page fails.
+The `test_does_not_exist` function asserts that loading a non-existent page returns `False`.
 
-The `test_save` function tests saving a page to the repository.
+The `test_save` function tests if a page can be saved successfully.
 
-The `test_save_load` function ensures a saved page can be loaded back from the repository.
+The `test_save_load` function further tests if a saved page can be reloaded successfully, ensuring both save and load functionalities work together.
+
+Important classes and functions include `PageRepository`, `make_page_from_file`, `test_basic`, `test_does_not_exist`, `test_save`, and `test_save_load`.
 

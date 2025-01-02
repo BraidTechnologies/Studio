@@ -1,37 +1,31 @@
 **ApiConfiguration.py**
 
-This module sets up configuration options for connecting to either Azure OpenAI or OpenAI based on the `azure` flag.
+The provided code checks whether the Azure mode is enabled via a boolean variable `azure`. Based on the value, it sets appropriate API parameters such as `API_TYPE`, `API_KEY`, `API_VERSION`, and `RESOURCE_ENDPOINT` for Azure or OpenAI services.
 
-It defines the `ApiConfiguration` class, which initializes several key parameters such as `apiKey`, `apiVersion`, `resourceEndpoint`, `azureDeploymentName`, `azureEmbedDeploymentName`, `modelName`, `embedModelName`, `processingThreads`, `openAiRequestTimeout`, `summaryWordCount`, `chunkDurationMins`, `maxTokens`, and `discardIfBelow`.
+The `ApiConfiguration` class initializes and holds various configurations for an API service. It includes attributes like `apiKey`, `apiVersion`, and `resourceEndpoint`, as well as specific parameters for Azure deployments, model names, processing threads, request timeouts, and constraints on summary length, video chunk duration, token limits, and article indexing.
 
-Environment variables are safely retrieved for `API_KEY` using `os.getenv`, ensuring compatibility across Windows and Unix systems. The default deployment names, model names, and various thresholds for requests and processing are also defined within the class.
+Important class:
+- `ApiConfiguration`: Stores API-related configuration settings.
 
 **common_functions.py**
 
-### Important Classes or Functions:
+The code imports essential libraries, including `os` for file system operations and `AzureOpenAI` for working with the OpenAI API.
 
-1. **ensure_directory_exists(directory)**: 
-   - Checks if a specified directory exists. If not, it creates the directory.
+The `ApiConfiguration` class is imported from `common.ApiConfiguration` and an instance of it is created.
 
-2. **get_embedding(text : str, client : AzureOpenAI, config : ApiConfiguration)**: 
-   - Cleans up input text by removing newline characters.
-   - Uses `client.embeddings.create` to create an embedding of the text using the configuration from `ApiConfiguration`.
-   - Returns the embedding.
+The `ensure_directory_exists` function checks if a specified directory exists. If it doesn't, the function creates the directory using `os.makedirs`.
 
-### Summary:
+A directory path `HTML_DESTINATION_DIR` is constructed using `os.path.join` for cross-platform compatibility, and `ensure_directory_exists` ensures this directory is created.
 
-This code imports necessary modules and configuration settings. It defines a function, `ensure_directory_exists`, to check for or create a directory. It ensures the existence of a specific directory, `data/web`. Another function, `get_embedding`, processes input text to create and return an embedding using the AzureOpenAI client and API configurations.
+The `get_embedding` function generates an embedding for a given text using `AzureOpenAI`. It replaces newline characters with spaces, creates an embedding with the provided model configuration, and returns the embedding result.
 
 **Urls.py**
 
-This Python script logs and processes hit counts on various URLs categorized into YouTube videos, GitHub repositories, and web articles.
+This code defines a data processing script in Python. It imports essential libraries such as `os`, `json`, and `logging` for file handling, JSON operations, and logging respectively.
 
-Key sections include:
-- `youTubeUrls`, `gitHubUrls`, `webUrls`: Store URLs and their descriptions.
-- `UrlHit` class: Stores URL details and hit counts.
-- `countUrlHits(destinationDir, urls, input_filename, output_filename)` function: Reads a JSON file with hit data, counts occurrences of URL paths, and logs results.
-- The function reads the `input_filename` from `destinationDir`, processes hits, then outputs the counts into `output_filename`.
-- Error handling and logging are integral throughout for robustness.
+There are three pre-defined lists (`youTubeUrls`, `gitHubUrls`, `webUrls`) containing various URL categories and descriptions.
 
+A `UrlHit` class is defined to store information about each URL, including its path, description, and hit count.
 
+The `countUrlHits` function processes a JSON file containing usage data to count hits for each URL. It logs errors for missing input files and accumulates hit counts for URLs based on tracking IDs. Finally, it prints results and saves them to an output file.
 

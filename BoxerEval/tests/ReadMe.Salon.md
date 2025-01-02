@@ -1,143 +1,153 @@
 **BoxerDataTest_v1.py**
 
-This code handles the generation of enriched questions and calculation of their similarity embeddings using OpenAI APIs (AzureOpenAI). 
+This code is designed to process questions through similarity embedding and to generate enriched questions using the Azure OpenAI API. 
 
-Classes/Functions:
-1. `configure_openai_for_azure()`: Configures the Azure OpenAI API client.
-2. `TestResult`: A class to store information about test results.
-3. `call_openai_chat()`: Communicates with OpenAI API for chat-based responses, with retry logic.
-4. `get_text_embedding()`: Retrieves text embeddings via the OpenAI API.
-5. `cosine_similarity()`: Computes cosine similarity between two vectors.
-6. `generate_enriched_question()`: Uses OpenAI API to generate an enriched version of a question.
-7. `process_questions()`: Processes a list of questions and assesses their similarity to pre-processed data.
-8. `read_processed_chunks()`: Reads and processes JSON files from a directory.
-9. `save_results()`: Saves test results in a JSON file.
-10. `run_tests()`: Manages the overall test run by coordinating other functions.
+The `configure_openai_for_azure` function initializes the Azure OpenAI client. The `TestResult` class is used to hold test results, which include the original question, enriched question, hit status, and relevance.
+
+The `call_openai_chat` and `get_text_embedding` functions call the OpenAI API with retry logic using the `tenacity` library. 
+
+The `cosine_similarity` function calculates similarity between vectors. The `generate_enriched_question` function generates enriched questions via the OpenAI API.
+
+The `process_questions` function handles the evaluation of each question against processed question chunks, and the `read_processed_chunks` function reads JSON files containing these chunks. 
+
+Finally, the `save_results` function writes the results to a file, and `run_tests` orchestrates the entire process.
 
 **BoxerDataTest_v2.py**
 
-The code provided is for generating and processing AI-assisted questions using `gpt-3.5-turbo` and `text-embedding-ada-002` for OpenAI services integrated with Azure. It involves defining functions and classes for configuring Azure OpenAI clients, generating enriched questions, calculating cosine similarity, and handling retries for API calls.
+This Python code facilitates question generation, similarity analysis, and evaluation in the context of AI-based applications using OpenAI's Azure services.
 
-Important classes and functions:
-- `configure_openai_for_azure(config: ApiConfiguration)`: Sets up the Azure OpenAI client.
-- `TestResult`: Stores results from test questions.
-- `call_openai_chat(client, messages, config, logger)`: Handles retries for calling the OpenAI Chat API.
-- `get_text_embedding(client, config, text, logger)`: Retrieves text embeddings.
-- `cosine_similarity(a, b)`: Calculates cosine similarity between two vectors.
-- `generate_enriched_question(client, config, question, logger)`: Generates enriched questions.
-- `process_questions(client, config, questions, processed_question_chunks, logger)`: Processes and evaluates test questions.
-- `read_processed_chunks(source_dir)`: Reads and processes JSON files.
-- `save_results(test_destination_dir, question_results, test_mode)`: Saves test results.
-- `run_tests(config, test_destination_dir, source_dir, num_questions, questions, persona_strategy)`: Main function to run tests. 
-
-Logging, retry mechanisms, and strategy patterns are utilized to improve reliability and clarity in generating and processing AI inquiries.
+**Classes & Functions:**
+- **`configure_openai_for_azure`**: Configures OpenAI for Azure.
+- **`TestResult`**: Class for storing test results.
+- **`call_openai_chat`**: Calls OpenAI API with retry logic.
+- **`get_text_embedding`**: Retrieves text embeddings.
+- **`cosine_similarity`**: Calculates cosine similarity between vectors.
+- **`generate_enriched_question`**: Generates enriched questions using OpenAI API.
+- **`process_questions`**: Processes test questions.
+- **`read_processed_chunks`**: Reads processed JSON files containing pre-processed question chunks.
+- **`save_results`**: Saves test results to a specified directory.
+- **`run_tests`**: Orchestrates the entire testing sequence.
 
 **BoxerDataTest_v3.py**
 
-This Python module generates persona-specific questions using AI, primarily integrating with OpenAI and Azure services. It includes setup for logging and relevant third-party packages.
+This module facilitates persona-based question generation and evaluation using OpenAI's Azure services. It imports standard libraries and third-party packages like Tenacity for retry logic and AzureOpenAI from OpenAI. 
 
-**Key Classes and Functions:**
-1. **ApiConfiguration:** A local module for handling API configurations.
-2. **DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy, PersonaStrategy:** Classes for persona-based question strategies.
-3. **TestResult:** A class storing test results.
-4. **configure_openai_for_azure(config):** Configures Azure OpenAI API client.
-5. **call_openai_chat(client, messages, config, logger):** Calls OpenAI API with configured retry logic.
-6. **get_text_embedding(client, config, text, logger):** Retrieves text embeddings from OpenAI API.
-7. **cosine_similarity(a, b):** Calculates cosine similarity between two vectors.
-8. **generate_enriched_question(client, config, question, logger):** Generates enriched questions using OpenAI.
-9. **generate_follow_up_question(client, config, text, logger):** Generates follow-up questions.
-10. **assess_follow_up_on_topic(client, config, follow_up, logger):** Assesses the relevance of follow-up questions.
-11. **process_questions(client, config, questions, processed_question_chunks, logger):** Processes and evaluates a list of test questions.
-12. **read_processed_chunks(source_dir):** Reads processed data from a directory.
-13. **save_results(test_destination_dir, question_results, test_mode):** Saves generated questions and their results.
-14. **run_tests(config, test_destination_dir, source_dir, num_questions, questions, persona_strategy):** Main function to execute test processes.
+Key components include:
+- **ApiConfiguration**: Holds API settings.
+- **TestResult**: Stores results for each test question.
+- **configure_openai_for_azure**: Configures the OpenAI client.
+- **call_openai_chat**: Handles API calls with retries.
+- **get_text_embedding**: Fetches text embeddings.
+- **cosine_similarity**: Computes similarity between vectors.
+- **generate_enriched_question**: Produces enriched questions.
+- **generate_follow_up_question** and **assess_follow_up_on_topic**: Handle follow-up question generation and assessment.
+- **process_questions**, **read_processed_chunks**, and **save_results**: Manage question processing, reading processed data, and saving results.
+- **run_tests**: The main function to execute tests utilizing generated or provided questions.
 
 **BoxerDataTest_v4.py**
 
-This Python module provides functionality for AI-powered question generation, embedding similarity checks, and evaluation using generative models.
+This Python module handles persona-based question generation, similarity embedding, and evaluation. 
 
-1. **Key Classes and Functions**:
-   - `configure_openai_for_azure(config: ApiConfiguration)`: Configures an Azure OpenAI client using the provided settings.
-   - `TestResult`: A class to store test results including enriched questions and follow-up questions.
-   - `call_openai_chat(...)`: A function to call the OpenAI API with retry logic for generating responses.
-   - `get_text_embedding(...)`: Retrieves text embeddings using OpenAI API.
-   - `cosine_similarity(...)`: Calculates cosine similarity between two vectors.
-   - Functions like `generate_enriched_question(...)`, `generate_follow_up_question(...)`, and `assess_follow_up_on_topic(...)` handle different stages of question processing and evaluation.
-   - `process_questions(...)`: Processes a list of questions to evaluate their relevance based on similarity to pre-processed question chunks.
-   - Functions `read_processed_chunks(...)` and `save_results(...)` handle reading and saving test data respectively.
-   - `run_tests(...)`: Main function to run tests using the provided configuration, persona strategy, and directories.
+### Key Classes and Functions:
 
-2. **Logging and Retry Mechanism**: 
-   - The module utilizes Python's `logging` package for logging messages.
-   - The OpenAI API interactions use a retry mechanism with exponential backoff, to handle transient errors.
+- **`configure_openai_for_azure`**: Configures and returns an AzureOpenAI client.
+- **`TestResult` class**: Stores the results of the test, including question, enriched question summary, hit status, hit relevance, follow-up question, and Gemini evaluation.
+- **`call_openai_chat`**: Calls the OpenAI API with retry logic to manage session consistency and fault tolerance.
+- **`get_text_embedding`**: Retrieves text embedding for a given text using the OpenAI API.
+- **`cosine_similarity`**: Computes cosine similarity between two vectors.
+- **`generate_enriched_question`** and **`generate_follow_up_question`**: Generates enriched questions and follow-up questions using OpenAI API.
+- **`assess_follow_up_on_topic`**: Determines if the follow-up question is relevant to AI.
+- **`process_questions`**: Processes test questions, assesses relevance, and evaluates the enriched answers.
+- **`read_processed_chunks`**: Reads and processes JSON data from a specified directory.
+- **`save_results`**: Saves the processed question results to a JSON file.
+- **`run_tests`**: Main test function that initiates the Azure OpenAI client, generates questions using a persona strategy, processes them, and saves the results.
 
-3. **Configuration and Class Usage**:
-   - Configurations are managed with `ApiConfiguration`.
-   - Uses `GeminiEvaluator` to assess quality of generated content from GPT-4o outputs.
-   - Incorporates `PersonaStrategy` for generating different types of persona-based questions.
-
-Overall, this module facilitates generating and evaluating AI-driven questions using Azure OpenAI, with robust error handling and logging.
+### Constants and Logging:
+Constants manage settings like similarity thresholds and prompts. Logging is set up for debugging and tracking the process.
 
 **BoxerDataTest_v5.py**
 
-This code is designed for generating, processing, and evaluating AI-based enriched questions using OpenAI tools.
+The code is a suite for generating and evaluating AI-related questions using OpenAI's API, integrated with Azure.
 
-**Imports and Dependencies:** 
-- It imports libraries such as logging, json, numpy, AzureOpenAI, and tenacity.
+Key Classes:
+1. **TestResult**: Metadata storage for questions, follow-ups, and evaluations.
+2. **ApiConfiguration**: Configures AzureOpenAI client.
+3. **GeminiEvaluator**: Assess follow-up question relevance.
 
-**Configurations and Constants:** 
-- Defines constants for similarity thresholds, retry attempts, and sets up logging.
+Important Functions:
+1. **configure_openai_for_azure**: Sets up Azure OpenAI client.
+2. **call_openai_chat**: Handles API calls with retries.
+3. **get_text_embedding**: Fetches text embeddings.
+4. **cosine_similarity**: Computes similarity between vectors.
+5. **generate_enriched_question**: Creates enriched questions.
+6. **generate_follow_up_question**: Generates follow-up questions.
+7. **assess_follow_up_on_topic**: Validates follow-up relevance.
+8. **process_questions**: Main routine for question processing and evaluation.
+9. **read_processed_chunks**: Reads pre-processed question sets.
+10. **save_results**: Writes results to JSON.
 
-Important Functions and Classes:
-
-1. **configure_openai_for_azure:** Configures OpenAI client for Azure.
-2. **TestResult Class:** Stores test results including questions and evaluations.
-3. **call_openai_chat:** Handles OpenAI's chat API calls with retry logic.
-4. **get_text_embedding:** Retrieves text embeddings with retry logic.
-5. **cosine_similarity:** Calculates cosine similarity between vectors.
-6. **generate_enriched_question:** Generates enriched question summaries.
-7. **generate_follow_up_question:** Creates follow-up questions based on AI content.
-8. **assess_follow_up_on_topic:** Assesses the relevance of follow-up questions.
-9. **process_questions:** Processes and evaluates questions, including similarity checks and follow-ups.
-10. **read_processed_chunks:** Reads pre-processed question chunks.
-11. **save_results:** Saves generated results to JSON files.
-12. **run_tests:** Runs tests based on configurations, generating questions, processing them, and saving results.
-
-The code works with various `PersonaStrategies` for generating questions and uses Azure OpenAI for embedding and chatting. It involves reading questions, generating and evaluating follow-ups, and storing results.
+### Flow:
+1. OpenAI clients for chat/embedding initialization.
+2. Process and enrich questions based on strategies.
+3. Evaluate relevance and save outputs.
 
 **GeminiEvaluator.py**
 
-The `GeminiEvaluator` class evaluates the quality of summaries generated by a large language model (LLM). It uses the Gemini LLM to determine how well the summary captures core information from the original content and addresses the user's query.
+**GeminiEvaluator Module**
 
-Important functions:
-- `__init__`: Initializes the class, sets the API key, endpoint, and system instruction prompt for the evaluation using environment variables and the Google Generative AI library.
-- `evaluate`: Assesses the summary quality by creating an evaluation prompt with the original content and summary, generating a response from the Gemini LLM, and returning the evaluation score.
+**Overview:**
+The GeminiEvaluator module evaluates the quality of summaries generated by large language models (LLM) using Google's Gemini model. It assesses how well summaries encapsulate core information from the original content and address user queries.
+
+**Key Class:**
+- **GeminiEvaluator Class:** This class initiates the evaluation process using Gemini's API. It authenticates using an API key and sets instructions for evaluating summaries.
+
+**Key Function:**
+- **evaluate(original_content: str, summary: str) -> str:** This function takes original content and a generated summary as inputs. It uses Gemini LLM to score the summary on a scale of 1 (poor) to 4 (excellent).
+
+**Dependencies:**
+- google.generativeai
+- os
 
 **PersonaStrategy.py**
 
-This code defines a module that generates questions tailored to specific professional personas using the OpenAI chat model.
+This module uses the Strategy pattern for generating persona-specific questions using LLM (large language models) technology and Azure OpenAI services.
 
-The code imports necessary libraries such as `abc`, `logging`, `OpenAI`, and manages the API configuration and logging setup.
+The PersonaStrategy abstract class defines the interface for creating persona-based question generation strategies. Concrete implementations include DeveloperPersonaStrategy, TesterPersonaStrategy, and BusinessAnalystPersonaStrategy, each generating questions from their respective perspectives.
 
-The `PersonaStrategy` abstract class defines a method to generate persona-based questions, which is meant to be implemented by subclasses. The `_generate_questions` method assists in creating a standard chat interaction to generate these questions using provided prompts.
+The _generate_questions method is a helper function for generating questions using specific prompts and handles calling the OpenAI chat model. Error handling and logging mechanisms are included for robustness.
 
-Three concrete classes extend `PersonaStrategy`: `DeveloperPersonaStrategy`, `TesterPersonaStrategy`, and `BusinessAnalystPersonaStrategy`, each implementing the `generate_questions` method using respective persona prompts.
+Key classes:
+- PersonaStrategy (ABC)
+- DeveloperPersonaStrategy
+- TesterPersonaStrategy
+- BusinessAnalystPersonaStrategy
 
 **run_BoxerDataTest.py**
 
-This code sets up the environment for running tests on BoxerData. It begins by importing standard libraries and setting up the Python path to include the project directories. It then imports necessary modules, including `run_tests` from `BoxerDataTest_v1`.
+This module is designed to run tests for LLM-related questions using the Boxer Data Testing framework. It handles the execution of tests, supports different test implementation versions (v1/v2), and manages file operations for test inputs and outputs.
 
-Logging is configured to the INFO level, and a list of questions about Large Language Models (LLMs) is defined.
+Key functions include loading and processing test questions, configuring test environments and directories, executing tests, and handling logging.
 
-It configures API settings through the `ApiConfiguration` class and sets paths for test outputs and source data, ensuring the test output directory exists.
+Key classes and functions:
+- `run_tests` from `BoxerDataTest_v1 (or v2)`
+- `ApiConfiguration` from `common.ApiConfiguration`
 
-Finally, it runs the tests with error handling, logging the process's start and completion, and catching any exceptions during execution.
+The script sets up logging and directories, lists predefined questions about LLMs, and executes tests while handling potential errors.
 
 **TestRunner.py**
 
-This script sets up logging and adds directories to the system path for module imports. The `TestRunner` function runs different test scenarios based on user input, utilizing the `run_tests` function from `BoxerDataTest_v5`.
+**TestRunner Module**
 
-It initializes the API configuration through `ApiConfiguration` and prepares Azure resources with `configure_openai_for_azure`. The test output and source directories are defined, and the script ensures the test output directory exists.
+The `TestRunner` module for running automated tests on LLM-based systems supports static question testing and persona-based testing using Developer, Tester, and Business Analyst strategies. This module leverages Azure OpenAI clients for chat and embedding, configurable test output directories, logging, error handling, and directory management.
 
-The user can select between static question tests or persona-based tests (`DeveloperPersonaStrategy`, `TesterPersonaStrategy`, `BusinessAnalystPersonaStrategy`). The script runs the appropriate tests based on the user’s choice, handling any exceptions and logging errors.
+**Classes and Functions**
+1. **TestRunner**: Main function to run tests based on user choice via a command-line interface, handling API configurations, directory management, and test execution.
+2. **run_tests, call_openai_chat, configure_openai_for_azure**: Imported from `BoxerDataTest_v5` for executing tests.
+3. **ApiConfiguration**: Manages API configurations.
+4. **PersonaStrategy implementations**: DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy for persona-based test execution.
+
+### Other Relevant Points
+- Logging is set up for test execution tracking.
+- Ensures test output directory exists or creates it.
+- Prompts users to choose testing modes and executes corresponding test strategies.
 

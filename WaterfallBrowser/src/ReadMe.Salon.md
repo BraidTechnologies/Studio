@@ -1,12 +1,14 @@
 **App.tsx**
 
-This React module renders an application using Fluent UI components. The `App` function is the main component that handles the retrieval of chunk data based on a URL parameter.
+This ReactJS code sets up the structure and styling for a web application. 
 
-The `fluidFillPageStyles`, `pageOuterStyles`, and `innerColumnStyles` provide CSS-in-JS styles for various layout configurations. These styles are applied respectively to the root, outer container, and inner column elements to ensure a responsive and flexible layout.
+It imports necessary libraries, including React components, Fluent UI for styling, and custom components like `ChunkRetriever` and `retrieveChunk` for data fetching. 
 
-`ChunkRetriever` is a component that receives a `chunkId` parameter from the URL and a retrieval function `retrieveChunk` to fetch relevant data.
+`makeStyles` is used to create three custom styles: `fluidFillPageStyles`, `pageOuterStyles`, and `innerColumnStyles`. These styles define the layout properties needed to ensure the application's interface is responsive and properly aligned.
 
-The application is initialized and rendered to the DOM within an element with the ID `reactRoot`. For performance measurement, it uses `reportWebVitals`.
+The `App` function initializes and renders the main application. It uses URL search parameters to retrieve a `chunkId` and passes it to the `ChunkRetriever` component.
+
+The module also ensures the application is mounted to the HTML element with id `reactRoot`, and a function called `reportWebVitals` is included for performance monitoring.
 
 Important functions and classes:
 - `App`
@@ -14,85 +16,97 @@ Important functions and classes:
 - `pageOuterStyles`
 - `innerColumnStyles`
 - `ChunkRetriever`
+- `retrieveChunk`
+- `reportWebVitals`
 
 **ChunkRetriever.tsx**
 
-The module defines a React component `ChunkRetriever` that fetches and displays a data chunk based on a `chunkId`. It uses hooks to manage fetching state (`chunk`, `calling`, `called`). If the chunk is successfully retrieved using `props.retrieverFn`, it displays the chunk using `ChunkView`; if loading, shows `ChunkViewLoading`; otherwise, shows `ChunkViewError`.
+The code defines a React component `ChunkRetriever` which fetches and displays a chunk of data. It uses internal state variables to manage the retrieval process and show different components (`ChunkView`, `ChunkViewError`, or `ChunkViewLoading`) based on the state.
 
-Key functions and classes:
-- `ChunkRetriever`: Main React component to retrieve and display data chunk.
-- `ChunkRetrieveFunction`: Type defining a function signature for chunk retrieval.
-- `retrieveChunk`: Asynchronously retrieves a data chunk using `ChunkRepostoryApi` and a decoded API key.
+The component expects properties `chunkId` and `retrieverFn`, which is a function to retrieve chunk data. If the data is being fetched, `ChunkViewLoading` is displayed, once fetched successfully, `ChunkView` is displayed, otherwise `ChunkViewError` is shown.
+
+The `retrieveChunk` function is an asynchronous function that retrieves a chunk by its identifier using `ChunkRepositoryApi`, utilizing configurations from `IEnvironmentFactory` and an obfuscated string for the API key. 
+
+Important classes or functions:
+1. `ChunkRetriever()` - Component to fetch and display the chunk.
+2. `retrieveChunk()` - Function to asynchronously fetch the chunk data.
+3. `ChunkView` - Component to display the chunk.
+4. `ChunkViewError` - Component to display errors.
+5. `ChunkViewLoading` - Component to display the loading state.
 
 **ChunkView.tsx**
 
-- The code defines several functions and a `ChunkView` component in a React module.
-- `chunkUrl(value: string)`: Constructs a URL string with `value` as a query parameter.
-- `backToParent(value: string | undefined)`: Generates a `ReactNode` with a link to the parent element if `value` is provided.
-- `mapRelated(value: string, index: number, all: Array<string>)`: Maps string values to `ReactNode` elements containing hyperlinks.
-- `splitByNewlines(text: string)`: Splits the input text into an array of non-empty strings based on newline characters.
-- `ChunkView(props: {chunk: IStoredChunk})`: A React component that displays a stored chunk's title, summary, and URL. It also includes navigation to the parent chunk and related chunks.
+The module defines several functions and a React component for handling and displaying chunks of data.
 
+**Classes/Functions:**
+1. **chunkUrl**: Constructs a URL string with a query parameter, using the provided string value.
+2. **backToParent**: Generates a ReactNode containing a link back to a parent chunk based on a provided identifier.
+3. **mapRelated**: Creates a ReactNode for a list of related chunks, converting each string value into a hyperlink.
+4. **splitByNewlines**: Splits a given string into an array based on double or single newline characters, filtering out empty lines.
+5. **ChunkView**: A React component that displays chunk data, including title, summary, and URL. It also includes navigation to parent and related chunks if available.
 
 **ChunkViewError.tsx**
 
-The `ChunkViewError` component is a React functional component. 
+This code defines a React functional component named `ChunkViewError`.
 
-It imports React and two string values, `uiAppName` and `uiSorryNoData`, from a module named `UIString`.
+The component imports the `uiAppName` and `uiSorryNoData` strings from the `UIString` module.
 
-Within the component, it returns a JSX structure consisting of a `div` element. Inside the `div`, it renders a paragraph containing `uiAppName` inside bold tags, another paragraph displaying `uiSorryNoData`, and some non-breaking spaces (&nbsp;) for spacing.
+In the `ChunkViewError` component, it returns a `div` element that contains two paragraphs. The first paragraph displays the `uiAppName` string in bold, and the second paragraph displays the `uiSorryNoData` string.
 
-The component is then exported as the default export from the module. 
-
-Important functions/classes:
-- `ChunkViewError`: React functional component.
-- `uiAppName` and `uiSorryNoData`: Imported string values.
+The `ChunkViewError` component is exported as the default export of the module.
 
 **ChunkViewLoading.tsx**
 
-This code imports React and two variables, `uiAppName` and `uiLoading`, from a module named `UIString`.
+This code is a React functional component named `ChunkViewLoading`. 
 
-The function `ChunkViewLoading` is defined, which is a React functional component. It returns a JSX fragment containing a `div` element with two `p` tags.
+The component imports `uiAppName` and `uiLoading` from a module named `UIString`.
 
-The first `p` tag displays the `uiAppName` variable in bold.
+Within the `ChunkViewLoading` component, a div containing two paragraphs is returned. The first paragraph displays `uiAppName` in bold, and the second paragraph displays the `uiLoading` text.
 
-The second `p` tag displays the `uiLoading` variable.
+The component is exported as the default export of the module, making it reusable in other parts of the application.
 
-The `ChunkViewLoading` function is exported as the default export from this module.
+Important Classes/Functions:
+- `ChunkViewLoading`: The functional component rendering the UI elements.
+- `uiAppName` and `uiLoading`: Imported values used within the component for textual content.
 
 **Defusc.tsx**
 
-This code defines a function `getDefusc` that decodes an obfuscated string. 
+The `getDefusc` function is designed to decode an obfuscated string using Base64 decoding.
 
-The function starts by initializing a string variable `obfusc` with an obfuscated value, which is encoded in Base64 format.
+Inside the function, a variable `obfusc` is assigned a Base64 encoded string: `"NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"`.
 
-It then uses the `atob` function to decode this Base64-encoded string, storing the resulting decoded string in the variable `defusc`.
+The `atob` function is then used to decode this Base64 encoded string and stores the result in the `defusc` variable.
 
-Finally, the function returns the decoded string stored in `defusc`.
+Finally, the function returns the decoded string stored in `defusc`. 
 
-The primary function in this module is `getDefusc`.
+Important function:
+- `getDefusc()`: Decodes a predefined Base64 encoded string and returns the decoded value.
 
 **reportWebVitals.ts**
 
-The `reportWebVitals` function conditionally imports and reports web vitals data. 
+The `reportWebVitals` function aims to report web vital metrics if a valid `onPerfEntry` function is provided. 
 
-It accepts an optional `onPerfEntry` callback function. If `onPerfEntry` is provided and is a function, it dynamically imports specific functions from the 'web-vitals' module.
+The function first checks if `onPerfEntry` exists and is a function. If so, it dynamically imports the 'web-vitals' library.
 
-The imported functions (`getCLS`, `getFID`, `getFCP`, `getLCP`, `getTTFB`) are then executed with `onPerfEntry` as their parameter to measure various web vital metrics.
+Upon successful import, the function extracts five methods: `getCLS`, `getFID`, `getFCP`, `getLCP`, and `getTTFB`.
 
-The function is exported as the default export of the module. 
+Each of these methods is then called with `onPerfEntry` as an argument, enabling the reporting of the respective web vitals metrics.
 
-Important function: `reportWebVitals`.
+The module is structured to be used with any valid `ReportHandler` provided by the 'web-vitals' library.
+
+Key functions include `reportWebVitals` and methods `getCLS`, `getFID`, `getFCP`, `getLCP`, and `getTTFB` from the 'web-vitals' library.
 
 **UIString.ts**
 
-This code defines a module that exports several string variables used for UI messaging in an application named "Waterfall Browser".
+The module `UIString.ts` is part of the Waterfall Browser application and contains user interface text constants.
 
-- `uiAppName` contains the name of the application.
-- `uiSorryNoData` provides a message for situations where data with a specific ID cannot be found.
-- `uiBackToParentChunk` holds the text for a navigation option to return to a parent chunk of data.
-- `uiRelatedChunks` is used for labeling related data chunks.
-- `uiLoading` serves as a loading message.
+`uiAppName` is a constant representing the application's name, "Waterfall Browser".
 
-Important elements include each exported variable which can be used for internationalization or to maintain consistent text across various UI components.
+`uiSorryNoData` is a message displayed when data cannot be found using a given ID, "Sorry, we can't fund a chunk of data with that ID."
+
+`uiBackToParentChunk` holds text for navigating back to a parent chunk, "Back to parent:".
+
+`uiRelatedChunks` contains text for displaying related chunks, "Related:".
+
+`uiLoading` represents a loading message, "Loading."
 

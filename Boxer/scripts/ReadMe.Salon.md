@@ -1,90 +1,68 @@
 **eval_pipeline.py**
 
-This Python script sets up a testing environment for Large Language Models (LLMs). 
+The code imports necessary modules, `ApiConfiguration` and `run_tests`, from local modules. It configures paths for test destination and chunk source directories. The `config` object is instantiated from the `ApiConfiguration` class. The script defines a list of off-topic questions that could be used for testing an AI model for various scenarios.
 
-- It imports configurations from `ApiConfiguration` and a utility function `run_tests` from `test_utility`.
-- It defines constants `TEST_DESTINATION_DIR` and `CHUNK_SOURCE_DIR` for directory paths.
-- It creates an instance of `ApiConfiguration`.
+Key classes/functions:
+- `ApiConfiguration`: Likely used to configure API settings.
+- `run_tests(config, TEST_DESTINATION_DIR, CHUNK_SOURCE_DIR, off_topic_questions)`: Function that runs tests based on provided configuration and data. 
 
-The script includes two lists of test questions: `off_topic_questions` and `questions`, with a wide variety of topics and specific questions related to LLMs.
-
-It checks if `TEST_DESTINATION_DIR` exists and creates it if not.
-
-The script then runs tests using the `run_tests` function, passing configuration, directory paths, and the list of off-topic questions.
+Finally, the script creates the test destination directory if it does not exist and runs tests with the specified parameters.
 
 **github_pipeline.py**
 
-This code imports necessary modules and functions and sets up the destination directory for downloaded markdown files.
+This code imports various modules and classes to process and enrich text data from GitHub.
 
-The `ApiConfiguration` class is used to configure the API settings.
+The `MARKDOWN_DESTINATION_DIR` variable is set to a specific directory path where downloaded markdown files will be stored.
 
-The `ensure_directory_exists` function ensures that the specified directory exists.
+`ApiConfiguration` is instantiated to create a configuration object named `config`.
 
-The script iterates over `gitHubUrls`, downloading markdown files using the `download_markdown` function to the designated directory.
+The `download_markdown` function is used to download markdown files from a list of URLs (`gitHubUrls`) and save them to the `MARKDOWN_DESTINATION_DIR`.
 
-It enriches the text chunks, summaries, and embeddings in the downloaded markdown files through the `enrich_text_chunks`, `enrich_text_summaries`, and `enrich_text_embeddings` functions respectively, then calls `enrich_lite` for additional processing.
+Various enrichment functions, such as `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite`, are called to process the downloaded markdown files using the configuration.
 
-Finally, `countUrlHits` evaluates the output data and saves the results in JSON format.
-
-**make_api_embeddings.ts**
-
-This code is a test script using Mocha and Expect libraries to test the functionality for building a consolidated embeddings file.
-
-The key function `makeLite` populates an array of `IEnrichedChunk` by iterating over the `FullEmbedding` items and using provided URL generation functions.
-
-The test case "Needs to build consolidated embeddings file" reads from three different JSON files (`htmlEmbeddingsFile`, `markdownEmbeddingsFile`, and `youTubeEmbeddingsFile`), converts them using `makeLite`, and then writes the result to `data/api_embeddings_lite.json`.
-
-Key classes/functions: `makeLite`, `FullEmbedding`, `MakeEmbeddingUrlFnFull`, `makeYouTubeUrlFromFullEmbedding`, `makeGithubUrlFromFullEmbedding`, `makeHtmlUrlfromFullEmbedding`.
+Finally, the `countUrlHits` function is used to count URL hits and save the results in specified JSON files in the output directory.
 
 **make_new_container.ts**
 
-The code uses Mocha for testing and Expect for assertions.
+This code is a test module designed to create a new container using Mocha for running tests and Expect for assertions.
 
-The `describe` function sets up a test suite called "Make new container".
+Main components: 
+- `Persona`: Represents an entity involved in the connection.
+- `BraidFluidConnection`: Establishes a connection and facilitates the creation of a new container.
+- `SessionKey`: Represents a session key, obtained from an environment variable, used for authenticated actions.
 
-Within this suite, the `it` function defines a test case named "Needs to create new container".
-
-A `Persona` is created using a static method `unknown`.
-
-A `BraidFluidConnection` instance is created with the `local` persona.
-
-The function verifies that the environment variable `SessionKey` is defined using `throwIfUndefined`.
-
-A new container is created using the `SessionKey`, and the conversation key is logged. Errors are caught and logged.
-
-An expect statement (`expect(true).toBe(true)`) is used to complete the test.
-
-Important classes/functions: `describe`, `it`, `Persona.unknown`, `BraidFluidConnection`, `throwIfUndefined`, `SessionKey`.
+The test suite named "Make new container" includes a single test case. Within the test, a local persona is initialized, and a `BraidFluidConnection` instance is created. The session key is verified to be defined before attempting to create a new container. If successful, the conversation key is logged; otherwise, errors are caught and logged.
 
 **web_pipeline.py**
 
-This code imports required modules and sets up configurations to download and process HTML content.
+This script performs web data downloading and text enrichment.
 
-The `HTML_DESTINATION_DIR` is defined, and `ensure_directory_exists` is used to ensure its existence.
+The `HTML_DESTINATION_DIR` is set to "data/web", ensuring the directory exists. Configurations are managed by the `ApiConfiguration` class.
 
-`ApiConfiguration` initializes configuration settings. The script then iterates through `webUrls` to download HTML content using `download_html`.
+Web URLs from `webUrls` are iterated over and the `download_html` function is called to retrieve web pages, storing them in `HTML_DESTINATION_DIR`.
 
-Text enrichment functions (`enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, `enrich_lite`) process the downloaded HTML content.
+Text enrichment functions: `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite` are called to process the downloaded HTML files.
 
-Finally, `countUrlHits` counts the number of URL hits and outputs the results in `hit_test_results_web.json`.
+Results are stored in `ENRICHMENT_OUTPUT_DIR`, and `countUrlHits` is used to evaluate the processed URLs, writing statistics to "hit_test_results_web.json".
 
-Key functions and classes include `ApiConfiguration`, `ensure_directory_exists`, `download_html`, `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, `enrich_lite`, and `countUrlHits`.
+Important functions/classes: `ApiConfiguration`, `download_html`, `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, `enrich_lite`, `countUrlHits`.
 
 **youtube_pipeline.py**
 
-This script handles the process of downloading, enriching, and analyzing YouTube transcript data.
+This script starts with standard library imports, logging configuration, and imports of various local modules. 
 
-The `ApiConfiguration` class initializes API configurations necessary for the tasks.
+The `TRANSCRIPT_DESTINATION_DIR` variable sets the directory for storing downloaded transcripts. The `ensure_directory_exists` function ensures that this directory exists. 
 
-The `youTubeUrls` list contains the target YouTube URLs whose transcripts will be downloaded.
+A configuration object, `config`, is created using `ApiConfiguration`.
 
-The script ensures the existence of a directory for storing the transcripts using `ensure_directory_exists`.
+The script iterates over `youTubeUrls`, logs the URL being processed, and downloads the transcripts using `download_transcripts`.
 
-`download_transcripts` downloads transcripts for each URL into the specified directory.
+It then enriches the transcripts in stages:
+1. `enrich_transcript_chunks`
+2. `enrich_transcript_summaries`
+3. `enrich_transcript_embeddings`
 
-`enrich_transcript_chunks` processes the downloaded transcripts and enriches them.
+Lastly, `enrich_lite` is used for a final level of enrichment, and `countUrlHits` counts the URL hits for analysis. 
 
-Similarly, `enrich_transcript_summaries` adds summaries, and `enrich_transcript_embeddings` adds embeddings to the transcripts.
-
-Finally, `enrich_lite` performs a lighter enrichment on the transcripts, and `countUrlHits` counts the hits in URLs and outputs the results.
+Key classes/functions: `ApiConfiguration`, `youTubeUrls`, `ensure_directory_exists`, `download_transcripts`, `enrich_transcript_chunks`, `enrich_transcript_summaries`, `enrich_transcript_embeddings`, `enrich_lite`, `countUrlHits`.
 

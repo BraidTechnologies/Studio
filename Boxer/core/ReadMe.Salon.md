@@ -1,493 +1,426 @@
 **ActivityRecord.ts**
 
-The module defines interfaces for storing activity records with different details.
+The `ActivityRecord` module defines interfaces and utilities for storing user activity records within the Braid system.
 
-`IStoredActivity` is an interface extending `IStorable`, representing a basic activity record.
+Key interfaces include:
+- `IStoredActivity`: A base interface for all activity records, extending `IStorable`.
+- `IStoredUrlActivity`: An extension of `IStoredActivity`, adding a `url` property for URL-based activities.
+- `IStoredLikeUrlActivity`: An extension of `IStoredUrlActivity`, adding a `like` property to indicate if the URL was liked.
+- `IStoredMessageActivity`: Extends `IStoredActivity` with a `message` property.
 
-`IStoredUrlActivity` extends `IStoredActivity` and includes a `url` property for recording the URL clicked by the user.
+Each activity record class includes constants for the class name and schema version. 
 
-`IStoredLikeUrlActivity` extends `IStoredUrlActivity` and includes a `like` boolean property indicating whether the URL activity was liked.
-
-`IStoredMessageActivity` extends `IStoredActivity` and includes a `message` property to store a message related to the activity.
-
-The `makeDateUTC` function takes a `Date` object, removes milliseconds, and returns it as a UTC date, recommended for use with Cosmos DB.
-
-The constant values, such as `activityRecordClassName` and `activityRecordSchemaNumber` represent class and schema names/numbers for these interfaces.
+The module also provides the utility function `makeDateUTC` for ensuring dates are stored in UTC format.
 
 **ActivityRepository.ts**
 
-### Points:
-1. The code defines an `ActivityRepositoryCosmos` class that implements the `IActivityRepository` interface.
-2. The constructor accepts a `SessionKey` object, converts it to a string, and stores it as `_sessionKey`.
-3. The `save` method uses `ActivityRepostoryApi` to save an `IStoredActivity` record.
-4. `loadRecentUrlActivity` retrieves and combines recent URL activity and like URL activities.
-5. The `loadRecentMessages` method loads recent message activities.
-6. The `loadRecent` method retrieves recent activities of a specified type.
-7. `removeMessageRecord` deletes a message record by ID using the `ActivityRepostoryApi`.
+This module, named `ActivityRepository`, handles the storage and retrieval of user activities, specifically for URLs visited, likes/unlikes, and messages in Braid.
 
-### Important Classes/Functions:
-- `ActivityRepositoryCosmos` class
-- `save` method
-- `loadRecentUrlActivity` method
-- `loadRecentMessages` method
-- `loadRecent` method
-- `removeMessageRecord` method
-- `ActivityRepostoryApi` class
+The `ActivityRepositoryCosmos` class implements the `IActivityRepository` interface and mainly interacts with Cosmos DB for data persistence. 
+
+Key functions include saving activities (`save`), loading recent URL-based activities (`loadRecentUrlActivity`), loading recent messages (`loadRecentMessages`), and removing message records (`removeMessageRecord`).
+
+The class requires a session key for authentication and uses environment configuration for determining API endpoints. The `ActivityRepositoryApi` handles API requests.
+
+Important modules and functions include: `ActivityRepositoryCosmos`, `save`, `loadRecentUrlActivity`, `loadRecentMessages`, `loadRecent`, and `removeMessageRecord`.
 
 **AIConnection.ts**
 
-The code creates the `AIConnection` class to facilitate interactions with an AI model through a session using the `QueryModelApi`.
+### Summary:
 
-The `AIConnection` class includes functions like `makeEnrichedCall` for answering questions and finding reference summaries, and `makeFollowUpCall` to ask relevant follow-up questions based on context.
+The `AIConnection` module manages communication between the Boxer application and AI/LLM (Large Language Model) services.
 
-A private `streamResponse` function simulates response streaming by periodically updating the message content with parts of the AI response.
+The key class, `AIConnection`, handles making enriched queries to LLM models, streaming responses back to the UI, managing conversation history, and tracking the active call state. 
 
-Helper static methods (`buildEnrichmentQuery`, `buildQueryForQuestionPrompt`, `buildTranscript`) formulate queries for the AI and construct conversation transcripts.
+The constructor of `AIConnection` initiates the connection using a session key for authentication and API endpoints based on the environment configuration. 
 
-Utility functions (`isFromLLM`, `isRequestForLLM`, `mightBeMissTypedRequestForLLM`) identify which messages originate from or invoke the AI.
+Two primary functions, `makeEnrichedCall` and `makeFollowUpCall`, manage enriched query calls and generate follow-up questions respectively. 
+
+Private methods like `streamResponse` handle asynchronously updating responses. Static methods include `buildEnrichmentQuery`, `buildQueryForQuestionPrompt`, and helpful utilities for managing tokens and identifying AI-related messages.
 
 **ApiCalls.ts**
 
-The code imports necessary modules, including 'axios' for making HTTP requests and various local modules for handling session keys, logging, configuration values, and API types.
+The module `ApiCalls` provides functions for making API calls to the Braid backend, focusing on summarization requests to the Summarise API.
 
-The `makeSummaryCall` function is an asynchronous function that takes a `session` of type `SessionKey` and a text string as arguments, and returns a Promise that resolves to a summary string or undefined.
+The main function, `makeSummaryCall`, takes a session key and a text string as inputs, builds a summarization request, and sends it to the Summarise API using the `axios` library. It then returns the API's response in the form of a summary or handles errors by logging them.
 
-It sets up default environment variables and constructs the API URL using a summarization endpoint and the session key.
-
-The function creates a summarization request object, and tries to send an HTTP POST request to the summarization API using `axios`.
-
-If successful, it extracts the summary from the API response and returns it. In case of an error, it logs the error using `logApiError`.
-
-Important functions/classes mentioned include `makeSummaryCall`, `SessionKey`, `logApiError`, `EConfigStrings`, `EConfigNumbers`, `getDefaultEnvironment`, `ISummariseRequest`, and `ISummariseResponse`.
+Important classes and functions in this module include `SessionKey` for handling session keys, `logApiError` for error logging, `getDefaultEnvironment` for obtaining the environment configuration, and various type imports like `ISummariseRequest` and `ISummariseResponse` to structure the API request and response.
 
 **Asserts.ts**
 
-This module provides two functions, `throwIfUndefined` and `throwIfNull`. Both functions are generic, meaning they work with any type, `T`.
+The module **Asserts** provides utility functions to ensure objects are neither undefined nor null. This helps maintain type safety and prevents runtime errors.
 
-The `throwIfUndefined` function checks if the provided input `x` is `undefined`. If `x` is `undefined`, it throws an `AssertionFailedError` with the message "Object is undefined". 
+The module imports **AssertionFailedError** from a file named `Errors`.
 
-The `throwIfNull` function checks if the provided input `x` is `null`. If `x` is `null`, it throws an `AssertionFailedError` with the message "Object is null".
+It defines two main functions:
+1. **throwIfUndefined**: Takes an object `x` and throws an **AssertionFailedError** if `x` is undefined.
+2. **throwIfNull**: Takes an object `x` and throws an **AssertionFailedError** if `x` is null. 
 
-Both functions use TypeScript assertion signatures to narrow the type, ensuring `x` is not `undefined` or `null` after the function call.
+These functions are generics that enforce a non-null and non-undefined type for the passed objects.
 
 **BoxerFluidConnection.ts**
 
-The `BraidFluidConnection` class extends `FluidConnection` to manage real-time shared states using `SharedMap` from the Fluid framework. It sets up local caucuses for participants, messages, and shared embeddings, periodically adding the local user to these caucuses if not already present.
+The `BraidFluidConnection` class in the `BoxerFluidConnection` module is derived from `FluidConnection` and manages the Fluid connection for the Boxer application. Key functionalities include setting up local caucuses for participants, messages, and shared embeddings using `SharedMap`. It can also handle adding the Boxer persona to the participants' caucus.
 
-The `compareFn` function is used to order messages by their send time.
+The `setupLocalCaucuses` method initializes the schema-defined caucuses and starts an interval to ensure the local user is added to the participant caucus. 
 
-Main constructor initializes the class attributes and local user.
+The `resetMessages` method clears all messages and participants from their respective caucuses. 
 
-`setupLocalCaucuses` initializes the caucuses and starts an interval to maintain the local user's presence.
-
-`disconnectLocalCaucuses` stops the interval.
-
-The `resetMessages` method clears all messages and participants and reinitializes values.
-
-`checkAddAddSelfToAudience` ensures the local user is in the participant caucus, resolving conflicts if necessary.
+It uses helper functions like `throwIfUndefined` for error handling and `checkAddAddSelfToAudience` to manage user participation in discussions.
 
 **CaucusFramework.ts**
 
-The `CaucusOf` class extends the `Notifier` class and manages dynamic collections of streaming data (`AType`), which extends `MDynamicStreamable`. 
+This module, `CaucusFramework`, provides a framework for managing caucuses within the Boxer application. The primary class `CaucusOf` extends the `Notifier` class from the `NotificationFramework` module, facilitating notification mechanisms for events. 
 
-Important types and functions include:
-- `compareFn<T>`: Type alias for comparison functions.
-- `doNotification()`: Notifies observers about changes (added, changed, removed members).
-- `has()`, `add()`, `remove()`, `amend()`, `get()`, `removeAll()`, `current()`, `currentAsArray()`: CRUD operations and other data manipulations for the shared map.
-- `synchFrom()`: Synchronizes shared map with a provided map.
-- `updateCache()`: Updates local cache if items change.
-- `binarySearch()`: Utility to perform binary search on sorted arrays.
+Key features include static interests for notifications when elements are added, changed, or removed. These are identified by IDs such as `caucusMemberAddedNotificationId`, `caucusMemberChangedNotificationId`, and `caucusMemberRemovedNotificationId`.
 
-The constructor initializes the shared map, sets up value change listener, initiates an initial data load, and debounces initial notifications.
+The `CaucusOf` class manages a shared map (`SharedMap`) and local data structures to add, remove, update, or synchronize elements efficiently. Important methods include `add`, `remove`, `amend`, `get`, `current`, `currentAsArray`, and `synchFrom`. The class also handles cache updates and includes a `binarySearch` method for efficient element searching.
 
 **ConfigStrings.ts**
 
-This module defines configuration strings and numbers used in a software application developed by Braid Technologies Ltd.
+This module, `ConfigStrings`, provides constants and enumerations for configuration strings and values used in the Boxer application.
 
-The `EConfigStrings` enum lists various configuration constants, including log categories (`kCoreLogCategory`, `kApiLogCategory`, `kDbLogCategory`), font name (`kFontNameForTextWrapCalculation`), URLs (`kHomeRelativeUrl`, `kAzureProductionFluidHost`, `kAzureLocalFluidHost`), LLM identifiers and markers (`kLLMName`, `kLLMRequestSignature`, `kPromptLookFor1`, etc.), error messages (`kErrorConnectingToKeyAPI`, `kErrorConnectingToAiAPI`), and parameter names (`kSessionParamName`, `kEmailParamName`, etc.).
+The `EConfigStrings` enumeration includes constants for logging categories (`kCoreLogCategory`, `kApiLogCategory`), font names (`kFontNameForTextWrapCalculation`), URLs (`kHomeRelativeUrl`, `kAzureProductionFluidHost`), authentication and session parameters (`kSessionParamName`, `kSecretParamName`), and strings for interacting with AI models (`kLLMName`, `kPromptLookFor1` to `kPromptReplaceWith6`).
 
-The `EConfigNumbers` enum lists various numerical configuration constants, including time delays (`kInitialHelpfulPromptDelayMsecs`), message constraints (`kMaximumLinkTextlength`, `kMaxMessagesBack`), and layout settings (`kMessagePrompt2VBorder`, `kMessagePromptMaxCharacters`).
+The `EConfigNumbers` enumeration contains numerical configuration values such as delays, counts, lengths, and other thresholds (`kInitialHelpfulPromptDelayMsecs`, `kMaximumLinkTextlength`, `kMaxChatLevel`).
 
-`KStubEnvironmentVariables` is an object containing stub environment variables for local development settings. 
-
-Important elements: `EConfigStrings`, `EConfigNumbers`, `KStubEnvironmentVariables`.
+The `KStubEnvironmentVariables` object provides default session and conversation keys for local development, avoiding the use of production secrets.
 
 **Debounce.ts**
 
-The code defines a `debounce` function designed to delay the execution of a given function (`fn_`) by a specified time interval (`ms_`).
+The Debounce module provides a utility function for debouncing function calls, ensuring that a given function is not called more frequently than a specified delay period.
 
-The `debounce` function returns a new function that clears any previously set timeout and sets a new one each time it is called.
+The main function exported is `debounce(fn_: Function, ms_: number)`, which takes two parameters: `fn_` (the function to debounce) and `ms_` (the delay in milliseconds).
 
-The helper function `nested` is defined within `debounce` to clear the timer, invoke the original function, and reset the timer to `null`. It uses `throwIfNull` to ensure the timer is not null before clearing it.
+The `debounce` function returns a new function that uses `setTimeout` to call the original function after the specified delay. If the debounced function is called again before the delay period ends, the previous timer is cleared using `clearTimeout`.
 
-Important functions in the module are:
-- `debounce(fn_: Function, ms_: number): Function`
-- `throwIfNull` (imported from `./Asserts`)
-
-**Embedding.ts**
-
-The `lookLikeSameSource` function compares two URLs to determine if they originate from the same source.
-
-If the URLs are from YouTube, it checks if the video IDs (the `v` parameter) match.
-
-If the URLs are from GitHub, it compares the first two path segments, typically representing the organization's name and repository name.
-
-For other URLs, it compares the hostname and first path segment for a match.
-
-Important constants include `youTubeHostname` and `gitHubHostname`. The primary function is `lookLikeSameSource`.
-
-**EmbeddingFormats.ts**
-
-This module defines two interfaces, `FullEmbedding` and `LiteEmbedding`, to describe structured data with various properties, including a speaker, title, source ID, summary, and an embedding array.
-
-`MakeEmbeddingUrlFnLite` and `MakeEmbeddingUrlFnFull` are type definitions for functions that produce a URL string from `LiteEmbedding` and `FullEmbedding` objects, respectively.
-
-There are three URL construction functions: `makeYouTubeUrl`, `makeGithubUrl`, and `makeWebUrl`, which generate YouTube, GitHub, and generic web URLs based on provided identifiers.
-
-The module also exports three functions: `makeYouTubeUrlFromFullEmbedding`, `makeGithubUrlFromFullEmbedding`, and `makeHtmlUrlfromFullEmbedding`, which utilize the URL construction functions to generate URLs from `FullEmbedding` objects.
+The `throwIfNull` function from the Asserts module ensures that the timer is not null before clearing it.
 
 **Errors.ts**
 
-This code defines multiple custom error classes that extend the built-in `Error` class in TypeScript.
+This module, developed by Braid Technologies Ltd, is designed to define custom error classes specifically for the Boxer application. 
 
-For each custom error class (`InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError`), a constructor is defined to call the parent `Error` constructor with an optional message.
+The classes included are `InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError`. Each class extends the built-in `Error` class and includes a constructor that logs the error using either `logCoreError` or `logApiError` functions.
 
-The code sets the prototype chain explicitly using `Object.setPrototypeOf`, ensuring proper inheritance behavior.
-
-The name property of each error class is set for accurate stack trace information.
-
-Each constructor also logs the error using `logCoreError` or `logApiError` functions based on the error type, to help with error tracking and diagnostics.
+To ensure stack traces display correctly, each constructor sets the prototype chain using `Object.setPrototypeOf(this, new.target.prototype)` and assigns the appropriate name to the error instance for accurate error handling.
 
 **FluidConnection.ts**
 
-The given code defines an abstract class `FluidConnection` that establishes and manages connections to Fluid containers using the `AzureClient`. 
+The `FluidConnection` module provides a base class for managing connections to Fluid containers in the Boxer application. It handles creating and attaching to Fluid containers, disconnecting from them, managing local caucuses for participants and messages, and tracking the active call state. The connection requires a session key for authentication and uses environment configuration to determine API endpoints.
 
-`createNew`: Asynchronously creates a new Fluid container and establishes a connection to the Azure service. After setting up, it attempts to attach the container and resolve a `ConversationKey`.
-
-`attachToExisting`: Asynchronously attaches to an existing Fluid container using a `ConversationKey`. It sets up the connection similarly to `createNew`.
-
-`isConnected` and `canDisconnect`: Check the connection state of the Fluid container.
-
-`disconnect`: Disconnects the Fluid container if it is currently connected.
-
-`setupBeforeConnection` and `setupAfterConnection`: Helper functions to configure the client before connection and set up necessary components afterward. 
-
-The abstract methods `schema`, `setupLocalCaucuses`, and `disconnectLocalCaucuses` must be implemented by any subclass.
+### Important Classes and Functions:
+- **FluidConnection Class**: Manages Fluid container connections.
+- **createNew**: Creates a new Fluid container and attaches it to the service.
+- **attachToExisting**: Attaches to an existing Fluid container using a conversation key.
+- **canDisconnect** and **isConnected**: Check the connection state.
+- **disconnect**: Disconnects from the Fluid container.
+- **setupBeforeConnection** and **setupAfterConnection**: Internal setup functions for initializing the connection.
+- **schema**, **setupLocalCaucuses**, and **disconnectLocalCaucuses**: Abstract methods to be implemented by subclasses.
 
 **IActivityRepository.ts**
 
-This code is an interface definition for an `IActivityRepository`. Interfaces do not provide implementations but specify the methods that conforming classes must implement.
+This module defines an interface `IActivityRepository` for managing stored activities.
 
-The `save` method takes an `IStoredActivity` object and returns a Promise that resolves to a boolean, indicating whether the save operation was successful.
+The `save` function accepts an `IStoredActivity` record and returns a promise that resolves to a boolean, indicating whether the save operation was successful.
 
-The `loadRecentUrlActivity` method takes a count parameter and returns a Promise that resolves to an array of `IStoredActivity` objects, representing the most recent URL activities.
+The `loadRecentUrlActivity` function takes a count and returns a promise that resolves to an array of `IStoredActivity` records, representing the most recent URL activities up to the specified count.
 
-The `loadRecentMessages` method is similar to `loadRecentUrlActivity` but focuses on loading recent messages.
+The `loadRecentMessages` function also takes a count and returns a promise that resolves to an array of `IStoredActivity` records, representing recent messages.
 
-The `removeMessageRecord` method takes a message ID and returns a Promise that resolves to a boolean, indicating if the removal was successful.
+The `removeMessageRecord` function takes a `messageId` and returns a promise that resolves to a boolean, indicating whether the removal was successful.
+
+Key interface:
+- `IActivityRepository`
+
+Key functions:
+- `save`
+- `loadRecentUrlActivity`
+- `loadRecentMessages`
+- `removeMessageRecord`
 
 **IActivityRepositoryFactory.ts**
 
-This code module defines and exports a function, `getRecordRepository`, that returns an instance of `ActivityRepositoryCosmos`.
+This module, `IActivityRepositoryFactory`, provides a factory function for creating activity repositories.
 
-The function takes a single parameter, `sessionKey_`, of type `SessionKey`.
+The key function, `getRecordRepository`, takes a `SessionKey` as an argument and returns an implementation of `IActivityRepository`.
 
-The returned `ActivityRepositoryCosmos` object is initialized with the given `sessionKey_`.
+Currently, the repository implementation being returned is `ActivityRepositoryCosmos`, which is a Cosmos DB-backed activity repository.
 
-Key classes and functions in this module include `SessionKey`, `IActivityRepository`, `ActivityRepositoryCosmos`, and the `getRecordRepository` function.
+Key imports include `SessionKey` from `./Keys`, `IActivityRepository` from `./IActivityRepository`, and `ActivityRepositoryCosmos` from `./ActivityRepository`.
 
 **IAdminRepository.ts**
 
-The code defines an interface `IAdminRepository` which includes a method `isAdmin` that takes a `Persona` object and returns a promise that resolves to a boolean.
+This module defines an interface and a class for checking if a user is an admin.
 
-The `getDefaultAdminRepository` function returns an instance of the `DefaultAdminRepository` class, which is a local implementation of `IAdminRepository`.
+**Classes/Functions:**
+- **IAdminRepository:** An interface declaring an `isAdmin` method which takes a `Persona` object and returns a Promise of a boolean indicating admin status.
+- **getDefaultAdminRepository:** A function that returns an instance of `DefaultAdminRepository`.
+- **DefaultAdminRepository:** A class implementing the `IAdminRepository` interface. Its `isAdmin` method checks if a user's name, contained in `Persona`, is in a predefined list of admin names (`EConfigStrings.kAdminUserNames`), and resolves a Promise with a boolean result based on this check.
 
-The `DefaultAdminRepository` class implements the `isAdmin` method by checking if the `persona.name` exists within the `EConfigStrings.kAdminUserNames` array, resolving the promise with `true` if it is and `false` otherwise.
+**Usage:**
+- Ensure to import `Persona` and `EConfigStrings` modules which contain necessary user and configuration details.
 
-Important classes and functions include `IAdminRepository`, `getDefaultAdminRepository`, and `DefaultAdminRepository`.
 
 **Icons.ts**
 
-This code defines an enumeration `EIcon` which lists a set of icons related to personas. 
+This module, named `Icons`, is responsible for defining an enumeration of icon names used in the Boxer application.
 
-Enumerations (enums) are a way to define a set of named constants; they can make a program easier to read and maintain by giving meaningful names to these constants.
+The `EIcon` enum lists several icons, such as `kPersonPersona`, `kLLMPersona`, `kBotPersona`, `kUnknownPersona`, and `kFromBcd`. These represent different personas or sources in the application.
 
-There are five constants defined in this enumeration:
-1. `kPersonPersona`
-2. `kLLMPersona`
-3. `kBotPersona` 
-4. `kUnknownPersona`
-5. `kFromBcd`
+Notably, `kBotPersona` is kept for backward compatibility.
 
-The `kBotPersona` constant includes a comment indicating it's included for backwards compatibility reasons.
-
-The export statement makes this enumeration available for import in other modules. 
-
-Key part: `EIcon` enumeration.
-
-
+This enum can be used throughout the application to standardize the references to these specific icon names, ensuring consistency and easier management of icon usage.
 
 **IKeyGenerator.ts**
 
-This code defines an interface named `IKeyGenerator` for a TypeScript module.
+The provided code defines an interface called `IKeyGenerator` within a module meant for generating unique keys.
 
-It has methods to generate keys (`generateKey`), generate secrets (`generateSecret`), and verify if a string could be a key (`couldBeAKey`).
+The `generateKey` function generates a unique key, and the `generateSecret` function generates a secret. 
 
-It includes methods to save (`saveSecret`), check if a saved secret matches another secret (`matchesSavedSecret`), check if there is a saved secret (`haveSavedSecret`), and return the saved secret (`savedSecret`).
+The `couldBeAKey` method checks if a given string could potentially be a valid key.
 
-These methods are intended for classes that implement this interface to handle generating and managing unique keys and secrets securely and consistently.
+The `saveSecret` function allows for saving a secret, and `matchesSavedSecret` checks if a given secret matches the saved one.
+
+The `haveSavedSecret` method verifies the existence of a saved secret, while `savedSecret` retrieves said secret.
+
+This interface establishes a contract that any implementing class must follow, ensuring consistency in key and secret management.
 
 **IKeyGeneratorFactory.ts**
 
-This code defines a module that provides a default key generator.
+The `IKeyGeneratorFactory` module provides a factory function for creating key generators.
 
-It imports two modules: `IKeyGenerator` and `UuidKeyGenerator`. `IKeyGenerator` is an interface, and `UuidKeyGenerator` is a class that presumably implements this interface.
+The main function in this module is `getDefaultKeyGenerator`, which returns an instance of the `UuidKeyGenerator` class.
 
-The main function, `getDefaultKeyGenerator`, returns an instance of `UuidKeyGenerator` when called, thus providing a default key generation mechanism.
+This module depends on two other classes, `IKeyGenerator` and `UuidKeyGenerator`, imported from their respective modules.
 
-Key classes and functions include `IKeyGenerator`, `UuidKeyGenerator`, and `getDefaultKeyGenerator`.
+The purpose of `getDefaultKeyGenerator` is to abstract the creation of key generator instances, making it easier to retrieve the default key generator in a standardized way.
 
 **JoinDetails.ts**
 
-1. The code contains a `validateEmail` function that checks whether a string is a valid email format using a regular expression.
+The module `JoinDetails` manages join details in the Boxer application, including functionalities for parsing, validating, and converting join details. The `JoinDetails` class is the primary class, handling these operations.
 
-2. The main class, `JoinDetails`, encapsulates details needed for joining a session such as email, name, session key, conversation key, and a secret.
+The `JoinDetails` class includes a constructor that parses a string to extract email, session key, conversation key, and name information. It provides getter functions for these details.
 
-3. `JoinDetails` constructor takes a string input in the format `email=xxx@yyy.com&session=guid&conversation=guid&secret=xxx`, parses it using the `qs` package, and initializes respective class properties.
+Key functions in the module:
+- `validateEmail(email: string): boolean` validates email format.
+- `toString(): string` and `static toString(email: string, name: string, session: SessionKey, conversation: ConversationKey, secret: string): string` convert details to a query string format.
+- `canAttemptJoin(): boolean` checks if the join details are valid based on environment and presence of session and conversation keys.
+- `static makeFromParts(email: string, name: string, session: SessionKey, conversation: ConversationKey, secret: string)` creates a `JoinDetails` instance from individual parts. 
 
-4. The class provides getters for accessing the private properties like email, name, session, conversation, and secret.
+Supporting classes: `SessionKey`, `ConversationKey`.
 
-5. The `canAttemptJoin` method determines whether the join attempt is valid based on the current environment and whether the credentials meet defined criteria.
-
-6. The `toString` method formats the details into a query string.
-
-7. There is a static `makeFromParts` method to create a `JoinDetails` object from individual components by calling `toString` internally.
-
-*Important classes and functions:*
-1. `validateEmail(email_: string): boolean`
-2. `JoinDetails` class
-3. `JoinDetails` constructor
-4. `canAttemptJoin(): boolean`
-5. `toString(): string`
-6. `static toString (email_: string, name_: string, session_: SessionKey, conversation_: ConversationKey, secret_: string): string`
-7. `static makeFromParts (email_: string, name_: string, session_: SessionKey, conversation_: ConversationKey, secret_: string)`
+Key imports: `qs` for query string parsing, `EConfigStrings`, `getDefaultFluidEnvironment`, `EEnvironment`.
 
 **JoinPageValidator.ts**
 
-The `JoinPageValidator` class has a constructor that initializes an empty object.
+The code defines a module named `JoinPageValidator` used in the Boxer application to validate join details for conversations.
 
-The `canAttemptJoin` method takes email, name, session, and conversation keys as input, creates `JoinDetails` from these parts, and checks if the details are sufficient to join a conversation by calling the `canAttemptJoin()` method on the `JoinDetails` instance.
+The primary class provided is `JoinPageValidator`. The constructor simply initializes the object.
 
-The `matchesSavedSecret` method checks if a provided secret matches the stored secret by using a key generator.
+The `canAttemptJoin` function checks if the provided email, name, session, and conversation keys are valid for joining a conversation by utilizing the `JoinDetails` class.
 
-The `haveSavedSecret` method checks whether there is a saved secret using a key generator.
+The `matchesSavedSecret`, `haveSavedSecret`, and `savedSecret` functions interact with a key generator (obtained via `getDefaultKeyGenerator`) to manage and validate stored secrets for user authentication.
 
-The `savedSecret` method retrieves the saved secret from a key generator.
-
-Key classes/functions: `JoinPageValidator`, `JoinDetails`, `getDefaultKeyGenerator`.
+Key classes and functions include `JoinPageValidator`, `canAttemptJoin`, `matchesSavedSecret`, `haveSavedSecret`, and `savedSecret`.
 
 **KeyRetriever.ts**
 
-The code defines a `KeyRetriever` class used for requesting keys from an API.
+**KeyRetriever Class:**  
+This class is responsible for retrieving keys from the Braid backend using API calls, tracking the state of active calls, and logging errors. It is the main class provided in this module.
 
-**KeyRetriever Class**:
-- Has a private property `activeCallCount` to track the number of active API calls.
-- The `constructor` initializes `activeCallCount` to 0.
-- The `requestKey` method:
-  - Increments `activeCallCount`.
-  - Tries to fetch a key from the API using `axios.get` and the provided parameters.
-  - Decrements `activeCallCount` upon completion.
-  - Logs errors using `logApiError` and throws a `ConnectionError` if the response is invalid.
+**Important Functions:**
+- **Constructor:** Initializes an instance of `KeyRetriever` and sets `activeCallCount` to 0.
+- **requestKey:** An asynchronous function to send GET requests using Axios to retrieve keys from the API. It increments the `activeCallCount` at the start of the call and decrements it after finishing or encountering an error. Errors are logged using the `logApiError` function, and a `ConnectionError` is thrown if the API call fails.
+- **isBusy:** A function that returns whether there are any active API calls by checking if `activeCallCount` is not zero.
 
-**isBusy Method**:
-- Returns `true` if there are any active API calls (`activeCallCount` is not zero), otherwise `false`.
+**Error Handling:**
+- **logApiError:** This function logs errors encountered during API calls.
+- **ConnectionError:** This custom error is thrown when the API call to retrieve the key fails.
 
-Important modules used include `axios` for HTTP requests, `logApiError`, and error classes like `ConnectionError`. The `SessionKey` type is involved in API requests.
+**External Imports:**
+- **axios:** Used to make HTTP requests.
+- **logApiError:** Function used to log API errors.
+- **EConfigStrings:** Enum that holds configuration strings, including error messages.
+- **ConnectionError:** Custom error for connection issues.
+- **SessionKey:** Represents a session key used in the API call.
+
+
 
 **Keys.ts**
 
-The code defines two classes, `SessionKey` and `ConversationKey`, which wrap string representations of GUIDs for session and conversation identifiers respectively.
+The `Keys` module handles key management in the Boxer application. It includes the `SessionKey` and `ConversationKey` classes.
 
-Both classes feature a constructor that initializes their respective string identifiers (`_sessionId` for `SessionKey` and `_conversationId` for `ConversationKey`) provided as input.
+`SessionKey` class wraps a string representing a session ID. It validates the session key by checking if it looks like a valid UUID using the `looksValidSessionKey` method and converts it to a string using the `toString` method.
 
-Each class includes a `looksValidKey` method that uses an `IKeyGenerator` to check if the string could be a valid UUID by calling the `couldBeAKey` method.
+`ConversationKey` class wraps a string representing a conversation ID. It validates the conversation key's format using the `looksValidConversationKey` method and converts it to a string using the `toString` method.
 
-Lastly, both classes have a `toString` method that returns the string representation of the identifiers.
-
-Important classes/functions:
-- `SessionKey`
-- `ConversationKey`
-- `looksValidSessionKey()`
-- `looksValidConversationKey()`
-- `toString()`
-- `IKeyGenerator`
-- `getDefaultKeyGenerator()`
+Both classes leverage an `IKeyGenerator` obtained from `getDefaultKeyGenerator` for UUID validation.
 
 **Like.ts**
 
-The `Like` class represents an object with two properties: `_name` (a string) and `_when` (a Date). 
+The module manages "likes" in the Boxer application.
 
-There are three constructors:
-1. An empty constructor initializing default values.
-2. A constructor that initializes the `_name` and `_when` from parameters.
-3. A constructor that copies properties from an existing `Like` instance.
+It includes the `Like` class which facilitates creating and managing "like" objects, each containing a name and timestamp. The class supports multiple construction patterns: initializing through no arguments, with a name and timestamp, or by copying from another `Like` object or JSON.
 
-Methods include `streamOut`, which returns a JSON string representation, and `streamIn`, which initializes the object from a JSON string.
+It includes methods for streaming data in (`streamIn`), streaming data out (`streamOut`), equality check (`equals`), and assignment (`assign`). 
 
-The class provides getter and setter methods for `_name` and `_when`. 
+There are also getter and setter methods for the private properties `_name` and `_when`.
 
-The `equals` method checks if another `Like` object has the same values. The `assign` method copies properties from another `Like` instance.
+Important classes and functions:
+- `Like` class: manages like objects.
+- `streamOut()`: serializes object data to JSON string.
+- `streamIn()`: initializes object data from JSON string.
+- `equals()`: compares two `Like` objects.
+- `assign()`: assigns values from another `Like` object.
 
 **Logging.ts**
 
-This code provides a logging system for an application, importing necessary functionalities from `missionlog` and configuration strings from `ConfigStrings`. 
+This module provides a logging system for the Boxer application. It includes functions for logging various types of errors and information.
 
-A `logger` handler object is defined, mapping different `LogLevel` values (ERROR, WARN, INFO, TRACE, DEBUG) to corresponding logging functions like `console.error` and `console.log`.
+The important functions in this module are:
+- `logCoreError`: Logs core errors.
+- `logDbError`: Logs database errors.
+- `logApiError`: Logs API errors.
+- `logApiInfo`: Logs API information.
 
-The `log.init` function initializes the logging system with specified levels for application and notifications, and sets a custom logging handler to direct messages to the appropriate logging functions.
+The logging handler, `logger`, maps different log levels to corresponding console methods (`console.error`, `console.warn`, and `console.log`).
 
-Four logging functions are exported:
-- `logCoreError`: logs core application errors.
-- `logDbError`: logs database errors.
-- `logApiError`: logs API errors.
-- `logApiInfo`: logs API informational messages.
+The `log.init` function initializes the logging system with specific log levels (`DEBUG`) and a callback to map the logging levels to the handler methods.
 
 **Media.ts**
 
-The code defines a `Media` class to handle responsive design interactions, particularly focusing on mobile display conditions.
+This module defines a `Media` class for managing media queries in the Boxer application. 
 
-The constructor initializes an empty `listeners` array and sets up a media query to detect screen widths less than or equal to 1023 pixels. It binds the media query's change event to the `onMobileFormFactorChange` method.
+The `Media` class maintains a list of listeners and uses the `window.matchMedia` function to create an `isMobileFormFactorQuery` that checks if the viewport width is 1023 pixels or less, indicating a mobile form factor.
 
-The `isSmallFormFactor` method checks if the current display matches the mobile form factor and returns `true` if it does, otherwise `false`.
+The constructor sets up an event listener for changes in the mobile form factor and binds it to the `onMobileFormFactorChange` method.
 
-The `onMobileFormFactorChange` method triggers registered listeners whenever the mobile form factor status changes.
+The `isSmallFormFactor` method returns a boolean indicating if the viewport currently matches the mobile form factor query.
 
-The `addMobileFormFactorChangeListener` method allows external functions to be added to the listeners array, which will be called on form factor change.
+The `onMobileFormFactorChange` method invokes all stored listeners when the viewport transitions to or from the mobile form factor size.
 
-Important methods: `isSmallFormFactor`, `onMobileFormFactorChange`, `addMobileFormFactorChangeListener`.
+The `addMobileFormFactorChangeListener` method allows external listeners to be registered and notified when the mobile form factor changes.
 
 **Message.ts**
 
-This code defines a `Message` class that represents a text message with various properties like `id`, `authorId`, `responseToId`, `text`, `sentAt`, `chunks`, `tokens`, and streaming status. It supports multiple constructors for creating an instance (empty, with parameters, or by copying another instance).
+The `Message` class manages messages in the Boxer application. 
 
-Several important utility functions and error handling classes are imported. The `Message` class contains methods for serializing (`streamOut`), deserializing (`streamIn`), calculating tokens, attaching and detaching streaming handlers, and equality testing.
+**Constructor:**
+It supports multiple initialization patterns, including creating an empty message, cloning from another object, or initializing with specific parameters like `id`, `authorId`, `responseToId`, `text`, `sentAt`, and `chunks`.
 
-Private variables have getter and setter methods to manage internal state. The `Message` class can dynamically participate in a streaming framework and uses `keyGenerator` and `tokenizer` objects for unique key generation and tokenization, respectively.
+**Methods:**
+- Implements methods for serialization (`streamOut()`, `streamIn()`), dynamic class name retrieval (`dynamicClassName()`), token calculation (`calculateTokens()`), and live streaming updates (`hookLiveAppend()`, `unhookLiveAppend()`, `liveUpdateText()`, and `liveUpdateChunks()`).
+- Includes equality check (`equals()`), assignment (`assign()`), and ID validation (`isValidId()`).
+  
+**Key Components:**
+- Uses `GPT4Tokenizer` for tokenization.
+- Incorporates utility functions from `Errors`, `Asserts`, and `Utilities`.
+- Integrates `IKeyGenerator` for key generation.
+  
+**Important Properties:**
+- `id`, `authorId`, `responseToId`, `text`, `sentAt`, `chunks`, `tokens`, and `isStreaming`. 
+
+It follows the `MDynamicStreamable` interface from the `StreamingFramework` for dynamic streaming.
 
 **NotificationFramework.ts**
 
-The code defines a notification framework.
+The module `NotificationFramework` provides a framework for managing notifications.
 
-**Important Classes/Functions:**
-1. **Interest**: Encapsulates what is being observed via a `notificationId`. It has multiple constructors for different initialization scenarios, including copying an existing interest and creating an empty object. Methods like `equals` and `assign` are provided for comparison and assignment.
+The `Interest` class manages notification interests with unique IDs. It has multiple constructors for different initialization patterns, including copying from JSON or another `Interest` instance, and provides methods for equality checking and assignment.
 
-2. **Notification**: Acts as a base class for events. It includes constructors for various initialization methods, and methods for equality comparison and assignment.
+The `Notification` class serves as a base for events, holding a reference to an `Interest`. It supports multiple constructors, equality checks, and assignment operations.
 
-3. **NotificationFor<EventData>**: Specializes `Notification` by including a data payload. Similar constructors and methods help to manage the event data.
+`NotificationFor` extends `Notification` by adding an notification data payload, supporting similar constructor patterns, equality checks, and assignments.
 
-4. **ObserverInterest**: Combines an observer with an interest. It helps notifiers manage which observers are interested in which notifications.
+The `ObserverInterest` class combines an `IObserver` and an `Interest`, allowing `Notifier` classes to track observer interests.
 
-5. **NotificationRouter and NotificationRouterFor**: Assist in routing notifications to specific functions, ensuring type safety. 
+The `NotificationRouter` and `NotificationRouterFor` classes link notifications to specific functions.
 
-6. **Notifier**: Manages observers and their interests, provides methods to add, remove, and notify observers.
+The `Notifier` class sends notifications to registered observers and manages the list of `ObserverInterest` objects, with methods to add, remove and notify observers.
 
-7. **Interfaces IObserver and INotifier**: Define methods that must be implemented by classes to handle notifications and observer management effectively.
-
-These classes and functions provide a robust framework for managing and sending notifications, ensuring modularity and ease of use in observing and reacting to events.
+Key Classes and Functions:
+- `Interest`
+- `Notification`
+- `NotificationFor`
+- `ObserverInterest`
+- `NotificationRouter`
+- `NotificationRouterFor`
+- `IObserver` interface
+- `INotifier` interface
+- `Notifier`
 
 **Persona.ts**
 
-The `Persona` class represents an individual with attributes like ID, name, email, icon, and timestamp of last interaction. It offers various constructors for creating a `Persona` object, ensures fields are valid, and supports serialization for streaming.
+**Important Classes or Functions:**
+- `Persona` class
+- Constructor Overloads
+- `equals` method
+- `assign` method
+- `dynamicClassName`, `createDynamicInstance`, `streamOut`, `streamIn` methods
+- Static validity check methods: `isValidId`, `isValidName`, `isValidEmail`, `isValidThumbnailB64`
+- Static helper methods: `unknown`, `safeAuthorLookup`, `isUnknown`
 
-The class' static methods include `isValidId`, `isValidName`, `isValidEmail`, and `isValidThumbnailB64` for field validation. 
+**Summary:**
+The module manages personas in the Boxer application. The `Persona` class encapsulates attributes like name, icon, email, and last interaction timestamp. It offers multiple constructors to create instances from parameters, copied objects, or JSON.
 
-Getter and setter methods provide and ensure safe assignment of private properties, while methods like `equals` and `assign` compare and assign `Persona` instances, respectively. 
+It implements serialization methods to support dynamic streaming. Methods for equality check and assignment between `Persona` objects are also provided, facilitating object manipulation.
 
-`safeAuthorLookup` handles lookup within a `Map`, returning an "unknown" persona if not found. 
-
-The `callAtob` function decodes base64 strings, with a fallback for Node environments.
+Static validity checks ensure attributes like id, name, email, and thumbnail are valid. There are additional static methods to handle 'unknown' personas and safely look up authors from a map.
 
 **Queue.ts**
 
-This module defines a generic `Queue` class in TypeScript.
+This module provides a `Queue` class that implements a generic queue data structure for the Boxer application, following the First-In-First-Out (FIFO) principle.
 
-The `Queue` class has a `queue` array and an `offset` to manage the position of the first element.
+The `Queue` class manages the queue through an array and an offset for efficient memory management. 
 
-The constructor initializes the `offset` to 0 and the `queue` as an empty array.
-
-The `getLength` method calculates and returns the number of elements in the queue.
-
-The `isEmpty` method checks if the queue has no elements and returns a boolean value.
-
-The `enqueue` method adds an element to the queue.
-
-The `dequeue` method removes and returns the front element, adjusting the queue if necessary.
-
-The `peek` method returns the front element without removing it from the queue.
-
-Key methods in this module include `getLength`, `isEmpty`, `enqueue`, `dequeue`, and `peek`.
+Key methods in the `Queue` class include:
+- `constructor()`: Initializes the queue and the offset.
+- `getLength()`: Returns the current length of the queue.
+- `isEmpty()`: Checks if the queue is empty.
+- `enqueue(item)`: Adds an item to the end of the queue.
+- `dequeue()`: Removes and returns the item at the front of the queue, managing the offset to maintain efficiency.
+- `peek()`: Returns the item at the front of the queue without removing it.
 
 **SharedEmbedding.ts**
 
-The `SharedEmbedding` class represents a shared embedded item with properties like ID, URL, conversation ID, and likes. It extends `MDynamicStreamable` and supports dynamic serialization and deserialization.
+The `SharedEmbedding` module manages shared embedding objects within the Boxer application.
 
-The class has multiple constructors enabling object creation from either another `SharedEmbedding` object or separate components such as ID, URL, conversation ID, and likes.
+The `SharedEmbedding` class is the primary class in the module. It handles creating and managing shared embeddings, which include properties like URL, conversation ID, and likes. The class supports multiple constructor patterns: one for initializing empty objects, another for initializing with specific parameters, and a third for copying from an existing object.
 
-Important functions include `streamOut` and `streamIn` for JSON serialization and deserialization, `like`, `unlike`, and `isLikedBy` for managing likes, and `equals` and `assign` for comparing and copying instances.
-
-It also contains multiple getters and setters for its private fields.
-
-The `SharedEmbedding` class relies on utilities and services like `InvalidParameterError`, `IKeyGenerator` and `Like`.
-
-Additionally, `findInMap` is a utility function to find a `SharedEmbedding` instance by URL within a `Map`.
+Important class methods include `like` and `unlike` to add and remove likes, `streamOut` and `streamIn` for serializing and deserializing objects, and `equals` and `assign` for comparing and assigning embedded objects. Additionally, `isValidId` checks if an ID is valid, and `findInMap` is a helper function to find a `SharedEmbedding` in a map by URL.
 
 **StreamingFramework.ts**
 
-This code defines a framework for serializing and deserializing objects to and from JSON, specifically using a factory pattern for dynamic object creation.
+The code module, `StreamingFramework`, manages streaming data to and from JSON within the `Boxer` application.
 
-The `MStreamable` class is an abstract base class for types that can be streamed to and from JSON. It contains two abstract methods: `streamOut` for serialization and `streamIn` for deserialization.
+The `MStreamable` class is an abstract root class designed for objects that can stream data (serialize and deserialize) to and from JSON. It defines two abstract methods: `streamOut` for serializing data and `streamIn` for deserializing data.
 
-The `MDynamicStreamable` class extends `MStreamable` and includes methods for dynamic class handling. It introduces the `dynamicClassName` method and the `flatten` method for creating a JSON string including the class name. The `resurrect` static method reconstructs an object from a JSON string.
+The `MDynamicStreamable` class extends `MStreamable` and adds the ability to dynamically manage objects based on their class names stored in the JSON stream. It includes methods `dynamicClassName`, `flatten`, and a static method `resurrect`.
 
-The `DynamicStreamableFactory` class manages the creation of `MDynamicStreamable` objects based on their class names. It stores factory methods for different classes and includes a constructor to register new factories and a static method `create` to instantiate objects by their class names.
+The `DynamicStreamableFactory` class provides a factory pattern for creating `MDynamicStreamable` objects based on class names. It registers and links creation methods for dynamic classes and provides the static method `create` to instantiate objects using the class name.
 
 Important classes and functions:
-- `MStreamable`
-- `MDynamicStreamable`
-- `DynamicStreamableFactory`
-- `MDynamicStreamable.dynamicClassName`
-- `MDynamicStreamable.flatten`
-- `MDynamicStreamable.resurrect`
-- `DynamicStreamableFactory.create`
+- `MStreamable` (abstract class)
+- `MDynamicStreamable` (abstract class)
+- `DynamicStreamableFactory` (class)
+- `resurrect` (static method in `MDynamicStreamable`)
+- `create` (static method in `DynamicStreamableFactory`)
 
 **Utilities.ts**
 
-This module includes three main functions: `areSameDate`, `areSameShallowArray`, and `areSameDeepArray`.
+The module "Utilities" provides comparison functions for the Boxer application. 
 
-The `areSameDate` function checks if two Date objects are identical. It handles cases where either or both dates may be undefined and ensures type checking before comparing their time values.
+The `areSameDate` function compares two Date objects, including handling cases where either or both dates are undefined, using the `throwIfUndefined` function for validation.
 
-The `areSameShallowArray` function compares two arrays for shallow equality, ensuring they are of the same length and that their corresponding elements are equal using a strict equality check.
+The `areSameShallowArray` function compares two arrays for shallow equality, meaning it checks if the arrays are the same length and each element is equal using the `===` operator.
 
-The `areSameDeepArray` function performs deep equality checks on two arrays, comparing serialized versions (using `JSON.stringify`) of their elements to ensure all nested objects or arrays are identical in structure and content.
+The `areSameDeepArray` function compares arrays for deep equality, checking if the arrays are the same length and all corresponding elements are equal by converting each element to a JSON string and comparing these strings.
 
 **UuidKeyGenerator.ts**
 
-The module imports necessary dependencies like `throwIfNull`, `EnvironmentError`, and `IKeyGenerator`.
+The `UuidKeyGenerator` module provides functionalities for generating and managing UUIDs and secrets within the Boxer application. 
 
-It defines a helper function `NumberToUint32Array` to convert a number to a `Uint32Array`.
+The main class, `UuidKeyGenerator`, implements the `IKeyGenerator` interface and includes methods to generate UUIDs (`generateKey`), generate secrets (`generateSecret`), check if a string looks like a valid UUID (`couldBeAKey`), save secrets (`saveSecret`), check if a given secret matches the saved secret (`matchesSavedSecret`), verify if a secret has been saved (`haveSavedSecret`), and retrieve a saved secret (`savedSecret`).
 
-The core class `UuidKeyGenerator` implements the `IKeyGenerator` interface with methods for generating, saving, matching, and checking secrets using UUIDs.
-
-The `generateUUID` function creates a UUID using a timestamp and random numbers.
-
-The `uuid` function creates a UUID using the Blob API if available, otherwise it falls back to the `generateUUID` function.
-
-The `looksLikeUuid` function checks if a string follows the UUID format.
-
-Key functions and classes:
-- `NumberToUint32Array`
-- `UuidKeyGenerator` class
-- `generateUUID`
-- `uuid`
-- `looksLikeUuid`
+Utility functions include `NumberToUint32Array` for converting numbers to `Uint32Array` and `looksLikeUuid` for syntax validation of UUIDs. The `uuid` function generates unique UUIDs with a fallback method if `Blob` objects are not supported.
 

@@ -1,262 +1,298 @@
 **activitystore.test.ts**
 
-This code is a Mocha test suite that tests the behavior of a storage system with the `ActivityRepositoryApi`.
+This module tests the `ActivityRepostoryApi` using Mocha with assertions from the `expect` library. 
 
-The `describe` function is used to define a set of related tests under the name "StorableActivity". 
+**Important Classes/Functions:**
+1. `describe`: Organizes tests related to the `StorableActivity` functionality.
+2. `it`: Defines individual test cases.
+3. `getEnvironment` from `IEnvironmentFactory`: Fetches the environment configuration.
+4. `ActivityRepostoryApi`: Interacts with the activity repository.
+5. `randomKey`, `saveLoadRemove`, `failSave`: Utility functions for testing record operations.
+6. `IStorable`, `IStorableMultiQuerySpec`: Interfaces specifying the structure of the storable objects.
 
-There are three test cases, each implemented using the `it` function:
+**Test Cases:**
+1. Successfully saves, loads, and removes a record with a valid key.
+2. Fails to save a record with an invalid key.
+3. Successfully pulls multiple records using a valid key and a query specification.
 
-1. "Needs to succeed with valid key" tests the function `saveLoadRemove` to ensure data can be saved, loaded, and removed with a valid session key.
-2. "Needs to fail with invalid key" tests the function `failSave` to ensure the operation fails with an invalid session key.
-3. "Needs to pull multiple records with valid key" tests the retrieval of multiple stored records using a query specification.
+**chatdriver.test.ts**
 
-Key classes and functions:
-- `getEnvironment`
-- `ActivityRepositoryApi`
-- `randomKey`
-- `saveLoadRemove`
-- `failSave`
+**Important Functions and Classes:**
+- `describe`
+- `it`
+- `getChatModelDriver`
+- `getDefaultChatModelDriver`
+- `IModelConversationPrompt`
+- `EPromptPersona.kArticleSummariser`
+
+**Summary:**
+
+This code is a test suite for a chat model driver using Mocha and Expect.js for testing. It describes a set of tests under "Chat Driver."
+
+First, it tests if the chat model can handle a single line prompt by comparing two different driver instances to ensure they handle the driver type correctly.
+
+Second, it checks if the chat model can generate a response to a simple single-line prompt asynchronously and validates the response content.
+
+Third, it verifies if the chat model can handle and respond correctly to a multi-line prompt with historical context, ensuring the response includes a specific previous user input. Each asynchronous test has a timeout limit set to 10 seconds.
 
 **checksession.test.ts**
 
-This JavaScript code imports necessary modules and sets the environment as strict for secure programming.
+This module is a test suite for checking session keys using the Mocha testing framework and the expect assertion library.
 
-It uses Mocha for describing and running test cases and Expect for writing assertions.
+`SessionApi`, `getEnvironment`, and `EEnvironment` are important classes or functions imported from the project’s common TypeScript files.
 
-The `describe` function names the test suite "CheckSession" and its nested `it` functions describe individual test cases.
+The `describe` function groups the tests under "CheckSession".
 
-Four test cases are defined:
-1. Test for success with a valid key in the local environment.
-2. Test for success with a valid key in the production environment.
-3. Test for failure with an invalid key in the local environment.
-4. Test for failure with an invalid key in the production environment.
+Four test cases are defined using the `it` function to check session validity in local and production environments with both valid and invalid session keys.
 
-`SessionApi` and `getEnvironment` are key functions/classes used for creating API instances and getting the appropriate environment settings. `checkSessionKey` method validates the session key. Each test has a timeout setting of 20 seconds.
+The tests create `SessionApi` instances with different environments and session keys, and verify the session key checks using assertions.
+
+Each test case is set to timeout after 20000 milliseconds.
 
 **chunk.test.ts**
 
-This code is a test suite for chunking text, implemented using Mocha and Expect. Tests are organized within the `describe` block named "Chunk".
+The code is a test module using Mocha and Expect to perform unit tests on URL comparison and chunking functionalities.
 
-The `validChunkCall` function sends a POST request with a text chunk request and processes the response. It returns an `IChunkResponse` object if successful, otherwise returns `undefined`.
+The "Chunk URLs" test suite contains four tests using the function `lookLikeSameSource` to determine if two URLs belong to the same source (either YouTube videos or GitHub repositories).
 
-The `invalidChunkCall` function sends a GET request which is expected to fail, catching any errors and returning `true` if an error occurs, otherwise `false`.
+The "Chunk" test suite has three tests. It checks if an API call fails with an incorrect session key, and verifies the chunking logic for both short and long messages using the `validChunkCall` and `invalidChunkCall` functions.
 
-The `it` blocks define three tests. The first checks if a request with an incorrect session key fails. The second checks if a short message can be chunked into one part. The third test checks if a longer message is chunked into multiple parts.
-
-Important classes/functions:
-1. `validChunkCall`
-2. `invalidChunkCall`
-3. Mocha’s `describe` and `it` functions for test definition.
+**Important Classes/Functions:**
+1. `lookLikeSameSource`
+2. `validChunkCall`
+3. `invalidChunkCall`
 
 **chunkstore.test.ts**
 
-### Summary of Code
+The code is a set of unit tests for the `StorableChunk` module using `Mocha` and `Expect`.
 
-#### Important Classes/Functions
-- `describe`, `it` from Mocha
-- `expect` from Expect
-- Functions: `failSave`, `randomKey`, `saveLoadRemove`, `saveFindRemove`
-- Classes: `ChunkRepostoryApi`, `EEnvironment`
+Key imported functions and classes:
+- `expect` from `expect`, `describe` and `it` from 'mocha'
+- Functions: `failSave`, `randomKey`, `saveLoadRemove`, `saveFindRemove` from './storable'
+- `EEnvironment` and `getEnvironment` from '../../CommonTs/src/IEnvironment'
+- `ChunkRepostoryApi` from '../../CommonTs/src/ChunkRepositoryApi'
+- Types: `IStoredChunk`, `IStorableMultiQuerySpec`
 
-#### Setup
-- Imports several modules for testing and storable operations.
-- Retrieves the local environment and session key to interact with the `ChunkRepostoryApi`.
-
-#### Test Suite: `StorableChunk`
-- **Setup**: Defines a `record` with various properties initialized with mock data.
-- **Environment and API**: Initializes environment and API to interact with the chunk repository.
-- **Cleanup**: Removes temporary objects after each test case using the `afterEach` function.
-
-#### Test Cases
-1. **saveLoadRemove Test**: Creates a record, saves, loads, and removes it, expecting a successful operation.
-2. **saveFindRemove Test**: Performs similar operations but verifies if the record can be found before removal.
-3. **failSave Test**: Uses an invalid session key expecting the save operation to fail.
+Tests are organized into a `describe` block:
+1. **Data Preparation**: Creates a `record` variable with sample chunk data and sets up environment and API instances.
+2. **Cleanup with `afterEach`**: Removes recently created test objects after each test.
+3. **Test Cases**:
+   - Saves, loads, and removes a record using `saveLoadRemove`.
+   - Finds and removes a record using `saveFindRemove`.
+   - Tests failure behavior with an invalid session key using `failSave`.
 
 **classify.test.ts**
 
-This module performs tests on a classification API using Mocha and Axios. It defines several test cases to validate the API’s behavior under different circumstances, such as incorrect session keys and correct classification of various messages.
+### Summary
 
-The `validClassifyCall` function sends a classification request to the API and returns the classification if successful.
+This code is a set of test cases for a text classification API using Mocha and Axios.
 
-The `invalidClassifyCall` function checks if an incorrect API call returns an error.
+### Important Classes/Functions
+- **describe**: Defines a suite of tests for classifying different types of text.
+- **it**: Defines individual test cases.
+- **validClassifyCall**: An asynchronous function that calls the classification API with valid parameters and returns the classification result.
+- **invalidClassifyCall**: An asynchronous function to check the API's behavior with invalid parameters, expecting it to throw an error.
 
-Test cases are defined using `describe` and `it` from Mocha, leveraging `expect` for assertions.
-
-The environment is fetched using the `getEnvironment` function, which adjusts the API URL based on the environment type (local or production).
-
-**Important functions and classes:**
-- `validClassifyCall`
-- `invalidClassifyCall`
+### Test Cases
+- Tests whether an incorrect session key fails for local and production environments.
+- Tests if the API correctly classifies sample texts into categories like Technology, Business, Politics, and Health in both local and production environments. Each test case includes timeout settings of 20000ms.
 
 **embed.test.ts**
 
-This module is a test suite for the "Embed" functionality using Mocha and Expect for testing, and Axios for making HTTP requests. It includes helper functions `validEmbedCall` and `invalidEmbedCall` for making API requests and handling their responses.
+### Summary:
 
-The module retrieves the environment configuration via `getEnvironment` from `../../CommonTs/src/IEnvironmentFactory` and uses types like `IEmbedRequest` and `IEmbedResponse` from `../../CommonTs/src/EmbedApi.Types`.
+- **Important Functions**:
+  - `validEmbedCall(apiUrl: string, text: string): Promise<Array<number> | undefined>`: Sends a POST request for embedding the text and returns an array of numbers.
+  - `invalidEmbedCall(apiUrl: string, text: string): Promise<Boolean>`: Sends a GET request which is expected to fail and returns a boolean indicating whether an error was caught.
 
-The test cases:
-1. Validate API failure with incorrect session keys in local and production environments.
-2. Validate successful embedding of simple and long messages by sending POST requests to the embed API with valid session keys.
+- **Tests**:
+  - The test suite named "Embed" contains several `it` blocks to test embedding functionality:
+    - **Failure cases**:
+      - Tests for incorrect session keys in both local and production environments, ensuring the API call should fail.
+    - **Success cases**:
+      - Tests for embedding a simple message with a valid session key in both local and production environments, expecting a valid embedding array.
+      - Tests for embedding a long message in the local environment, expecting a valid embedding array.
 
-Important functions:
-1. `validEmbedCall`
-2. `invalidEmbedCall`
+- **Setup**:
+  - Utilizes `expect` for assertions and `mocha` for describing tests.
+  - Relies on `axios` for HTTP requests.
+  - Fetches environment configurations and embeds API URLs dynamically depending on the environment (local or production).
+
+- **Miscellaneous**:
+  - Specifies timeouts for each test case (20,000 milliseconds).
 
 **environment.test.ts**
 
-The code starts with a 'strict mode' declaration to enforce stricter parsing and error handling in JavaScript.
+The code sets up a testing environment using `mocha` and `expect` modules. 
 
-It imports the `expect` function from the `expect` library for assertions, and `describe` and `it` functions from the `mocha` testing framework to structure the tests.
+It imports necessary functions and enums from external files i.e., `getEnvironment`, `getDefaultEnvironment`, and `EEnvironment`.
 
-Two functions, `getEnvironment` and `getDefaultEnvironment`, and an enumeration `EEnvironment`, are imported from a common library.
+The `describe` function defines a test suite named "Environment".
 
-The `describe` block defines a test suite named "Environment".
+Within this suite, the `it` function defines a test case to check if the default environment's name is the same as the local environment's name.
 
-Inside the suite, an `it` block specifies a test case to check if the default environment is local in the Mocha testing environment.
+The `expect` assertion ensures that the names are equal, signifying the default environment is local in the Mocha test context.
 
-The test asserts that the names of the default environment and the local environment are the same.
+Important functions:
+- `describe`
+- `it`
+- `getDefaultEnvironment`
+- `getEnvironment`
 
 **findenrichedchunks.test.ts**
 
-This code defines and runs a series of tests using Mocha and Expect. It imports necessary modules such as `getEnvironment` and `FindEnrichedChunkApi`.
+This module tests the functionality of fetching relevant chunks (small pieces of content) from a content repository based on given summaries and URLs using Mocha for the testing framework and Expect for assertions.
 
-The `commonChunkStoreTests` function is an asynchronous test suite that takes a repository, summaries, and URLs. It contains three tests: 
-1. `Needs to find relevant chunks from a matching Summary` - Tests if the function finds relevant pieces of chunks from summaries.
-2. `Needs to find relevant chunks from a matching URL` - Tests if the function finds relevant pieces of chunks from URLs.
-3. `Needs to find same chunks from a matching URL` - Tests whether identical chunks are found from the URL.
+Key classes and functions:
+- `commonChunkStoreTests`: This function conducts multiple tests to ensure chunks can be correctly retrieved based on both summaries and URLs for specified repositories.
+- `FindEnrichedChunkApi`: An API class used for finding enriched chunks based on provided queries.
+- `describe` and `it`: Mocha functions used to structure and define individual test cases.
 
-Then, two `describe` blocks (`FindEnrichedChunks - Boxer` and `FindEnrichedChunks - Waterfall`) execute `commonChunkStoreTests` with different sets of summaries and URLs for the Boxer and Waterfall repositories.
+Tests:
+1. Looks for relevant chunks using summaries.
+2. Searches for relevant chunks using URLs.
+3. Validates chunk retrieval for matching URLs.
 
 **findtheme.test.ts**
 
-This code is setting up a Mocha testing suite to validate theme extraction using API calls. It imports necessary modules like `expect`, `describe`, `it` from `mocha`, and `axios` for HTTP requests. 
+The code is written as a test suite using Mocha for testing, and Expect for assertions. It imports several necessary modules such as axios, an HTTP client for making requests, and environmental utilities from a common repository. 
 
-`validThemeCall` asynchronously sends a POST request with the text and length to a specified API URL and returns the theme extracted from the response. 
+This module is primarily testing an API that finds themes in texts. The `describe` block contains multiple test cases (`it` blocks). 
 
-`invalidThemeCall` asynchronously sends a GET request to a specified API URL and returns true if an error occurs.
+Two helper functions are defined: `validThemeCall`, which posts data to an API to get a theme, and `invalidThemeCall`, which tests for invalid session key handling. 
 
-Several test cases check the theme extraction functionality under different conditions (e.g., correct/incorrect session keys) using these helper functions. 
-
-Important functions are `validThemeCall` and `invalidThemeCall`.
+The test cases cover both scenarios for valid and invalid session keys against local and production environments.
 
 **generatefluidtoken.test.ts**
 
-- The code is a test suite that verifies the functionality of generating and handling Fluid tokens and connecting to Fluid containers.
-- The `describe` function groups the tests related to "Generate Fluid Token."
-- The `it` functions are used to define individual test cases:
-  1. "Needs to fail if session key is incorrect" ensures token generation fails with an incorrect session key.
-  2. "Needs to return a valid token if session key is correct" ensures token generation succeeds with a correct session key in a local environment.
-  3. "Needs to return a valid token from production if session key is correct" ensures token generation succeeds with a correct session key in a production environment.
-  4. "Needs to connect to a Fluid container" tests creating and connecting to a Fluid container through AzureClient.
-- Important classes/functions:
-  - `getEnvironment` from `../../CommonTs/src/IEnvironmentFactory`,
-  - `FluidApi` from `../../CommonTs/src/FluidApi`,
-  - `AzureClient` from `@fluidframework/azure-client`,
-  - `SharedString` from `fluid-framework/legacy`,
-  - `sleep` helper function for delay,
-  - Test framework functions from `expect` and `mocha`.
+This code is a test suite using Mocha and Expect for a Fluid framework token generation and container connection using AzureClient.
+
+**Key Functions and Classes:**
+- `describe`: Defines the main test suite named "Generate Fluid Token".
+- `it`: Each test case focuses on token generation and container connection.
+- `FluidApi`: Responsible for generating tokens based on different environments and conditions.
+- `AzureClient`: Used to create and connect to Fluid containers.
+- `getEnvironment`: Retrieves environment settings for local or production configurations.
+- Async `sleep` function: Introduces delays in processes.
+
+**Tests Include:** 
+1. Ensuring token generation fails with incorrect session key.
+2. Valid token generation with the correct session key for local setup.
+3. Valid token generation with the correct session key for production setup.
+4. Connecting to a Fluid container, verifying created container interaction.
 
 **login.test.ts**
 
-This code is a set of tests using Mocha and Expect to verify the functionality of a login system. 
+This code defines a test suite for the `LoginApi` functionality.
 
-The `LoginApi` class is tested in different environments (local and production) with both valid and invalid session keys.
+**Important Classes/Functions:**
+1. `describe`: Defines a suite of tests related to the "Login" functionality.
+2. `it`: Specifies individual test cases to be run within the test suite.
+3. `LoginApi`: The class under test, which handles login functionality.
+4. `EEnvironment` and `getEnvironment`: Both are imported to handle different login environments (local and production).
 
-The `describe` function from Mocha groups the tests under the "Login" name.
-Each `it` function defines an individual test case and verifies the expected behavior using the `expect` assertion library. 
+**Test Cases:**
+1. "Needs to succeed with valid key in local environment": Tests successful login with a valid session key in the local environment.
+2. "Needs to fail with invalid key": Tests login failure with an invalid session key in the local environment.
+3. "Needs to succeed with valid key in production environment": Tests successful login with a valid session key in the production environment.
+4. "Needs to fail with invalid key in production environment": Tests login failure with an invalid session key in the production environment.
 
-Four test cases are included:
-1. Successful login with a valid session key in the local environment.
-2. Failed login with an invalid session key in the local environment.
-3. Successful login with a valid session key in the production environment.
-4. Failed login with an invalid session key in the production environment.
-
-Each test is given a timeout of 20,000 milliseconds to allow for longer network operations.
+Each test case utilizes the `LoginApi` class for logging in and uses `expect` to assert the expected outcomes. Additionally, each test has a timeout of 20 seconds.
 
 **model.test.ts**
 
-This module contains a series of tests for the `Model` class using the Mocha testing framework. The `describe` function groups these tests under the "Model" label.
+This code is a test suite for the `Model` functionality, authored by Braid Technologies Ltd in 2024. 
 
-The first test verifies that the default model provided by the `getDefaultModel()` function has a non-empty `deploymentName` and a positive `contextWindowSize`.
+**Important Classes and Functions**:
+- `describe` (from Mocha): Defines a suite of related tests for "Model".
+- `it` (from Mocha): Specifies individual test cases within the suite.
+- `expect` (from Expect): Handles assertions within test cases.
+- `getDefaultModel` and `getModel` (from IModelFactory): Functions to fetch default or specified models.
 
-The next test checks that the `getModel(EModel.kSmall)` function returns a specific model with a non-empty `deploymentName` and a positive `contextWindowSize`.
-
-Subsequent tests assess the model's ability to judge whether small and large texts fit within its context using the `fitsInContext` method.
-
-Further tests evaluate the model's `chunkText` method to ensure it correctly chunks both small and large texts, with and without overlaps.
-
-Important functions in this module are `getDefaultModel` and `getModel` from `IModelFactory`, and the testing functions from the Mocha framework (`describe`, `it`, `expect`).
+**Test Cases**:
+1. Verify the existence of default model properties.
+2. Ensure specific model properties are defined.
+3. Check if small texts fit within the model's default chunk size.
+4. Validate large texts do not fit within the model's default chunk size.
+5. Assert small texts are chunked correctly (producing a single chunk).
+6. Confirm large texts are broken into multiple chunks.
+7. Ensure chunking with overlaps produces more chunks than without overlaps.
 
 **pagestore.test.ts**
 
-This code is a test module for verifying the functionality of the `StorablePage` feature in a local environment.
+This module tests the functionality of saving and loading HTML pages in a local environment using the `PageRepositoryApi`. 
 
-**Important Functions:**
-- `loadHtmlFromFile`: Reads HTML content from a specified file, returns it as a string, or throws an error if the file cannot be read.
+The `loadHtmlFromFile` function reads HTML content from a file and returns it as a string, throwing an error if the file can't be read.
 
-**Tests (using Mocha and Expect):**
-- **describe("StorablePage")**: Contains two tests that run in a local environment.
-  - **it("Needs to succeed with save & valid key in local environment")**: Tests saving a record using `PageRepositoryApi` and ensures the save operation returns true.
-  - **it("Needs to succeed with load & valid key in local environment")**: Tests loading the saved HTML page from the API endpoint and verifies it matches the original HTML content.
+In the `describe` block, the `StorablePage` test suite initializes the environment, API, and necessary data. The `it` test cases check if an HTML page can be saved and then loaded successfully. 
 
-**Dependencies:**
-- `axios`, `expect`, `mocha`: Used for making HTTP requests, assertions, and structuring tests.
-- Custom modules like `randomKey`, `EEnvironment`, `getEnvironment`, `PageRepositoryApi`, and types from `PageRepositoryApi.Types`.
+Key classes/functions:
+- `loadHtmlFromFile`
+- `describe` (Mocha)
+- `it` (Mocha)
+
+Important imports include `axios`, `expect`, `randomKey`, `getEnvironment`, `PageRepositoryApi`, and `IStoredPage`.
 
 **querymodel.test.ts**
 
-This code tests a QueryModel API for generating responses and questions related to generative AI. It contains three primary tests.
+This module is a test suite using Mocha and Expect libraries for a "QueryModel" service.
 
-The `describe` block specifies a suite named "QueryModel." 
+It imports necessary utilities and defines three main test cases inside a `describe` block.
 
-The `it` function defines three test cases: "Needs to make a simple query," "Needs to make a query with history," and "Needs to generate questions based on a summary." 
+- The first test case, "Needs to make a simple query," initializes the `QueryModelApi` object, makes a simple query, and asserts that the response is valid and non-empty.
 
-The `QueryModelApi` class is used to interact with the API, making use of methods `queryModelWithEnrichment` and `generateQuestion`. 
+- The second test case, "Needs to make a query with history," builds a query with conversation history, sends it, and validates the response similarly to the first case.
 
-Environment settings, session keys, and user prompts are defined as inputs to the API. 
+- The third test case, "Needs to generate questions based on a summary," tests question generation from a given summary and checks if the generated question is non-empty. 
 
-Assertions check if the API responses are defined and contain expected data.
+Key functions: `describe`, `it`. Key classes: `QueryModelApi`.
 
 **storable.ts**
 
-The code defines three key functions: `randomInt`, `randomKey`, and three asynchronous functions for interaction with `IStorableRepostoryApiWrapper` API: `saveLoadRemove`, `saveFindRemove`, and `failSave`.
+The code provides a set of utility functions for working with objects that implement the `IStorable` interface, using an API wrapper that implements `IStorableRepostoryApiWrapper`. 
 
-The `randomInt` function generates a random integer between `min` and `max`, while `randomKey` creates a string key using the `randomInt` function.
+Important functions:
+1. **randomInt(min: number, max: number) -> number**:
+   Generates a random integer between the specified `min` and `max` values.
 
-The `saveLoadRemove` function tests saving, loading, then removing a record via the `api`, asserting that each operation returns the expected result.
+2. **randomKey() -> string**:
+   Generates a random key as a string, using `randomInt` to create a random integer.
 
-Similarly, `saveFindRemove` tests saving, finding, and removing a record, using `functionalSearchKey` for finding.
+3. **saveLoadRemove(api, record) -> Promise<boolean>**:
+   Tests saving, loading, and removing a record. Verifies each operation was successful using the `expect` function.
 
-The `failSave` function ensures that an attempt to save a record returns `false`.
+4. **saveFindRemove(api, record) -> Promise<boolean>**:
+   Similar to `saveLoadRemove`, but tests saving, finding by functional search key, and removing the record.
+
+5. **failSave(api, record) -> Promise<boolean>**:
+   Tests that saving a record fails, and verifies this with `expect`.
 
 **summarise.test.ts**
 
-This code is a set of Mocha tests that validate the functionality of an API for summarizing text. 
+This module tests the `Summarise` API functionality using Mocha and Expect. The test suite includes multiple variations to validate the summarization process for different environments (local and production).
 
-The `describe` block named "Summarise" contains test cases to validate the API under various conditions. It uses the `it` function to define individual test cases.
+Key functions:
+- `validSummaryCall(apiUrl: string, text: string)`: Makes a POST request to the API to get a summarization of the provided text, returning the summary.
+- `invalidSummaryCall(apiUrl: string, text: string)`: Makes a GET request to the API to check if an incorrect session key triggers an error.
 
-The helper function `validSummaryCall` makes a POST request to the API to get a summary and returns the summary text.
-
-The helper function `invalidSummaryCall` makes an invalid API request to check for error handling and returns whether an error was caught.
-
-Important classes and functions:  
-1. `describe`  
-2. `it`  
-3. `validSummaryCall`  
-4. `invalidSummaryCall`  
-
-The tests include scenarios for both local and production environments, using the `getEnvironment` function to set up the environment. They check for correct failures and successful summaries given different API calls.
+Key tests:
+- Tests for incorrect session key failures in both local and production environments.
+- Tests for summarizing both short and long messages in local and production environments.
 
 **testforsummarisefail.test.ts**
 
-This code tests the summarization failure responses of an API. It uses Mocha as the testing framework and Axios for HTTP requests.
+This module tests the `TestForSummariseFail` API using Mocha and Expect frameworks. 
 
-Main functions include `validCall` which makes a POST request to the API to test valid input and `invalidCall` which tests the API's handling of invalid sessions by making a GET request.
+It contains two key helper functions:
+1. `validCall(apiUrl, text, length)`: Sends a POST request to the API and returns the fail code if present.
+2. `invalidCall(apiUrl, text)`: Sends a GET request to the API, capturing any error indicating an invalid call.
 
-The tests cover different scenarios including:
-1. Validating that the API catches incorrect session keys and returns an error.
-2. Ensuring that the API returns correct failure codes for predefined text inputs deemed unable to summarize.
-3. Repeating these checks for both local and production environments.
+Key tests are:
+1. Ensures failure when an incorrect session key is provided.
+2. Validates that example texts result in recognized summary failures (both for local and production environments).
 
-Important modules: `describe`, `it` from Mocha, `validCall`, `invalidCall`.
+Classes/Functions:
+- `validCall`: Helper function for valid API calls.
+- `invalidCall`: Helper function for invalid API calls.
+- Test cases with `describe` and `it` from Mocha.
 
