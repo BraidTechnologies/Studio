@@ -1,29 +1,51 @@
 **api_to_test_code.py**
 
-This script generates Pytest test code from JSON or YAML API data.
+This script generates Pytest code from API data provided in JSON or YAML format.
 
-The `parse_arguments` function uses `argparse` to handle command-line arguments, targeting an input file path. The `extract_code` function extracts Python code snippets between specified start and end markers.
+**parse_arguments**: Parses command-line arguments to get the input file path.
 
-The `load_api_data` function reads the input file, determines its format (JSON or YAML), and converts the contents into a dictionary.
+**extract_code**: Extracts Python code snippets from a string using specified start and end markers.
 
-In the `main` function, it obtains the input path, loads the API data, and sets up an assistant using OpenAI's API to generate test code. The script handles errors and logs critical errors if API data fails to load or generate code.
+**load_api_data**: Loads and parses API data from the specified JSON or YAML file, logging errors if the file is not found or contains invalid data.
+
+**main**: The main execution function. It parses input arguments, loads API data, and sets up an OpenAI assistant to generate Pytest code. Generated code is saved to a new Python file.
+
+**Classes/Functions**: `parse_arguments`, `extract_code`, `load_api_data`, `main`.
 
 **repo_to_text.py**
 
-This `repo_to_text.py` script reads files from a specified local GitHub repository, processes their content into text files within a set word limit, and generates summaries for source code files.
+### Important Classes and Functions:
 
-Key functions include:
-- `parse_arguments`: Handles command-line arguments.
-- `validate_args`: Ensures paths and arguments are valid.
-- `load_yaml`: Reads configuration from a YAML file.
+1. **SummarisedDirectory**: Stores directory names and their summaries.
 
-Key class:
-- `RepoContentProcessor`: Manages repository processing, which includes initialization, file processing, word count management, content saving when limits are reached, and directory content handling.
+2. **RepoContentProcessor**: Handles repository processing:
+   - `__init__`: Initializes the processor with paths, configurations, and word limits.
+   - `make_common_file_name`: Creates unique identifiers for common files.
+   - `format_file_block`: Formats content blocks with consistent indentation.
+   - `count_words`: Utilizes NLTK to count words in a text.
+   - `is_in_git_directory`, `is_skip_dir`, `is_in_common_dir`: Identifies paths to skip.
+   - `should_resummarise_code`: Decides if a source file should be re-summarized.
+   - `save_current_content`: Saves accumulated content into a text file.
+   - `process_file`: Processes an individual file and accumulates its content.
+   - `process_repo`: Orchestrates repository processing and stores summaries.
 
-Additional functionality:
-- `summarise_code`: Utilizes an API to summarize source code files.
-- Processes directories and files to skip.
-- Uses `nltk` for word tokenization and `requests` for API interaction.
+3. **summarise_code**: Summarizes source code using an external service.
 
-The script initiates with `if __name__ == "__main__":` to execute the `main()` function, which is essential but not defined in the provided snippet.
+4. **load_yaml**: Loads configuration from a YAML file, handles file and error management.
+
+5. **parse_arguments**: Parses command-line arguments for script options and input paths.
+
+6. **validate_args**: Validates parsed arguments to ensure paths exist and are directories.
+
+### Script Workflow:
+
+- **Argument Handling**: Arguments are parsed and validated.
+- **Initialization**: Creates `RepoContentProcessor` with repository path, configuration, and max words.
+- **Skip Patterns and Directories**: Updates processor with additional patterns or directories to skip.
+- **Working Directory**: Changes to specified output directory.
+- **Processing**: Calls `process_repo()` to process the repository.
+- **Error Handling**: Catches exceptions, prints errors, and exits with a status code of 1.
+
+### Entry Point:
+- The script starts execution with the `main()` function when run directly.
 

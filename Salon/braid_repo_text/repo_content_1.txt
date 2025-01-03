@@ -2498,6 +2498,73 @@ done
 ****************************************
 
 ****************************************
+Build\ReadMe.md
+****************************************
+# Build Scripts
+
+This directory contains various shell scripts for building, testing, and maintaining the project's codebase.
+
+## Available Scripts
+
+### Building
+- `build_subdirs.sh`: Executes `npm run build` in all TypeScript project directories that contain a package.json file.
+  - Processes: CommonTs, Api, Cascade, WaterfallBrowser, Boxer, Teams
+
+### Testing
+- `test_subdirs.sh`: Runs tests across all project directories
+  - For TypeScript projects: Executes `npm run test`
+  - For Python projects: Runs `pytest`
+  - Processes: CommonTs, CommonPy, Api, ApiTest, Cascade, Waterfall, WaterfallBrowser, Boxer, Teams
+
+### Maintenance
+- `clean_subdirs.sh`: Runs cleanup tasks in all directories containing package.json
+  - Executes `npm run clean` in each directory
+  
+- `prune_subdirs.sh`: Removes unused dependencies
+  - Executes `npm prune` in directories with package.json
+
+### Analysis
+- `count_loc.sh`: Counts lines of code (excluding whitespace)
+  - Counts both source and test files
+  - Separates counts for Python (.py) and TypeScript (.ts, .tsx)
+  - Usage: `./count_loc.sh <base_directory>`
+
+- `check_module_comments_subdirs.sh`: Validates module documentation
+  - TypeScript: Checks for `@module` comments
+  - Python: Uses pylint to check for module docstrings
+  - Reports files missing proper documentation
+
+## Project Structure
+The scripts handle the following project directories:
+
+### TypeScript Projects
+- CommonTs
+- Api
+- Cascade
+- WaterfallBrowser
+- Boxer
+- Teams
+
+### Python Projects
+- CommonPy
+- ApiTest
+- Waterfall
+- BoxerEval
+
+## Usage
+
+All scripts should be run from the project root directory. For example:
+
+bash
+./Build/build_subdirs.sh
+./Build/test_subdirs.sh
+./Build/count_loc.sh .
+
+bash
+chmod +x Build/.sh
+****************************************
+
+****************************************
 Build\test_subdirs.sh
 ****************************************
 #!/bin/bash
@@ -2734,6 +2801,8 @@ skip_patterns:
     - "*.zip"
     - "*.wav"
     - "*.mov"
+    - "*.css"    
+    - "*.ico"
 ****************************************
 
 ****************************************
@@ -2741,7 +2810,7 @@ Salon\README.md
 ****************************************
 # Salon
 
-Salon is a technology demonstrator for automated softwareevelopment tools using Large Language Models (LLMs). It provides a suite of tools to assist in API testing and code analysis.
+Salon is a technology demonstrator for automated software development tools using Large Language Models (LLMs). It provides a suite of tools to assist in API testing and code analysis.
 ## Key Components
 
 ### api_to_test_code
@@ -4811,6 +4880,308 @@ describe("QueryModel", async function () {
 ****************************************
 
 ****************************************
+Api\test\ReadMe.Salon.md
+****************************************
+**activitystore.test.ts**
+
+This module tests the `ActivityRepostoryApi` using Mocha with assertions from the `expect` library. 
+
+**Important Classes/Functions:**
+1. `describe`: Organizes tests related to the `StorableActivity` functionality.
+2. `it`: Defines individual test cases.
+3. `getEnvironment` from `IEnvironmentFactory`: Fetches the environment configuration.
+4. `ActivityRepostoryApi`: Interacts with the activity repository.
+5. `randomKey`, `saveLoadRemove`, `failSave`: Utility functions for testing record operations.
+6. `IStorable`, `IStorableMultiQuerySpec`: Interfaces specifying the structure of the storable objects.
+
+**Test Cases:**
+1. Successfully saves, loads, and removes a record with a valid key.
+2. Fails to save a record with an invalid key.
+3. Successfully pulls multiple records using a valid key and a query specification.
+
+**chatdriver.test.ts**
+
+**Important Functions and Classes:**
+- `describe`
+- `it`
+- `getChatModelDriver`
+- `getDefaultChatModelDriver`
+- `IModelConversationPrompt`
+- `EPromptPersona.kArticleSummariser`
+
+**Summary:**
+
+This code is a test suite for a chat model driver using Mocha and Expect.js for testing. It describes a set of tests under "Chat Driver."
+
+First, it tests if the chat model can handle a single line prompt by comparing two different driver instances to ensure they handle the driver type correctly.
+
+Second, it checks if the chat model can generate a response to a simple single-line prompt asynchronously and validates the response content.
+
+Third, it verifies if the chat model can handle and respond correctly to a multi-line prompt with historical context, ensuring the response includes a specific previous user input. Each asynchronous test has a timeout limit set to 10 seconds.
+
+**checksession.test.ts**
+
+This module is a test suite for checking session keys using the Mocha testing framework and the expect assertion library.
+
+`SessionApi`, `getEnvironment`, and `EEnvironment` are important classes or functions imported from the project’s common TypeScript files.
+
+The `describe` function groups the tests under "CheckSession".
+
+Four test cases are defined using the `it` function to check session validity in local and production environments with both valid and invalid session keys.
+
+The tests create `SessionApi` instances with different environments and session keys, and verify the session key checks using assertions.
+
+Each test case is set to timeout after 20000 milliseconds.
+
+**chunk.test.ts**
+
+The code is a test module using Mocha and Expect to perform unit tests on URL comparison and chunking functionalities.
+
+The "Chunk URLs" test suite contains four tests using the function `lookLikeSameSource` to determine if two URLs belong to the same source (either YouTube videos or GitHub repositories).
+
+The "Chunk" test suite has three tests. It checks if an API call fails with an incorrect session key, and verifies the chunking logic for both short and long messages using the `validChunkCall` and `invalidChunkCall` functions.
+
+**Important Classes/Functions:**
+1. `lookLikeSameSource`
+2. `validChunkCall`
+3. `invalidChunkCall`
+
+**chunkstore.test.ts**
+
+The code is a set of unit tests for the `StorableChunk` module using `Mocha` and `Expect`.
+
+Key imported functions and classes:
+- `expect` from `expect`, `describe` and `it` from 'mocha'
+- Functions: `failSave`, `randomKey`, `saveLoadRemove`, `saveFindRemove` from './storable'
+- `EEnvironment` and `getEnvironment` from '../../CommonTs/src/IEnvironment'
+- `ChunkRepostoryApi` from '../../CommonTs/src/ChunkRepositoryApi'
+- Types: `IStoredChunk`, `IStorableMultiQuerySpec`
+
+Tests are organized into a `describe` block:
+1. **Data Preparation**: Creates a `record` variable with sample chunk data and sets up environment and API instances.
+2. **Cleanup with `afterEach`**: Removes recently created test objects after each test.
+3. **Test Cases**:
+   - Saves, loads, and removes a record using `saveLoadRemove`.
+   - Finds and removes a record using `saveFindRemove`.
+   - Tests failure behavior with an invalid session key using `failSave`.
+
+**classify.test.ts**
+
+### Summary
+
+This code is a set of test cases for a text classification API using Mocha and Axios.
+
+### Important Classes/Functions
+- **describe**: Defines a suite of tests for classifying different types of text.
+- **it**: Defines individual test cases.
+- **validClassifyCall**: An asynchronous function that calls the classification API with valid parameters and returns the classification result.
+- **invalidClassifyCall**: An asynchronous function to check the API's behavior with invalid parameters, expecting it to throw an error.
+
+### Test Cases
+- Tests whether an incorrect session key fails for local and production environments.
+- Tests if the API correctly classifies sample texts into categories like Technology, Business, Politics, and Health in both local and production environments. Each test case includes timeout settings of 20000ms.
+
+**embed.test.ts**
+
+### Summary:
+
+- **Important Functions**:
+  - `validEmbedCall(apiUrl: string, text: string): Promise<Array<number> | undefined>`: Sends a POST request for embedding the text and returns an array of numbers.
+  - `invalidEmbedCall(apiUrl: string, text: string): Promise<Boolean>`: Sends a GET request which is expected to fail and returns a boolean indicating whether an error was caught.
+
+- **Tests**:
+  - The test suite named "Embed" contains several `it` blocks to test embedding functionality:
+    - **Failure cases**:
+      - Tests for incorrect session keys in both local and production environments, ensuring the API call should fail.
+    - **Success cases**:
+      - Tests for embedding a simple message with a valid session key in both local and production environments, expecting a valid embedding array.
+      - Tests for embedding a long message in the local environment, expecting a valid embedding array.
+
+- **Setup**:
+  - Utilizes `expect` for assertions and `mocha` for describing tests.
+  - Relies on `axios` for HTTP requests.
+  - Fetches environment configurations and embeds API URLs dynamically depending on the environment (local or production).
+
+- **Miscellaneous**:
+  - Specifies timeouts for each test case (20,000 milliseconds).
+
+**environment.test.ts**
+
+The code sets up a testing environment using `mocha` and `expect` modules. 
+
+It imports necessary functions and enums from external files i.e., `getEnvironment`, `getDefaultEnvironment`, and `EEnvironment`.
+
+The `describe` function defines a test suite named "Environment".
+
+Within this suite, the `it` function defines a test case to check if the default environment's name is the same as the local environment's name.
+
+The `expect` assertion ensures that the names are equal, signifying the default environment is local in the Mocha test context.
+
+Important functions:
+- `describe`
+- `it`
+- `getDefaultEnvironment`
+- `getEnvironment`
+
+**findenrichedchunks.test.ts**
+
+This module tests the functionality of fetching relevant chunks (small pieces of content) from a content repository based on given summaries and URLs using Mocha for the testing framework and Expect for assertions.
+
+Key classes and functions:
+- `commonChunkStoreTests`: This function conducts multiple tests to ensure chunks can be correctly retrieved based on both summaries and URLs for specified repositories.
+- `FindEnrichedChunkApi`: An API class used for finding enriched chunks based on provided queries.
+- `describe` and `it`: Mocha functions used to structure and define individual test cases.
+
+Tests:
+1. Looks for relevant chunks using summaries.
+2. Searches for relevant chunks using URLs.
+3. Validates chunk retrieval for matching URLs.
+
+**findtheme.test.ts**
+
+The code is written as a test suite using Mocha for testing, and Expect for assertions. It imports several necessary modules such as axios, an HTTP client for making requests, and environmental utilities from a common repository. 
+
+This module is primarily testing an API that finds themes in texts. The `describe` block contains multiple test cases (`it` blocks). 
+
+Two helper functions are defined: `validThemeCall`, which posts data to an API to get a theme, and `invalidThemeCall`, which tests for invalid session key handling. 
+
+The test cases cover both scenarios for valid and invalid session keys against local and production environments.
+
+**generatefluidtoken.test.ts**
+
+This code is a test suite using Mocha and Expect for a Fluid framework token generation and container connection using AzureClient.
+
+**Key Functions and Classes:**
+- `describe`: Defines the main test suite named "Generate Fluid Token".
+- `it`: Each test case focuses on token generation and container connection.
+- `FluidApi`: Responsible for generating tokens based on different environments and conditions.
+- `AzureClient`: Used to create and connect to Fluid containers.
+- `getEnvironment`: Retrieves environment settings for local or production configurations.
+- Async `sleep` function: Introduces delays in processes.
+
+**Tests Include:** 
+1. Ensuring token generation fails with incorrect session key.
+2. Valid token generation with the correct session key for local setup.
+3. Valid token generation with the correct session key for production setup.
+4. Connecting to a Fluid container, verifying created container interaction.
+
+**login.test.ts**
+
+This code defines a test suite for the `LoginApi` functionality.
+
+**Important Classes/Functions:**
+1. `describe`: Defines a suite of tests related to the "Login" functionality.
+2. `it`: Specifies individual test cases to be run within the test suite.
+3. `LoginApi`: The class under test, which handles login functionality.
+4. `EEnvironment` and `getEnvironment`: Both are imported to handle different login environments (local and production).
+
+**Test Cases:**
+1. "Needs to succeed with valid key in local environment": Tests successful login with a valid session key in the local environment.
+2. "Needs to fail with invalid key": Tests login failure with an invalid session key in the local environment.
+3. "Needs to succeed with valid key in production environment": Tests successful login with a valid session key in the production environment.
+4. "Needs to fail with invalid key in production environment": Tests login failure with an invalid session key in the production environment.
+
+Each test case utilizes the `LoginApi` class for logging in and uses `expect` to assert the expected outcomes. Additionally, each test has a timeout of 20 seconds.
+
+**model.test.ts**
+
+This code is a test suite for the `Model` functionality, authored by Braid Technologies Ltd in 2024. 
+
+**Important Classes and Functions**:
+- `describe` (from Mocha): Defines a suite of related tests for "Model".
+- `it` (from Mocha): Specifies individual test cases within the suite.
+- `expect` (from Expect): Handles assertions within test cases.
+- `getDefaultModel` and `getModel` (from IModelFactory): Functions to fetch default or specified models.
+
+**Test Cases**:
+1. Verify the existence of default model properties.
+2. Ensure specific model properties are defined.
+3. Check if small texts fit within the model's default chunk size.
+4. Validate large texts do not fit within the model's default chunk size.
+5. Assert small texts are chunked correctly (producing a single chunk).
+6. Confirm large texts are broken into multiple chunks.
+7. Ensure chunking with overlaps produces more chunks than without overlaps.
+
+**pagestore.test.ts**
+
+This module tests the functionality of saving and loading HTML pages in a local environment using the `PageRepositoryApi`. 
+
+The `loadHtmlFromFile` function reads HTML content from a file and returns it as a string, throwing an error if the file can't be read.
+
+In the `describe` block, the `StorablePage` test suite initializes the environment, API, and necessary data. The `it` test cases check if an HTML page can be saved and then loaded successfully. 
+
+Key classes/functions:
+- `loadHtmlFromFile`
+- `describe` (Mocha)
+- `it` (Mocha)
+
+Important imports include `axios`, `expect`, `randomKey`, `getEnvironment`, `PageRepositoryApi`, and `IStoredPage`.
+
+**querymodel.test.ts**
+
+This module is a test suite using Mocha and Expect libraries for a "QueryModel" service.
+
+It imports necessary utilities and defines three main test cases inside a `describe` block.
+
+- The first test case, "Needs to make a simple query," initializes the `QueryModelApi` object, makes a simple query, and asserts that the response is valid and non-empty.
+
+- The second test case, "Needs to make a query with history," builds a query with conversation history, sends it, and validates the response similarly to the first case.
+
+- The third test case, "Needs to generate questions based on a summary," tests question generation from a given summary and checks if the generated question is non-empty. 
+
+Key functions: `describe`, `it`. Key classes: `QueryModelApi`.
+
+**storable.ts**
+
+The code provides a set of utility functions for working with objects that implement the `IStorable` interface, using an API wrapper that implements `IStorableRepostoryApiWrapper`. 
+
+Important functions:
+1. **randomInt(min: number, max: number) -> number**:
+   Generates a random integer between the specified `min` and `max` values.
+
+2. **randomKey() -> string**:
+   Generates a random key as a string, using `randomInt` to create a random integer.
+
+3. **saveLoadRemove(api, record) -> Promise<boolean>**:
+   Tests saving, loading, and removing a record. Verifies each operation was successful using the `expect` function.
+
+4. **saveFindRemove(api, record) -> Promise<boolean>**:
+   Similar to `saveLoadRemove`, but tests saving, finding by functional search key, and removing the record.
+
+5. **failSave(api, record) -> Promise<boolean>**:
+   Tests that saving a record fails, and verifies this with `expect`.
+
+**summarise.test.ts**
+
+This module tests the `Summarise` API functionality using Mocha and Expect. The test suite includes multiple variations to validate the summarization process for different environments (local and production).
+
+Key functions:
+- `validSummaryCall(apiUrl: string, text: string)`: Makes a POST request to the API to get a summarization of the provided text, returning the summary.
+- `invalidSummaryCall(apiUrl: string, text: string)`: Makes a GET request to the API to check if an incorrect session key triggers an error.
+
+Key tests:
+- Tests for incorrect session key failures in both local and production environments.
+- Tests for summarizing both short and long messages in local and production environments.
+
+**testforsummarisefail.test.ts**
+
+This module tests the `TestForSummariseFail` API using Mocha and Expect frameworks. 
+
+It contains two key helper functions:
+1. `validCall(apiUrl, text, length)`: Sends a POST request to the API and returns the fail code if present.
+2. `invalidCall(apiUrl, text)`: Sends a GET request to the API, capturing any error indicating an invalid call.
+
+Key tests are:
+1. Ensures failure when an incorrect session key is provided.
+2. Validates that example texts result in recognized summary failures (both for local and production environments).
+
+Classes/Functions:
+- `validCall`: Helper function for valid API calls.
+- `invalidCall`: Helper function for invalid API calls.
+- Test cases with `describe` and `it` from Mocha.
+****************************************
+
+****************************************
 Api\test\storable.ts
 ****************************************
 'use strict';
@@ -6535,7 +6906,7 @@ Api\src\functions\FindTheme.Azure.ts
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 /**
  * @module FindTheme
@@ -6546,8 +6917,6 @@ Api\src\functions\FindTheme.Azure.ts
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
 import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility.Azure";
 
@@ -6576,7 +6945,7 @@ async function findThemeCall(text: string, length: number): Promise<string> {
       prompt: text
    }
 
-   let response = await modelDriver.generateResponse (EPromptPersona.kClassifier, prompt, {wordTarget: length});
+   let response = await modelDriver.generateResponse (EPromptPersona.kThemeFinder, prompt, {wordTarget: length});
 
    return (response.content);
 }
@@ -9440,6 +9809,146 @@ def test_get_page_missing_param():
     # Missing required 'id' parameter
     response = requests.get(url, timeout=request_timeout)
     assert response.status_code == 404
+****************************************
+
+****************************************
+ApiTest\test\ReadMe.Salon.md
+****************************************
+**chunk_test.py**
+
+This code is a testing module for a text chunking API endpoint at `/chunk`. It executes integration tests verifying the endpoint's functionality under various conditions.
+
+Classes/Functions:
+- `test_chunk_endpoint()`: Tests the chunking functionality with valid input data.
+
+Key Integration Points:
+- Utilizes `pytest` for running the tests.
+- Employs `requests` for making HTTP POST requests to the API.
+- `chunk_request_data()`: Pytest fixture to provide sample payload for testing.
+- `BASE_URL` and `chunk_url`: Define endpoint addresses.
+- Environment variable `SessionKey` is required for authentication.
+- Confirms API response status, checks if ‘chunks’ key exists in the response, and verifies validity of the chunked data format.
+
+**classify_test.py**
+
+This module tests the `/classify` endpoint of a classification API.
+
+The main classes/functions include `test_classification_request` and `test_invalid_classification_request`.
+
+`test_classification_request` sends a valid request with sample text and classifications, checks for a 200 OK response, and verifies that the response contains a valid classification.
+
+`test_invalid_classification_request` uses `pytest.mark.parametrize` to test different invalid classification request scenarios, ensuring the API returns a 400 status code for each.
+
+The tests rely on environment variables for a session key and a running API server at a specified `BASE_URL`. The `requests` module is used to send HTTP requests.
+
+**embed_test.py**
+
+This code is a test module for the embedding API endpoint at `/embed`, which generates vector embeddings from text inputs.
+
+The `BASE_URL` is configured for the local server, and the API endpoint includes a session key retrieved from environment variables. The endpoint URL for embedding is constructed as `embed_url`.
+
+The `test_embedding_request_structure` function simulates a valid embedding request, checks for a successful (200) response, verifies that the response contains an embedding list, and ensures all list elements are numeric.
+
+The `test_invalid_request_structure` function sends an invalid request (with a wrong field) and expects a 400 status code in response, indicating proper error handling for malformed requests.
+
+Important functions: `test_embedding_request_structure`, `test_invalid_request_structure`.
+
+**enumerate_models_test.py**
+
+This module tests the `enumerate_models` API endpoint for validating schema and functionality. 
+
+The `validate_enumerate_models_schema` function checks JSON instances against specific schema definitions provided in the `ENUMERATE_MODELS_API_SCHEMA`.
+
+The `test_ienumerate_models_request_valid` function ensures that a valid `IEnumerateModelsRequest` object adheres to the expected schema.
+
+The `test_ienumerate_models_response_valid` function validates a proper `IEnumerateModelsResponse` object against the schema.
+
+Various error-handling tests, such as `test_ienumerate_models_response_missing_fields` and `test_ienumerate_models_response_additional_fields`, check the response for missing or extra fields.
+
+The `test_enumerate_request` function sends an actual HTTP POST request to the endpoint and validates the response against the schema.
+
+Important elements include `validate_enumerate_models_schema`, `test_ienumerate_models_request_valid`, `test_ienumerate_models_response_valid`, `test_ienumerate_models_response_missing_fields`, `test_ienumerate_models_response_additional_fields`, and `test_enumerate_request`.
+
+**enumerate_repositories_test.py**
+
+This module tests the EnumerateRepositories API endpoint which returns a list of available repository IDs. 
+
+Important classes/functions:
+
+- `validate_response_vs_schema`: A helper function that validates API responses against a predefined schema using `jsonschema`.
+
+- `test_enumerate_repositories`: The main test function that sends a POST request to the endpoint and checks if the response status code is 200. It then validates the response against the predefined JSON schema.
+
+The base URL and session key for the API are configured using environment variables and concatenated to form the API endpoint URL. A response schema is defined to ensure that the API returns data in the expected format.
+
+**find_theme_test.py**
+
+This module tests the `/findtheme` API endpoint by validating request parameters and response formats. It includes test cases for both valid and invalid requests, such as when required fields are missing.
+
+The `BASE_URL` is configured for the API, and the endpoint URL is constructed using an environment variable `SESSION_KEY`.
+
+The `valid_request_data` fixture provides sample valid input data.
+
+The `test_find_theme_with_valid_request` function tests the API with valid input data, checking for a 200 status code and the presence of a "theme" in the response.
+
+The `test_find_theme_with_missing_text` and `test_find_theme_with_missing_length` functions test for 400 status codes when required fields are missing.
+
+Key components: `valid_request_data`, `test_find_theme_with_valid_request`, `test_find_theme_with_missing_text`, `test_find_theme_with_missing_length`.
+
+**page_repository_test.py**
+
+This script contains integration tests for the Page Repository API's `/getpage` endpoint.
+
+It verifies successful page retrieval with valid parameters and error handling for missing parameters and checks API authentication using session keys.
+
+A running local API instance on port 7071 and a valid session key set in the environment variables are required. 
+
+The main classes and functions are:
+- `test_get_page_success()`: Checks if a valid request returns a successful response with status code 200.
+- `test_get_page_missing_param()`: Checks if a request missing the required 'id' parameter returns a 404 status code.
+
+The base URL and session key are configured using environment variables.
+
+**studio_test.py**
+
+This module is designed to test the Studio Boxer API endpoints using `pytest`, `requests`, and `jsonschema`.
+
+- **BASE_URL** and **SESSION_KEY** are configured to define the API's base URL and session key.
+- **validate_response_vs_schema** validates API response data against a given JSON schema and reports any mismatch.
+- **test_IStudioBoxerResponseEnrichment_structure** checks the enrichment data structure for required fields and validates their data types.
+- **test_IStudioBoxerResponse_structure** ensures the main response is a list and validates each enrichment item in the list.
+- **test_studio_boxer** sends a request to the `/StudioForTeams-Boxer` endpoint to validate the response structure and contents.
+- **test_invalid_studio_request** tests the API's handling of invalid request data, expecting a 400 status code on bad data.
+
+Important functions:
+- `validate_response_vs_schema`
+- `test_IStudioBoxerResponseEnrichment_structure`
+- `test_IStudioBoxerResponse_structure`
+- `test_studio_boxer`
+- `test_invalid_studio_request`
+
+**summarise_test.py**
+
+This module contains integration tests for the text summarization API. It verifies the following scenarios:
+
+- Standard text summarization with a specified length.
+- Survey response summarization using a specialized persona.
+- Code summarization using a specialized persona.
+- Edge cases, including missing parameters, empty and invalid requests.
+
+Dependencies include `pytest` for the testing framework and `requests` for API interaction. Important environment variables are `SessionKey` for authentication and `BASE_URL` for the API endpoint.
+
+Main functions:
+- `summarise_endpoint_url()`: Constructs the summary endpoint URL.
+- `test_valid_summarise_request()`: Tests a valid summarization request.
+- `test_valid_summarise_survey_request()`: Tests a valid summarization request for surveys.
+- `test_valid_summarise_code_request()`: Tests code summarization.
+- `test_summarise_request_without_length()`: Tests summarization without length.
+- `test_summarise_request_missing_text()`: Tests summarization with missing text.
+- `test_empty_summarise_request()`: Tests empty summarization requests.
+- `get_current_source()`: Reads the current file's content for code summarization.
+
+This code ensures that the API handles different input scenarios properly.
 ****************************************
 
 ****************************************
@@ -14000,241 +14509,6 @@ export function looksLikeUuid(uuid: string): boolean {
 ****************************************
 
 ****************************************
-Boxer\coverage\base.css
-****************************************
-body, html {
-  margin:0; padding: 0;
-  height: 100%;
-}
-body {
-    font-family: Helvetica Neue, Helvetica, Arial;
-    font-size: 14px;
-    color:#333;
-}
-.small { font-size: 12px; }
-*, *:after, *:before {
-  -webkit-box-sizing:border-box;
-     -moz-box-sizing:border-box;
-          box-sizing:border-box;
-  }
-h1 { font-size: 20px; margin: 0;}
-h2 { font-size: 14px; }
-pre {
-    font: 12px/1.4 Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    margin: 0;
-    padding: 0;
-    -moz-tab-size: 2;
-    -o-tab-size:  2;
-    tab-size: 2;
-}
-a { color:#0074D9; text-decoration:none; }
-a:hover { text-decoration:underline; }
-.strong { font-weight: bold; }
-.space-top1 { padding: 10px 0 0 0; }
-.pad2y { padding: 20px 0; }
-.pad1y { padding: 10px 0; }
-.pad2x { padding: 0 20px; }
-.pad2 { padding: 20px; }
-.pad1 { padding: 10px; }
-.space-left2 { padding-left:55px; }
-.space-right2 { padding-right:20px; }
-.center { text-align:center; }
-.clearfix { display:block; }
-.clearfix:after {
-  content:'';
-  display:block;
-  height:0;
-  clear:both;
-  visibility:hidden;
-  }
-.fl { float: left; }
-@media only screen and (max-width:640px) {
-  .col3 { width:100%; max-width:100%; }
-  .hide-mobile { display:none!important; }
-}
-
-.quiet {
-  color: #7f7f7f;
-  color: rgba(0,0,0,0.5);
-}
-.quiet a { opacity: 0.7; }
-
-.fraction {
-  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-  font-size: 10px;
-  color: #555;
-  background: #E8E8E8;
-  padding: 4px 5px;
-  border-radius: 3px;
-  vertical-align: middle;
-}
-
-div.path a:link, div.path a:visited { color: #333; }
-table.coverage {
-  border-collapse: collapse;
-  margin: 10px 0 0 0;
-  padding: 0;
-}
-
-table.coverage td {
-  margin: 0;
-  padding: 0;
-  vertical-align: top;
-}
-table.coverage td.line-count {
-    text-align: right;
-    padding: 0 5px 0 20px;
-}
-table.coverage td.line-coverage {
-    text-align: right;
-    padding-right: 10px;
-    min-width:20px;
-}
-
-table.coverage td span.cline-any {
-    display: inline-block;
-    padding: 0 5px;
-    width: 100%;
-}
-.missing-if-branch {
-    display: inline-block;
-    margin-right: 5px;
-    border-radius: 3px;
-    position: relative;
-    padding: 0 4px;
-    background: #333;
-    color: yellow;
-}
-
-.skip-if-branch {
-    display: none;
-    margin-right: 10px;
-    position: relative;
-    padding: 0 4px;
-    background: #ccc;
-    color: white;
-}
-.missing-if-branch .typ, .skip-if-branch .typ {
-    color: inherit !important;
-}
-.coverage-summary {
-  border-collapse: collapse;
-  width: 100%;
-}
-.coverage-summary tr { border-bottom: 1px solid #bbb; }
-.keyline-all { border: 1px solid #ddd; }
-.coverage-summary td, .coverage-summary th { padding: 10px; }
-.coverage-summary tbody { border: 1px solid #bbb; }
-.coverage-summary td { border-right: 1px solid #bbb; }
-.coverage-summary td:last-child { border-right: none; }
-.coverage-summary th {
-  text-align: left;
-  font-weight: normal;
-  white-space: nowrap;
-}
-.coverage-summary th.file { border-right: none !important; }
-.coverage-summary th.pct { }
-.coverage-summary th.pic,
-.coverage-summary th.abs,
-.coverage-summary td.pct,
-.coverage-summary td.abs { text-align: right; }
-.coverage-summary td.file { white-space: nowrap;  }
-.coverage-summary td.pic { min-width: 120px !important;  }
-.coverage-summary tfoot td { }
-
-.coverage-summary .sorter {
-    height: 10px;
-    width: 7px;
-    display: inline-block;
-    margin-left: 0.5em;
-    background: url(sort-arrow-sprite.png) no-repeat scroll 0 0 transparent;
-}
-.coverage-summary .sorted .sorter {
-    background-position: 0 -20px;
-}
-.coverage-summary .sorted-desc .sorter {
-    background-position: 0 -10px;
-}
-.status-line {  height: 10px; }
-/* yellow */
-.cbranch-no { background: yellow !important; color: #111; }
-/* dark red */
-.red.solid, .status-line.low, .low .cover-fill { background:#C21F39 }
-.low .chart { border:1px solid #C21F39 }
-.highlighted,
-.highlighted .cstat-no, .highlighted .fstat-no, .highlighted .cbranch-no{
-  background: #C21F39 !important;
-}
-/* medium red */
-.cstat-no, .fstat-no, .cbranch-no, .cbranch-no { background:#F6C6CE }
-/* light red */
-.low, .cline-no { background:#FCE1E5 }
-/* light green */
-.high, .cline-yes { background:rgb(230,245,208) }
-/* medium green */
-.cstat-yes { background:rgb(161,215,106) }
-/* dark green */
-.status-line.high, .high .cover-fill { background:rgb(77,146,33) }
-.high .chart { border:1px solid rgb(77,146,33) }
-/* dark yellow (gold) */
-.status-line.medium, .medium .cover-fill { background: #f9cd0b; }
-.medium .chart { border:1px solid #f9cd0b; }
-/* light yellow */
-.medium { background: #fff4c2; }
-
-.cstat-skip { background: #ddd; color: #111; }
-.fstat-skip { background: #ddd; color: #111 !important; }
-.cbranch-skip { background: #ddd !important; color: #111; }
-
-span.cline-neutral { background: #eaeaea; }
-
-.coverage-summary td.empty {
-    opacity: .5;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    line-height: 1;
-    color: #888;
-}
-
-.cover-fill, .cover-empty {
-  display:inline-block;
-  height: 12px;
-}
-.chart {
-  line-height: 0;
-}
-.cover-empty {
-    background: white;
-}
-.cover-full {
-    border-right: none !important;
-}
-pre.prettyprint {
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-.com { color: #999 !important; }
-.ignore-none { color: #999; font-weight: normal; }
-
-.wrapper {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin: 0 auto -48px;
-}
-.footer, .push {
-  height: 48px;
-}
-****************************************
-
-****************************************
-Boxer\coverage\prettify.css
-****************************************
-.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
-****************************************
-
-****************************************
 Boxer\scripts\eval_pipeline.py
 ****************************************
 # Copyright (c) 2024 Braid Technologies Ltd
@@ -14521,6 +14795,78 @@ describe("Make new container", function () {
       expect (true).toBe (true);
    });         
 });
+****************************************
+
+****************************************
+Boxer\scripts\ReadMe.Salon.md
+****************************************
+**eval_pipeline.py**
+
+The code imports necessary modules, `ApiConfiguration` and `run_tests`, from local modules. It configures paths for test destination and chunk source directories. The `config` object is instantiated from the `ApiConfiguration` class. The script defines a list of off-topic questions that could be used for testing an AI model for various scenarios.
+
+Key classes/functions:
+- `ApiConfiguration`: Likely used to configure API settings.
+- `run_tests(config, TEST_DESTINATION_DIR, CHUNK_SOURCE_DIR, off_topic_questions)`: Function that runs tests based on provided configuration and data. 
+
+Finally, the script creates the test destination directory if it does not exist and runs tests with the specified parameters.
+
+**github_pipeline.py**
+
+This code imports various modules and classes to process and enrich text data from GitHub.
+
+The `MARKDOWN_DESTINATION_DIR` variable is set to a specific directory path where downloaded markdown files will be stored.
+
+`ApiConfiguration` is instantiated to create a configuration object named `config`.
+
+The `download_markdown` function is used to download markdown files from a list of URLs (`gitHubUrls`) and save them to the `MARKDOWN_DESTINATION_DIR`.
+
+Various enrichment functions, such as `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite`, are called to process the downloaded markdown files using the configuration.
+
+Finally, the `countUrlHits` function is used to count URL hits and save the results in specified JSON files in the output directory.
+
+**make_new_container.ts**
+
+This code is a test module designed to create a new container using Mocha for running tests and Expect for assertions.
+
+Main components: 
+- `Persona`: Represents an entity involved in the connection.
+- `BraidFluidConnection`: Establishes a connection and facilitates the creation of a new container.
+- `SessionKey`: Represents a session key, obtained from an environment variable, used for authenticated actions.
+
+The test suite named "Make new container" includes a single test case. Within the test, a local persona is initialized, and a `BraidFluidConnection` instance is created. The session key is verified to be defined before attempting to create a new container. If successful, the conversation key is logged; otherwise, errors are caught and logged.
+
+**web_pipeline.py**
+
+This script performs web data downloading and text enrichment.
+
+The `HTML_DESTINATION_DIR` is set to "data/web", ensuring the directory exists. Configurations are managed by the `ApiConfiguration` class.
+
+Web URLs from `webUrls` are iterated over and the `download_html` function is called to retrieve web pages, storing them in `HTML_DESTINATION_DIR`.
+
+Text enrichment functions: `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite` are called to process the downloaded HTML files.
+
+Results are stored in `ENRICHMENT_OUTPUT_DIR`, and `countUrlHits` is used to evaluate the processed URLs, writing statistics to "hit_test_results_web.json".
+
+Important functions/classes: `ApiConfiguration`, `download_html`, `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, `enrich_lite`, `countUrlHits`.
+
+**youtube_pipeline.py**
+
+This script starts with standard library imports, logging configuration, and imports of various local modules. 
+
+The `TRANSCRIPT_DESTINATION_DIR` variable sets the directory for storing downloaded transcripts. The `ensure_directory_exists` function ensures that this directory exists. 
+
+A configuration object, `config`, is created using `ApiConfiguration`.
+
+The script iterates over `youTubeUrls`, logs the URL being processed, and downloads the transcripts using `download_transcripts`.
+
+It then enriches the transcripts in stages:
+1. `enrich_transcript_chunks`
+2. `enrich_transcript_summaries`
+3. `enrich_transcript_embeddings`
+
+Lastly, `enrich_lite` is used for a final level of enrichment, and `countUrlHits` counts the URL hits for analysis. 
+
+Key classes/functions: `ApiConfiguration`, `youTubeUrls`, `ensure_directory_exists`, `download_transcripts`, `enrich_transcript_chunks`, `enrich_transcript_summaries`, `enrich_transcript_embeddings`, `enrich_lite`, `countUrlHits`.
 ****************************************
 
 ****************************************
@@ -16567,6 +16913,248 @@ describe("Queue", function () {
       expect(queue.peek()).toEqual("Two");
    });
 });
+****************************************
+
+****************************************
+Boxer\test\ReadMe.Salon.md
+****************************************
+**activityrecord.test.ts**
+
+This code defines a set of Mocha tests for the `ActivityRepository` module of an application.
+
+The `describe` function from Mocha is used to group these tests under the "ActivityRepository" label. Within this function, individual tests are defined using the `it` function.
+
+Before running the tests, the code retrieves a `SessionKey` from the environment variables, verifies it, and then obtains a record repository using `getRecordRepository`.
+
+Key classes and functions include: `IStoredUrlActivity`, `IStoredLikeUrlActivity`, `IStoredMessageActivity`, `getDefaultKeyGenerator`, `getRecordRepository`, `throwIfUndefined`, and the Mocha constructs `describe` and `it`.
+
+Each test case covers different functionalities such as saving, loading, and removing records for different types of activities. These activities include URL records, like/dislike records, and message records.
+
+**adminrespository.test.ts**
+
+The code is a test module using Mocha and Expect to verify the behavior of the DefaultAdminRepository class within an admin repository context.
+
+The `describe` function creates a test suite named "AdminRespository".
+
+The `it` functions define two test cases:
+1. The first test checks if a persona named "Jon Verrier" is recognized as an administrator by calling the `isAdmin` method of the `DefaultAdminRepository` class and expecting the result to be true.
+2. The second test checks if a persona with a different name does not get recognized as an administrator, expecting the result to be false.
+
+`doSomethingAsync` is a helper function that increments a counter variable. 
+
+Important classes/functions are `DefaultAdminRepository`, `Persona`, and `EIcon`.
+
+**aiconnection.test.ts**
+
+The code provided sets up a test suite using Mocha for the `AIConnection` and various utility functions imported from the '../core' and '../../CommonTs/src' directories.
+
+**Important Classes/Functions:**
+1. **Persona**: Represents an author or bot within the messaging system.
+2. **Message**: Represents messages exchanged in the communication system.
+3. **AIConnection**: Performs operations related to AI such as identifying bot messages or requests.
+4. **SessionKey**: Used for authenticated interactions with external services.
+5. **makeSummaryCall**: An API call to summarize text via an external service.
+
+**Tests:**
+- Determine whether a message is from a bot or a human.
+- Identify requests intended for the bot.
+- Handle near-miss bot requests.
+- Handle reference errors safely.
+- Build request objects from messages.
+- Interface with an OpenAI endpoint using streaming and basic APIs.
+- Validate API responses and handle token limits correctly.
+- Call summarization with appropriate session keys.
+
+Each `describe` and `it` section defines specific tests to ensure these functionalities work as expected.
+
+**caucus.test.ts**
+
+### Summary
+
+1. **Classes and Functions**:
+   - `MockLocation`: Mocks the browser's location object.
+   - `wait`: An asynchronous function that delays execution for 500 milliseconds.
+   - Event handlers `onAdd`, `onChange`, and `onRemove` for certain operations.
+   - `describe`, `it`: Mocha functions used for structuring tests.
+
+2. **Test Setup & Cleanup**:
+   - `describe("Caucus")`: Defines a series of tests for the "Caucus" functionality.
+   - `beforeEach` and `afterEach`: Hooks to set up and tear down the test environment.
+   - Initialization involves creating `persona` and `newConnection`, and replacing `global.location` with `mockLocation`.
+
+3. **Test Cases**:
+   - `"Can create a valid caucus"`: Tests creation, addition, modification, and removal of `Persona` objects.
+   - `"Can detect invalid operations"`: Verifies error handling for invalid operations.
+   - `"Can synchronise"`: Tests synchronizing a `caucus` with a `synchMap` containing `Persona` objects.
+   - `"Can remove all"`: Tests the ability to remove all `Persona` objects from the `caucus`.
+   - `"Can return an ordered array"`: Ensures messages in the `caucus` are ordered by `sentAt` timestamp.
+   - `"Can manage a large volume of members"`: Stresses the system by managing a large number of `Message` objects, and measures performance.
+
+4. **Important Classes**:
+   - `Persona`, `Message`, `Interest`, `NotificationFor`, `BraidFluidConnection`, `EIcon`, `SessionKey`, `ConversationKey` from the core module.
+
+5. **Assertions**:
+   - Used `expect` for various assertions to validate test outcomes. 
+
+This code comprehensively tests various functionalities of the `Caucus` system, including creation, synchronization, large volume management, and error handling.
+
+**chunk.test.ts**
+
+The code tests the functionality of the ChunkRepository module.
+
+**describe("ChunkRepository", function () {})**: This is a Mocha test suite that groups related tests for the ChunkRepository.
+
+**it("Needs to identify related content given an input URL", async function () {})**: This test verifies that given a YouTube URL, the FindEnrichedChunkApi can find related content with a specified similarity threshold. It expects the response to contain one relevant chunk.
+
+**it("Needs to identify starter content", async function () {})**: This test checks if the FindEnrichedChunkApi can find starter content given a summary of an article, ensuring the response contains one relevant chunk.
+
+**Key classes/functions**:
+- **FindEnrichedChunkApi**: Interface for querying related content.
+- **getEnvironment**: Retrieves the environment configuration.
+- **EChunkRepository**: Enum for content repositories.
+- **findRelevantChunksFromUrl**: Finds related content from a given URL.
+- **findRelevantChunksFromSummary**: Finds related content from a given summary.
+
+**Dependencies**:
+- **expect**: Assertion library.
+- **mocha**: Testing framework.
+- **EEnvironment** and **KStubEnvironmentVariables**: For environment setup.
+
+**debounce.test.ts**
+
+This code is a test suite for the `debounce` function, written in JavaScript using Mocha and Expect.js for testing.
+
+It starts by importing necessary modules, including the `debounce` function, `expect`, `describe`, and `it`.
+
+An `async` function `wait` is defined to pause execution for 1 second.
+
+A test suite named "Debounce" is defined using `describe`, which contains two test cases.
+
+The first test case checks if the debounce function works asynchronously by ensuring a function is called after a pause.
+
+The second test case ensures that multiple calls to the debounced function still result in the function being called at least once.
+
+**embedding.test.ts**
+
+This code is a set of automated tests for the `FindEnrichedChunkApi` using the Mocha testing framework and the Expect assertion library.
+
+The `describe` block "Embedding" contains several `it` tests that check if the API can find relevant document chunks.
+
+The tests query different types of documents (YouTube link, HTML document, simple text, and markdown text). Each query specifies parameters like `repositoryId`, `url` or `summary`, `maxCount`, and `similarityThreshold`.
+
+The `expect` statement asserts that the API returns exactly one relevant chunk for each query, indicating the function works as intended.
+
+**Important classes/functions:**
+- `describe`
+- `it`
+- `FindEnrichedChunkApi`
+- `getEnvironment`
+- `expect`
+
+**errors.test.ts**
+
+This code imports necessary testing modules, `expect` from 'expect' and `describe, it` from 'mocha', to set up test cases. 
+
+It imports custom error classes: `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, and `InvalidStateError` from '../core/Errors'. 
+
+The `describe` block outlines a series of tests named "Errors". 
+
+Each `it` block tests the creation of a specific custom error object, validates that the `message` property of each error object equals the predefined message "What". 
+
+Important functions and classes: `describe`, `it`, `expect`, `InvalidParameterError`, `InvalidOperationError`, `ConnectionError`, `EnvironmentError`, and `InvalidStateError`.
+
+**joinpagevalidator.test.ts**
+
+This code is a set of unit tests using Mocha, Expect, and various other modules to validate the functionality of `JoinPageValidator` and `JoinDetails` classes.
+
+Key functions and classes:
+1. `describe`: Groups related tests.
+2. `it`: Individual test specifications.
+3. `JoinPageValidator`: Validates the components needed to join a session.
+4. `JoinDetails`: Parses and validates join details from a string.
+5. `SessionKey` and `ConversationKey`: Represent unique keys for sessions and conversations.
+6. `IKeyGenerator`: Interface for key generation.
+7. `getDefaultKeyGenerator`: Provides a default implementation of `IKeyGenerator`.
+
+The tests check for invalid and valid name, session key, conversation key, and overall validation.
+
+**like.test.ts**
+
+This code tests the `Like` class from the `../core/Like` module using the Mocha testing framework and Expect module for assertions. 
+
+It initializes variables with sample data, defining `me` and `them`, and their corresponding dates. 
+
+The `describe` function is used to group tests for the `Like` class. 
+
+Within this block, the `it` function defines individual tests:
+- Verifying the construction of an empty `Like` object.
+- Testing equality and inequality comparisons between `Like` objects.
+- Detecting inequality based on the `when` attribute (dates).
+- Ensuring the correct storage of attributes.
+- Checking the copy constructor functionality.
+- Testing the modification of `Like` object's attributes.
+- Converting `Like` objects to and from JSON format.
+
+**message.test.ts**
+
+This module tests the functionality of the `Message` class using the Mocha testing framework along with the Expect library for assertions. The primary classes and functions used are `Message`, `IKeyGenerator`, `getDefaultKeyGenerator`, `MDynamicStreamable`, and `describe` & `it` from Mocha.
+
+The `Message` class is instantiated with various parameters like `id`, `authorId`, `responseToId`, `text`, and `sentAt`. Test cases verify the construction of empty objects, allow undefined IDs, detect invalid IDs, and test attribute storage, equality, and inequality, especially focusing on dates.
+
+Additional tests ensure the `Message` class handles JSON serialization/deserialization, dynamic creation, and copying, and correctly manages attributes, including those with Knowledge Sources attached. Furthermore, tests also check changing attributes, detecting errors when modifying IDs, and token counting with Knowledge Sources attached.
+
+**notification.test.ts**
+
+This code is a test suite for testing a notification framework written using Mocha and Expect. It imports and tests various functionalities including `Interest`, `Notification`, `NotificationFor`, `ObserverInterest`, `Notifier`, `IObserver`, `NotificationRouter`, and `NotificationRouterFor` from the `NotificationFramework`. 
+
+A mock observer `MockObserver` implementing the `IObserver` interface is created, which stores the last notification received.
+
+The test cases ensure that `Interest`, `Notification`, `ObserverInterest`, `NotificationRouter`, and `NotificationRouterFor` objects can be created, compared for equality, and assigned correctly. 
+
+The final test confirms that notifications are properly sent from `Notifier` to observers through various routes, including standard notifications and those with payloads.
+
+**persona.test.ts**
+
+This code is a set of unit tests for the `Persona` class using Mocha and Expect frameworks. 
+
+Functions `describe`, `it`, and `expect` are used to structure and assert the tests. 
+
+Tests include constructing a `Persona` object, validating fields, and checking object methods such as equality, JSON conversion, and setting attributes.
+
+Several attributes of `Persona` are initialized and tested, including `id`, `name`, `email`, `thumbnail`, and `lastSeenAt`.
+
+Functions tested include equality checks, error handling, and JSON serialization/deserialization.
+
+Key classes and functions mentioned are `Persona`, `EIcon`, `IKeyGenerator`, `MDynamicStreamable`, `getDefaultKeyGenerator`, and `Persona.unknown`.
+
+**queue.test.ts**
+
+This code is a test module for the `Queue` class located in the `../core/Queue` file. It uses the testing libraries `expect` and `mocha`.
+
+Three test cases are defined within the `describe` block:
+1. `"returns empty when initialised."`: This test checks if a newly instantiated `Queue` object is empty by asserting that `peek` returns `undefined`.
+2. `"Enqueues & dequeues single item."`: This test ensures that the queue behaves correctly when a single item is enqueued and then dequeued. It checks the values returned by `peek` before and after the dequeue operation.
+3. `"Enqueues & dequeues multiple items."`: This test verifies that the queue handles multiple items by checking the order of items returned by `peek` before and after dequeue operations.
+
+Key functions are `describe`, `it`, `enqueue`, `dequeue`,  and `peek`.
+
+**sharedembedding.test.ts**
+
+The code tests the `SharedEmbedding` class using the Mocha framework and the `expect` assertion library. It performs various test cases to ensure the class functions correctly under different scenarios.
+
+The `describe` block defines the suite of tests for `SharedEmbedding`, within which multiple `it` blocks define individual test cases. These tests include constructing objects, handling undefined and invalid IDs, equality checks, attribute storage and modification, JSON serialization/deserialization, dynamic creation, and processing of likes and unlikes.
+
+Important classes and functions include `SharedEmbedding`, `IKeyGenerator`, `getDefaultKeyGenerator`, and `MDynamicStreamable.resurrect`.
+
+**uuid.test.ts**
+
+This code is a test suite for UUID generation and validation functionality.
+
+The main classes and functions used are `IKeyGenerator` and `getDefaultKeyGenerator`. The key generator is obtained using the `getDefaultKeyGenerator` function.
+
+The test suite is divided into two `describe` blocks. The first block tests UUID creation, validation, and secret generation using the `IKeyGenerator`. Key functions include `generateKey` for creating UUIDs and `generateSecret` for generating secret values.
+
+The second `describe` block tests UUID functionality when `Blob` is undefined. It includes `beforeEach` and `afterEach` hooks to modify and reset the global `Blob` object.
 ****************************************
 
 ****************************************
@@ -19296,6 +19884,168 @@ export const MainPageMessageRow = (props: IMainPageMessageProps) => {
 ****************************************
 
 ****************************************
+Boxer\ui\ReadMe.Salon.md
+****************************************
+**AnimatedIconButton.tsx**
+
+The code defines a React component `AnimatedIconButton` with type `IAnimatedIconButtonProps`. It renders a button with an animated lightbulb icon that changes colors in a sequence.
+
+`useForceUpdate` is a custom hook for triggering component re-renders.
+
+`EAnimatedIconButtonTypes` is an enumeration defining different icon types, current containing `kLightBulb`.
+
+`animatedColourSequence` and `staticColourSeqeunce` define color sequences used for animation.
+
+`animatedGlowIcon` uses Fluent UI's `makeStyles` to style the icon.
+
+The `AnimatedIconButton` uses `useState` to manage animation sequence state and `useEffect` to trigger color animation at an interval.
+
+The component utilizes Fluent UI components for the icon, menu, and menu actions.
+
+**AppEntry.tsx**
+
+This code provides a React component `App` that serves as the main application entry point. It uses Fluent UI components for styling and layout, specifically with a dark theme.
+
+The `App` component initializes a `Persona` object and manages state variables for messages, session keys, and conversation keys, using React hooks (`useState`).
+
+Key functionalities include handling URL hash values for join details, managing session and conversation keys, and providing various error handling functions such as `onConnectError`, `onFluidError`, and `onAiError`.
+
+The component renders various child components like `MainPageMessageRow`, `ConversationControllerRow`, and `JoinPane`, passing necessary props and handlers.
+
+Important classes and functions:
+1. `Persona`
+2. `JoinDetails`
+3. `SessionKey`, `ConversationKey`
+4. `getDefaultLoginEnvironment`
+5. `getDefaultKeyGenerator`
+6. `onConnect`
+7. `onConnectError`
+8. `onFluidError`
+9. `onAiError`
+10. `onDismissMessage`
+
+**ColumnStyles.tsx**
+
+This code defines a module for styling components using Microsoft's Fluent UI library. 
+
+It imports necessary components and themes from '@fluentui/react-components', as well as a constants file 'UIStrings'.
+
+The `innerColumnStyles` function creates a column layout with styles for alignment, spacing, and maximum width.
+
+The `innerColumnMidStyles` function sets a row layout for elements.
+
+The `innerColumnFooterStyles` function creates footer styles, aligning items to the end with auto margin on top.
+
+The `textFieldStyles` function ensures text fields occupy full width. 
+
+Important classes/functions: `innerColumnStyles`, `innerColumnMidStyles`, `innerColumnFooterStyles`, `textFieldStyles`, `makeStyles`.
+
+**ConversationController.tsx**
+
+The `ConversationController` module manages conversations in a chat application, interacting with shared resources like messages, participants, and embeddings, and updating its state accordingly.
+
+The main React component, `ConversationControllerRow`, initializes and maintains states for the conversation, audience, connection, and joining status using React hooks. It connects to a backend service, handles session management, determines if the user is an admin, and updates the user interface.
+
+The module provides functionality to add and manage messages, handle user interactions (like, unlike, click on URLs), and record these in a repository. Functions for user actions include exiting or trimming conversations, and view refresh.
+
+Key functions include `makeInitialSuggestion` for initial prompts, `initialiseConnectionState`, `onSend`, `onCancelSuggestedContent`, and `onStreamedUpdate`. Error handling involves managing busy states and unhooking live updates.
+
+Important classes and functions:
+1. `ConversationControllerRow`
+2. `addMessage`
+3. `initialiseConnectionState`
+4. `makeInitialSuggestion`
+5. `onSend`
+6. `onCancelSuggestedContent`
+7. `onStreamedUpdate`
+8. `onExitConversation`
+9. `onTrimConversation`
+10. `onUnlikeUrl`
+11. `onLikeUrl`
+12. `onClickUrl`
+13. `onDeleteMessage`
+14. `refreshLocalState`
+15. `refreshAndForceUpdate`
+16. `JoinPageValidator`
+17. `BraidFluidConnection`
+18. `ConversationView`
+
+**ConversationMessagePrompt.tsx**
+
+**`IMessagePromptProps` interface**
+
+- Defines properties for `MessagePrompt` component including `message`, `onSend`, and `onChange` functions.
+
+**`textFieldStyles`**
+
+- Creates styles for different sections of the `MessagePrompt` component.
+
+**`wrapText` function**
+
+- Handles wrapping of text within a given width, computes the necessary height, and returns the computed height based on text length and line separation.
+
+**`calculateDyNeeded` function**
+
+- Uses the `wrapText` function to determine the vertical space required to render text in a textarea, utilizing an `OffscreenCanvas` for measurement.
+
+**`MessagePrompt` function component**
+
+- Defines functional component `MessagePrompt` using React. Manages width state and calculates necessary height for the textarea based on input text length. Handles input changes and key events, specifically commit operation on Ctrl+Enter. 
+
+Main functionalities include dynamic text area resizing, text input handling, and triggering defined `onSend` or `onChange` actions.
+
+**ConversationPane.tsx**
+
+The `IConversationHeaderProps`, `IConversationViewProps`, `ISingleMessageViewProps`, `IAuthorIconProps`, and `IRelevantChunkProps` interfaces define properties for their respective components. 
+
+The `ConversationHeaderRow` component renders the conversation header, including toolbar buttons for copying URL, chat level control, trimming, and exiting. It also displays audience members using a partitioned avatar group.
+
+The `ConversationView` component renders `ConversationHeaderRow`, a list of messages, and an input view, using React hooks for scroll management.
+
+The `splitByDoubleNewline` function splits a string by double newlines and filters out empty strings.
+
+The `RelevantChunkView` component displays relevant content chunks with dynamic styling, event handling, and data segmentation.
+
+The `SingleMessageView` component shows individual messages with author details, deletion options for authors/admins, and nested relevant chunk display.
+
+The `InputView` component allows users to input and send messages, handling state and validation, and includes AI content suggestions.
+
+**JoinPane.tsx**
+
+This code defines a `JoinPane` React component used for joining conversations with validation. It imports several packages from `@fluentui/react-components` for UI elements and icons.
+
+The `JoinPane` component uses the `useState` hook to manage state for session keys and selected conversation names. It contains several nested functional components like `onConversationSelect`, `onKeyChange`, and `onTryJoin` for handling events.
+
+Styling is managed using the `makeStyles` utility from Fluent's library, defining classes like `joinPageInnerStyles`, `joinFormRowStyles`, `buttonDisabledStyles`, and `dropdownStyles`.
+
+The `conversationKeyFromName` function maps conversation names to their keys based on environment configurations. The component structure includes inputs for session keys and a dropdown for conversation selection, with corresponding handlers for form submission and state updates.
+
+**MainPageMessage.tsx**
+
+The code imports various components and icons from the `@fluentui/react` library and other modules. 
+
+`EMainPageMessageTypes` is an enumeration specifying different types of messages, including `info`, `warning`, `error`, `success`, and `nothing`.
+
+`IMainPageMessageProps` is an interface that defines the properties for the main message component, including `intent`, `text`, `dismissable`, and `onDismiss` function.
+
+`MainPageMessageRow` is a React functional component that displays a message bar based on the props. It styles the component using `makeStyles`, shows a `MessageBarGroup`, and includes a dismiss button if the message is dismissable.
+
+Important classes/functions: `EMainPageMessageTypes`, `IMainPageMessageProps`, `MainPageMessageRow`.
+
+
+
+**UIStrings.ts**
+
+This code module defines an `enum` called `EUIStrings` containing string constants used across a user interface for joining conversations and interactions with an AI named "@Boxer." It includes prompts, error messages, and instructional texts utilized within the application's UI elements.
+
+The `initialQuestions` variable is an array of strings containing various questions related to generative AI and language learning models (LLMs). These questions cover a wide range of topics, including use cases, tokenization, embeddings, fine-tuning models, text generation strategies, evaluation metrics, ethical considerations, and other technical aspects of interacting with and managing LLMs.
+
+Key components:
+- `EUIStrings` (enum)
+- `initialQuestions` (Array of strings)
+****************************************
+
+****************************************
 Boxer\ui\UIStrings.ts
 ****************************************
 // Copyright (c) 2024 Braid Technologies Ltd
@@ -19494,6 +20244,41 @@ def get_embedding(text : str, client : AzureOpenAI, config : ApiConfiguration):
                                    timeout=config.openAiRequestTimeout)
    
    return response.data[0].embedding
+****************************************
+
+****************************************
+Boxer\scripts\common\ReadMe.Salon.md
+****************************************
+**ApiConfiguration.py**
+
+The provided code checks whether the Azure mode is enabled via a boolean variable `azure`. Based on the value, it sets appropriate API parameters such as `API_TYPE`, `API_KEY`, `API_VERSION`, and `RESOURCE_ENDPOINT` for Azure or OpenAI services.
+
+The `ApiConfiguration` class initializes and holds various configurations for an API service. It includes attributes like `apiKey`, `apiVersion`, and `resourceEndpoint`, as well as specific parameters for Azure deployments, model names, processing threads, request timeouts, and constraints on summary length, video chunk duration, token limits, and article indexing.
+
+Important class:
+- `ApiConfiguration`: Stores API-related configuration settings.
+
+**common_functions.py**
+
+The code imports essential libraries, including `os` for file system operations and `AzureOpenAI` for working with the OpenAI API.
+
+The `ApiConfiguration` class is imported from `common.ApiConfiguration` and an instance of it is created.
+
+The `ensure_directory_exists` function checks if a specified directory exists. If it doesn't, the function creates the directory using `os.makedirs`.
+
+A directory path `HTML_DESTINATION_DIR` is constructed using `os.path.join` for cross-platform compatibility, and `ensure_directory_exists` ensures this directory is created.
+
+The `get_embedding` function generates an embedding for a given text using `AzureOpenAI`. It replaces newline characters with spaces, creates an embedding with the provided model configuration, and returns the embedding result.
+
+**Urls.py**
+
+This code defines a data processing script in Python. It imports essential libraries such as `os`, `json`, and `logging` for file handling, JSON operations, and logging respectively.
+
+There are three pre-defined lists (`youTubeUrls`, `gitHubUrls`, `webUrls`) containing various URL categories and descriptions.
+
+A `UrlHit` class is defined to store information about each URL, including its path, description, and hit count.
+
+The `countUrlHits` function processes a JSON file containing usage data to count hits for each URL. It logs errors for missing input files and accumulates hit counts for URLs based on tracking IDs. Finally, it prints results and saves them to an output file.
 ****************************************
 
 ****************************************
@@ -19800,6 +20585,22 @@ def download_markdown(repoSourceDir, repoName, markdownDestinationDir):
 ****************************************
 
 ****************************************
+Boxer\scripts\github\ReadMe.Salon.md
+****************************************
+**download_markdown.py**
+
+This script downloads Markdown file transcripts from a specified GitHub repository and converts them to plain text, saving both the text and metadata in JSON format.
+
+### Important Classes and Functions:
+- **Counter**: A thread-safe counter to keep track of processed files.
+- **makeSourceId(repoSourceDir, repoName, filePath)**: Constructs a unique source ID for each Markdown file.
+- **md_to_plain_text(md)**: Converts Markdown content to plain text using BeautifulSoup.
+- **get_markdown(fileName, counter_id, repoSourceDir, repoName, markdownDestinationDir, logger)**: Reads and converts Markdown files to plain text, then saves them with metadata in JSON format.
+- **process_queue(q, repoSourceDir, repoName, markdownDestinationDir, logger)**: Processes a queue of files using multiple threads.
+- **download_markdown(repoSourceDir, repoName, markdownDestinationDir)**: Main function to manage downloading and processing Markdown files.
+****************************************
+
+****************************************
 Boxer\scripts\test\README.md
 ****************************************
 # Test Scripts README
@@ -19896,6 +20697,63 @@ If you encounter any issues while running the tests:
 2. Check that your `.env` file contains the necessary API keys.
 3. Verify that you're running the tests from the correct directory.
 4. If a specific test is failing, review the error message and stack trace for more information.
+****************************************
+
+****************************************
+Boxer\scripts\test\ReadMe.Salon.md
+****************************************
+**test_3chunks_web_pipeline.py**
+
+This code configures and runs unit tests for various functions related to text processing and HTML downloading. 
+
+- It uses **pytest** for running tests and **unittest.mock** for creating mock objects and patching dependencies.
+- Key functions from the `enrich_text_chunks` and `download_html` modules are tested, including `append_text_to_previous_chunk`, `add_new_chunk`, `parse_json_mdd_transcript`, and `enrich_text_chunks`.
+- Mock configurations, tokenizers, and metadata are created to simulate the actual environment in which these functions would run.
+- The **mock_open** and **patch** decorators are used to mock file operations and external HTTP requests, allowing for isolated testing.
+- Fixture `mock_file_system` creates a temporary directory structure for testing file system interactions.
+
+**test_utility.py**
+
+This code processes a list of questions through a test pipeline, using OpenAI's API for generating AI-based responses. 
+
+It includes main functions: `get_enriched_question`, `get_text_embedding`, `get_followup_question`, and `assess_followup_question`, all of which use chatGPT for different tasks like enriching a question, getting text embeddings, generating follow-up questions, and assessing if a follow-up is AI-related, respectively. 
+
+The `test_result` class holds results for each test. 
+
+The `run_tests` function initializes logging, processes each question, calculates similarity scores for embeddings, and then gets and assesses follow-up questions, finally saving results to a JSON file. The similarity is computed using the `cosine_similarity` function from NumPy.
+
+**test_web_pipeline.py**
+
+This code tests the functionality of an HTML download and text enrichment pipeline. 
+
+The `create_mock_html_files` function generates mock HTML and metadata files for testing. 
+
+The `test_chunk_addition` function verifies that these chunks are created and processed correctly, checking their integrity and content.
+
+Fixtures like `test_output_dir` and `config` create temporary directories and configuration instances for testing purposes. 
+
+`check_content` verifies that the downloaded content contains data from specific URLs.
+
+`run_pipeline` handles the flow of enriching text chunks, summaries, embeddings, and running lightweight enrichment.
+
+`verify_hit_counts` checks that the expected number of sources has been hit through the processing.
+
+`test_web_pipeline` drives the end-to-end testing of downloading HTML, running the pipeline, and verifying results.
+
+**test_youtube_pipeline.py**
+
+This module is a script designed to test the process of downloading, enriching, and verifying YouTube video transcripts.
+
+- **IgnoreSpecificWarningsFilter (Class)**: Defines a logging filter to ignore specific warning messages.
+- **test_output_dir (Function)**: Pytest fixture that creates a temporary directory for storing test outputs.
+- **config (Function)**: Pytest fixture that creates and returns an instance of the `ApiConfiguration` class.
+- **check_content (Function)**: Verifies if specific content is present in a JSON file.
+- **run_pipeline (Function)**: Runs the entire pipeline of transcript enrichment processes.
+- **verify_hit_counts (Function)**: Checks hit counts for source URLs and compares them to the expected number.
+- **test_youtube_pipeline (Function)**: Comprehensive test function for the YouTube pipeline.
+- **test_get_transcript_exceptions (Function)**: Tests `get_transcript` function for various error scenarios using parameterized exceptions.
+- **test_get_transcript_success (Function)**: Tests the `get_transcript` function for successful scenarios.
+- **test_get_transcript_file_exists (Function)**: Tests the `get_transcript` function when the transcript file already exists.
 ****************************************
 
 ****************************************
@@ -21737,6 +22595,86 @@ def enrich_text_summaries(config, destinationDir):
 ****************************************
 
 ****************************************
+Boxer\scripts\text\ReadMe.Salon.md
+****************************************
+**enrich_lite.py**
+
+This script processes a JSON file by removing specific fields ("text" and "description") from each dictionary within a list of dictionaries, and then saves the modified version as a new JSON file.
+
+**Key components**:
+- `remove_text(segments)`: Function that iterates through a list of dictionaries and removes the keys "text" and "description".
+- `enrich_lite(destinationDir)`: Main function that reads the input JSON file, uses `remove_text` to process the data, and writes the result to a new JSON file.
+
+It also includes error logging if the destination directory is not provided and logs the total number of segments processed.
+
+**enrich_text_chunks.py**
+
+The script generates a master CSV file from transcript files by processing JSON files.
+
+`MddSegment`: A class that represents a segment of an MDD file, containing text, start time, and duration.
+
+`gen_metadata_master`: Cleans and generates metadata for each transcript.
+
+`clean_text`: Cleans text by removing unwanted characters and formatting issues.
+
+`append_text_to_previous_chunk`: Ensures smooth context transition by appending a portion of the text to the previous chunk.
+
+`add_new_chunk`: Adds a new chunk of text to the list of chunks if it meets the required length.
+
+`parse_json_mdd_transcript`: Parses the JSON MDD file to extract text, segment it appropriately, and handle token limits and transitions between chunks.
+
+`get_transcript`: Retrieves and processes the transcript from an MDD file, checking the file's existence and updating the total processed files.
+
+`enrich_text_chunks`: Manages the entire process, setting up logging, initializing variables, iterating over JSON files in the specified directory, and saving the processed chunks to a master JSON file.
+
+Important global variables: `PERCENTAGE_OVERLAP`, `AVERAGE_CHARACTERS_PER_TOKEN`, `AVERAGE_WORDS_PER_MINUTE`, `AVERAGE_TOKENS_PER_WORD`, `total_files`.
+
+**enrich_text_embeddings.py**
+
+### Summary:
+
+The script creates text embeddings using the OpenAI API and enriches text data stored in JSON files.
+
+**Important Classes/Functions:**
+
+- **normalize_text:** Cleans and normalizes input text by removing extra spaces and newlines.
+  
+- **get_text_embedding:** Attempts to fetch text embeddings from the OpenAI API with retry logic for handling exceptions.
+    
+- **process_queue:** Processes chunks of text in a queue to retrieve embeddings or retrieve cached embeddings, then stores the results.
+    
+- **enrich_text_embeddings:** Configures logging, sets up the OpenAI client, reads chunks from a JSON file, initializes processing threads, and outputs the enriched data back to a JSON file.
+
+### Points:
+
+1. **Imports:** The script imports necessary libraries and modules including logging, threading, progress tracking, and OpenAI's API.
+   
+2. **Normalization:** Sanitizes input texts to remove extra spaces, newlines, and other unwanted characters.
+   
+3. **Retry Logic:** Implements retry mechanisms for OpenAI API calls with exponential backoff to handle transient errors.
+
+4. **Text Embeddings:** Retrieves or computes text embeddings and updates the processed data with embeddings.
+
+5. **Queue and Threads:** Uses multi-threading to efficiently handle large sets of text data, processes a queue of tasks, and manages task completion.
+
+6. **Caching:** Checks for existing cached data to prevent redundant processing.
+
+7. **File I/O:** Reads and writes JSON files to store the input and output data, ensuring that the directory exists.
+
+**enrich_text_summaries.py**
+
+1. **Classes and Imports**: The code uses various standard (json, os, threading, queue, logging) and third-party libraries (openai, tenacity, rich) to interact with APIs, handle errors, manage threads, and create progress bars. It defines a thread-safe `Counter` class to manage a shared counter across threads.
+
+2. **chatgpt_summary Function**: This function generates a summary using OpenAI's ChatGPT API. It uses a retry mechanism to handle transient failures, calling the API to generate a summary for the provided text and returning it if successful.
+
+3. **process_queue_for_summaries Function**: This function processes items from a queue, calling `chatgpt_summary` to generate summaries. It manages threading to concurrently process multiple chunks of text and updates the progress.
+
+4. **enrich_text_summaries Function**: This function initializes necessary configurations, sets up logging, and loads text chunks from a JSON file. It employs multithreading to process these chunks, generating summaries and appending them to a list.
+
+5. **Main Flow**: The main function processes text chunks, manages multiple threads for concurrent execution, and writes the enriched summaries to a JSON output file, ensuring the output directory exists.
+****************************************
+
+****************************************
 Boxer\scripts\web\download_html.py
 ****************************************
 """ This script downloads the text content for all sub pages of a URL. """
@@ -21982,6 +22920,28 @@ def download_html (sourceUrl, recurse, htmlDesitinationDir, minimumPageTokenCoun
 
    finish_time = time.time()
    logger.debug("Total time taken: %s", finish_time - start_time)
+****************************************
+
+****************************************
+Boxer\scripts\web\ReadMe.Salon.md
+****************************************
+**download_html.py**
+
+This script downloads and processes all textual content from sub-pages of a given URL up to a specified depth. The important functions and classes are: 
+
+- `Counter`: A thread-safe counter class to keep track of the number of processed pages.
+  
+- `get_html()`: Fetches the HTML content of a URL, extracts its text, saves the content in JSON format if it meets a minimum token count, and stores metadata.
+
+- `process_queue()`: Processes a queue of URLs for downloading HTML content utilizing multiple threads.
+
+- `recurse_page_list()`: Recursively identifies sub-URLs starting from the initial URL.
+
+- `build_page_list()`: Initiates the recursive page search and populates a queue with URLs.
+
+- `download_html()`: Sets up logging and directories, starts the queue processing with multithreading, and records the total time taken. 
+
+Helper functions like `makePathOnly()`, `makeFullyQualified()`, `deduplicate()`, `remove_exits()`, and `add_prefix()` perform various actions like URL normalization and deduplication.
 ****************************************
 
 ****************************************
@@ -23004,6 +23964,106 @@ logger.debug(
 ****************************************
 
 ****************************************
+Boxer\scripts\youtube\ReadMe.Salon.md
+****************************************
+**download_transcripts.py**
+
+This script downloads transcripts from all videos in a YouTube playlist. It uses the `googleapiclient` library to interface with YouTube API and `YouTubeTranscriptApi` to fetch video transcripts.
+
+The `Counter` class is a thread-safe counter to keep track of processed videos.
+
+The `gen_metadata` function generates and saves metadata for a video.
+
+The `get_transcript` function retrieves the transcript of a video, handles errors, and saves it in `.vtt` format.
+
+The `process_queue` function processes videos from a queue, fetching their transcripts and metadata.
+
+The `download_transcripts` function initializes the YouTube API client, handles pagination to fetch all playlist videos, and uses threading to download transcripts concurrently.
+
+**enrich_transcript_chunks.py**
+
+1. Constants and Libraries: The script imports necessary libraries and defines constants like `PERCENTAGE_OVERLAP` and `ENCODING_MODEL`.
+
+2. Classes: The `VttChunk` class is used to store VTT file data segments with attributes: text, start time, and duration.
+
+3. Functions: 
+   - `gen_metadata_master`: Cleans and generates metadata for the CSV file.
+   - `clean_text`: Cleans unwanted characters and spaces from the transcript text.
+   - `append_text_to_previous_chunk`: Appends a percentage of overlap text to the previous chunk.
+   - `add_new_chunk`: Adds a new chunk to the chunks list based on the given metadata and text.
+
+4. Main Processing:
+   - `parse_json_vtt_transcript`: Reads and processes VTT files, segments text into chunks, and handles metadata.
+   - `get_transcript`: Fetches the transcript file and invokes parsing.
+   - `enrich_transcript_chunks`: Reads metadata from JSON files, processes the transcripts, and generates the master CSV file.
+
+5. Utilities:
+   - `ensure_directory_exists`: Ensures that a specified directory exists, creating it if it does not.
+
+6. Logging: Configured with a warning level.
+
+**enrich_transcript_embeddings.py**
+
+The provided code processes text data to generate embeddings using the Azure OpenAI service. It imports necessary standard libraries and third-party packages.
+
+The `normalize_text` function cleans up whitespace and punctuation issues in text. The `get_text_embedding` function retries embedding fetching with exponential backoff on failures.
+
+The `process_queue` function processes queued text chunks: it retrieves embeddings for new text, handles existing summaries, and catches errors. Progress is tracked with a `Progress` class.
+
+The `convert_time_to_seconds` function converts time formatted strings into seconds.
+
+The `enrich_transcript_embeddings` function initializes API clients and logger, loads data, and manages a queue with threading. It ensures all enriched data is processed, sorted, and saved to a file.
+
+Important functions:
+- `normalize_text`
+- `get_text_embedding`
+- `process_queue`
+- `convert_time_to_seconds`
+- `enrich_transcript_embeddings`
+
+**enrich_transcript_summaries.py**
+
+**Important Classes and Functions:**
+1. **Counter**
+2. **chatgpt_summary**
+3. **process_queue**
+4. **convert_time_to_seconds**
+5. **enrich_transcript_summaries**
+
+**Summary:**
+
+This code imports various libraries and sets up key components for concurrent processing of transcript chunks to summarize their content using OpenAI's API.
+
+The `Counter` class provides a thread-safe way to increment a counter using a lock.
+
+The `chatgpt_summary` function retries up to five times (with an exponential back-off strategy) to get a summary from the OpenAI API, handling specific errors to retry safely.
+
+The `process_queue` function processes chunks of text from a queue in multiple threads, generating summaries or reusing existing data, and updating progress.
+
+The `convert_time_to_seconds` helper function converts timestamp strings to seconds.
+
+The `enrich_transcript_summaries` function initializes the OpenAI client and logger, loads chunks from files, sets up a queue for processing with multiple threads, and saves the enriched summaries back to a JSON file after processing.
+
+**not_used_enrich_transcript_speaker.py**
+
+This script extracts speaker names from YouTube video metadata and the first minute of the transcript using OpenAI's entity extraction.
+
+The script configures OpenAI API settings and retrieves YouTube transcript files from a specified folder using argparse. 
+
+The `Counter` class ensures thread-safe counting.
+
+The `get_speaker_info` function retries on failure and uses OpenAI's API to extract speaker names.
+
+The `clean_text` function standardizes text by removing unnecessary characters.
+
+The `get_first_segment` function retrieves the first segment of the transcript.
+
+The `process_queue` function processes files concurrently using threading and updates metadata with extracted speaker names.
+
+Classes/Functions: `Counter`, `get_speaker_info`, `clean_text`, `get_first_segment`, `process_queue`.
+****************************************
+
+****************************************
 BoxerEval\common\ApiConfiguration.py
 ****************************************
 """
@@ -23149,4 +24209,37 @@ def get_embedding(text: str, embedding_client: AzureOpenAI, config: ApiConfigura
     )
     
     return response.data[0].embedding
+****************************************
+
+****************************************
+BoxerEval\common\ReadMe.Salon.md
+****************************************
+**ApiConfiguration.py**
+
+This module configures API settings for Azure OpenAI and Google's Gemini API, centralizing API endpoints, keys, and other necessary parameters.
+
+It adapts configurations based on the environment, managing versions, URLs, and sensitive data fetched via environment variables for security.
+
+`ApiConfiguration` class provides structured access to these settings, initializing default values for key attributes like API version, endpoints, processing threads, timeout, and token limits.
+
+Key classes/functions:
+- `ApiConfiguration`: Main class for accessing and managing API settings.
+- `os.getenv()`: Used to safely retrieve environment variables for sensitive information like API keys.
+   
+It ensures environment-specific configurations and security practices.
+
+**common_functions.py**
+
+This module provides utility functions for the Braid LMS project, such as directory creation, embedding generation, and API configuration handling.
+
+The `ensure_directory_exists(directory)` function checks if a directory exists at the given path and creates it if it doesn't. This aids in cross-platform directory handling.
+
+The `get_embedding(text, embedding_client, config, model)` function generates an embedding for a provided text using Azure OpenAI, with options to set a specific model and configuration parameters.
+
+Important classes/functions:
+- `ensure_directory_exists(directory)`
+- `get_embedding(text, embedding_client, config, model)`
+- `ApiConfiguration` from `common.ApiConfiguration`
+
+Configuration details and model selection are managed through the provided `ApiConfiguration` and optional model parameter.
 ****************************************

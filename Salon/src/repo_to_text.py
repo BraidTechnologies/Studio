@@ -27,6 +27,7 @@ Example:
 import os
 import fnmatch
 import argparse
+from datetime import datetime
 from pathlib import Path
 import requests
 import yaml
@@ -178,6 +179,32 @@ class RepoContentProcessor:
         
         return False
     
+    def should_resummarise_code(self, path):
+        """
+        Check if a path should be resummarised
+        """
+        earliest = datetime(1970, 1, 2)
+        readme_timestamp = earliest.timestamp()
+
+        # If there is no readme, we need to summarise
+        directory = os.path.dirname(path)
+        readme_path = os.path.join(directory, SUMMARY_FILENAME)
+        if not os.path.exists(readme_path):
+            return True
+        
+        # If the readme is older than the source file, we need to summarise
+        readme_timestamp = os.path.getmtime(readme_path)
+        
+        # Check if any source files are newer than the readme
+        for file in os.listdir(directory):
+            file_path = os.path.join(directory, file)
+            if os.path.isfile(file_path) and self.is_source_file(Path(file_path)):
+                file_timestamp = os.path.getmtime(file_path)
+                if file_timestamp > readme_timestamp:
+                    return True
+                    
+        return False
+    
     def should_skip_path(self, path):
         """
         Check if a path should be skipped
@@ -190,8 +217,8 @@ class RepoContentProcessor:
         if self.is_skip_dir(path):
             return True
             
-        # Skip summary files - we add the  later on
-        if self.is_summary_file(path):
+        # Skip summary files where there are amended- we add them later on
+        if self.is_summary_file(path) and self.should_resummarise_code(path):
             return True
         
         # Skip files matching patterns
@@ -312,7 +339,7 @@ class RepoContentProcessor:
                         self.process_file(file_path)
                         file_count += 1
 
-                        if self.is_source_file(file_path):                           
+                        if self.is_source_file(file_path) and self.should_resummarise_code(file_path):
                             file_content = ""
                             summary = None
                             with open(file_path, 'r', encoding='utf-8') as f:
