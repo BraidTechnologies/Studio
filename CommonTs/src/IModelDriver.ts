@@ -13,6 +13,27 @@
 
 // Copyright (c) 2024 Braid Technologies Ltd
 
+/**
+ * Enum representing different sizes of a model.
+ * 
+ * @enum {string}
+ */
+export enum EModel {
+
+   kSmall = "Small", 
+   kLarge = "Large"  
+};
+
+/**
+ * Enum representing different providers of a model.
+ * 
+ * @enum {string}
+ */
+export enum EModelProvider {
+
+   kOpenAI = "OpenAI"
+}
+
 import { EPromptPersona } from './IPromptPersona';
 /**
  * Enum representing the roles in a conversation with a model.
@@ -60,12 +81,10 @@ export interface IModelConversationPrompt {
  * @interface IEmbeddingModelDriver
  */
 export interface IEmbeddingModelDriver {
-   /**
-    * Gets the type identifier of the model being driven.
-    * 
-    * @returns {string} A string identifier representing the type of the underlying model
-    */
-   getDrivenModelType(): string;
+
+   deploymentName : string;
+   drivenModelType: EModel;
+   drivenModelProvider: EModelProvider;
    
    
     /**
@@ -90,12 +109,9 @@ export interface IChatModelDriverParams {
  */
 export interface IChatModelDriver {
 
-      /**
-    * Gets the type identifier of the model being driven.
-    * 
-    * @returns {string} A string identifier representing the type of the underlying model
-    */
-   getDrivenModelType(): string;
+   deploymentName : string;
+   drivenModelType: EModel;
+   drivenModelProvider: EModelProvider;
 
    /**
     * Generates a response to a given conversation prompt.
@@ -108,4 +124,22 @@ export interface IChatModelDriver {
    generateResponse(persona: EPromptPersona, 
       prompt: IModelConversationPrompt, 
       params?: IChatModelDriverParams): Promise<IModelConversationElement>;
+}
+
+/**
+ * Represents an interface for text chunking apsects of a model provider
+ * @interface
+ */
+export interface ITextChunker {
+
+   drivenModelProvider: EModelProvider;
+
+   defaultChunkSize : number;
+   maximumChunkSize : number;
+   embeddingChunkSize : number;
+   fitsInDefaultChunk(text: string): boolean;
+   fitsInMaximumChunk(text: string): boolean;
+   fitsInEmbeddingChunk(text: string): boolean;
+   chunkText (text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string>;
+   estimateTokens (text: string): number;
 }

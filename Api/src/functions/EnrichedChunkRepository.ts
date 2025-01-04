@@ -11,8 +11,7 @@ import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedChunk";
 import { IRelevantEnrichedChunk, IChunkQuerySpec } from "../../../CommonTs/src/EnrichedChunk";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
-import { getEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getEmbeddingModelDriver, getDefaultTextChunker, getDefaultEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
 
 /**
  * Calculates the cosine similarity between two vectors.
@@ -236,7 +235,7 @@ export class EnrichedChunkRepositoryInMemory implements IEnrichedChunkRepository
       const enrichedChunks = this._chunks;
       const accumulator = new Array<IRelevantEnrichedChunk>();
 
-      const driver = getEmbeddingModelDriver(getDefaultModel().implementsModel);
+      const driver = getDefaultEmbeddingModelDriver();
       const validEmbedding = await driver.embed(spec.summary);
 
       for (let i = 0; i < enrichedChunks.length; i++) {

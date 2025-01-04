@@ -13,31 +13,30 @@
  */
 
 // Internal imports
-import {EModel, IModel} from './IModel';
-import { IEmbeddingModelDriver, IChatModelDriver } from './IModelDriver';
-import {GPT4} from './Model.OAI';
-import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver } from './ModelDrivers.OAI';
+import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, ITextChunker } from './IModelDriver';
+import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker } from './ModelDrivers.OAI';
 
 /**
- * Returns the default model which is an instance of GPT4oMini.
+ * Returns the default model which is an instance of GPT4o.
  * @returns {IModel} The default model.
  */
-export function getDefaultModel () : IModel  {
+export function getDefaultTextChunker () : ITextChunker  {
 
-   return new GPT4();   
+   return new OpenAITextChunker();   
 }
 
 /**
  * Returns an instance of IModel based on the provided EModel type.
  * 
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns An instance of IModel corresponding to the specified EModel type.
  */
-export function getModel (model: EModel) : IModel  {
+export function getTextChunker (model: EModel, provider: EModelProvider) : ITextChunker  {
 
    switch (model) {
       default:
-         return new GPT4();
+         return new OpenAITextChunker();
    }
 }
 
@@ -55,9 +54,10 @@ export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
 /**
  * Returns an instance of IEmbeddingModelDriver based on the provided EModel type.
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns {IEmbeddingModelDriver} An instance of IEmbeddingModelDriver corresponding to the specified EModel type.
  */
-export function getEmbeddingModelDriver (model: EModel) : IEmbeddingModelDriver  {
+export function getEmbeddingModelDriver (model: EModel, provider: EModelProvider) : IEmbeddingModelDriver  {
 
    switch (model) {
       default:
@@ -73,9 +73,10 @@ export function getDefaultChatModelDriver () : IChatModelDriver  {
 /**
  * Returns an instance of IChatModelDriver based on the provided EModel type.
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns {IChatModelDriver} An instance of IChatModelDriver corresponding to the specified EModel type.
  */
-export function getChatModelDriver (model: EModel) : IChatModelDriver  {
+export function getChatModelDriver (model: EModel, provider: EModelProvider) : IChatModelDriver  {
 
    switch (model) {
       default:

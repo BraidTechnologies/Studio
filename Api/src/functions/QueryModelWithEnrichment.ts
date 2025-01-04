@@ -23,13 +23,13 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import { IModelConversationElement, EModelConversationRole, IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
 import { IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
 import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
-import { getDefaultChatModelDriver, getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
-const model = getDefaultModel();
+const chunker = getDefaultTextChunker();
 const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 
 
 /**
@@ -61,7 +61,7 @@ export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse
    const answer = (directResponse.content);
    const imagined = (enrichedResponse.content);
 
-   const tokens = model.estimateTokens (imagined);
+   const tokens = chunker.estimateTokens (imagined);
    let chunks = new Array<IRelevantEnrichedChunk>();
 
    if (tokens >= minimumEnrichmentTokens) {

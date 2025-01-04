@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 /**
  * @module EnumerateModels
@@ -13,13 +13,10 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultChatModelDriver, getDefaultEmbeddingModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "../../../CommonTs/src/EnumerateModelsApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure";
-
-const model = getDefaultModel();
-
 
 
 /**
@@ -38,17 +35,22 @@ export async function enumerateModels(request: HttpRequest, context: InvocationC
          const jsonRequest = await request.json();
          context.log(jsonRequest);
 
-         const model = getDefaultModel();
-
          const spec = (jsonRequest as any).request as IEnumerateModelsRequest;        
 
+         const embeddingModel = getDefaultEmbeddingModelDriver();
+         const chatModel = getDefaultChatModelDriver();
+
          const body: IEnumerateModelsResponse = {
-            defaultId: model.deploymentName,
-            defaultEmbeddingId: model.embeddingDeploymentName,
-            largeId: model.deploymentName,
-            largeEmbeddingId: model.embeddingDeploymentName,            
-            smallId: model.deploymentName,
-            smallEmbeddingId: model.embeddingDeploymentName,            
+            // Currently we have the same model for large & small 
+            // TODO: add a small model for GPT4o-mini
+            defaultId: chatModel.deploymentName,
+            defaultEmbeddingId: embeddingModel.deploymentName,
+
+            largeId: chatModel.deploymentName,
+            largeEmbeddingId: embeddingModel.deploymentName,            
+            
+            smallId: chatModel.deploymentName,
+            smallEmbeddingId: embeddingModel.deploymentName,            
          }
 
          context.log (body)

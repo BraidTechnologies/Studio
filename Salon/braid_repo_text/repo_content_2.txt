@@ -14504,6 +14504,163 @@ class BusinessAnalystPersonaStrategy(PersonaStrategy):
 ****************************************
 
 ****************************************
+BoxerEval\tests\ReadMe.Salon.md
+****************************************
+**BoxerDataTest_v1.py**
+
+This code is designed to process questions through similarity embedding and to generate enriched questions using the Azure OpenAI API. 
+
+The `configure_openai_for_azure` function initializes the Azure OpenAI client. The `TestResult` class is used to hold test results, which include the original question, enriched question, hit status, and relevance.
+
+The `call_openai_chat` and `get_text_embedding` functions call the OpenAI API with retry logic using the `tenacity` library. 
+
+The `cosine_similarity` function calculates similarity between vectors. The `generate_enriched_question` function generates enriched questions via the OpenAI API.
+
+The `process_questions` function handles the evaluation of each question against processed question chunks, and the `read_processed_chunks` function reads JSON files containing these chunks. 
+
+Finally, the `save_results` function writes the results to a file, and `run_tests` orchestrates the entire process.
+
+**BoxerDataTest_v2.py**
+
+This Python code facilitates question generation, similarity analysis, and evaluation in the context of AI-based applications using OpenAI's Azure services.
+
+**Classes & Functions:**
+- **`configure_openai_for_azure`**: Configures OpenAI for Azure.
+- **`TestResult`**: Class for storing test results.
+- **`call_openai_chat`**: Calls OpenAI API with retry logic.
+- **`get_text_embedding`**: Retrieves text embeddings.
+- **`cosine_similarity`**: Calculates cosine similarity between vectors.
+- **`generate_enriched_question`**: Generates enriched questions using OpenAI API.
+- **`process_questions`**: Processes test questions.
+- **`read_processed_chunks`**: Reads processed JSON files containing pre-processed question chunks.
+- **`save_results`**: Saves test results to a specified directory.
+- **`run_tests`**: Orchestrates the entire testing sequence.
+
+**BoxerDataTest_v3.py**
+
+This module facilitates persona-based question generation and evaluation using OpenAI's Azure services. It imports standard libraries and third-party packages like Tenacity for retry logic and AzureOpenAI from OpenAI. 
+
+Key components include:
+- **ApiConfiguration**: Holds API settings.
+- **TestResult**: Stores results for each test question.
+- **configure_openai_for_azure**: Configures the OpenAI client.
+- **call_openai_chat**: Handles API calls with retries.
+- **get_text_embedding**: Fetches text embeddings.
+- **cosine_similarity**: Computes similarity between vectors.
+- **generate_enriched_question**: Produces enriched questions.
+- **generate_follow_up_question** and **assess_follow_up_on_topic**: Handle follow-up question generation and assessment.
+- **process_questions**, **read_processed_chunks**, and **save_results**: Manage question processing, reading processed data, and saving results.
+- **run_tests**: The main function to execute tests utilizing generated or provided questions.
+
+**BoxerDataTest_v4.py**
+
+This Python module handles persona-based question generation, similarity embedding, and evaluation. 
+
+### Key Classes and Functions:
+
+- **`configure_openai_for_azure`**: Configures and returns an AzureOpenAI client.
+- **`TestResult` class**: Stores the results of the test, including question, enriched question summary, hit status, hit relevance, follow-up question, and Gemini evaluation.
+- **`call_openai_chat`**: Calls the OpenAI API with retry logic to manage session consistency and fault tolerance.
+- **`get_text_embedding`**: Retrieves text embedding for a given text using the OpenAI API.
+- **`cosine_similarity`**: Computes cosine similarity between two vectors.
+- **`generate_enriched_question`** and **`generate_follow_up_question`**: Generates enriched questions and follow-up questions using OpenAI API.
+- **`assess_follow_up_on_topic`**: Determines if the follow-up question is relevant to AI.
+- **`process_questions`**: Processes test questions, assesses relevance, and evaluates the enriched answers.
+- **`read_processed_chunks`**: Reads and processes JSON data from a specified directory.
+- **`save_results`**: Saves the processed question results to a JSON file.
+- **`run_tests`**: Main test function that initiates the Azure OpenAI client, generates questions using a persona strategy, processes them, and saves the results.
+
+### Constants and Logging:
+Constants manage settings like similarity thresholds and prompts. Logging is set up for debugging and tracking the process.
+
+**BoxerDataTest_v5.py**
+
+The code is a suite for generating and evaluating AI-related questions using OpenAI's API, integrated with Azure.
+
+Key Classes:
+1. **TestResult**: Metadata storage for questions, follow-ups, and evaluations.
+2. **ApiConfiguration**: Configures AzureOpenAI client.
+3. **GeminiEvaluator**: Assess follow-up question relevance.
+
+Important Functions:
+1. **configure_openai_for_azure**: Sets up Azure OpenAI client.
+2. **call_openai_chat**: Handles API calls with retries.
+3. **get_text_embedding**: Fetches text embeddings.
+4. **cosine_similarity**: Computes similarity between vectors.
+5. **generate_enriched_question**: Creates enriched questions.
+6. **generate_follow_up_question**: Generates follow-up questions.
+7. **assess_follow_up_on_topic**: Validates follow-up relevance.
+8. **process_questions**: Main routine for question processing and evaluation.
+9. **read_processed_chunks**: Reads pre-processed question sets.
+10. **save_results**: Writes results to JSON.
+
+### Flow:
+1. OpenAI clients for chat/embedding initialization.
+2. Process and enrich questions based on strategies.
+3. Evaluate relevance and save outputs.
+
+**GeminiEvaluator.py**
+
+**GeminiEvaluator Module**
+
+**Overview:**
+The GeminiEvaluator module evaluates the quality of summaries generated by large language models (LLM) using Google's Gemini model. It assesses how well summaries encapsulate core information from the original content and address user queries.
+
+**Key Class:**
+- **GeminiEvaluator Class:** This class initiates the evaluation process using Gemini's API. It authenticates using an API key and sets instructions for evaluating summaries.
+
+**Key Function:**
+- **evaluate(original_content: str, summary: str) -> str:** This function takes original content and a generated summary as inputs. It uses Gemini LLM to score the summary on a scale of 1 (poor) to 4 (excellent).
+
+**Dependencies:**
+- google.generativeai
+- os
+
+**PersonaStrategy.py**
+
+This module uses the Strategy pattern for generating persona-specific questions using LLM (large language models) technology and Azure OpenAI services.
+
+The PersonaStrategy abstract class defines the interface for creating persona-based question generation strategies. Concrete implementations include DeveloperPersonaStrategy, TesterPersonaStrategy, and BusinessAnalystPersonaStrategy, each generating questions from their respective perspectives.
+
+The _generate_questions method is a helper function for generating questions using specific prompts and handles calling the OpenAI chat model. Error handling and logging mechanisms are included for robustness.
+
+Key classes:
+- PersonaStrategy (ABC)
+- DeveloperPersonaStrategy
+- TesterPersonaStrategy
+- BusinessAnalystPersonaStrategy
+
+**run_BoxerDataTest.py**
+
+This module is designed to run tests for LLM-related questions using the Boxer Data Testing framework. It handles the execution of tests, supports different test implementation versions (v1/v2), and manages file operations for test inputs and outputs.
+
+Key functions include loading and processing test questions, configuring test environments and directories, executing tests, and handling logging.
+
+Key classes and functions:
+- `run_tests` from `BoxerDataTest_v1 (or v2)`
+- `ApiConfiguration` from `common.ApiConfiguration`
+
+The script sets up logging and directories, lists predefined questions about LLMs, and executes tests while handling potential errors.
+
+**TestRunner.py**
+
+**TestRunner Module**
+
+The `TestRunner` module for running automated tests on LLM-based systems supports static question testing and persona-based testing using Developer, Tester, and Business Analyst strategies. This module leverages Azure OpenAI clients for chat and embedding, configurable test output directories, logging, error handling, and directory management.
+
+**Classes and Functions**
+1. **TestRunner**: Main function to run tests based on user choice via a command-line interface, handling API configurations, directory management, and test execution.
+2. **run_tests, call_openai_chat, configure_openai_for_azure**: Imported from `BoxerDataTest_v5` for executing tests.
+3. **ApiConfiguration**: Manages API configurations.
+4. **PersonaStrategy implementations**: DeveloperPersonaStrategy, TesterPersonaStrategy, BusinessAnalystPersonaStrategy for persona-based test execution.
+
+### Other Relevant Points
+- Logging is set up for test execution tracking.
+- Ensures test output directory exists or creates it.
+- Prompts users to choose testing modes and executes corresponding test strategies.
+****************************************
+
+****************************************
 BoxerEval\tests\run_BoxerDataTest.py
 ****************************************
 """
@@ -15159,6 +15316,32 @@ console.log ("Content script loaded");
 ****************************************
 
 ****************************************
+Cascade\src\ReadMe.Salon.md
+****************************************
+**content.ts**
+
+The module `Cascade/src/content.ts` is a TypeScript script for a Chrome extension focused on web scraping, text summarization, and content classification.
+
+**Global Variables:**
+- `haveStartedScrape` prevents concurrent scraping operations.
+- External integrations: `artoo`, `chrome`, `axios`.
+
+**Key Functions:**
+1. `suppressUnhandledPromiseRejection(event)`: Handles unhandled promise rejections, resets scraping state, and sends error messages.
+2. `startScrape(key)`: Manages the entire scraping, summarization, and classification process, utilizing web scraping for text extraction, enforcing text length limits, and communicating with external summarize and classify APIs.
+
+**Message Handling:**
+- Listens for messages to initiate scraping.
+- Prevents concurrent operations for efficiency and stability.
+
+**Error Handling:**
+- Comprehensive error handling for API and operational failures with user feedback.
+
+**Dependencies:**
+- Uses Artoo.js for web scraping, Axios for HTTP requests, and Chrome Extension APIs for communication.
+****************************************
+
+****************************************
 CommonPy\src\chunk_repository_api.py
 ****************************************
 '''API to store data in the Chunk table of the Braid Apis '''
@@ -15792,6 +15975,99 @@ class IStoredPage(IStorable):
             self.html = other.html
         else:
             self.html = None
+****************************************
+
+****************************************
+CommonPy\src\ReadMe.Salon.md
+****************************************
+**chunk_repository_api.py**
+
+The code defines an API for storing and managing data in the Chunk table of the Braid Apis. It includes importing necessary libraries such as `os`, `logging`, `datetime`, `json`, and `requests`.
+
+Logging is set to the WARNING level to capture warnings and above. The `SESSION_KEY` is retrieved from the environment, and HTTP headers are defined for API requests.
+
+The `ChunkRepository` class provides methods to interact with the Braid Cosmos database, such as `save`, `find`, `load`, `remove`, and `exists`. It uses the `requests` library for making HTTP requests, with retry logic for handling transient failures.
+
+Important classes and functions:
+- `ChunkRepository.__init__`
+- `ChunkRepository.save`
+- `ChunkRepository.find`
+- `ChunkRepository.load`
+- `ChunkRepository.remove`
+- `ChunkRepository.exists`
+
+**chunk_repository_api_types.py**
+
+This code defines several classes and functions intended to store and manage data associated with embeddings and text renderings.
+
+The `IStoredEmbedding` class stores an embedding with a model ID and a list of float values. It has an `__init__` method to initialize these properties.
+
+The `IStoredTextRendering` class stores a text rendering with a model ID and text content. Similar to `IStoredEmbedding`, it includes an `__init__` method for initialization.
+
+There are two utility functions: `create_text_rendering` creates an instance of `IStoredTextRendering`, and `create_embedding` creates an instance of `IStoredEmbedding`.
+
+The `IStoredChunk` class inherits from `IStorable` and represents a chunk of data with various attributes, including parent chunk ID, original text, stored embedding, stored summaries and titles, a URL, and related chunk IDs, and initializes these properties in its `__init__` method.
+
+**page_repository_api.py**
+
+The code provides an API for storing data in the "Page" table of the Braid Apis, utilizing a `PageRepository` class.
+
+The `PageRepository` class includes methods `save` and `load`. The `save` method saves the provided `IStoredPage` instance to the database, adding timestamps and generating the API URL dynamically. The `load` method retrieves content from the database based on a given record ID, returning the content if successful.
+
+Utility functions `compress_string` and `read_file_to_string` are included to compress strings and read file contents respectively.
+
+The `make_page_from_file` function generates an `IStoredPage` instance by reading HTML content from a file and applying necessary metadata.
+
+Key classes and functions: `PageRepository`, `compress_string`, `read_file_to_string`, `make_page_from_file`.
+
+**page_repository_api_types.py**
+
+This code defines a class, `IStoredPage`, which inherits from `IStorable`.
+
+### Key Points:
+- **Class `IStoredPage`**: Represents a chunk of data that includes an optional HTML attribute.
+- **Inheritance**: It inherits attributes and methods from the `IStorable` class.
+- **Attributes**:
+  - `html` (of type `Union[str, None]`): Holds HTML content of the page, if available, defaulting to `None`.
+- **Constructor**: Initializes the `html` attribute from another `IStoredPage` object if provided; otherwise, sets `html` to `None`. 
+
+### Dependencies:
+- Uses `typing.Union` for type hinting.
+- Imports `IStorable` from `storable_types`.
+
+**storable_types.py**
+
+The code defines several classes aimed at storing and querying data related to storable entities.
+
+### Classes Defined:
+
+#### IStorable
+- A base class for storable entities with common attributes like `id`, `applicationId`, `contextId`, `functionalSearchKey`, `userId`, `created`, `amended`, `className`, and `schemaVersion`.
+- The constructor allows for initializing these attributes either from an existing object or setting them to `None` by default.
+
+#### IStorableQuerySpec
+- A class for specifying query parameters for storables, including `id` and `functionalSearchKey`.
+- The constructor permits initializing these attributes from another object or setting them to `None`.
+
+#### IStorableOperationResult
+- A class defining the result of a storable operation, represented by a boolean attribute `ok`.
+- The constructor allows initializing the `ok` attribute from another object or setting it to `None` by default.
+
+**type_utilities.py**
+
+This module provides utilities to convert dictionaries into objects and safely cast values to specified types.
+
+**Class: DictToObject**
+- Converts a dictionary into an object by dynamically creating attributes for each key-value pair in the dictionary.
+- `__init__` method initializes the object with the dictionary's key-value pairs as attributes.
+
+**Function: safe_dict_to_object**
+- Safely converts a dictionary to an object using the `DictToObject` class.
+- Returns `None` or a specified default value if the conversion fails.
+
+**Function: safe_cast**
+- Attempts to cast a value to a specified type.
+- Returns a default value if the casting fails.
 ****************************************
 
 ****************************************
@@ -19721,6 +19997,503 @@ export class QueryModelApi extends Api {
 ****************************************
 
 ****************************************
+CommonTs\src\ReadMe.Salon.md
+****************************************
+**ActivityRepositoryApi.ts**
+
+The `ActivityRepositoryApi` module provides a wrapper for managing activity records using CRUD operations. It extends the `Api` class and implements the `IStorableRepositoryApiWrapper` interface.
+
+The main functions include:
+- `load(recordId: string)`: Loads an activity record by its ID.
+- `find(functionalSearchKey: string)`: Finds an activity by a search key.
+- `save(record: IStorable)`: Saves a new or updated activity record.
+- `remove(recordId: string)`: Removes an activity record by its ID.
+- `recent(querySpec: IStorableMultiQuerySpec)`: Retrieves recent activity records based on query specifications.
+
+Authentication via session key is required for all operations, which communicate with environment-specific API endpoints.
+
+**Api.ts**
+
+This module defines a base class named `Api` that facilitates interaction with various APIs.
+
+The `Api` class requires an environment interface (`IEnvironment`) and a session key for authentication. These are passed as parameters to its constructor and stored as private properties `_environment` and `_sessionKey`.
+
+The class provides public getter methods, `environment` and `sessionKey`, to access these properties.
+
+The module imports the `axios` library for making HTTP requests, though there are no methods implemented in this base class utilizing `axios`.
+
+The `Api` class is designed to be a superclass, meaning more specific API classes will extend it to implement their own unique functionality.
+
+**Asserts.ts**
+
+This module named `Asserts` provides type-safe assertion utilities to ensure runtime checks with type narrowing in TypeScript.
+
+### Key Functions:
+
+- **throwIfUndefined**: Throws an `AssertionFailedError` if the input `x` is `undefined`, ensuring `x` is of type `T`.
+- **throwIfNull**: Throws an `AssertionFailedError` if the input `x` is `null`, ensuring `x` is of type `T`.
+- **throwIfFalse**: Throws an `AssertionFailedError` if the input `x` is `false`, ensuring `x` is `true`.
+
+### Important Classes:
+
+- **AssertionFailedError**: Imported from `./Errors`, this class is used to throw errors when assertions fail.
+
+**ChunkApi.Types.ts**
+
+The module `ChunkApi.Types` provides type definitions for a Chunk API that handles text chunking operations.
+
+The `IChunkRequest` interface defines the structure for API requests, including properties for `text` (mandatory string), `chunkSize` (optional number, size of each chunk in tokens), and `overlapWords` (optional number, size of overlap between chunks in words).
+
+The `IChunkResponse` interface defines the structure for API responses, containing a `chunks` property, which is an array of strings representing the segmented text chunks.
+
+These interfaces ensure consistent formatting of request and response data for text segmentation operations.
+
+**ChunkRepositoryApi.ts**
+
+The `ChunkRepositoryApi` module is an API wrapper for managing text chunking, extending the base `Api` class and implementing the `IStorableRepostoryApiWrapper` interface. This module allows CRUD operations (Create, Read, Update, Delete) for text chunks.
+
+Key classes and methods:
+- `ChunkRepostoryApi`: Main class for the API with methods for operations.
+- `constructor(environment_, sessionKey_)`: Initializes the API with environment settings and an authentication session key.
+- `load(recordId)`: Loads a record by ID from the repository.
+- `find(functionalSearchKey)`: Finds a record using a search key.
+- `save(record)`: Saves a new or updated record.
+- `remove(recordId)`: Removes a record by ID.
+- `recent(querySpec)`: Retrieves recent records based on query specifications.
+
+All operations communicate with environment-specific API endpoints and require authentication through the session key.
+
+**ChunkRepositoryApi.Types.ts**
+
+This module defines core data types and interfaces for the ChunkRepository API. These definitions are used for handling chunks, embeddings, and text renderings throughout the chunk storage system.
+
+The `IStoredEmbedding` interface stores vector embeddings associated with a model ID.
+
+The `IStoredTextRendering` interface defines the structure for storing generated text along with its related model ID.
+
+The `IStoredChunk` interface represents data chunks, including metadata, embeddings, summaries, and relationships with other chunks. It includes fields for parent chunk ID, original text, URL to external resources, stored embeddings, summaries, titles, and IDs of related chunks.
+
+The `storedChunkClassName` constant is defined as "Chunk".
+
+**ClassifyApi.Types.ts**
+
+The code provides type definitions for a Classification API used in a text classification system.
+
+The `IClassifyRequest` interface defines the structure of a classification request, which includes `text` (a string) and an array of possible `classifications`.
+
+The `IClassifyResponse` interface defines the structure of a classification response, which contains a single `classification` string.
+
+These interfaces ensure type safety when making API calls and handling responses.
+
+**Compress.ts**
+
+The module "Compress" provides functions to compress and decompress strings using the deflate algorithm. It is compatible with both Node.js and browser environments.
+
+Key functions include `compressString` and `decompressString`.
+
+`compressString` converts the input string to a `Uint8Array`, compresses it using pako's `deflate` method and then base64 encodes the compressed data. Base64 encoding differs slightly for Node.js and browsers.
+
+`decompressString` reverses this process. It base64 decodes the input and then inflates the resulting `Uint8Array` using pako’s `inflate` method, finally converting it back to a string. It throws an error if decompression fails.
+
+**EmbedApi.Types.ts**
+
+This module, `EmbedApi.Types`, defines the data structures for the Embed API which is responsible for handling text embedding operations. 
+
+The `IEmbedRequest` interface describes the structure of an embedding request object containing `persona` of type `EPromptPersona` and `text` which is a string.
+
+The `IEmbedResponse` interface outlines the structure of an embedding response object including `embedding`, which is an array of numbers representing the embedding vector.
+
+These interfaces define the contract between clients and the embedding service ensuring consistent data exchange formats.
+
+The `EPromptPersona` type is imported from `./IPromptPersona` and is used within the `IEmbedRequest` interface.
+
+**EnrichedChunk.ts**
+
+This module defines the core data structures and interfaces for the Chunk API, which deals with enriched chunks of content that can be stored, queried, and retrieved based on semantic similarity. It caters to both client-side summaries and server-side storage formats.
+
+Important components include the `EChunkRepository` enum which lists available chunk storage repositories, while `IEnrichedChunk` and `IEnrichedChunkSummary` interfaces define the structures for both server-side and client-side chunks. The `IChunkQuerySpec` and its extensions (`IChunkQueryRelevantToUrlSpec`, `IChunkQueryRelevantToSummarySpec`) specify the parameters for querying these chunks.
+
+The default similarity threshold for presenting chunks to users is set at 0.5.
+
+**EnrichedQuery.ts**
+
+The `EnrichedQuery` module defines core interfaces and enums for managing enriched conversations with AI assistants.
+
+The `IEnrichedQuery` interface structures an enriched query object, including repository identification, similarity threshold, maximum result count, conversation history, the posed question, and word count target.
+
+The `IEnrichedResponse` interface structures an enriched response object, including an answer string and an array of relevant enriched chunk objects (`IRelevantEnrichedChunk`).
+
+The `IGenerateQuestionQuery` interface defines the structure for a question generation query, including a summary text and a word target for the resulting question.
+
+The `IQuestionGenerationResponse` interface structures the response for question generation, consisting only of a generated question string. 
+
+Key Interfaces: `IEnrichedQuery`, `IEnrichedResponse`, `IGenerateQuestionQuery`, `IQuestionGenerationResponse`.
+
+**EnumerateModelsApi.Types.ts**
+
+This module defines TypeScript interfaces for the EnumerateModels and EnumerateRepositories APIs, which are used in AI model enumeration and repository listing operations.
+
+The `IEnumerateModelsRequest` interface represents the structure of the request for listing available AI models.
+
+The `IEnumerateModelsResponse` interface defines the structure of the response, including ID fields for different sizes and embeddings of models.
+
+The `IEnumerateRepositoriesRequest` interface represents the structure of the request for listing available chunk repositories.
+
+The `IEnumerateRepositoriesResponse` interface defines the structure of the response, which includes an array of chunk repository IDs (`EChunkRepository`).
+
+**Environment.ts**
+
+This code provides a base for different environment configurations (Development, Staging, Production) by defining various API endpoints specific to each environment.
+
+The `DevelopmentEnvironment` class represents the development settings. It defines several methods, such as `checkSessionApi()`, `summariseApi()`, `findThemeApi()`, and others, returning local endpoints (e.g., `http://localhost:7071/api/CheckSession`).
+
+The `StagingEnvironment` class represents the staging environment settings. It similarly defines the same set of methods as the development class but points to staging URLs (e.g., `https://braid-api.azurewebsites.net/api/CheckSession`).
+
+The `ProductionEnvironment` class represents the production environment settings. It contains the same methods as the other classes but uses production URLs (e.g., `https://braid-api.azurewebsites.net/api/CheckSession`). 
+
+Important classes: `DevelopmentEnvironment`, `StagingEnvironment`, `ProductionEnvironment`. Important functions: `checkSessionApi()`, `summariseApi()`, `findThemeApi()`, `classifyApi()`, `chunkApi()`, `embedApi()`, `testForSummariseFail()`, `saveActivityApi()`, `removeActivityApi()`, `getActivityApi()`, `findActivityApi()`, `getActivitiesApi()`, `loginWithLinkedInApi()`, `authFromLinkedInApi()`, `boxerHome()`, `findRelevantEnrichedChunksFromUrl()`, and `generateFluidTokenApi()`.
+
+**Errors.ts**
+
+This module defines custom error classes that extend the native JavaScript `Error` class, tailored for the Braid application. Each custom error class such as `InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError` includes features like restoring the prototype chain for TypeScript support, standard error naming for improved stack trace readability, and automatic logging.
+
+Logging functions `logApiError` and `logCoreError` are used within the constructors to log error messages, enhancing error traceability.
+
+Classes:
+- InvalidParameterError
+- InvalidOperationError
+- InvalidStateError
+- ConnectionError
+- EnvironmentError
+- AssertionFailedError
+
+**FindEnrichedChunkApi.ts**
+
+The `FindEnrichedChunkApi` module provides an API for locating and retrieving enriched data chunks. 
+
+It includes the `FindEnrichedChunkApi` class, which extends from the `Api` class. The class is initialized with environment and session key parameters for authentication.
+
+Key methods include `findChunkFromUrl`, which fetches an enriched chunk summary for a given URL query, `findRelevantChunksFromUrl`, which retrieves a list of relevant enriched chunks based on URL, and `findRelevantChunksFromSummary`, which finds relevant chunks based on a summary query.
+
+The methods make asynchronous POST requests using the `axios` library to the defined API endpoints, handling errors and logging them as necessary.
+
+**FindThemeApi.Types.ts**
+
+This module, `FindThemeApi.Types`, contains type definitions for the FindTheme API. The API is designed to analyze text content and identify its primary theme.
+
+The interface `IFindThemeRequest` defines the structure of request objects, detailing that they should include a `text` property (the text to be analyzed) and a `length` property (the length of the text).
+
+The interface `IFindThemeResponse` describes the structure of response objects. These responses contain a `theme` property, indicating the primary theme derived from the supplied text. 
+
+These interfaces ensure that requests and responses adhere to expected formats for efficient communication with the FindTheme API.
+
+**Fluid.ts**
+
+The code defines core interfaces for the Fluid Framework token authentication module.
+
+**Key interfaces:**
+1. **IFluidUser:** Represents a Fluid user with properties indicating if the user is operating locally (local), the userId, and userName.
+2. **IFluidTokenRequest:** Combines the user information from IFluidUser with a documentId that specifies the ID of the shared document.
+3. **IFluidTokenResponse:** Returns a token in response to a Fluid token request.
+
+These interfaces facilitate the authentication process between client applications and the Fluid service, accommodating both development and production environments.
+
+**FluidApi.ts**
+
+The provided code defines a TypeScript module named `FluidApi`, which is used to generate Fluid Framework tokens.
+
+The **`FluidApi`** class extends a base class `Api` and includes error handling and retry logic using `axios` and `axios-retry`. The class is initialized with an environment configuration and a session key.
+
+The `generateToken` method takes a query parameter containing `documentId`, `userId`, and `userName`. It attempts to post this data to an API endpoint, retrying up to 5 times in case of network errors or HTTP 429 status responses. If successful, it returns the generated token; otherwise, it logs an error and returns undefined.
+
+Important classes and functions:
+- **FluidApi**
+- **generateToken**
+
+**FluidTokenProvider.ts**
+
+The module **FluidTokenProvider** is designed for managing token generation and connection configuration for Azure Fluid Relay services.
+
+- The **FluidTokenProvider** class handles the token generation for both orderer and storage connections. It interacts with the **FluidApi** class to generate tokens based on user credentials and environment settings.
+  
+- The **FluidConnectionConfig** class configures connection details such as the token provider, endpoint, tenant ID, and connection type. It can operate in both local and remote environments by adjusting its settings accordingly.
+  
+- The **FluidClientProps** class sets up client properties using the connection configuration specified in **FluidConnectionConfig**.
+
+This module manages authentication through session keys and user contexts, and adjusts configurations based on the environment settings.
+
+**IEnvironment.ts**
+
+The `IEnvironment` module defines an interface for managing different deployment environments (Local, Staging, Production) in the Braid application. It outlines the environment-specific configurations and API endpoints required throughout the application. 
+
+The key elements include:
+- Enum `EEnvironment` lists the types of environments.
+- Constant `BRAID_ENVIRONMENT_KEY` holds the environment key.
+- Interface `IEnvironment` details properties and methods for handling environment settings.
+
+The `IEnvironment` interface includes methods for various operations:
+- Authentication and session management (`checkSessionApi`, `loginWithLinkedInApi`, `authFromLinkedInApi`).
+- Content operations such as summarization, classification, and embedding (`summariseApi`, `classifyApi`, `embedApi`).
+- Activity tracking (`saveActivityApi`, `removeActivityApi`, `getActivityApi`, `findActivityApi`, `getActivitiesApi`).
+- Chunk and page operations (`chunkApi`, `saveChunkApi`, `removeChunkApi`, `getChunkApi`, `findChunkApi`, `getChunksApi`, `savePageApi`, `getPageApi`).
+- Integration with other services like LinkedIn and Fluid (`generateFluidTokenApi`, `fluidApi`, `fluidTenantId`, `studioForTeamsBoxer`).
+
+Overall, the module ensures appropriate environment configurations and streamline API interactions for the Braid application across various deployment setups.
+
+**IEnvironmentFactory.ts**
+
+This module, **IEnvironmentFactory**, is designed to create environment instances for different deployment contexts: Development, Staging, and Production.
+
+The `getDefaultEnvironment` function determines and returns the default environment instance by checking the execution context and the `BRAID_ENVIRONMENT` process variable, returning a `DevelopmentEnvironment` for local settings or a `ProductionEnvironment` otherwise.
+
+The `getDefaultFluidEnvironment` and `getDefaultLoginEnvironment` functions decide the environment similarly but prioritize the browser's localhost to set `DevelopmentEnvironment`.
+
+The `getEnvironment` function creates and returns specific environment instances based on the provided `EEnvironment` type.
+
+Important classes/functions:
+- `getDefaultEnvironment`
+- `getDefaultFluidEnvironment`
+- `getDefaultLoginEnvironment`
+- `getEnvironment`
+- `DevelopmentEnvironment`
+- `StagingEnvironment`
+- `ProductionEnvironment`
+
+**IModel.ts**
+
+The code defines core elements for AI model management.
+
+It contains an enumeration `EModel` with two possible values, "Small" and "Large", representing model sizes.
+
+An interface `IModel` is defined to standardize AI model deployments. The interface includes properties for deployment names, chunk sizes, and several text processing methods. These methods check if a given text fits within specific chunk sizes and provide a way to chunk text and estimate the number of tokens in the text.
+
+The module facilitates the organization and handling of model variants and their text processing capabilities in AI model management systems.
+
+**IModelDriver.ts**
+
+The `IModelDriver` module defines core interfaces and enums for facilitating model-driven conversations between users and AI models. 
+
+It introduces `EModelConversationRole`, an enum for differentiating roles such as system, assistant, and user.
+
+`IModelConversationElement` is an interface representing individual messages with properties for role and content.
+
+`IModelConversationPrompt` is an interface for structuring complete conversation contexts, including conversation history and the current prompt.
+
+`IEmbeddingModelDriver` defines methods for text embedding, including `getDrivenModelType()` and `embed()`.
+
+`IChatModelDriver` includes methods for chat model interactions, such as `generateResponse()` which generates a model response based on a given prompt and persona. 
+
+Key classes/interfaces/functions: `EModelConversationRole`, `IModelConversationElement`, `IModelConversationPrompt`, `IEmbeddingModelDriver`, `IChatModelDriver`, and `generateResponse()`.
+
+**IModelFactory.ts**
+
+This module, `IModelFactory`, is responsible for creating AI model instances. It provides functions for default model creation and specific model creation based on the requested `EModel` type. This abstraction ensures consistent instantiation and hides implementation details.
+
+Key functions in the module include:
+- `getDefaultModel()`: Returns the default model instance, `GPT4`.
+- `getModel(model: EModel)`: Returns an AI model instance based on the provided `EModel` type.
+- `getDefaultEmbeddingModelDriver()`: Returns the default embedding model driver, `OpenAIEmbeddingModelDriver`.
+- `getEmbeddingModelDriver(model: EModel)`: Returns an embedding model driver based on the `EModel` type.
+- `getDefaultChatModelDriver()`: Returns the default chat model driver, `OpenAIChatModelDriver`.
+- `getChatModelDriver(model: EModel)`: Returns a chat model driver based on the `EModel` type.
+
+**IPromptPersona.ts**
+
+**Module Description**  
+The `IPromptPersona` module defines interfaces and enums for managing different AI prompt personas tailored for specific summarization tasks.
+
+**Key Classes and Functions**  
+- **EPromptPersona**: An enumeration listing different persona types, including `ArticleSummariser`, `CodeSummariser`, `SurveySummariser`, among others. Each value represents a specific AI prompt persona designed for specialized summarization tasks.
+- **IPromptPersona**: An interface that outlines the structure of a prompt persona. It includes:
+  - `name`: A string representing the persona's name.
+  - `systemPrompt`: A string defining the system-level prompt configuration.
+  - `itemPrompt`: A string specifying the item-level prompt configuration.
+
+**IPromptPersonaFactory.ts**
+
+The `IPromptPersonaFactory` module creates specialized AI prompt personas for different content summarization tasks.
+
+Predefined persona templates include those for summarizing articles, code, and surveys. Each persona is defined with a `systemPrompt` and an `itemPrompt`.
+
+The `getChatPersona` function generates customized prompt personas based on the specified persona type, userPrompt, and additional parameters. The word count target can be adjusted through the function's parameters.
+
+Notable functions and classes: 
+- `getChatPersona`: Generates the appropriate prompt persona based on input parameters.
+- Persona templates: `DefaultPersona`, `DeveloperAssistantPersona`, `ArticleSummariserPersona`, `CodeSummariserPersona`, `SurveySummariserPersona`, `TestForSummariseFailPersona`, `ClassifierPersona`, `ThemeFinderPersona`, `DeveloperQuestionGeneratorPersona`, `DeveloperImaginedAnswerGeneratorPersona`.
+
+**IStorable.ts**
+
+This module, `IStorable`, establishes core interfaces and types for persistent storage within an application. It aims to provide consistent storage patterns while allowing flexibility for application-specific extensions.
+
+**Important Classes/Functions:**
+
+1. **EStorableApplicationIds**: An enumeration representing application identifiers such as "Boxer" and "Waterfall".
+
+2. **IStorable**: An interface outlining the structure of objects that can be stored, including properties like `id`, `applicationId`, `contextId`, `userId`, `created`, `amended`, `className`, and `schemaVersion`.
+
+3. **IStorableMultiQuerySpec**: Defines the structure for querying multiple records, including properties `limit` and `className`.
+
+4. **IStorableQuerySpec**: Defines the structure for querying a single record by `id` or `functionalSearchKey`.
+
+5. **IStorableOperationResult**: An interface defining the result of storage operations, indicating success with the `ok` property.
+
+**Logging.ts**
+
+This module provides logging functionality to handle different parts of an application, including core system errors, database errors, and API errors and information.
+
+Major functions include:
+- `logCoreError(description: string, details: any): void` for logging core system errors.
+- `logDbError(description: string, details: any): void` for logging database errors.
+- `logApiError(description: string, details: any): void` for logging API errors.
+- `logApiInfo(description: string, details: any): void` for logging API-related information.
+
+Each logging function accepts a description and details parameter to format and output consistent log messages for easier debugging and maintenance across the application.
+
+**LoginApi.ts**
+
+The `LoginApi` module provides functionality for handling login operations using the LinkedIn API.
+
+The main class, `LoginApi`, extends the `Api` class and requires environment settings (`IEnvironment`) and a session key for instantiation.
+
+The constructor initializes a `LoginApi` instance with the given environment and session key.
+
+The asynchronous `login` method constructs a URL using the provided session key, makes a POST request to the LinkedIn API, and handles the response. If successful, it returns a "Redirecting..." status; otherwise, it logs the error and returns an empty string.
+
+Important classes or functions:
+- `LoginApi` class
+- `login` method
+
+**LooseObject.ts**
+
+This module defines a TypeScript interface called `LooseObject`.
+
+The `LooseObject` interface allows for any key-value pairs, where keys are strings and values can be of any type. 
+
+This is useful for creating flexible data structures without predefined schemas, making it a versatile choice when working with dynamic data.
+
+The main component of this module is the `LooseObject` interface.
+
+**Model.OAI.ts**
+
+The provided module, `Model`, is designed to manage AI models and their deployment settings, focusing on the GPT4 implementation of the IModel interface.
+
+The `GPT4` class encapsulates various properties such as deployment names and chunk sizes, both with and without buffers. It has methods to check if a text fits into default, maximum, or embedding chunk sizes, determining if the number of tokens in a text is within specific limits.
+
+The `chunkText` method splits input text into smaller chunks based on optional overlap parameters, facilitating manageable text pieces for processing.
+
+The `estimateTokens` method estimates the number of tokens in the provided text using a tokenizer.
+
+**ModelDrivers.OAI.ts**
+
+This module, `IModelDrivers.OAI`, provides implementations specific to OpenAI for embedding model drivers, with functionality for calculating text embeddings using Azure OpenAI services.
+
+Key components include:
+- **OpenAIEmbeddingModelDriver**: This class implements the `IEmbeddingModelDriver` interface and the `embed` method, which computes text embeddings using the `calculateEmbedding` function.
+- **calculateEmbedding**: This is an asynchronous utility function that uses Azure OpenAI services to compute embeddings for given text, with up to 5 retries for handling rate limits.
+
+Additionally, the module provides the `OpenAIChatModelDriver` class implementing the `IChatModelDriver` interface to facilitate OpenAI chat model interactions via the `chat` function. This function generates chat responses for specified personas by communicating with Azure OpenAI and includes retry logic for robustness.
+
+**PageRepositoryApi.ts**
+
+The `PageRepositoryApi` module provides an API for managing the storage and retrieval of pages within an application. It contains the class `PageRepositoryApi`.
+
+The `PageRepositoryApi` class extends from the `Api` class and implements the `IStorablePageRepositoryApiWrapper` interface, ensuring consistent storage patterns and handling specific requirements such as content compression.
+
+Key methods include `save`, which saves a page record to a persistent storage system using the `StorableRepostoryApi` class, and `compressString`/`decompressString`, which handle compression and decompression of page content using a deflate algorithm. The constructor initializes the instance with the provided environment and session key for authentication.
+
+Important classes and functions:
+- `Api`
+- `PageRepositoryApi`
+- `IStorablePageRepositoryApiWrapper`
+- `StorableRepostoryApi`
+- `compressString`
+- `decompressString`
+
+**PageRepositoryApi.Types.ts**
+
+This module `PageRepositoryApi.Types` defines data types and interfaces for the PageRepository API. It includes the structure for stored pages and their HTML content, as well as request and response types for page storage operations. These interfaces ensure type-safe operations in the PageRepositoryApi module.
+
+**Important Interfaces:**
+1. `IStoredPage`: Represents a stored web page, including its HTML content.
+2. `IStoredPageRequest`: Specifies the structure for page storage request operations.
+3. `IStoredPageResponse`: Defines the structure for the response obtained after a page storage operation.
+
+These types support the API's functionality by providing clear, consistent data structures.
+
+**QueryModelApi.ts**
+
+The module `QueryModelApi` provides an API for querying models with enrichment and generating questions. 
+
+The `QueryModelApi` class extends the `Api` class. It requires an environment and a session key for authentication during initialization. 
+
+The method `queryModelWithEnrichment` allows you to send an enriched query to the model and returns a promise that resolves to the enriched response data. It handles HTTP POST requests and returns undefined in case of errors.
+
+The method `generateQuestion` sends a query containing persona prompt, question generation prompt, and summary to the model to generate questions. It also handles HTTP POST requests and returns a promise that resolves to the generated question response or undefined for errors.
+
+**SessionApi.ts**
+
+**SessionApi Class:**
+The `SessionApi` class extends the base `Api` class to manage user sessions and authentication. It implements methods for validating session keys and handling session authentication states. 
+
+**Constructor:**
+The constructor initializes an instance of `SessionApi` with environment settings and a session key required for authentication.
+
+**checkSessionKey Method:**
+The `checkSessionKey` method is an asynchronous function that verifies the validity of a session key by sending a POST request to a session API endpoint. It returns a promise that resolves to a string indicating the session key's validity. 
+
+**Modules and Imports:**
+The code imports `axios` for HTTP requests, and imports `Api` and `IEnvironment` for class dependencies.
+
+**StorableRepositoryApi.ts**
+
+The module `StorableRepositoryApi` provides a framework for handling repository operations for objects implementing the `IStorable` interface.
+
+`IStorablePageRepostoryApiWrapper` is an interface that provides a `save` method for saving storable records. 
+
+`IStorableRepostoryApiWrapper` extends `IStorablePageRepostoryApiWrapper` with additional methods like `remove`, `load`, `find`, and `recent` to manage storable records.
+
+`StorableRepostoryApi` class offers methods (`save`, `remove`, `load`, `find`, and `recent`) to interact with a repository via HTTP requests using Axios. These methods handle saving, removing, loading, and fetching recent records by making API calls.
+
+**StudioApi.Types.ts**
+
+This module, `StudioApi.Types`, defines the data types and interfaces used by the Studio API, ensuring type-safe interactions with its endpoints.
+
+The `IStudioBoxerRequest` interface defines the structure for requests made to the Studio Boxer, requiring a `question` string.
+
+The `IStudioBoxerResponseEnrichment` interface outlines the structure for the enrichment data in responses, including an `id`, `summary`, and optional `title`, `url`, and `iconUrl`.
+
+**SummariseApi.Types.ts**
+
+This module, named `SummariseApi.Types`, defines the data types and interfaces used within the Summarise API, ensuring type-safe text summarisation operations.
+
+The `ISummariseRequest` interface outlines the structure for summarisation requests, which includes properties such as `persona` (an enum of type `EPromptPersona`), `text` (the text to be summarized), and an optional `lengthInWords` parameter to specify the desired length of the summary.
+
+The `ISummariseResponse` interface defines the structure for summarisation responses, containing a single property `summary` that holds the summarized text.
+
+These definitions support the core functionality of the SummariseApi module.
+
+**TestForSummariseFailApi.Types.ts**
+
+This module belongs to the `TestForSummariseFailApi` and handles the data types and interfaces required for summary validation.
+
+The interface `ITestForSummariseFailRequest` defines the structure of a summarise request, including mandatory `text` and an optional `lengthInWords`.
+
+The `ETestForSummariseFail` is an enumeration that lists possible validation results: `kSummaryFailed` and `kSummarySucceeded`.
+
+The `ITestForSummariseFailResponse` interface defines the structure of a summarise response, which includes the validation result of type `ETestForSummariseFail`.
+
+These types ensure type-safe validation of summaries within the `TestForSummariseFailApi` module.
+
+**ThemeApi.ts**
+
+The given code is part of the `ThemeApi` module developed by Braid Technologies Ltd. It provides type definitions and interfaces for detecting and analyzing themes in textual content.
+
+The `IFindThemeRequest` interface specifies the structure of a request for theme detection. It includes two properties: `text`, which is the content to be analyzed, and `length`, which likely represents the length of the text or a relevant parameter for the theme-finding algorithm.
+
+These type definitions ensure that the theme-related operations are type-safe, making the code more robust and easier to maintain.
+****************************************
+
+****************************************
 CommonTs\src\SessionApi.ts
 ****************************************
 // Copyright (c) 2024 Braid Technologies Ltd
@@ -22805,6 +23578,30 @@ def test_get_page_missing_param():
 ****************************************
 
 ****************************************
+Salon\apis\ReadMe.Salon.md
+****************************************
+**FindThemeApi.Types_test.py**
+
+This code defines and validates JSON schemas for request and response using the `jsonschema` library and tests these schemas using the `pytest` framework.
+
+The `IFindThemeRequestSchema` specifies a request schema requiring `text` as a string and `length` as a number, with no additional properties allowed.
+
+The `IFindThemeResponseSchema` outlines a response schema needing a `theme` as a string, disallowing any extra properties.
+
+There are also test functions to validate the adherence to schemas. Functions like `test_valid_ifind_theme_request`, `test_invalid_ifind_theme_request_missing_text`, etc., check for valid and different invalid payloads, ensuring exceptions are raised when validations fail.
+
+**PagerepositoryApi.Types_test.py**
+
+This code is designed for testing an API endpoint at `http://api.example.com/functions` using the `pytest` framework and `unittest.mock` for mocking. 
+
+The `test_get_page_success` function tests a successful request with a dummy parameter, verifying a 200 status code and checking the response contains the expected HTML content.
+
+The `test_get_page_missing_param` function tests an unsuccessful request due to a missing required parameter, expecting a 400 status code and an appropriate error message in the response.
+
+The important methods in this module are `test_get_page_success` and `test_get_page_missing_param`.
+****************************************
+
+****************************************
 Salon\apis\StudioApi.Types.yaml
 ****************************************
 openapi: 3.0.0
@@ -23316,6 +24113,61 @@ In case of an error (such as an invalid input file or failure in code generation
 ****************************************
 
 ****************************************
+Salon\src\ReadMe.Salon.md
+****************************************
+**api_to_test_code.py**
+
+This script generates Pytest code from API data provided in JSON or YAML format.
+
+**parse_arguments**: Parses command-line arguments to get the input file path.
+
+**extract_code**: Extracts Python code snippets from a string using specified start and end markers.
+
+**load_api_data**: Loads and parses API data from the specified JSON or YAML file, logging errors if the file is not found or contains invalid data.
+
+**main**: The main execution function. It parses input arguments, loads API data, and sets up an OpenAI assistant to generate Pytest code. Generated code is saved to a new Python file.
+
+**Classes/Functions**: `parse_arguments`, `extract_code`, `load_api_data`, `main`.
+
+**repo_to_text.py**
+
+### Important Classes and Functions:
+
+1. **SummarisedDirectory**: Stores directory names and their summaries.
+
+2. **RepoContentProcessor**: Handles repository processing:
+   - `__init__`: Initializes the processor with paths, configurations, and word limits.
+   - `make_common_file_name`: Creates unique identifiers for common files.
+   - `format_file_block`: Formats content blocks with consistent indentation.
+   - `count_words`: Utilizes NLTK to count words in a text.
+   - `is_in_git_directory`, `is_skip_dir`, `is_in_common_dir`: Identifies paths to skip.
+   - `should_resummarise_code`: Decides if a source file should be re-summarized.
+   - `save_current_content`: Saves accumulated content into a text file.
+   - `process_file`: Processes an individual file and accumulates its content.
+   - `process_repo`: Orchestrates repository processing and stores summaries.
+
+3. **summarise_code**: Summarizes source code using an external service.
+
+4. **load_yaml**: Loads configuration from a YAML file, handles file and error management.
+
+5. **parse_arguments**: Parses command-line arguments for script options and input paths.
+
+6. **validate_args**: Validates parsed arguments to ensure paths exist and are directories.
+
+### Script Workflow:
+
+- **Argument Handling**: Arguments are parsed and validated.
+- **Initialization**: Creates `RepoContentProcessor` with repository path, configuration, and max words.
+- **Skip Patterns and Directories**: Updates processor with additional patterns or directories to skip.
+- **Working Directory**: Changes to specified output directory.
+- **Processing**: Calls `process_repo()` to process the repository.
+- **Error Handling**: Catches exceptions, prints errors, and exits with a status code of 1.
+
+### Entry Point:
+- The script starts execution with the `main()` function when run directly.
+****************************************
+
+****************************************
 Salon\src\repo_to_text.py
 ****************************************
 """
@@ -23347,6 +24199,7 @@ Example:
 import os
 import fnmatch
 import argparse
+from datetime import datetime
 from pathlib import Path
 import requests
 import yaml
@@ -23498,6 +24351,32 @@ class RepoContentProcessor:
         
         return False
     
+    def should_resummarise_code(self, path):
+        """
+        Check if a path should be resummarised
+        """
+        earliest = datetime(1970, 1, 2)
+        readme_timestamp = earliest.timestamp()
+
+        # If there is no readme, we need to summarise
+        directory = os.path.dirname(path)
+        readme_path = os.path.join(directory, SUMMARY_FILENAME)
+        if not os.path.exists(readme_path):
+            return True
+        
+        # If the readme is older than the source file, we need to summarise
+        readme_timestamp = os.path.getmtime(readme_path)
+        
+        # Check if any source files are newer than the readme
+        for file in os.listdir(directory):
+            file_path = os.path.join(directory, file)
+            if os.path.isfile(file_path) and self.is_source_file(Path(file_path)):
+                file_timestamp = os.path.getmtime(file_path)
+                if file_timestamp > readme_timestamp:
+                    return True
+                    
+        return False
+    
     def should_skip_path(self, path):
         """
         Check if a path should be skipped
@@ -23510,8 +24389,8 @@ class RepoContentProcessor:
         if self.is_skip_dir(path):
             return True
             
-        # Skip summary files - we add the  later on
-        if self.is_summary_file(path):
+        # Skip summary files where there are amended- we add them later on
+        if self.is_summary_file(path) and self.should_resummarise_code(path):
             return True
         
         # Skip files matching patterns
@@ -23632,7 +24511,7 @@ class RepoContentProcessor:
                         self.process_file(file_path)
                         file_count += 1
 
-                        if self.is_source_file(file_path):                           
+                        if self.is_source_file(file_path) and self.should_resummarise_code(file_path):
                             file_content = ""
                             summary = None
                             with open(file_path, 'r', encoding='utf-8') as f:
@@ -24002,6 +24881,23 @@ app.http("boxer", {
       authLevel: "anonymous",
       handler: boxer,
    });
+****************************************
+
+****************************************
+Teams\src\functions\ReadMe.Salon.md
+****************************************
+**boxer.ts**
+
+This code provides a server-side implementation for a Teams App using TypeScript and Azure Functions. It features the primary function `boxer` which handles HTTP requests and retrieves boxer information based on a query parameter.
+
+The function `boxer(req, context)`:
+1. Retrieves the "question" parameter from the request.
+2. Logs the question and sets up Axios for handling potential rate limits with up to 5 retries.
+3. Sends a POST request to the Braid API to fetch relevant boxer data.
+4. Processes the API response to extract necessary details and formats them into an array.
+5. Returns this array in the HTTP response or handles errors and invalid requests appropriately.
+
+Classes/Functions: `boxer`, `app.http`.
 ****************************************
 
 ****************************************
@@ -25514,6 +26410,438 @@ def make_local_file_path(url: str) -> str:
     fake_name = clean_path.replace("//", "_").replace("\\", "_").replace("/", "_").replace("=", "_").replace("&", "_").replace("%", "_")
 
     return fake_name[0:200]
+****************************************
+
+****************************************
+Waterfall\src\ReadMe.Salon.md
+****************************************
+**boxer_pipeline.py**
+
+This Python module is a driver for the Boxer data generation pipeline by Braid Technologies Ltd. It sets up logging for the script execution, to log warnings and above.
+
+The primary class, `BoxerDataPipeline`, initializes with an output location and handles the data pipeline operations. Its main function, `search`, processes specified HTML and YouTube content links to generate enriched data chunks.
+
+Key imported classes and functions used include `YouTubePipelineSpec`, `HtmlDirectedPipelineSpec`, `PipelineItem`, `PipelineFileSpec`, `YoutubePlaylistSearcher`, `YouTubeTranscriptDownloader`, `YouTubeTranscriptChunker`, `HtmlLinkCrawler`, `HtmlFileDownloader`, `Summariser`, `Embedder`, and `save_chunks`.
+
+The `search` function organizes tasks like YouTube playlist searching, HTML link crawling, downloading, summarization, embedding, and saving the resultant chunks to JSON.
+
+**boxer_sources.py**
+
+This module provides a curated list of educational resources for AI/ML (Artificial Intelligence/Machine Learning) education and research. 
+
+Key sections include YouTube playlists, which cover full courses and detailed explanations of core topics like machine learning, natural language processing (NLP), deep learning, and AI fundamentals.
+
+Additionally, it lists informative articles, tutorials, and reference documentation from respected industry experts and leading educational institutions. These resources provide insights into advanced topics, tools, and techniques relevant to AI and ML development.
+
+The intention of the module is to build and maintain a comprehensive knowledge base to help individuals stay updated with developments in the AI/ML field.
+
+**chunker.py**
+
+This code outlines a `Chunker` class, which inherits from `PipelineStep`. It is designed to break a text string into smaller, manageable pieces (chunks). The `chunk` method takes a `PipelineItem`, chunk size, and overlap size, and interacts with an external API to perform chunking.
+
+`Chunker` initializes with an output location provided to its constructor. 
+
+The `chunk` method sets up a session with retry logic for HTTP requests, constructs a request payload based on given chunk parameters, and sends it to an external API for processing. Successful responses return chunks encapsulated in `PipelineItem` objects, which the function then returns as a list.
+
+### Important Classes or Functions
+1. `Chunker` (Class)
+2. `chunk` (Method)
+3. `__init__` (Constructor)
+
+**cluster_analyser.py**
+
+The code defines a `ClusterAnalyser` class, which is a subclass of `PipelineStep` from the `src.workflow` module.
+
+The `ClusterAnalyser` class initializes with an output location and the number of clusters for KMeans clustering. This initialization is handled by the `__init__` method.
+
+The main method in this class is `analyse`, which takes a list of `PipelineItem` objects. It extracts the embeddings from these items and applies the KMeans clustering algorithm to assign cluster labels to each item.
+
+The class uses the `KMeans` functionality from the `sklearn.cluster` module for clustering.
+
+Logging is configured to capture warning-level messages and higher, using Python's standard logging library. 
+
+Important classes and functions in the module include `ClusterAnalyser`, `__init__`, and `analyse`.
+
+**db_repository.py**
+
+The provided module allows interaction with the BraidApis Chunk table by converting `PipelineItem` data into a format compatible with the native Chunk API. It is designed for compatibility across multiple applications.
+
+**Important Classes:**
+- `DbRepository`: Contains methods for saving, retrieving, and checking the existence of records in the Braid Cosmos database.
+
+**Important Functions:**
+- `save(self, item: PipelineItem) -> bool`: Saves a `PipelineItem` to the Chunk repository after converting it into a compatible `IStoredChunk` structure.
+- `find(self, path: str) -> PipelineItem`: Retrieves a `PipelineItem` from the database based on a given path.
+- `exists(self, path: str) -> bool`: Checks whether a record with a specific functional key and context exists in the database.
+
+**embedder.py**
+
+The Python code defines a class `Embedder` which extends the `PipelineStep` class and is tasked with creating the embedding for a given text string. 
+
+The `Embedder` class is initialized with an `output_location`, where embeddings will be saved or loaded from. 
+
+The `embed` method generates embeddings for a `PipelineItem`. If an embedding already exists, it is loaded from the repository; otherwise, a new one is created using an external API and saved.
+
+The `embed_text` method directly generates embeddings for provided text strings, using an external API. 
+
+The `requests` library with a retry mechanism is used to handle HTTP requests, logging handles execution information.
+
+**embedder_repository_facade.py**
+
+This code provides a facade to store and manage embeddings in the local file system. 
+
+**Key Classes and Functions:**
+
+1. **read_file_names(path: str, file_spec: str):**
+   - Retrieves a list of file names matching a specified pattern within a directory.
+
+2. **EmbeddingRespositoryFacade:**
+   - Provides an interface to load, save, and check the existence of files in the file system.
+
+3. **EmbeddingRespositoryFacade.__init__(self, output_location: str):**
+   - Initializes the class with a file repository instance, output location, and file extension pattern.
+
+4. **EmbeddingRespositoryFacade.spec() -> str:**
+   - Returns the file extension pattern used for storing files.
+
+5. **EmbeddingRespositoryFacade.list_contents() -> list[str]:**
+   - Lists the contents of the output location by retrieving file names and stripping double extensions.
+
+6. **EmbeddingRespositoryFacade.save(self, path: str, embedding: list[float]) -> None:**
+   - Saves provided text to a file at the specified path.
+
+7. **EmbeddingRespositoryFacade.load(self, path: str) -> list[float]:**
+   - Loads content from a file at the provided path and returns it as a list of floats.
+
+8. **EmbeddingRespositoryFacade.exists(self, path: str) -> bool:**
+   - Checks if the file exists in the output location.
+
+9. **EmbeddingRespositoryFacade.text_to_float(self, embedding: str) -> list[float]:**
+   - Converts a string of numbers to a list of floating-point numbers.
+
+**embedding_finder.py**
+
+**Important Classes/Functions:**
+
+1. **cosine_similarity(a, b)**: A function that computes the cosine similarity between two vectors `a` and `b`.
+
+2. **EmbeddingFinder**: A class designed to find the nearest embedding to a given target text based on cosine similarity.
+
+3. **__init__(self, embeddings, output_location)**: The constructor initializes the EmbeddingFinder with a list of embeddings and an output location.
+
+4. **find_nearest(self, target_text)**: This method uses the `Embedder` class to transform `target_text` into an embedding and then finds the embedding from the list with the highest cosine similarity to it.
+
+**Summary:**
+
+This module contains a function to calculate cosine similarity, and a class, `EmbeddingFinder`, which uses this function to find the most similar embedding to a target text. It relies on classes `Embedder` and `PipelineItem` from other modules to generate text embeddings. Logging is configured to show warnings and above.
+
+**file_repository.py**
+
+This module handles file operations in the local file system, including saving, loading, and checking the existence of files. It has been created by Braid Technologies Ltd in 2024.
+
+Logging is set up using the `logging` library to warn about potential issues during execution.
+
+The function `strip_quotes` removes single and double quotes from a given string.
+
+The `FileRepository` class is central to this module, providing methods to save (`save`), load (`load`), and check the existence (`exists`) of specific files. The file paths are derived using the `make_local_file_path` function.
+
+Important classes and functions:
+1. `strip_quotes`
+2. `FileRepository`
+3. `FileRepository.save`
+4. `FileRepository.load`
+5. `FileRepository.exists`
+
+**google_office_mailer.py**
+
+This script allows sending emails via the Gmail API, with support for attachments, using OAuth2 credentials.
+
+`send_mail()` handles OAuth2 authentication with Gmail, either loading credentials from `token.json` or prompting the user to log in, then calls `send_message_with_attachment()`.
+
+`send_message_with_attachment()` constructs an email with optional attachments and sends it using the Gmail API. The method encodes the message in a format accepted by the API.
+
+`build_file_part()` creates a MIME part for file attachments, managing proper MIME type determination and attachment headers.
+
+Important classes or functions: `send_mail()`, `send_message_with_attachment()`, `build_file_part()`.
+
+**html_file_downloader.py**
+
+This module handles the downloading and processing of HTML content from web pages, encapsulated within a `PipelineStep` subclass named `HtmlFileDownloader`.
+
+The `HtmlFileDownloader` class is initialized with an output location where downloaded files will be saved. It includes a `download` method that either retrieves the HTML content from an online source using Selenium's WebDriver for full JS rendering or reads it from a local file.
+
+The `TextRespositoryFacade` class ensures proper loading and saving of text files. The HTML content is processed and converted to plain text using BeautifulSoup before being saved and appended to the provided `PipelineItem`. 
+
+Logging is configured to track execution details.
+
+**html_link_crawler.py**
+
+**HtmlLinkCrawler class**: This is a custom pipeline step inheriting from `PipelineStep`. It initializes with an output location and a maximum depth for crawling, making it responsible for crawling web pages and generating sub-links.
+
+**crawl method**: This method is the primary function for crawling. It starts by calling a recursive function to fetch sub-links and creates pipeline items for each link, returning a list of `PipelineItem` objects.
+
+**crawl_links_recursively**: A recursive method that processes the HTML content of a page, extracts links, and traverses sub-pages up to a specified depth, filtering unwanted links (e.g., same-page fragments and external links).
+
+**helper functions**: `find_matching_entry`, `deduplicate`, `remove_exits`, `add_prefix`, and `make_fully_qualified_path` are used for filtering duplicates, ensuring links stay within the same site, adding prefixes to relative URLs, and constructing absolute URLs.
+
+**make_local_file_path.py**
+
+This module converts an HTTP URL into a local file system path.
+
+The `make_local_file_path` function takes a URL string as input.
+
+It uses the `urlsplit` function from the `urllib.parse` module to break down the URL into components: scheme, network location (netloc), path, and query.
+
+It then constructs a clean path by concatenating the netloc, path, and query.
+
+Special characters (//, \\, /, =, &, %) in the clean path are replaced with underscores to generate a file-safe name.
+
+The resulting file name is truncated to a maximum length of 200 characters.
+
+**summariser.py**
+
+The code imports necessary libraries like `logging`, `requests`, and custom modules for handling pipeline items and a summary repository. Logging is configured to display warnings.
+
+The `Summariser` class inherits from `PipelineStep` and is designed to create summaries for text strings. The `__init__` method initializes the `Summariser` with an output location.
+
+The `summarise` method in `Summariser` checks if a summary exists. If it does, it loads and returns the summary. If not, it uses an external API to generate a new summary, saves it, and returns the updated `PipelineItem`.
+
+Classes: `Summariser`
+Functions: `__init__`, `summarise`
+
+**summarise_fail_suppressor.py**
+
+This code defines a class `SummariseFailSuppressor` that inherits from `PipelineStep`. It is designed to process text summaries and suppress any invalid ones based on specified criteria.
+
+The `__init__` function initializes the object with an output location.
+
+The `should_suppress` function checks a `PipelineItem` for suppression by calling an external API. It creates a session with retry logic for robustness and posts the text to a specified URL. If the API response indicates the summary is valid, the item is not suppressed.
+
+Important classes/functions:
+1. `SummariseFailSuppressor`
+2. `__init__`
+3. `should_suppress`
+
+**summary_repository_facade.py**
+
+The `SummaryRespositoryFacade` class offers an interface to interact with the file system, specifically for loading, saving, and checking the existence of files.
+
+This class uses the `FileRespository` class from the `src.file_repository` module to perform actual file operations. It initializes with an `output_location` and has a fixed file extension `summary.txt`.
+
+Key methods include:
+- `spec()`: Returns the file extension as a string.
+- `save(path, text)`: Saves a text file to the specified path.
+- `load(path)`: Loads the file content from the path.
+- `exists(path)`: Checks if the file exists at the path.
+
+The class helps manage file operations uniformly across the application.
+
+**text_repository_facade.py**
+
+**Important Classes:**
+1. `TextRespositoryFacade`
+
+**Important Functions:**
+1. `__init__(self, output_location: str)`
+2. `spec() -> str`
+3. `save(self, path: str, text: str) -> None`
+4. `load(self, path: str) -> str`
+5. `exists(self, path: str) -> bool`
+
+`TextRespositoryFacade` provides a simplified interface to interact with the file system. It can save text to a specified path using the `save` method, load text from a specified path using the `load` method, and check if a file exists at a specified path using the `exists` method. This is done via a class from `src.file_repository` called `FileRespository`, which handles the actual file operations. The class also defines a standard file extension ("txt") and a static method `spec` to determine the file type specification.
+
+**theme_finder.py**
+
+The code defines a `ThemeFinder` class to generate a theme for input text paragraphs by querying an external API. 
+
+Logging is configured to capture warnings and errors with a specific format.
+
+The `SESSION_KEY` required for making API requests is fetched from the environment variables.
+
+Essential HTTP headers, such as 'User-Agent', 'Content-Type', and 'Accept', are defined for the requests.
+
+The `ThemeFinder` class contains an initialization method and a `find_theme` method. The `find_theme` method sets up a session with retry policies, sends a POST request with text and length to an external API, and returns the theme if the request is successful or logs an error message otherwise. 
+
+Key components include `find_theme` and `ThemeFinder`.
+
+**waterfall_pipeline.py**
+
+This code serves as the driver for a data processing pipeline. Key classes and functions include `WaterfallDataPipeline`, `sort_array_by_another`, `make_path`, and `load_file`.
+
+`WaterfallDataPipeline` is the main class orchestrating the data search, processing, and clustering workflow. It utilizes various other classes like `WebSearcher`, `HtmlFileDownloader`, `Summariser`, `SummariseFailSuppressor`, `Embedder`, `ClusterAnalyser`, `ThemeFinder`, and `EmbeddingFinder` to handle each part of the process.
+
+It features methods such as `search_dynamic`, `search_static`, `search_and_cluster`, `cluster_from_files`, `cluster`, `create_themes`, and `create_report` to complete each step from data retrieval to report generation. The module also includes utility functions like `sort_array_by_another`, `make_path`, and `load_file` for sorting, path handling, and file reading, respectively.
+
+**waterfall_pipeline_report.py**
+
+This code generates and sends a final Waterfall report via email.
+
+The `create_mail_report` function prepares an email summary report based on a list of `PipelineItem` objects, `Theme` objects, and a `WebSearchPipelineSpec` object. It organizes and formats the data into an HTML email.
+
+The logging module is used to set up warning-level logging for debugging purposes.
+
+The `send_mail` function from the `src.google_office_mailer` module sends the final formatted report email.
+
+Key functions:
+- `create_mail_report`
+- `send_mail`
+
+Key classes:
+- `PipelineItem`
+- `Theme`
+- `WebSearchPipelineSpec`
+
+**waterfall_pipeline_report_common.py**
+
+This script generates and sends a final Waterfall report by mail.
+
+- The `write_chart` function generates a scatter plot based on the embeddings of `PipelineItem` objects. It clusters the items using UMAP, adds theme names as legend entries, and saves an interactive HTML version of the chart to a specified directory. The function returns the file path of the saved chart.
+  
+- The `write_details_json` function writes detailed information about `PipelineItem` objects to a JSON file. Each item’s summary, embedding, path, and related theme are included. This data is saved to a specified directory.
+
+Important classes or functions:
+- `write_chart`
+- `write_details_json`
+- `PipelineItem`
+- `Theme`
+- `WebSearchPipelineSpec`
+
+**waterfall_pipeline_save_chunks.py**
+
+- **Logging Setup**: Configures logging for the script to record events at the ERROR level and sets up a logger.
+
+- **set_timestamps Function**: Updates created and amended timestamps for an `IStoredChunk` object.
+
+- **create_theme_chunk Function**: Creates a chunk from a theme's attributes, sets timestamps, generates embeddings, and assigns various properties.
+
+- **save_chunks Function**: Saves a list of `PipelineItem` objects as chunks in the database. Each chunk includes fields like ID, path, summary, text, and embedding.
+
+- **save_chunk_tree Function**: Saves chunks in a hierarchical structure based on `PipelineItem`, `Theme`, and `PipelineSpec` objects. It involves writing a chart, managing themes (both master and sub-themes), and saving related chunks and summary texts.
+
+**Important Classes/Functions:**
+- `set_timestamps`
+- `create_theme_chunk`
+- `save_chunks`
+- `save_chunk_tree`
+- `Embedder`
+- `DbRepository`
+- `ChunkRepository`
+- `PipelineItem`
+- `Theme`
+- `WebSearchPipelineSpec`
+- `PipelineFileSpec`
+
+**waterfall_survey_pipeline.py**
+
+The script is a driver for a web content pipeline that involves searching, downloading, summarizing, and analyzing HTML content.
+
+**Important classes and functions:**
+- `WaterfallDataPipeline`
+- `search_and_cluster`
+- `create_themes`
+- `create_report`
+- `sort_array_by_another`
+
+The `WaterfallDataPipeline` class coordinates the workflow, encapsulating the processes of searching for web content, summarizing, and clustering them into themes.
+
+The `search_and_cluster` method uses various components (like `WebSearcher`, `HtmlFileDownloader`, `ClusterAnalyser`) to process the web content iteratively, including downloading, summarizing, suppressing failure summaries, embedding, and clustering the results.
+
+The `create_themes` method aggregates the clustered items, summarizes them, and uses `ThemeFinder` to create short and long descriptions of themes. Subsequently, it enriches these themes with relevant examples using the `EmbeddingFinder`.
+
+The `create_report` function finalizes the pipeline by generating reports and saving details.
+
+`sort_array_by_another` is a utility for ordering themes based on their importance.
+
+**web_searcher.py**
+
+This script is the first step in a Waterfall pipeline that involves searching the web and generating a list of `PipelineItem`. It imports necessary libraries such as `logging` and `requests`, and sets up logging to warn levels.
+
+It retrieves the Google Developer API key from environment variables and contains various pre-defined search engine IDs used for specific searches.
+
+The `WebSearcher` class is defined, with an initialization method setting the output location. The `search` method of this class employs the Google Custom Search Engine API to perform web searches using a specified query, extracting URLs from the search results, and then creating and returning a list of `PipelineItem` objects containing these URLs. 
+
+Key classes/functions:
+- `WebSearcher` class
+- `WebSearcher.__init__`
+- `WebSearcher.search`
+
+**workflow.py**
+
+**Freezable Class**
+
+A generic class allowing instances to become immutable after being set up, using `_is_frozen` attribute and `_freeze` method.
+
+**PipelineItem Class**
+
+Inherits `Freezable`. Represents a work item for a processing pipeline with attributes like `path`, `text`, and `summary`. Overloads comparison operators, making instances comparable based on `path` and `summary`.
+
+**Theme Class**
+
+Inherits `Freezable`. Represents a documented cluster of pipeline items with attributes such as `short_description` and `long_description`. Overloads comparison operators, similar to `PipelineItem`.
+
+**PipelineStep Class**
+
+Represents a step in a pipeline, initialized with an `output_location`.
+
+**PipelineSpec Class**
+
+Inherits `Freezable`. Defines specifications for a workflow run, including attributes like `clusters` and `output_chart_name`.
+
+**WebSearchPipelineSpec Class**
+
+Inherits `PipelineSpec`. Adds web-specific attributes such as `pages` and `search_key`, freezing the instance post-initialization.
+
+**YouTubePipelineSpec Class**
+
+Inherits `Freezable`. Specifies configurations for downloading video playlists, with attributes like `playlists` and `max_words`, freezing the instance post-initialization.
+
+**HtmlDirectedPipelineSpec Class**
+
+Inherits `Freezable`. Specifies configurations for downloading web pages, using a list of URLs, and freezes the instance post-initialization.
+
+**FileDirectedPipelineSpec Class**
+
+Inherits `Freezable`. Specifies configurations for handling files, using a list of file paths, and freezes the instance post-initialization.
+
+**PipelineFileSpec Class**
+
+Inherits `Freezable`. Defines the specifications for a full workflow run, including `output_data_name` and `description`, freezing the instance post-initialization.
+
+**youtube_searcher.py**
+
+The code is for generating a list of `PipelineItem` objects from a YouTube playlist as the first step in a Waterfall pipeline.
+
+Important classes and functions include:
+- `parseVideoDurationMins`: This function parses the video's duration from ISO 8601 format into minutes.
+- `YoutubePlaylistSearcher`: This class processes sets of YouTube playlists to create a list of `PipelineItem` objects representing the videos. The constructor initializes the class with an output location. The `search` method fetches videos from specified playlists using the YouTube Data API, creates request objects, retrieves video details, and appends them as `PipelineItem` objects into a list.
+
+**youtube_transcript_chunker.py**
+
+This code is designed to divide a transcript of a YouTube video into chunks for further processing. Important classes and functions include:
+
+- **`make_start_time_offset`**: This function takes an integer (minutes) and converts it into a time offset string formatted for YouTube URLs.
+  
+- **`YouTubeTranscriptChunker`**: A class that extends `PipelineStep` to handle the utility of chunking transcripts. 
+
+- **`__init__`**: Initializes the `YouTubeTranscriptChunker` object with an output location and a `Chunker` object.
+
+- **`chunk`**: This method divides the transcript into chunks of specified word size and overlap, returning a list of new `PipelineItem` objects with updated URLs incorporating time offsets. The process includes handling cases with no chunks or a single chunk, and ensuring fair time distribution across chunks assuming evenly spread text.
+
+Logging is set up to track execution details and is configured to show warnings and above.
+
+**youtube_transcript_downloader.py**
+
+The code facilitates downloading transcripts from YouTube videos in a playlist.
+
+The main class is `YouTubeTranscriptDownloader`, a subclass of the `PipelineStep`. It initializes with an `output_location` for saving transcripts. Its primary method is `download`, which fetches the transcript for a given video, processes it by cleaning, and saves the result using `TextRespositoryFacade`.
+
+The `clean_text` function adjusts specific textual artifacts such as newlines and special characters to improve text quality.
+
+The `parse_video_id` function extracts the video ID from various YouTube URL formats.
+
+The `logging` module is used for recording errors and information. 
+
+The script handles exceptions like no transcript available, transcripts disabled, or video unavailable gracefully.
 ****************************************
 
 ****************************************
@@ -27456,6 +28784,314 @@ class YouTubeTranscriptDownloader (PipelineStep):
 ****************************************
 
 ****************************************
+Waterfall\test\ReadMe.Salon.md
+****************************************
+**test_boxer_pipeline.py**
+
+This module tests the Boxer Pipeline implementation by setting up different pipeline configurations and ensuring they produce the expected outputs.
+
+- **Imports**: It imports necessary standard libraries and specific modules like `YouTubePipelineSpec`, `HtmlDirectedPipelineSpec`, `PipelineFileSpec`, `youtube_playlists`, `html_pages`, and `BoxerDataPipeline` for pipeline specification and data sources.
+- **Logging**: It configures logging to capture and display error-level logs for debugging purposes.
+- **Classes and Functions**:
+  - `test_youtube_boxer_pipeline()`: Tests the pipeline with YouTube data source.
+  - `test_html_boxer_pipeline()`: Tests the pipeline with HTML pages as data sources.
+  - `test_full_boxer_pipeline()`: Intended to perform a full pipeline test combining YouTube playlists and HTML pages; currently, it returns immediately to prevent full execution.
+
+**test_chunker.py**
+
+This module is a pytest suite that tests the functionality of three main classes: `PipelineItem`, `Chunker`, and `HtmlFileDownloader` from the `src` directory.
+
+The `test_output_dir` fixture creates a temporary directory for test output, and ensures it is cleaned up after tests run.
+
+The `test_basic` function verifies if the `Chunker` is correctly initialized with the test output directory.
+
+The `test_with_output` function tests the downloading and chunking of a simple HTML file to ensure the chunker produces the expected number of chunks.
+
+The `test_long` function checks how the `Chunker` handles very long text content by verifying multiple chunks are created.
+
+The `test_long_with_overlap` and `test_long_overlap` functions specifically test chunking with overlapping words, ensuring that overlapping is correctly managed by checking the boundaries and overlaps between chunks.
+
+Logging is configured at the beginning of the module to capture ERROR level logs, to facilitate debugging the test execution process.
+
+**test_cluster_analyser.py**
+
+This code is a test suite using the `pytest` framework to verify the functionality of a pipeline involving several components from the `src` directory.
+
+The `test_output_dir` function is a `pytest` fixture that creates a temporary directory for test outputs and ensures cleanup after the test execution.
+
+The `test_basic` function tests the basic creation and attributes of a `ClusterAnalyser` object using a single `PipelineItem`.
+
+The `test_with_output` function tests the full pipeline by iterating over a list of HTML test files, processing them through `HtmlFileDownloader`, `Summariser`, and `Embedder`, and finally analyzing them with `ClusterAnalyser`.
+
+Important classes or functions:
+- `test_output_dir` (fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
+- `PipelineItem`
+- `ClusterAnalyser`
+- `HtmlFileDownloader`
+- `Summariser`
+- `Embedder`
+
+**test_db_repository.py**
+
+This code contains unit tests for the `DbRepository` class from the `src.db_repository` module.
+
+The `test_basic` function assesses the creation of a `DbRepository` object and checks if its context ID is set correctly.
+
+The `test_does_not_exist` function verifies that the `exists` method of `DbRepository` accurately identifies a non-existing item.
+
+The `test_save` function tests the `save` method by attempting to save a `PipelineItem` instance and checking if the operation is successful.
+
+The `test_save_exists` function first saves a `PipelineItem` and then verifies its existence with the `exists` method.
+
+The `test_save_load` function saves a `PipelineItem` and then confirms that it can be loaded back correctly with the `find` method.
+
+Key classes and functions: `DbRepository`, `PipelineItem`, `test_basic`, `test_does_not_exist`, `test_save`, `test_save_exists`, and `test_save_load`.
+
+**test_embedder.py**
+
+This code involves setting up and executing pytest cases to test the functionality of classes `Embedder` and `HtmlFileDownloader` from a source directory.
+
+Logging is configured to capture and display script execution details above the warning level, with an error level for the module-specific logger.
+
+A pytest fixture creates a temporary directory for test outputs, and ensures cleanup after tests run.
+
+The `test_basic` function ensures the `Embedder` class correctly sets its output location.
+
+The `test_with_output` function tests the process of downloading HTML content using `HtmlFileDownloader`, enriching it, and then embedding that content using `Embedder`, verifying that the embedding is successfully generated.
+
+Important classes/functions:
+- `test_output_dir` (pytest fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
+
+**test_embedding_finder.py**
+
+This code is for testing a workflow involving text processing and embeddings:
+
+- `test_output_dir` is a pytest fixture that sets up and cleans up a temporary directory for test output. It logs the directory creation and cleanup.
+- `test_basic` checks that an `EmbeddingFinder` instance is correctly initialized with a list of embeddings.
+- `test_with_output` tests the full flow of processing HTML files: downloading them using `HtmlFileDownloader`, summarizing them with `Summariser`, embedding them with `Embedder`, and finally finding the nearest embeddings using `EmbeddingFinder`.
+
+Key components:
+- `test_output_dir` (fixture)
+- `test_basic` (test function)
+- `test_with_output` (test function)
+- `EmbeddingFinder`
+- `HtmlFileDownloader`
+- `PipelineItem`
+- `Summariser`
+- `Embedder`
+
+**test_embedding_repository.py**
+
+This Python script uses the pytest framework to perform unit tests for the `EmbeddingRespositoryFacade` class from the `embedder_repository_facade` module.
+
+Logging is set up to log warnings and errors, helping diagnose issues during test execution.
+
+The `test_output_dir` fixture creates a temporary directory for test outputs and ensures its cleanup post-test.
+
+The `test_basic` function verifies that the `EmbeddingRespositoryFacade` initializes correctly with a given output location.
+
+The `test_with_output` function ensures that saving, checking existence, and loading embeddings work correctly.
+
+The `test_with_no_output` function tests that loading a non-existent file raises an exception.
+
+**test_errors.py**
+
+This script sets up the environment for importing from the 'src' directory, including adjusting the system path.
+
+The logging module is configured to record information about script execution, with the default logging level set to ERROR.
+
+The script imports and utilises the 'PipelineItem' and 'Summariser' classes from the 'workflow' and 'summariser' modules respectively.
+
+The `test_basic()` function contains assertions and log statements for different logging levels to test logging.
+
+The `test_with_output()` function sets the working directory, creates a `PipelineItem`, populates it with text, uses a `Summariser` to summarize the text, and verifies the summary is generated.
+
+**test_file_repository.py**
+
+This code tests the File System API, particularly the `FileRespository` class from the `file_repository` module.
+
+The script sets up the test environment by importing necessary modules, configuring logging, and extending the Python path to include the source directory.
+
+The `test_output_dir` fixture creates a temporary directory for test outputs, logs its creation, and ensures cleanup by removing the directory after tests run.
+
+The `test_basic` function tests that the repository’s output location is correctly set upon initialization.
+
+The `test_with_output` function verifies that a file can be saved to and loaded from the repository correctly.
+
+The `test_with_no_output` function ensures that the repository correctly handles attempts to load non-existent files.
+
+**test_html_file_downloader.py**
+
+This module sets up an environment for testing with pytest, and includes the following key functions and classes:
+
+1. **test_output_dir (fixture)**: Creates a temporary directory for test output and ensures cleanup after tests run, logging the creation and deletion of the directory.
+
+2. **test_basic**: Tests if the `HtmlFileDownloader` instance has the correct output location by asserting equality of expected and actual output location paths.
+
+3. **test_with_output**: Tests the `HtmlFileDownloader` by downloading an HTML file ('simple_test.html') and checking that the downloaded content has text. Uses the `PipelineItem` class to manage the path of the file.
+
+4. **test_connected**: Similar to `test_with_output`, but downloads content from a URL ('https://openai.com/') to ensure online functionality.
+
+The important classes are `PipelineItem` and `HtmlFileDownloader`.
+
+**test_html_link_crawler.py**
+
+This code is a pytest module designed for testing the `HtmlLinkCrawler` from the `src.html_link_crawler` module and `PipelineItem` from the `src.workflow` module.
+
+Logging is set up to report execution details, configured at the ERROR level.
+
+`test_output_dir` is a pytest fixture that creates and cleans up a temporary directory for test outputs.
+
+There are several test functions: `test_basic`, `test_with_output`, `test_with_one_recursion`, `test_with_two_recursions`, `test_many_sublinks`, and `test_mad_page`, all of which create an `HtmlLinkCrawler` instance and verify its functionality by asserting the number of links it finds during a crawl.
+
+**test_summariser.py**
+
+This code is a Python module containing tests for a summarisation workflow, utilising the `pytest` framework.
+
+It sets up the paths and logging configuration for the tests. The `sys.path` is extended to include the parent and `src` directories to ensure that module imports work correctly.
+
+The `test_output_dir` fixture creates a temporary directory for test outputs, provides its path to the tests, and ensures clean-up by deleting the directory post-test.
+
+Two test functions are defined: `test_basic` creates a `Summariser` instance and checks the designated output location, `test_with_output` simulates the complete summarisation workflow by downloading an HTML file and then summarising it.
+
+Important classes/functions:
+- `test_output_dir` (fixture)
+- `test_basic` (function)
+- `test_with_output` (function)
+
+**test_summarise_fail_suppressor.py**
+
+This script is a set of tests for components in a Python project, which uses the `pytest` framework.
+
+The logging module is configured to report warnings and errors, ensuring the script's execution is logged comprehensively.
+
+A pytest fixture `test_output_dir` creates a temporary directory for test outputs and ensures clean-up after tests.
+
+Functions `test_basic`, `test_with_no_suppression`, and `test_with_suppression` test the functionality of the `SummariseFailSuppressor` class. `test_basic` verifies the assignment of the output location. The other two tests assess how summaries are handled when suppressing conditions are and aren't met.
+
+Important classes/functions:
+- SummariseFailSuppressor
+- PipelineItem
+- test_output_dir (fixture)
+- test_basic (test function)
+- test_with_no_suppression (test function)
+- test_with_suppression (test function)
+
+**test_summary_repository.py**
+
+This code is a test module for a repository system that handles summaries, using `pytest` for testing. The essential classes and functions are:
+
+- **`test_output_dir` fixture**: This creates a temporary directory for test outputs, provides its path to the tests, and cleans up the directory afterward.
+- **`test_basic` function**: It tests the basic creation of a `SummaryRepositoryFacade` object and verifies that the output location is set correctly.
+- **`test_with_output` function**: It verifies that a repository can save, check the existence of, and load a text file correctly.
+- **`test_with_no_output` function**: It tests the repository's behavior when trying to access a file that wasn't saved, ensuring proper handling of non-existent entries.
+
+**test_text_repository.py**
+
+This module contains tests for the text repository API, primarily using the pytest framework.
+
+The `test_output_dir` is a pytest fixture that creates a temporary directory for test output and ensures cleanup after tests.
+
+`TextRespositoryFacade` is the class from the module `text_repository_facade` that's being tested.
+
+`test_basic` checks that a `TextRespositoryFacade` instance correctly identifies the output location.
+
+`test_with_output` verifies that text can be saved and retrieved correctly from the repository.
+
+`test_with_no_output` checks that attempting to retrieve non-existent text properly indicates failure.
+
+Logging is set up at the ERROR level to capture execution details.
+
+**test_theme_finder.py**
+
+This script is a test module for a summarisation pipeline using classes from the `src` library.
+
+**Logging setup**: Configures logging to display warnings and higher-level messages, while the script logs errors specifically.
+
+**test_basic function**: It verifies the instantiation of the `ThemeFinder` class to ensure it is not `None`.
+
+**test_with_output function**: 
+- Changes the current working directory to the script's location.
+- Defines test HTML file paths and an output location.
+- Iterates through each test file, creating `PipelineItem` objects.
+- Downloads the HTML content and then summarises it using the `HtmlFileDownloader` and `Summariser` classes, respectively.
+- Combines the summaries, finds common themes via the `ThemeFinder` class, and asserts that the themes are generated.
+
+**Key Classes/Functions**: `PipelineItem`, `HtmlFileDownloader`, `Summariser`, `ThemeFinder`, `test_basic`, `test_with_output`.
+
+**test_waterfall_pipeline.py**
+
+The code is designed to test the Waterfall data pipeline from Braid Technologies Ltd. 
+
+It starts with necessary imports, sets up logging, and defines a root directory for tests. The main class used is `WaterfallDataPipeline`, and it is tested using `pytest`.
+
+The `test_basic()` function checks if the pipeline outputs to the specified location. 
+
+Several tests (`test_with_search_supply`, `test_with_search_demand`, `test_with_search_telecom`, `test_with_search_nationwide`, `test_with_search_bny`) initialize the pipeline, create a `WebSearchPipelineSpec` with search configurations, and assert if links are retrieved. 
+
+One test (`test_with_search_vf_survey_01`) uses `PipelineSpec` and `FileDirectedPipelineSpec` for file-based data.
+
+Key classes/functions include `WaterfallDataPipeline`, `WebSearchPipelineSpec`, `PipelineSpec`, and `FileDirectedPipelineSpec`.
+
+**test_web_searcher.py**
+
+The code imports several standard libraries such as `os`, `sys`, and `logging`, and adjusts the `sys.path` to include parent and source directories.
+
+Logging is configured to show messages of level WARNING or higher and the logger is set to the ERROR level to log only errors.
+
+The `WebSearcher` class and the `AI_SUPPLY_STACK_SEARCH_ENGINE_ID` constant are imported from `src.waterfall_pipeline` and `src.web_searcher`, respectively.
+
+There are two test functions, `test_basic` and `test_with_search`. `test_basic` checks if a `WebSearcher` object's `output_location` attribute is correctly set. `test_with_search` sets up a web search pipeline, initiates a search with one page, and verifies that at least one item is returned.
+
+Important classes/functions:
+- `WebSearchPipelineSpec`
+- `WebSearcher`
+- `test_basic`
+- `test_with_search`
+
+**test_workflow.py**
+
+The script sets up a test environment by modifying the system path to include the parent and source directories, enabling module imports. It also configures logging to handle errors and display warning level logs.
+
+Three testing functions are defined: `test_pipeline_item`, `test_theme`, and `test_pipeline`.
+
+- `test_pipeline_item` creates a `PipelineItem` object, sets attributes, and verifies that invalid attribute assignment raises a `TypeError`.
+- `test_theme` creates a `Theme` object with associated `PipelineItem` objects, sets descriptions, and tests for correct attribute behavior.
+- `test_pipeline` configures a `WebSearchPipelineSpec` object, links `Theme` objects, and verifies invalid attribute assignment raises a `TypeError`.
+
+Important classes include `WebSearchPipelineSpec`, `PipelineItem`, and `Theme`.
+
+**test_youtube_playlist.py**
+
+1. The script handles various imports including `os`, `sys`, and `logging` from the standard library and several module-specific imports such as `YouTubePipelineSpec`, `YoutubePlaylistSearcher`, `YouTubeTranscriptDownloader`, and `youtube_playlists`.
+
+2. The script sets up the system paths to include parent directories, making it possible to access specific modules in the `src` directory.
+
+3. Logging is configured to display warnings and errors, and a logger named `__name__` logs error-level messages.
+
+4. The script contains three test functions: `test_basic`, `test_with_search`, and `test_download`.
+
+5. `test_basic` tests the initialization of `YoutubePlaylistSearcher` by verifying the output location.
+
+6. `test_with_search` changes the working directory, sets up an output location, uses `YoutubePlaylistSearcher` to search through playlists, and asserts that at least one item is found.
+
+7. `test_download` initializes both `YoutubePlaylistSearcher` and `YouTubeTranscriptDownloader`, performs searches and downloads transcripts, then asserts the length of the retrieved items and ensures there is at least one item in the results.
+
+Key Classes/Functions: 
+- `YoutubePlaylistSearcher`
+- `YouTubePipelineSpec`
+- `YouTubeTranscriptDownloader`
+- `youtube_playlists`
+- `test_basic`
+- `test_with_search`
+- `test_download`
+****************************************
+
+****************************************
 Waterfall\test\test_boxer_pipeline.py
 ****************************************
 """Test module for the Boxer Pipeline implementation."""
@@ -29118,1783 +30754,4 @@ Waterfall\test\telecom_output\courses.nvidia.com_courses_course-v1
 Waterfall\test\telecom_output\learn.nvidia.com_courses_course-detailcourse_id_course-v1
 ****************************************
 
-****************************************
-
-****************************************
-WaterfallBrowser\dist\waterfall.pack.css
-****************************************
-/* src/App.css */
-.App {
-  text-align: center;
-}
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-.App-header {
-  background-color: #282c34;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-.App-link {
-  color: #61dafb;
-}
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-****************************************
-
-****************************************
-WaterfallBrowser\src\App.tsx
-****************************************
-import React from 'react';
-import { createRoot } from "react-dom/client";
-import { FluentProvider, teamsDarkTheme, makeStyles } from '@fluentui/react-components';
-import ChunkRetriever from './ChunkRetriever';
-import { retrieveChunk } from './ChunkRetriever';
-import reportWebVitals from './reportWebVitals';
-
-const fluidFillPageStyles = makeStyles({
-   root: {
-      minWidth: "512px",  // Ask for enough for at least the error message  
-      height: '100%',  /* fill the screen with flex layout */
-      width: '100vw'   /* fill the screen with flex layout */      
-   },
-});
-
-const pageOuterStyles = makeStyles({
-   root: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'stretch',    /* for a row, the main axis is vertical, flex-end is items aligned to the bottom of the row */
-      justifyContent: 'center', /* for a row, the cross-axis is horizontal, center means vertically centered */
-      height: '100%',  /* fill the screen with flex layout */
-      width: '100vw',  /* fill the screen with flex layout */
-      marginLeft: '0px',
-      marginRight: '0px',
-      marginTop: '0px',
-      marginBottom: '0px',
-      paddingLeft: '20px',
-      paddingRight: '20px',
-      paddingTop: '20px',
-      paddingBottom: '20px',
-      webkitTextSizeAdjust: '100%'
-   },
-});
-
-export const innerColumnStyles = makeStyles({
-   root: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start',    // start layout at the top       
-      alignItems: 'left',
-      maxWidth: '896px',
-      width: '100vw',  /* fill the screen with flex layout */      
-   },
-});
-
-function App() {
-
-   const fluidFillPageClasses = fluidFillPageStyles();
-   const pageOuterClasses = pageOuterStyles();
-   const innerColumnClasses = innerColumnStyles();
-
-   let chunkId : string | undefined = undefined;
-
-   const params = new URLSearchParams(window.location.search);
-   let chunkParam = params.get("id");
-   console.log(chunkParam); 
-
-   if (chunkParam) {
-      chunkId = chunkParam; 
-   }
-   console.log (chunkId);
-   return (
-      <FluentProvider theme={teamsDarkTheme} className={fluidFillPageClasses.root}>
-         <div className={pageOuterClasses.root}>
-            <div className={innerColumnClasses.root}>
-               <ChunkRetriever chunkId={chunkId} retrieverFn={retrieveChunk} />
-            </div>
-         </div>
-      </FluentProvider>
-   );
-}
-
-export default App;
-
-// This allows code to be loaded in node.js for tests, even if we dont run actual React methods
-if (document !== undefined && document.getElementById !== undefined) {
-   const root = createRoot(document.getElementById("reactRoot") as HTMLElement);
-   root.render(
-      <React.StrictMode>
-         <App />
-      </React.StrictMode>      
-   ); 
-}
-
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
-****************************************
-
-****************************************
-WaterfallBrowser\src\ChunkRetriever.tsx
-****************************************
-import React, { useState } from 'react';
-import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
-import { ChunkRepostoryApi } from './CommonTs/src/ChunkRepositoryApi';
-import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
-import { ChunkView } from './ChunkView';
-import { ChunkViewError } from './ChunkViewError';
-import { ChunkViewLoading } from './ChunkViewLoading';
-import { getDefusc } from './Defusc';
-
-/**
- * Type for a function that returns an IStoredChunk given a key. 
- * This allows test code to replace it with a stub.
- * Production calls the relevant API. 
- **/
-export type ChunkRetriveFunction = (chunkId: string | undefined) => Promise <IStoredChunk | undefined>;
-
-/**
- * A React component that retrieves and displays a chunk of data using a provided retrieval function.
- * 
- * @param props - The properties for the component.
- * @param props.chunkId - The unique identifier for the chunk to be retrieved.
- * @param props.retrieverFn - A function that retrieves the chunk data based on the chunkId.
- * 
- * @returns A JSX element displaying the retrieved chunk using the ChunkView component, 
- * or an empty div if the chunk is not yet retrieved.
- * 
- * The component manages the retrieval state using internal state variables to track if the retrieval
- * process is ongoing or completed, and updates the UI accordingly.
- */
-export function ChunkRetriever (props: {chunkId: string | undefined, retrieverFn: ChunkRetriveFunction}) {
-    
-    const [chunk, setChunk] = useState<IStoredChunk | undefined> (undefined);
-    const [calling, setCalling] = useState<boolean> (false);    
-    const [called, setCalled] = useState<boolean> (false);  
-
-    if (!chunk && props.chunkId) {
-       if (!calling && !called) {
-
-       setCalling (true);
-        props.retrieverFn (props.chunkId).then ((prom) => {
-            setCalling (false);
-            setCalled (true);
-
-            let retrivedChunk = prom;
-            if (retrivedChunk)
-               setChunk (retrivedChunk);
-        }).catch ((e) => {
-            setCalling (false);
-            setCalled (true);
-
-        })
-      }
-    }
-    
-    return (
-      chunk ? <ChunkView chunk={chunk as unknown as IStoredChunk}/> 
-            : calling ? <ChunkViewLoading/> 
-                      : <ChunkViewError/>
-    );
-}
-
-export default ChunkRetriever;
-
-/**
- * Asynchronously retrieves a stored chunk by its unique identifier.
- *
- * @param chunkId - The unique identifier of the chunk to be retrieved.
- * @returns A promise that resolves to the retrieved IStoredChunk or undefined if not found.
- *
- * The function decodes an obfuscated string to obtain an API key, initializes
- * the ChunkRepositoryApi with the default environment and the decoded key,
- * and attempts to load the chunk using the provided chunkId.
- */
-export async function retrieveChunk(chunkId: string | undefined): Promise<IStoredChunk | undefined> {
-
-   let defusc = getDefusc();
-
-   let env = getDefaultEnvironment();
-   let api = new ChunkRepostoryApi(env, defusc);
-
-   if (chunkId) {
-      let loaded = await api.load(chunkId);
-      let loadedChunk: IStoredChunk | undefined = loaded as IStoredChunk | undefined;
-
-      return loadedChunk;
-   }
-   else
-      return undefined;
-}
-****************************************
-
-****************************************
-WaterfallBrowser\src\ChunkView.tsx
-****************************************
-import React, { ReactNode } from 'react';
-import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
-import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
-
-
-/**
- * Constructs a URL string by appending the given value as a query parameter.
- *
- * @param value - The string value to be appended as a query parameter.
- * @returns The constructed URL string with the query parameter.
- */
-function chunkUrl (value: string) : string {
-   return window.location.protocol + '//' + window.location.host + window.location.pathname + '?id=' + value.toString();
-}
-
-
-/**
- * Generates a ReactNode that provides a link back to a parent element.
- *
- * @param value - The identifier for the parent element, used to construct the URL.
- * @returns A paragraph element containing a link if the value is provided, or an empty paragraph if undefined.
- */
-function backToParent (value: string | undefined) : ReactNode {
-
-   if (value) {
-      let relatedUrl = chunkUrl(value);
-      return (<p>{uiBackToParentChunk} <a href={relatedUrl}>{value}</a> </p>)
-   }
-   else
-      return <p></p>
-}
-
-/**
- * Maps a string value to a ReactNode containing a paragraph with a hyperlink.
- *
- * @param value - The string value used to generate the URL and key for the ReactNode.
- * @param index - The index of the current element in the array (unused).
- * @param all - The array of strings being processed (unused).
- * @returns A ReactNode containing a paragraph with a hyperlink pointing to a URL
- *          constructed from the input string value.
- */
-function mapRelated (value: string, index: number, all: Array<string>) : ReactNode {
-
-   let relatedUrl = chunkUrl(value);
-   let nodeWithKey : ReactNode = <p key={value}> <a href={relatedUrl}>{value}</a> </p>;
-
-   return (nodeWithKey)
-}
-
-/**
- * Splits the input text into an array of strings based on double newline characters.
- * If no double newline is found, splits by single newline characters.
- * Filters out any empty or whitespace-only strings from the result.
- *
- * @param text - The input string to be split.
- * @returns An array of non-empty strings obtained by splitting the input text.
- */
-function splitByNewlines(text: string): string[] {
-   if (!text.includes('\n\n')) {
-      return text.split('\n\n').filter(str => str.trim().length > 0);
-   }
-   return text.split('\n').filter(str => str.trim().length > 0);
-}
-
-/**
- * Renders a view for a stored chunk, displaying its title, summary, and URL.
- * Includes navigation to the parent chunk and lists related chunks if available.
- * 
- * @param props - Contains the stored chunk data to be displayed.
- * @returns A ReactNode representing the chunk view.
- */
-export function ChunkView(props: {chunk: IStoredChunk}) {
-
-    let splitSummary: Array<string> = new Array<string> ();
-    let url : string | undefined = undefined
-
-    if (props.chunk.storedSummary?.text) {
-        splitSummary = splitByNewlines (props.chunk.storedSummary?.text);
-    }
-
-
-   url = props.chunk.url;
-
-    return (
-        <div>
-            <p><b>{uiAppName}</b></p>
-            &nbsp;                   
-            <p><b>{props.chunk.storedTitle?.text}</b></p>
-            &nbsp;
-            {splitSummary.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-            ))}
-            &nbsp;
-            <p>{url ? <a href={url}>{url}</a> : <div/>}</p>
-            &nbsp;
-            {backToParent (props.chunk.parentChunkId)}
-            &nbsp;
-            {props.chunk.relatedChunks ? <p>{uiRelatedChunks}</p> : <div/>}            
-            {props.chunk.relatedChunks ? props.chunk.relatedChunks.map (mapRelated) : <div/>}
-            &nbsp;
-        </div>
-    );
-}
-
-export default ChunkView;
-****************************************
-
-****************************************
-WaterfallBrowser\src\ChunkViewError.tsx
-****************************************
-import React from 'react';
-
-import { uiAppName, uiSorryNoData } from './UIString';
-
-export function ChunkViewError () {
-
-    
-    return (
-        <div>
-            <p><b>{uiAppName}</b></p>
-            &nbsp;                   
-            <p>{uiSorryNoData}</p>
-            &nbsp;
-        </div>
-    );
-}
-
-export default ChunkViewError;
-****************************************
-
-****************************************
-WaterfallBrowser\src\ChunkViewLoading.tsx
-****************************************
-import React from 'react';
-
-import { uiAppName, uiLoading } from './UIString';
-
-export function ChunkViewLoading () {
-
-    
-    return (
-        <div>
-            <p><b>{uiAppName}</b></p>
-            &nbsp;                   
-            <p>{uiLoading}</p>
-            &nbsp;
-        </div>
-    );
-}
-
-export default ChunkViewLoading;
-****************************************
-
-****************************************
-WaterfallBrowser\src\Defusc.tsx
-****************************************
-/**
- * Decodes an obfuscated string using base64 decoding
- * @returns {string} The decoded string value
- */
-export function getDefusc (): string {
-   let obfusc = "NDliNjUxOTQtMjZlMS00MDQxLWFiMTEtNDA3ODIyOWY0Nzhh"
-   let defusc = atob(obfusc);
-
-   return defusc;
-}
-****************************************
-
-****************************************
-WaterfallBrowser\src\reportWebVitals.ts
-****************************************
-/**
- * @module WaterfallBrowser/src/reportWebVitals.ts
- * 
- * This module provides a function to report web vitals metrics.
- */
-
-import { ReportHandler } from 'web-vitals';
-
-const reportWebVitals = (onPerfEntry?: ReportHandler) => {
-  if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    });
-  }
-};
-
-export default reportWebVitals;
-****************************************
-
-****************************************
-WaterfallBrowser\src\UIString.ts
-****************************************
-/**
- * @module WaterfallBrowser/src/UIString.ts
- * 
- * This module contains UI text constants for the Waterfall Browser application.
- */
-
-export let uiAppName = "Waterfall Browser";
-export let uiSorryNoData = "Sorry, we can't fund a chunk of data with that ID.";
-export let uiBackToParentChunk = "Back to parent:";
-export let uiRelatedChunks = "Related:";
-export let uiLoading = "Loading."
-****************************************
-
-****************************************
-WaterfallBrowser\test\chunkretriever.test.tsx
-****************************************
-'use strict';
-// Copyright Braid technologies ltd, 2024
-
-import { describe, it } from 'mocha';
-import { expect } from "expect";
-import React from "react";
-import { render, screen } from "@testing-library/react";
-
-import { ChunkRetriever } from '../src/ChunkRetriever';
-import { testChunkRetriever, parentKey } from './ChunkTestHelpers';
-
-function waitFor(seconds: number): Promise<void> {
-   return new Promise(resolve => setTimeout(resolve, seconds * 1000));
-}
-
-// https://medium.com/@ufukbakan/testing-react-with-mocha-and-typescript-ultimate-guide-54332de7cf36#:~:text=Open%20package.json%20with%20any%20text%20editor%2C%20find%20the,can%20use%20this%20glob%20matcher%3A%20.%2F%2A%2A%2F%2A.test.%20%5Bjt%5Ds%3F%20%28x%29
-
-describe("ChunkRetriever", function () {
-
-   it("Renders sample Chunk", async function () {
-
-      async function renderfn () { render(<ChunkRetriever chunkId={parentKey} retrieverFn={testChunkRetriever} />); }
-
-      await renderfn();
-
-      await waitFor(19);
-
-      const summaryLinkElement = screen.getByText(/Summary/i);
-      expect(summaryLinkElement !== null).toEqual(true);
-    
-      const titleLinkElement = screen.getByText(/Title/i);
-      expect(titleLinkElement !== null).toEqual(true);  
-    
-      const linkElement = screen.getByText(/microsoft/i);
-      expect(linkElement !== null).toEqual(true);  
-   }).timeout(20000);
-  
-}).timeout(20000);
-****************************************
-
-****************************************
-WaterfallBrowser\test\ChunkTestHelpers.tsx
-****************************************
-
-import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
-
-
-
-export let parentKey = "123";
-let childKey1 = "456";
-let childKey2 = "789";
-let modelKey = "TestModel";
-
-let now = new Date().toUTCString();
-
-export let testChunk: IStoredChunk = {
-   id: parentKey,
-   applicationId: "Test",
-   schemaVersion: "1",
-   created: now,
-   amended: now,
-   contextId: "madeupId",
-   userId: "madeupId",
-   className: "madeUpClass",
-   functionalSearchKey: parentKey,
-   parentChunkId: undefined,
-   originalText: undefined,
-   url: "https://microsoft.com",
-   storedEmbedding: undefined,
-   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
-   storedTitle: {modelId: modelKey, text: "Title"},
-   relatedChunks: [childKey1, childKey2]
-}
-
-export let childChunk1: IStoredChunk = {
-   id: childKey1,
-   applicationId: "Test",
-   schemaVersion: "1",
-   created: now,
-   amended: now,
-   contextId: "madeupId",
-   userId: "madeupId",
-   className: "madeUpClass",
-   functionalSearchKey: childKey1,
-   parentChunkId: parentKey,
-   originalText: undefined,
-   url: "https://microsoft.com",
-   storedEmbedding: undefined,
-   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
-   storedTitle: {modelId: modelKey, text: "Title"},
-   relatedChunks: undefined
-}
-
-export let childChunk2: IStoredChunk = {
-   id: childKey1,
-   applicationId: "Test",
-   schemaVersion: "1",
-   created: now,
-   amended: now,
-   contextId: "madeupId",
-   userId: "madeupId",
-   className: "madeUpClass",
-   functionalSearchKey: childKey2,
-   parentChunkId: parentKey,
-   originalText: undefined,
-   url: "https://microsoft.com",
-   storedEmbedding: undefined,
-   storedSummary: {modelId: modelKey, text: "Summary Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
-   storedTitle: {modelId: modelKey, text: "Title"},
-   relatedChunks: undefined
-}
-
-export let parentChunk = testChunk;
-
-
-export async function testChunkRetriever (chunkId: string | undefined) : Promise <IStoredChunk | undefined> {
-
-   switch (chunkId) {
-      case parentKey:
-         return parentChunk;
-      case childKey1:
-         return childChunk1;        
-      case childKey2:
-         return childChunk2;            
-      default:
-         return undefined;
-   }
-}
-****************************************
-
-****************************************
-WaterfallBrowser\test\chunkview.test.tsx
-****************************************
-'use strict';
-// Copyright Braid technologies ltd, 2024
-
-import { describe, it } from 'mocha';
-import { expect } from "expect";
-import React from "react";
-import { render, screen } from "@testing-library/react";
-
-import { ChunkView } from '../src/ChunkView';
-import { testChunk } from './ChunkTestHelpers';
-
-// https://medium.com/@ufukbakan/testing-react-with-mocha-and-typescript-ultimate-guide-54332de7cf36#:~:text=Open%20package.json%20with%20any%20text%20editor%2C%20find%20the,can%20use%20this%20glob%20matcher%3A%20.%2F%2A%2A%2F%2A.test.%20%5Bjt%5Ds%3F%20%28x%29
-
-describe("ChunkView", function () {
-
-   it("Renders sample Chunk", function () {
-
-      render(<ChunkView chunk={testChunk}/>);
-
-      const summaryLinkElement = screen.getByText(/Summary/i);
-      expect(summaryLinkElement !== null).toEqual(true);
-    
-      const titleLinkElement = screen.getByText(/Title/i);
-      expect(titleLinkElement !== null).toEqual(true);  
-    
-      const linkElement = screen.getByText(/microsoft/i);
-      expect(linkElement !== null).toEqual(true);  
-   });
-  
-});
-****************************************
-
-****************************************
-WaterfallBrowser\create-react-archive\build\static\css\main.8f788f21.css
-****************************************
-body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;margin:0}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}.App{text-align:center}.App-logo{height:40vmin;pointer-events:none}@media (prefers-reduced-motion:no-preference){.App-logo{animation:App-logo-spin 20s linear infinite}}.App-header{align-items:center;background-color:#282c34;color:#fff;display:flex;flex-direction:column;font-size:calc(10px + 2vmin);justify-content:center;min-height:100%}.App-link{color:#61dafb}@keyframes App-logo-spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
-/*# sourceMappingURL=main.8f788f21.css.map*/
-****************************************
-
-****************************************
-WaterfallBrowser\src\CommonTs\src\Model.ts
-****************************************
-// Copyright (c) 2024 Braid Technologies Ltd
-import { InvalidParameterError } from './Errors';
-import { IModel } from './IModel';
-import GPT4Tokenizer from 'gpt4-tokenizer';
-
-const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
-
-
-/**
- * GPTM class implementing IModel interface.
- * Represents a model with specific deployment settings and context window sizes.
- */
-export class GPT4 implements IModel {
-
-   deploymentName: string;
-   embeddingDeploymentName: string;
-   contextWindowSize: number;
-   contextWindowSizeWithBuffer: number;
-
-   public constructor() {
-      this.deploymentName = "GPT4o";
-      this.embeddingDeploymentName = "Embed-3";
-      this.contextWindowSize = 8192;
-      this.contextWindowSizeWithBuffer = (8192 - 256)
-   }
-
-   /**
-    * Checks if the given text fits within the context window size with buffer.
-    * 
-    * @param text The text to check if it fits within the context window size with buffer.
-    * @returns True if the text fits within the context window size with buffer, false otherwise.
-    */
-   fitsInContext(text: string): boolean {
-
-      let estimatedTokens = tokenizer.estimateTokenCount(text);
-
-      if (estimatedTokens < this.contextWindowSizeWithBuffer)
-         return true;
-      return false;
-   }
-
-   /**
-    * Splits the input text into chunks based on the specified overlap of words.
-    * 
-    * @param text The text to be chunked.
-    * @param overlapWords The number of overlapping words between consecutive chunks. If undefined, we chunk with no obverlap. 
-    * @returns An array of strings representing the chunked text.
-    */
-   chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
-
-      let effectiveChunkSize = chunkSize
-         ? Math.min(this.contextWindowSizeWithBuffer, chunkSize)
-         : this.contextWindowSizeWithBuffer;
-
-      if (overlapWords) {
-
-         if (overlapWords > effectiveChunkSize)
-            throw new InvalidParameterError ("Overlap window size cannot be bigger than chunk size")
-
-         // If the users requests overlapping chunks, we divide the text into pieces the size of the overlap, then glue them back
-         // together until we fill a buffer. 
-         let chunked = tokenizer.chunkText(text, Math.floor(overlapWords * 2));
-         let chunks = new Array<string>();
-
-         let workingBufferText = "";
-         let workingBufferTokens = 0;
-         let lastChunkText = "";
-         let lastChunkTokens = 0;
-
-         for (let i = 0; i < chunked.length; i++) {
-
-            let thisChunkText = chunked[i].text;
-            let thisChunkTokens = tokenizer.estimateTokenCount(thisChunkText);
-
-            if (workingBufferTokens + thisChunkTokens < effectiveChunkSize) {
-               // If we are within buffer size, we just accumulate
-               workingBufferText = workingBufferText + thisChunkText;
-               workingBufferTokens = workingBufferTokens + thisChunkTokens;
-            }
-            else {
-               // If we are outside buffer, we save the current chunk and build the start of the next one
-               chunks.push(workingBufferText);
-
-               workingBufferText = lastChunkText + thisChunkText
-               workingBufferTokens = lastChunkTokens + thisChunkTokens;
-            }
-
-            // If we have reached the last chunk, we have to save it. 
-            if (i === chunked.length - 1) {
-               chunks.push(workingBufferText);
-            }
-
-            lastChunkTokens = thisChunkTokens;
-            lastChunkText = thisChunkText;
-         }
-         return chunks;
-      }
-      else {
-         let chunked = tokenizer.chunkText(text, effectiveChunkSize);
-
-         let chunks = new Array<string>();
-
-         for (let i = 0; i < chunked.length; i++) {
-            chunks.push(chunked[i].text);
-         }
-         return chunks;
-      }
-   }
-
-   /**
-    * Estimates the number of tokens in the provided text using the tokenizer.
-    * 
-    * @param text The text for which to estimate the number of tokens.
-    * @returns The estimated number of tokens in the text.
-    */
-   estimateTokens(text: string): number {
-
-      return tokenizer.estimateTokenCount(text);
-   }
-}
-****************************************
-
-****************************************
-WaterfallBrowser\src\CommonTs\src\PromptPersona.ts
-****************************************
-// Copyright (c) 2024 Braid Technologies Ltd
-
-
-import { EPromptPersona } from "./IPromptPersona";
-import { IPromptPersona } from "./IPromptPersona";
-
-export const ArticleSummariserPersona: IPromptPersona = {
-
-   name: EPromptPersona.kArticleSummariser,
-   systemPrompt: "",
-   itemPrompt: ""
-};
-
-export const CodeSummariserPersona: IPromptPersona = {
-
-   name: EPromptPersona.kCodeSummariser,
-   systemPrompt: "",
-   itemPrompt: ""
-};
-****************************************
-
-****************************************
-WaterfallBrowser\src\CommonTs\src\SuppressSummariseFailApi.Types.ts
-****************************************
-// Copyright (c) 2024 Braid Technologies Ltd
-// Definitions for the data elements of the SuppressSummariseFail API
-
-/**
- * Defines the structure of a summarise request object.
- */
-export interface ISuppressSummariseFailRequest{
-
-   text: string;
-   lengthInWords?: number | undefined;
-}
-
-export enum ESuppressSummariseFail {
-   kYes = "Yes",
-   kNo = "No"
-}
-
-/**
- * Defines the structure of a summarise response object.
- */
-export interface ISuppressSummariseFailResponse {
-
-   isValidSummary: ESuppressSummariseFail;
-}
-****************************************
-
-****************************************
-WaterfallBrowser\src\CommonTs\src\SuppressSummariseFailApi.Types.yaml
-****************************************
-openapi: 3.0.0
-info:
-  title: Converted from SuppressSummariseFailApi.Types.yaml with typeconv
-  version: '1'
-  x-id: SuppressSummariseFailApi.Types.yaml
-  x-comment: >-
-    Generated from src\SuppressSummariseFailApi.Types.ts by
-    core-types-json-schema (https://github.com/grantila/core-types-json-schema)
-    on behalf of typeconv (https://github.com/grantila/typeconv)
-paths: {}
-components:
-  schemas:
-    ISuppressSummariseFailRequest:
-      properties:
-        text:
-          title: ISuppressSummariseFailRequest.text
-          type: string
-        lengthInWords:
-          title: ISuppressSummariseFailRequest.lengthInWords
-          type: number
-      required:
-        - text
-      additionalProperties: false
-      title: ISuppressSummariseFailRequest
-      description: Defines the structure of a summarise request object.
-      type: object
-    ISuppressSummariseFailResponse:
-      properties:
-        isValidSummary:
-          title: ISuppressSummariseFailResponse.isValidSummary
-      required:
-        - isValidSummary
-      additionalProperties: false
-      title: ISuppressSummariseFailResponse
-      description: Defines the structure of a summarise response object.
-      type: object
-****************************************
-
-****************************************
-Api\test\ReadMe.Salon.md
-****************************************
-**activitystore.test.ts**
-
-This module tests the `ActivityRepostoryApi` using Mocha with assertions from the `expect` library. 
-
-**Important Classes/Functions:**
-1. `describe`: Organizes tests related to the `StorableActivity` functionality.
-2. `it`: Defines individual test cases.
-3. `getEnvironment` from `IEnvironmentFactory`: Fetches the environment configuration.
-4. `ActivityRepostoryApi`: Interacts with the activity repository.
-5. `randomKey`, `saveLoadRemove`, `failSave`: Utility functions for testing record operations.
-6. `IStorable`, `IStorableMultiQuerySpec`: Interfaces specifying the structure of the storable objects.
-
-**Test Cases:**
-1. Successfully saves, loads, and removes a record with a valid key.
-2. Fails to save a record with an invalid key.
-3. Successfully pulls multiple records using a valid key and a query specification.
-
-**chatdriver.test.ts**
-
-**Important Functions and Classes:**
-- `describe`
-- `it`
-- `getChatModelDriver`
-- `getDefaultChatModelDriver`
-- `IModelConversationPrompt`
-- `EPromptPersona.kArticleSummariser`
-
-**Summary:**
-
-This code is a test suite for a chat model driver using Mocha and Expect.js for testing. It describes a set of tests under "Chat Driver."
-
-First, it tests if the chat model can handle a single line prompt by comparing two different driver instances to ensure they handle the driver type correctly.
-
-Second, it checks if the chat model can generate a response to a simple single-line prompt asynchronously and validates the response content.
-
-Third, it verifies if the chat model can handle and respond correctly to a multi-line prompt with historical context, ensuring the response includes a specific previous user input. Each asynchronous test has a timeout limit set to 10 seconds.
-
-**checksession.test.ts**
-
-This module is a test suite for checking session keys using the Mocha testing framework and the expect assertion library.
-
-`SessionApi`, `getEnvironment`, and `EEnvironment` are important classes or functions imported from the project’s common TypeScript files.
-
-The `describe` function groups the tests under "CheckSession".
-
-Four test cases are defined using the `it` function to check session validity in local and production environments with both valid and invalid session keys.
-
-The tests create `SessionApi` instances with different environments and session keys, and verify the session key checks using assertions.
-
-Each test case is set to timeout after 20000 milliseconds.
-
-**chunk.test.ts**
-
-The code is a test module using Mocha and Expect to perform unit tests on URL comparison and chunking functionalities.
-
-The "Chunk URLs" test suite contains four tests using the function `lookLikeSameSource` to determine if two URLs belong to the same source (either YouTube videos or GitHub repositories).
-
-The "Chunk" test suite has three tests. It checks if an API call fails with an incorrect session key, and verifies the chunking logic for both short and long messages using the `validChunkCall` and `invalidChunkCall` functions.
-
-**Important Classes/Functions:**
-1. `lookLikeSameSource`
-2. `validChunkCall`
-3. `invalidChunkCall`
-
-**chunkstore.test.ts**
-
-The code is a set of unit tests for the `StorableChunk` module using `Mocha` and `Expect`.
-
-Key imported functions and classes:
-- `expect` from `expect`, `describe` and `it` from 'mocha'
-- Functions: `failSave`, `randomKey`, `saveLoadRemove`, `saveFindRemove` from './storable'
-- `EEnvironment` and `getEnvironment` from '../../CommonTs/src/IEnvironment'
-- `ChunkRepostoryApi` from '../../CommonTs/src/ChunkRepositoryApi'
-- Types: `IStoredChunk`, `IStorableMultiQuerySpec`
-
-Tests are organized into a `describe` block:
-1. **Data Preparation**: Creates a `record` variable with sample chunk data and sets up environment and API instances.
-2. **Cleanup with `afterEach`**: Removes recently created test objects after each test.
-3. **Test Cases**:
-   - Saves, loads, and removes a record using `saveLoadRemove`.
-   - Finds and removes a record using `saveFindRemove`.
-   - Tests failure behavior with an invalid session key using `failSave`.
-
-**classify.test.ts**
-
-### Summary
-
-This code is a set of test cases for a text classification API using Mocha and Axios.
-
-### Important Classes/Functions
-- **describe**: Defines a suite of tests for classifying different types of text.
-- **it**: Defines individual test cases.
-- **validClassifyCall**: An asynchronous function that calls the classification API with valid parameters and returns the classification result.
-- **invalidClassifyCall**: An asynchronous function to check the API's behavior with invalid parameters, expecting it to throw an error.
-
-### Test Cases
-- Tests whether an incorrect session key fails for local and production environments.
-- Tests if the API correctly classifies sample texts into categories like Technology, Business, Politics, and Health in both local and production environments. Each test case includes timeout settings of 20000ms.
-
-**embed.test.ts**
-
-### Summary:
-
-- **Important Functions**:
-  - `validEmbedCall(apiUrl: string, text: string): Promise<Array<number> | undefined>`: Sends a POST request for embedding the text and returns an array of numbers.
-  - `invalidEmbedCall(apiUrl: string, text: string): Promise<Boolean>`: Sends a GET request which is expected to fail and returns a boolean indicating whether an error was caught.
-
-- **Tests**:
-  - The test suite named "Embed" contains several `it` blocks to test embedding functionality:
-    - **Failure cases**:
-      - Tests for incorrect session keys in both local and production environments, ensuring the API call should fail.
-    - **Success cases**:
-      - Tests for embedding a simple message with a valid session key in both local and production environments, expecting a valid embedding array.
-      - Tests for embedding a long message in the local environment, expecting a valid embedding array.
-
-- **Setup**:
-  - Utilizes `expect` for assertions and `mocha` for describing tests.
-  - Relies on `axios` for HTTP requests.
-  - Fetches environment configurations and embeds API URLs dynamically depending on the environment (local or production).
-
-- **Miscellaneous**:
-  - Specifies timeouts for each test case (20,000 milliseconds).
-
-**environment.test.ts**
-
-The code sets up a testing environment using `mocha` and `expect` modules. 
-
-It imports necessary functions and enums from external files i.e., `getEnvironment`, `getDefaultEnvironment`, and `EEnvironment`.
-
-The `describe` function defines a test suite named "Environment".
-
-Within this suite, the `it` function defines a test case to check if the default environment's name is the same as the local environment's name.
-
-The `expect` assertion ensures that the names are equal, signifying the default environment is local in the Mocha test context.
-
-Important functions:
-- `describe`
-- `it`
-- `getDefaultEnvironment`
-- `getEnvironment`
-
-**findenrichedchunks.test.ts**
-
-This module tests the functionality of fetching relevant chunks (small pieces of content) from a content repository based on given summaries and URLs using Mocha for the testing framework and Expect for assertions.
-
-Key classes and functions:
-- `commonChunkStoreTests`: This function conducts multiple tests to ensure chunks can be correctly retrieved based on both summaries and URLs for specified repositories.
-- `FindEnrichedChunkApi`: An API class used for finding enriched chunks based on provided queries.
-- `describe` and `it`: Mocha functions used to structure and define individual test cases.
-
-Tests:
-1. Looks for relevant chunks using summaries.
-2. Searches for relevant chunks using URLs.
-3. Validates chunk retrieval for matching URLs.
-
-**findtheme.test.ts**
-
-The code is written as a test suite using Mocha for testing, and Expect for assertions. It imports several necessary modules such as axios, an HTTP client for making requests, and environmental utilities from a common repository. 
-
-This module is primarily testing an API that finds themes in texts. The `describe` block contains multiple test cases (`it` blocks). 
-
-Two helper functions are defined: `validThemeCall`, which posts data to an API to get a theme, and `invalidThemeCall`, which tests for invalid session key handling. 
-
-The test cases cover both scenarios for valid and invalid session keys against local and production environments.
-
-**generatefluidtoken.test.ts**
-
-This code is a test suite using Mocha and Expect for a Fluid framework token generation and container connection using AzureClient.
-
-**Key Functions and Classes:**
-- `describe`: Defines the main test suite named "Generate Fluid Token".
-- `it`: Each test case focuses on token generation and container connection.
-- `FluidApi`: Responsible for generating tokens based on different environments and conditions.
-- `AzureClient`: Used to create and connect to Fluid containers.
-- `getEnvironment`: Retrieves environment settings for local or production configurations.
-- Async `sleep` function: Introduces delays in processes.
-
-**Tests Include:** 
-1. Ensuring token generation fails with incorrect session key.
-2. Valid token generation with the correct session key for local setup.
-3. Valid token generation with the correct session key for production setup.
-4. Connecting to a Fluid container, verifying created container interaction.
-
-**login.test.ts**
-
-This code defines a test suite for the `LoginApi` functionality.
-
-**Important Classes/Functions:**
-1. `describe`: Defines a suite of tests related to the "Login" functionality.
-2. `it`: Specifies individual test cases to be run within the test suite.
-3. `LoginApi`: The class under test, which handles login functionality.
-4. `EEnvironment` and `getEnvironment`: Both are imported to handle different login environments (local and production).
-
-**Test Cases:**
-1. "Needs to succeed with valid key in local environment": Tests successful login with a valid session key in the local environment.
-2. "Needs to fail with invalid key": Tests login failure with an invalid session key in the local environment.
-3. "Needs to succeed with valid key in production environment": Tests successful login with a valid session key in the production environment.
-4. "Needs to fail with invalid key in production environment": Tests login failure with an invalid session key in the production environment.
-
-Each test case utilizes the `LoginApi` class for logging in and uses `expect` to assert the expected outcomes. Additionally, each test has a timeout of 20 seconds.
-
-**model.test.ts**
-
-This code is a test suite for the `Model` functionality, authored by Braid Technologies Ltd in 2024. 
-
-**Important Classes and Functions**:
-- `describe` (from Mocha): Defines a suite of related tests for "Model".
-- `it` (from Mocha): Specifies individual test cases within the suite.
-- `expect` (from Expect): Handles assertions within test cases.
-- `getDefaultModel` and `getModel` (from IModelFactory): Functions to fetch default or specified models.
-
-**Test Cases**:
-1. Verify the existence of default model properties.
-2. Ensure specific model properties are defined.
-3. Check if small texts fit within the model's default chunk size.
-4. Validate large texts do not fit within the model's default chunk size.
-5. Assert small texts are chunked correctly (producing a single chunk).
-6. Confirm large texts are broken into multiple chunks.
-7. Ensure chunking with overlaps produces more chunks than without overlaps.
-
-**pagestore.test.ts**
-
-This module tests the functionality of saving and loading HTML pages in a local environment using the `PageRepositoryApi`. 
-
-The `loadHtmlFromFile` function reads HTML content from a file and returns it as a string, throwing an error if the file can't be read.
-
-In the `describe` block, the `StorablePage` test suite initializes the environment, API, and necessary data. The `it` test cases check if an HTML page can be saved and then loaded successfully. 
-
-Key classes/functions:
-- `loadHtmlFromFile`
-- `describe` (Mocha)
-- `it` (Mocha)
-
-Important imports include `axios`, `expect`, `randomKey`, `getEnvironment`, `PageRepositoryApi`, and `IStoredPage`.
-
-**querymodel.test.ts**
-
-This module is a test suite using Mocha and Expect libraries for a "QueryModel" service.
-
-It imports necessary utilities and defines three main test cases inside a `describe` block.
-
-- The first test case, "Needs to make a simple query," initializes the `QueryModelApi` object, makes a simple query, and asserts that the response is valid and non-empty.
-
-- The second test case, "Needs to make a query with history," builds a query with conversation history, sends it, and validates the response similarly to the first case.
-
-- The third test case, "Needs to generate questions based on a summary," tests question generation from a given summary and checks if the generated question is non-empty. 
-
-Key functions: `describe`, `it`. Key classes: `QueryModelApi`.
-
-**storable.ts**
-
-The code provides a set of utility functions for working with objects that implement the `IStorable` interface, using an API wrapper that implements `IStorableRepostoryApiWrapper`. 
-
-Important functions:
-1. **randomInt(min: number, max: number) -> number**:
-   Generates a random integer between the specified `min` and `max` values.
-
-2. **randomKey() -> string**:
-   Generates a random key as a string, using `randomInt` to create a random integer.
-
-3. **saveLoadRemove(api, record) -> Promise<boolean>**:
-   Tests saving, loading, and removing a record. Verifies each operation was successful using the `expect` function.
-
-4. **saveFindRemove(api, record) -> Promise<boolean>**:
-   Similar to `saveLoadRemove`, but tests saving, finding by functional search key, and removing the record.
-
-5. **failSave(api, record) -> Promise<boolean>**:
-   Tests that saving a record fails, and verifies this with `expect`.
-
-**summarise.test.ts**
-
-This module tests the `Summarise` API functionality using Mocha and Expect. The test suite includes multiple variations to validate the summarization process for different environments (local and production).
-
-Key functions:
-- `validSummaryCall(apiUrl: string, text: string)`: Makes a POST request to the API to get a summarization of the provided text, returning the summary.
-- `invalidSummaryCall(apiUrl: string, text: string)`: Makes a GET request to the API to check if an incorrect session key triggers an error.
-
-Key tests:
-- Tests for incorrect session key failures in both local and production environments.
-- Tests for summarizing both short and long messages in local and production environments.
-
-**testforsummarisefail.test.ts**
-
-This module tests the `TestForSummariseFail` API using Mocha and Expect frameworks. 
-
-It contains two key helper functions:
-1. `validCall(apiUrl, text, length)`: Sends a POST request to the API and returns the fail code if present.
-2. `invalidCall(apiUrl, text)`: Sends a GET request to the API, capturing any error indicating an invalid call.
-
-Key tests are:
-1. Ensures failure when an incorrect session key is provided.
-2. Validates that example texts result in recognized summary failures (both for local and production environments).
-
-Classes/Functions:
-- `validCall`: Helper function for valid API calls.
-- `invalidCall`: Helper function for invalid API calls.
-- Test cases with `describe` and `it` from Mocha.
-****************************************
-
-****************************************
-ApiTest\test\ReadMe.Salon.md
-****************************************
-**chunk_test.py**
-
-This code is a testing module for a text chunking API endpoint at `/chunk`. It executes integration tests verifying the endpoint's functionality under various conditions.
-
-Classes/Functions:
-- `test_chunk_endpoint()`: Tests the chunking functionality with valid input data.
-
-Key Integration Points:
-- Utilizes `pytest` for running the tests.
-- Employs `requests` for making HTTP POST requests to the API.
-- `chunk_request_data()`: Pytest fixture to provide sample payload for testing.
-- `BASE_URL` and `chunk_url`: Define endpoint addresses.
-- Environment variable `SessionKey` is required for authentication.
-- Confirms API response status, checks if ‘chunks’ key exists in the response, and verifies validity of the chunked data format.
-
-**classify_test.py**
-
-This module tests the `/classify` endpoint of a classification API.
-
-The main classes/functions include `test_classification_request` and `test_invalid_classification_request`.
-
-`test_classification_request` sends a valid request with sample text and classifications, checks for a 200 OK response, and verifies that the response contains a valid classification.
-
-`test_invalid_classification_request` uses `pytest.mark.parametrize` to test different invalid classification request scenarios, ensuring the API returns a 400 status code for each.
-
-The tests rely on environment variables for a session key and a running API server at a specified `BASE_URL`. The `requests` module is used to send HTTP requests.
-
-**embed_test.py**
-
-This code is a test module for the embedding API endpoint at `/embed`, which generates vector embeddings from text inputs.
-
-The `BASE_URL` is configured for the local server, and the API endpoint includes a session key retrieved from environment variables. The endpoint URL for embedding is constructed as `embed_url`.
-
-The `test_embedding_request_structure` function simulates a valid embedding request, checks for a successful (200) response, verifies that the response contains an embedding list, and ensures all list elements are numeric.
-
-The `test_invalid_request_structure` function sends an invalid request (with a wrong field) and expects a 400 status code in response, indicating proper error handling for malformed requests.
-
-Important functions: `test_embedding_request_structure`, `test_invalid_request_structure`.
-
-**enumerate_models_test.py**
-
-This module tests the `enumerate_models` API endpoint for validating schema and functionality. 
-
-The `validate_enumerate_models_schema` function checks JSON instances against specific schema definitions provided in the `ENUMERATE_MODELS_API_SCHEMA`.
-
-The `test_ienumerate_models_request_valid` function ensures that a valid `IEnumerateModelsRequest` object adheres to the expected schema.
-
-The `test_ienumerate_models_response_valid` function validates a proper `IEnumerateModelsResponse` object against the schema.
-
-Various error-handling tests, such as `test_ienumerate_models_response_missing_fields` and `test_ienumerate_models_response_additional_fields`, check the response for missing or extra fields.
-
-The `test_enumerate_request` function sends an actual HTTP POST request to the endpoint and validates the response against the schema.
-
-Important elements include `validate_enumerate_models_schema`, `test_ienumerate_models_request_valid`, `test_ienumerate_models_response_valid`, `test_ienumerate_models_response_missing_fields`, `test_ienumerate_models_response_additional_fields`, and `test_enumerate_request`.
-
-**enumerate_repositories_test.py**
-
-This module tests the EnumerateRepositories API endpoint which returns a list of available repository IDs. 
-
-Important classes/functions:
-
-- `validate_response_vs_schema`: A helper function that validates API responses against a predefined schema using `jsonschema`.
-
-- `test_enumerate_repositories`: The main test function that sends a POST request to the endpoint and checks if the response status code is 200. It then validates the response against the predefined JSON schema.
-
-The base URL and session key for the API are configured using environment variables and concatenated to form the API endpoint URL. A response schema is defined to ensure that the API returns data in the expected format.
-
-**find_theme_test.py**
-
-This module tests the `/findtheme` API endpoint by validating request parameters and response formats. It includes test cases for both valid and invalid requests, such as when required fields are missing.
-
-The `BASE_URL` is configured for the API, and the endpoint URL is constructed using an environment variable `SESSION_KEY`.
-
-The `valid_request_data` fixture provides sample valid input data.
-
-The `test_find_theme_with_valid_request` function tests the API with valid input data, checking for a 200 status code and the presence of a "theme" in the response.
-
-The `test_find_theme_with_missing_text` and `test_find_theme_with_missing_length` functions test for 400 status codes when required fields are missing.
-
-Key components: `valid_request_data`, `test_find_theme_with_valid_request`, `test_find_theme_with_missing_text`, `test_find_theme_with_missing_length`.
-
-**page_repository_test.py**
-
-This script contains integration tests for the Page Repository API's `/getpage` endpoint.
-
-It verifies successful page retrieval with valid parameters and error handling for missing parameters and checks API authentication using session keys.
-
-A running local API instance on port 7071 and a valid session key set in the environment variables are required. 
-
-The main classes and functions are:
-- `test_get_page_success()`: Checks if a valid request returns a successful response with status code 200.
-- `test_get_page_missing_param()`: Checks if a request missing the required 'id' parameter returns a 404 status code.
-
-The base URL and session key are configured using environment variables.
-
-**studio_test.py**
-
-This module is designed to test the Studio Boxer API endpoints using `pytest`, `requests`, and `jsonschema`.
-
-- **BASE_URL** and **SESSION_KEY** are configured to define the API's base URL and session key.
-- **validate_response_vs_schema** validates API response data against a given JSON schema and reports any mismatch.
-- **test_IStudioBoxerResponseEnrichment_structure** checks the enrichment data structure for required fields and validates their data types.
-- **test_IStudioBoxerResponse_structure** ensures the main response is a list and validates each enrichment item in the list.
-- **test_studio_boxer** sends a request to the `/StudioForTeams-Boxer` endpoint to validate the response structure and contents.
-- **test_invalid_studio_request** tests the API's handling of invalid request data, expecting a 400 status code on bad data.
-
-Important functions:
-- `validate_response_vs_schema`
-- `test_IStudioBoxerResponseEnrichment_structure`
-- `test_IStudioBoxerResponse_structure`
-- `test_studio_boxer`
-- `test_invalid_studio_request`
-
-**summarise_test.py**
-
-This module contains integration tests for the text summarization API. It verifies the following scenarios:
-
-- Standard text summarization with a specified length.
-- Survey response summarization using a specialized persona.
-- Code summarization using a specialized persona.
-- Edge cases, including missing parameters, empty and invalid requests.
-
-Dependencies include `pytest` for the testing framework and `requests` for API interaction. Important environment variables are `SessionKey` for authentication and `BASE_URL` for the API endpoint.
-
-Main functions:
-- `summarise_endpoint_url()`: Constructs the summary endpoint URL.
-- `test_valid_summarise_request()`: Tests a valid summarization request.
-- `test_valid_summarise_survey_request()`: Tests a valid summarization request for surveys.
-- `test_valid_summarise_code_request()`: Tests code summarization.
-- `test_summarise_request_without_length()`: Tests summarization without length.
-- `test_summarise_request_missing_text()`: Tests summarization with missing text.
-- `test_empty_summarise_request()`: Tests empty summarization requests.
-- `get_current_source()`: Reads the current file's content for code summarization.
-
-This code ensures that the API handles different input scenarios properly.
-****************************************
-
-****************************************
-Boxer\core\ReadMe.Salon.md
-****************************************
-**ActivityRecord.ts**
-
-The `ActivityRecord` module defines interfaces and utilities for storing user activity records within the Braid system.
-
-Key interfaces include:
-- `IStoredActivity`: A base interface for all activity records, extending `IStorable`.
-- `IStoredUrlActivity`: An extension of `IStoredActivity`, adding a `url` property for URL-based activities.
-- `IStoredLikeUrlActivity`: An extension of `IStoredUrlActivity`, adding a `like` property to indicate if the URL was liked.
-- `IStoredMessageActivity`: Extends `IStoredActivity` with a `message` property.
-
-Each activity record class includes constants for the class name and schema version. 
-
-The module also provides the utility function `makeDateUTC` for ensuring dates are stored in UTC format.
-
-**ActivityRepository.ts**
-
-This module, named `ActivityRepository`, handles the storage and retrieval of user activities, specifically for URLs visited, likes/unlikes, and messages in Braid.
-
-The `ActivityRepositoryCosmos` class implements the `IActivityRepository` interface and mainly interacts with Cosmos DB for data persistence. 
-
-Key functions include saving activities (`save`), loading recent URL-based activities (`loadRecentUrlActivity`), loading recent messages (`loadRecentMessages`), and removing message records (`removeMessageRecord`).
-
-The class requires a session key for authentication and uses environment configuration for determining API endpoints. The `ActivityRepositoryApi` handles API requests.
-
-Important modules and functions include: `ActivityRepositoryCosmos`, `save`, `loadRecentUrlActivity`, `loadRecentMessages`, `loadRecent`, and `removeMessageRecord`.
-
-**AIConnection.ts**
-
-### Summary:
-
-The `AIConnection` module manages communication between the Boxer application and AI/LLM (Large Language Model) services.
-
-The key class, `AIConnection`, handles making enriched queries to LLM models, streaming responses back to the UI, managing conversation history, and tracking the active call state. 
-
-The constructor of `AIConnection` initiates the connection using a session key for authentication and API endpoints based on the environment configuration. 
-
-Two primary functions, `makeEnrichedCall` and `makeFollowUpCall`, manage enriched query calls and generate follow-up questions respectively. 
-
-Private methods like `streamResponse` handle asynchronously updating responses. Static methods include `buildEnrichmentQuery`, `buildQueryForQuestionPrompt`, and helpful utilities for managing tokens and identifying AI-related messages.
-
-**ApiCalls.ts**
-
-The module `ApiCalls` provides functions for making API calls to the Braid backend, focusing on summarization requests to the Summarise API.
-
-The main function, `makeSummaryCall`, takes a session key and a text string as inputs, builds a summarization request, and sends it to the Summarise API using the `axios` library. It then returns the API's response in the form of a summary or handles errors by logging them.
-
-Important classes and functions in this module include `SessionKey` for handling session keys, `logApiError` for error logging, `getDefaultEnvironment` for obtaining the environment configuration, and various type imports like `ISummariseRequest` and `ISummariseResponse` to structure the API request and response.
-
-**Asserts.ts**
-
-The module **Asserts** provides utility functions to ensure objects are neither undefined nor null. This helps maintain type safety and prevents runtime errors.
-
-The module imports **AssertionFailedError** from a file named `Errors`.
-
-It defines two main functions:
-1. **throwIfUndefined**: Takes an object `x` and throws an **AssertionFailedError** if `x` is undefined.
-2. **throwIfNull**: Takes an object `x` and throws an **AssertionFailedError** if `x` is null. 
-
-These functions are generics that enforce a non-null and non-undefined type for the passed objects.
-
-**BoxerFluidConnection.ts**
-
-The `BraidFluidConnection` class in the `BoxerFluidConnection` module is derived from `FluidConnection` and manages the Fluid connection for the Boxer application. Key functionalities include setting up local caucuses for participants, messages, and shared embeddings using `SharedMap`. It can also handle adding the Boxer persona to the participants' caucus.
-
-The `setupLocalCaucuses` method initializes the schema-defined caucuses and starts an interval to ensure the local user is added to the participant caucus. 
-
-The `resetMessages` method clears all messages and participants from their respective caucuses. 
-
-It uses helper functions like `throwIfUndefined` for error handling and `checkAddAddSelfToAudience` to manage user participation in discussions.
-
-**CaucusFramework.ts**
-
-This module, `CaucusFramework`, provides a framework for managing caucuses within the Boxer application. The primary class `CaucusOf` extends the `Notifier` class from the `NotificationFramework` module, facilitating notification mechanisms for events. 
-
-Key features include static interests for notifications when elements are added, changed, or removed. These are identified by IDs such as `caucusMemberAddedNotificationId`, `caucusMemberChangedNotificationId`, and `caucusMemberRemovedNotificationId`.
-
-The `CaucusOf` class manages a shared map (`SharedMap`) and local data structures to add, remove, update, or synchronize elements efficiently. Important methods include `add`, `remove`, `amend`, `get`, `current`, `currentAsArray`, and `synchFrom`. The class also handles cache updates and includes a `binarySearch` method for efficient element searching.
-
-**ConfigStrings.ts**
-
-This module, `ConfigStrings`, provides constants and enumerations for configuration strings and values used in the Boxer application.
-
-The `EConfigStrings` enumeration includes constants for logging categories (`kCoreLogCategory`, `kApiLogCategory`), font names (`kFontNameForTextWrapCalculation`), URLs (`kHomeRelativeUrl`, `kAzureProductionFluidHost`), authentication and session parameters (`kSessionParamName`, `kSecretParamName`), and strings for interacting with AI models (`kLLMName`, `kPromptLookFor1` to `kPromptReplaceWith6`).
-
-The `EConfigNumbers` enumeration contains numerical configuration values such as delays, counts, lengths, and other thresholds (`kInitialHelpfulPromptDelayMsecs`, `kMaximumLinkTextlength`, `kMaxChatLevel`).
-
-The `KStubEnvironmentVariables` object provides default session and conversation keys for local development, avoiding the use of production secrets.
-
-**Debounce.ts**
-
-The Debounce module provides a utility function for debouncing function calls, ensuring that a given function is not called more frequently than a specified delay period.
-
-The main function exported is `debounce(fn_: Function, ms_: number)`, which takes two parameters: `fn_` (the function to debounce) and `ms_` (the delay in milliseconds).
-
-The `debounce` function returns a new function that uses `setTimeout` to call the original function after the specified delay. If the debounced function is called again before the delay period ends, the previous timer is cleared using `clearTimeout`.
-
-The `throwIfNull` function from the Asserts module ensures that the timer is not null before clearing it.
-
-**Errors.ts**
-
-This module, developed by Braid Technologies Ltd, is designed to define custom error classes specifically for the Boxer application. 
-
-The classes included are `InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError`. Each class extends the built-in `Error` class and includes a constructor that logs the error using either `logCoreError` or `logApiError` functions.
-
-To ensure stack traces display correctly, each constructor sets the prototype chain using `Object.setPrototypeOf(this, new.target.prototype)` and assigns the appropriate name to the error instance for accurate error handling.
-
-**FluidConnection.ts**
-
-The `FluidConnection` module provides a base class for managing connections to Fluid containers in the Boxer application. It handles creating and attaching to Fluid containers, disconnecting from them, managing local caucuses for participants and messages, and tracking the active call state. The connection requires a session key for authentication and uses environment configuration to determine API endpoints.
-
-### Important Classes and Functions:
-- **FluidConnection Class**: Manages Fluid container connections.
-- **createNew**: Creates a new Fluid container and attaches it to the service.
-- **attachToExisting**: Attaches to an existing Fluid container using a conversation key.
-- **canDisconnect** and **isConnected**: Check the connection state.
-- **disconnect**: Disconnects from the Fluid container.
-- **setupBeforeConnection** and **setupAfterConnection**: Internal setup functions for initializing the connection.
-- **schema**, **setupLocalCaucuses**, and **disconnectLocalCaucuses**: Abstract methods to be implemented by subclasses.
-
-**IActivityRepository.ts**
-
-This module defines an interface `IActivityRepository` for managing stored activities.
-
-The `save` function accepts an `IStoredActivity` record and returns a promise that resolves to a boolean, indicating whether the save operation was successful.
-
-The `loadRecentUrlActivity` function takes a count and returns a promise that resolves to an array of `IStoredActivity` records, representing the most recent URL activities up to the specified count.
-
-The `loadRecentMessages` function also takes a count and returns a promise that resolves to an array of `IStoredActivity` records, representing recent messages.
-
-The `removeMessageRecord` function takes a `messageId` and returns a promise that resolves to a boolean, indicating whether the removal was successful.
-
-Key interface:
-- `IActivityRepository`
-
-Key functions:
-- `save`
-- `loadRecentUrlActivity`
-- `loadRecentMessages`
-- `removeMessageRecord`
-
-**IActivityRepositoryFactory.ts**
-
-This module, `IActivityRepositoryFactory`, provides a factory function for creating activity repositories.
-
-The key function, `getRecordRepository`, takes a `SessionKey` as an argument and returns an implementation of `IActivityRepository`.
-
-Currently, the repository implementation being returned is `ActivityRepositoryCosmos`, which is a Cosmos DB-backed activity repository.
-
-Key imports include `SessionKey` from `./Keys`, `IActivityRepository` from `./IActivityRepository`, and `ActivityRepositoryCosmos` from `./ActivityRepository`.
-
-**IAdminRepository.ts**
-
-This module defines an interface and a class for checking if a user is an admin.
-
-**Classes/Functions:**
-- **IAdminRepository:** An interface declaring an `isAdmin` method which takes a `Persona` object and returns a Promise of a boolean indicating admin status.
-- **getDefaultAdminRepository:** A function that returns an instance of `DefaultAdminRepository`.
-- **DefaultAdminRepository:** A class implementing the `IAdminRepository` interface. Its `isAdmin` method checks if a user's name, contained in `Persona`, is in a predefined list of admin names (`EConfigStrings.kAdminUserNames`), and resolves a Promise with a boolean result based on this check.
-
-**Usage:**
-- Ensure to import `Persona` and `EConfigStrings` modules which contain necessary user and configuration details.
-
-
-**Icons.ts**
-
-This module, named `Icons`, is responsible for defining an enumeration of icon names used in the Boxer application.
-
-The `EIcon` enum lists several icons, such as `kPersonPersona`, `kLLMPersona`, `kBotPersona`, `kUnknownPersona`, and `kFromBcd`. These represent different personas or sources in the application.
-
-Notably, `kBotPersona` is kept for backward compatibility.
-
-This enum can be used throughout the application to standardize the references to these specific icon names, ensuring consistency and easier management of icon usage.
-
-**IKeyGenerator.ts**
-
-The provided code defines an interface called `IKeyGenerator` within a module meant for generating unique keys.
-
-The `generateKey` function generates a unique key, and the `generateSecret` function generates a secret. 
-
-The `couldBeAKey` method checks if a given string could potentially be a valid key.
-
-The `saveSecret` function allows for saving a secret, and `matchesSavedSecret` checks if a given secret matches the saved one.
-
-The `haveSavedSecret` method verifies the existence of a saved secret, while `savedSecret` retrieves said secret.
-
-This interface establishes a contract that any implementing class must follow, ensuring consistency in key and secret management.
-
-**IKeyGeneratorFactory.ts**
-
-The `IKeyGeneratorFactory` module provides a factory function for creating key generators.
-
-The main function in this module is `getDefaultKeyGenerator`, which returns an instance of the `UuidKeyGenerator` class.
-
-This module depends on two other classes, `IKeyGenerator` and `UuidKeyGenerator`, imported from their respective modules.
-
-The purpose of `getDefaultKeyGenerator` is to abstract the creation of key generator instances, making it easier to retrieve the default key generator in a standardized way.
-
-**JoinDetails.ts**
-
-The module `JoinDetails` manages join details in the Boxer application, including functionalities for parsing, validating, and converting join details. The `JoinDetails` class is the primary class, handling these operations.
-
-The `JoinDetails` class includes a constructor that parses a string to extract email, session key, conversation key, and name information. It provides getter functions for these details.
-
-Key functions in the module:
-- `validateEmail(email: string): boolean` validates email format.
-- `toString(): string` and `static toString(email: string, name: string, session: SessionKey, conversation: ConversationKey, secret: string): string` convert details to a query string format.
-- `canAttemptJoin(): boolean` checks if the join details are valid based on environment and presence of session and conversation keys.
-- `static makeFromParts(email: string, name: string, session: SessionKey, conversation: ConversationKey, secret: string)` creates a `JoinDetails` instance from individual parts. 
-
-Supporting classes: `SessionKey`, `ConversationKey`.
-
-Key imports: `qs` for query string parsing, `EConfigStrings`, `getDefaultFluidEnvironment`, `EEnvironment`.
-
-**JoinPageValidator.ts**
-
-The code defines a module named `JoinPageValidator` used in the Boxer application to validate join details for conversations.
-
-The primary class provided is `JoinPageValidator`. The constructor simply initializes the object.
-
-The `canAttemptJoin` function checks if the provided email, name, session, and conversation keys are valid for joining a conversation by utilizing the `JoinDetails` class.
-
-The `matchesSavedSecret`, `haveSavedSecret`, and `savedSecret` functions interact with a key generator (obtained via `getDefaultKeyGenerator`) to manage and validate stored secrets for user authentication.
-
-Key classes and functions include `JoinPageValidator`, `canAttemptJoin`, `matchesSavedSecret`, `haveSavedSecret`, and `savedSecret`.
-
-**KeyRetriever.ts**
-
-**KeyRetriever Class:**  
-This class is responsible for retrieving keys from the Braid backend using API calls, tracking the state of active calls, and logging errors. It is the main class provided in this module.
-
-**Important Functions:**
-- **Constructor:** Initializes an instance of `KeyRetriever` and sets `activeCallCount` to 0.
-- **requestKey:** An asynchronous function to send GET requests using Axios to retrieve keys from the API. It increments the `activeCallCount` at the start of the call and decrements it after finishing or encountering an error. Errors are logged using the `logApiError` function, and a `ConnectionError` is thrown if the API call fails.
-- **isBusy:** A function that returns whether there are any active API calls by checking if `activeCallCount` is not zero.
-
-**Error Handling:**
-- **logApiError:** This function logs errors encountered during API calls.
-- **ConnectionError:** This custom error is thrown when the API call to retrieve the key fails.
-
-**External Imports:**
-- **axios:** Used to make HTTP requests.
-- **logApiError:** Function used to log API errors.
-- **EConfigStrings:** Enum that holds configuration strings, including error messages.
-- **ConnectionError:** Custom error for connection issues.
-- **SessionKey:** Represents a session key used in the API call.
-
-
-
-**Keys.ts**
-
-The `Keys` module handles key management in the Boxer application. It includes the `SessionKey` and `ConversationKey` classes.
-
-`SessionKey` class wraps a string representing a session ID. It validates the session key by checking if it looks like a valid UUID using the `looksValidSessionKey` method and converts it to a string using the `toString` method.
-
-`ConversationKey` class wraps a string representing a conversation ID. It validates the conversation key's format using the `looksValidConversationKey` method and converts it to a string using the `toString` method.
-
-Both classes leverage an `IKeyGenerator` obtained from `getDefaultKeyGenerator` for UUID validation.
-
-**Like.ts**
-
-The module manages "likes" in the Boxer application.
-
-It includes the `Like` class which facilitates creating and managing "like" objects, each containing a name and timestamp. The class supports multiple construction patterns: initializing through no arguments, with a name and timestamp, or by copying from another `Like` object or JSON.
-
-It includes methods for streaming data in (`streamIn`), streaming data out (`streamOut`), equality check (`equals`), and assignment (`assign`). 
-
-There are also getter and setter methods for the private properties `_name` and `_when`.
-
-Important classes and functions:
-- `Like` class: manages like objects.
-- `streamOut()`: serializes object data to JSON string.
-- `streamIn()`: initializes object data from JSON string.
-- `equals()`: compares two `Like` objects.
-- `assign()`: assigns values from another `Like` object.
-
-**Logging.ts**
-
-This module provides a logging system for the Boxer application. It includes functions for logging various types of errors and information.
-
-The important functions in this module are:
-- `logCoreError`: Logs core errors.
-- `logDbError`: Logs database errors.
-- `logApiError`: Logs API errors.
-- `logApiInfo`: Logs API information.
-
-The logging handler, `logger`, maps different log levels to corresponding console methods (`console.error`, `console.warn`, and `console.log`).
-
-The `log.init` function initializes the logging system with specific log levels (`DEBUG`) and a callback to map the logging levels to the handler methods.
-
-**Media.ts**
-
-This module defines a `Media` class for managing media queries in the Boxer application. 
-
-The `Media` class maintains a list of listeners and uses the `window.matchMedia` function to create an `isMobileFormFactorQuery` that checks if the viewport width is 1023 pixels or less, indicating a mobile form factor.
-
-The constructor sets up an event listener for changes in the mobile form factor and binds it to the `onMobileFormFactorChange` method.
-
-The `isSmallFormFactor` method returns a boolean indicating if the viewport currently matches the mobile form factor query.
-
-The `onMobileFormFactorChange` method invokes all stored listeners when the viewport transitions to or from the mobile form factor size.
-
-The `addMobileFormFactorChangeListener` method allows external listeners to be registered and notified when the mobile form factor changes.
-
-**Message.ts**
-
-The `Message` class manages messages in the Boxer application. 
-
-**Constructor:**
-It supports multiple initialization patterns, including creating an empty message, cloning from another object, or initializing with specific parameters like `id`, `authorId`, `responseToId`, `text`, `sentAt`, and `chunks`.
-
-**Methods:**
-- Implements methods for serialization (`streamOut()`, `streamIn()`), dynamic class name retrieval (`dynamicClassName()`), token calculation (`calculateTokens()`), and live streaming updates (`hookLiveAppend()`, `unhookLiveAppend()`, `liveUpdateText()`, and `liveUpdateChunks()`).
-- Includes equality check (`equals()`), assignment (`assign()`), and ID validation (`isValidId()`).
-  
-**Key Components:**
-- Uses `GPT4Tokenizer` for tokenization.
-- Incorporates utility functions from `Errors`, `Asserts`, and `Utilities`.
-- Integrates `IKeyGenerator` for key generation.
-  
-**Important Properties:**
-- `id`, `authorId`, `responseToId`, `text`, `sentAt`, `chunks`, `tokens`, and `isStreaming`. 
-
-It follows the `MDynamicStreamable` interface from the `StreamingFramework` for dynamic streaming.
-
-**NotificationFramework.ts**
-
-The module `NotificationFramework` provides a framework for managing notifications.
-
-The `Interest` class manages notification interests with unique IDs. It has multiple constructors for different initialization patterns, including copying from JSON or another `Interest` instance, and provides methods for equality checking and assignment.
-
-The `Notification` class serves as a base for events, holding a reference to an `Interest`. It supports multiple constructors, equality checks, and assignment operations.
-
-`NotificationFor` extends `Notification` by adding an notification data payload, supporting similar constructor patterns, equality checks, and assignments.
-
-The `ObserverInterest` class combines an `IObserver` and an `Interest`, allowing `Notifier` classes to track observer interests.
-
-The `NotificationRouter` and `NotificationRouterFor` classes link notifications to specific functions.
-
-The `Notifier` class sends notifications to registered observers and manages the list of `ObserverInterest` objects, with methods to add, remove and notify observers.
-
-Key Classes and Functions:
-- `Interest`
-- `Notification`
-- `NotificationFor`
-- `ObserverInterest`
-- `NotificationRouter`
-- `NotificationRouterFor`
-- `IObserver` interface
-- `INotifier` interface
-- `Notifier`
-
-**Persona.ts**
-
-**Important Classes or Functions:**
-- `Persona` class
-- Constructor Overloads
-- `equals` method
-- `assign` method
-- `dynamicClassName`, `createDynamicInstance`, `streamOut`, `streamIn` methods
-- Static validity check methods: `isValidId`, `isValidName`, `isValidEmail`, `isValidThumbnailB64`
-- Static helper methods: `unknown`, `safeAuthorLookup`, `isUnknown`
-
-**Summary:**
-The module manages personas in the Boxer application. The `Persona` class encapsulates attributes like name, icon, email, and last interaction timestamp. It offers multiple constructors to create instances from parameters, copied objects, or JSON.
-
-It implements serialization methods to support dynamic streaming. Methods for equality check and assignment between `Persona` objects are also provided, facilitating object manipulation.
-
-Static validity checks ensure attributes like id, name, email, and thumbnail are valid. There are additional static methods to handle 'unknown' personas and safely look up authors from a map.
-
-**Queue.ts**
-
-This module provides a `Queue` class that implements a generic queue data structure for the Boxer application, following the First-In-First-Out (FIFO) principle.
-
-The `Queue` class manages the queue through an array and an offset for efficient memory management. 
-
-Key methods in the `Queue` class include:
-- `constructor()`: Initializes the queue and the offset.
-- `getLength()`: Returns the current length of the queue.
-- `isEmpty()`: Checks if the queue is empty.
-- `enqueue(item)`: Adds an item to the end of the queue.
-- `dequeue()`: Removes and returns the item at the front of the queue, managing the offset to maintain efficiency.
-- `peek()`: Returns the item at the front of the queue without removing it.
-
-**SharedEmbedding.ts**
-
-The `SharedEmbedding` module manages shared embedding objects within the Boxer application.
-
-The `SharedEmbedding` class is the primary class in the module. It handles creating and managing shared embeddings, which include properties like URL, conversation ID, and likes. The class supports multiple constructor patterns: one for initializing empty objects, another for initializing with specific parameters, and a third for copying from an existing object.
-
-Important class methods include `like` and `unlike` to add and remove likes, `streamOut` and `streamIn` for serializing and deserializing objects, and `equals` and `assign` for comparing and assigning embedded objects. Additionally, `isValidId` checks if an ID is valid, and `findInMap` is a helper function to find a `SharedEmbedding` in a map by URL.
-
-**StreamingFramework.ts**
-
-The code module, `StreamingFramework`, manages streaming data to and from JSON within the `Boxer` application.
-
-The `MStreamable` class is an abstract root class designed for objects that can stream data (serialize and deserialize) to and from JSON. It defines two abstract methods: `streamOut` for serializing data and `streamIn` for deserializing data.
-
-The `MDynamicStreamable` class extends `MStreamable` and adds the ability to dynamically manage objects based on their class names stored in the JSON stream. It includes methods `dynamicClassName`, `flatten`, and a static method `resurrect`.
-
-The `DynamicStreamableFactory` class provides a factory pattern for creating `MDynamicStreamable` objects based on class names. It registers and links creation methods for dynamic classes and provides the static method `create` to instantiate objects using the class name.
-
-Important classes and functions:
-- `MStreamable` (abstract class)
-- `MDynamicStreamable` (abstract class)
-- `DynamicStreamableFactory` (class)
-- `resurrect` (static method in `MDynamicStreamable`)
-- `create` (static method in `DynamicStreamableFactory`)
-
-**Utilities.ts**
-
-The module "Utilities" provides comparison functions for the Boxer application. 
-
-The `areSameDate` function compares two Date objects, including handling cases where either or both dates are undefined, using the `throwIfUndefined` function for validation.
-
-The `areSameShallowArray` function compares two arrays for shallow equality, meaning it checks if the arrays are the same length and each element is equal using the `===` operator.
-
-The `areSameDeepArray` function compares arrays for deep equality, checking if the arrays are the same length and all corresponding elements are equal by converting each element to a JSON string and comparing these strings.
-
-**UuidKeyGenerator.ts**
-
-The `UuidKeyGenerator` module provides functionalities for generating and managing UUIDs and secrets within the Boxer application. 
-
-The main class, `UuidKeyGenerator`, implements the `IKeyGenerator` interface and includes methods to generate UUIDs (`generateKey`), generate secrets (`generateSecret`), check if a string looks like a valid UUID (`couldBeAKey`), save secrets (`saveSecret`), check if a given secret matches the saved secret (`matchesSavedSecret`), verify if a secret has been saved (`haveSavedSecret`), and retrieve a saved secret (`savedSecret`).
-
-Utility functions include `NumberToUint32Array` for converting numbers to `Uint32Array` and `looksLikeUuid` for syntax validation of UUIDs. The `uuid` function generates unique UUIDs with a fallback method if `Blob` objects are not supported.
-****************************************
-
-****************************************
-Boxer\scripts\ReadMe.Salon.md
-****************************************
-**eval_pipeline.py**
-
-The code imports necessary modules, `ApiConfiguration` and `run_tests`, from local modules. It configures paths for test destination and chunk source directories. The `config` object is instantiated from the `ApiConfiguration` class. The script defines a list of off-topic questions that could be used for testing an AI model for various scenarios.
-
-Key classes/functions:
-- `ApiConfiguration`: Likely used to configure API settings.
-- `run_tests(config, TEST_DESTINATION_DIR, CHUNK_SOURCE_DIR, off_topic_questions)`: Function that runs tests based on provided configuration and data. 
-
-Finally, the script creates the test destination directory if it does not exist and runs tests with the specified parameters.
-
-**github_pipeline.py**
-
-This code imports various modules and classes to process and enrich text data from GitHub.
-
-The `MARKDOWN_DESTINATION_DIR` variable is set to a specific directory path where downloaded markdown files will be stored.
-
-`ApiConfiguration` is instantiated to create a configuration object named `config`.
-
-The `download_markdown` function is used to download markdown files from a list of URLs (`gitHubUrls`) and save them to the `MARKDOWN_DESTINATION_DIR`.
-
-Various enrichment functions, such as `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite`, are called to process the downloaded markdown files using the configuration.
-
-Finally, the `countUrlHits` function is used to count URL hits and save the results in specified JSON files in the output directory.
-
-**make_new_container.ts**
-
-This code is a test module designed to create a new container using Mocha for running tests and Expect for assertions.
-
-Main components: 
-- `Persona`: Represents an entity involved in the connection.
-- `BraidFluidConnection`: Establishes a connection and facilitates the creation of a new container.
-- `SessionKey`: Represents a session key, obtained from an environment variable, used for authenticated actions.
-
-The test suite named "Make new container" includes a single test case. Within the test, a local persona is initialized, and a `BraidFluidConnection` instance is created. The session key is verified to be defined before attempting to create a new container. If successful, the conversation key is logged; otherwise, errors are caught and logged.
-
-**web_pipeline.py**
-
-This script performs web data downloading and text enrichment.
-
-The `HTML_DESTINATION_DIR` is set to "data/web", ensuring the directory exists. Configurations are managed by the `ApiConfiguration` class.
-
-Web URLs from `webUrls` are iterated over and the `download_html` function is called to retrieve web pages, storing them in `HTML_DESTINATION_DIR`.
-
-Text enrichment functions: `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, and `enrich_lite` are called to process the downloaded HTML files.
-
-Results are stored in `ENRICHMENT_OUTPUT_DIR`, and `countUrlHits` is used to evaluate the processed URLs, writing statistics to "hit_test_results_web.json".
-
-Important functions/classes: `ApiConfiguration`, `download_html`, `enrich_text_chunks`, `enrich_text_summaries`, `enrich_text_embeddings`, `enrich_lite`, `countUrlHits`.
-
-**youtube_pipeline.py**
-
-This script starts with standard library imports, logging configuration, and imports of various local modules. 
-
-The `TRANSCRIPT_DESTINATION_DIR` variable sets the directory for storing downloaded transcripts. The `ensure_directory_exists` function ensures that this directory exists. 
-
-A configuration object, `config`, is created using `ApiConfiguration`.
-
-The script iterates over `youTubeUrls`, logs the URL being processed, and downloads the transcripts using `download_transcripts`.
-
-It then enriches the transcripts in stages:
-1. `enrich_transcript_chunks`
-2. `enrich_transcript_summaries`
-3. `enrich_transcript_embeddings`
-
-Lastly, `enrich_lite` is used for a final level of enrichment, and `countUrlHits` counts the URL hits for analysis. 
-
-Key classes/functions: `ApiConfiguration`, `youTubeUrls`, `ensure_directory_exists`, `download_transcripts`, `enrich_transcript_chunks`, `enrich_transcript_summaries`, `enrich_transcript_embeddings`, `enrich_lite`, `countUrlHits`.
 ****************************************

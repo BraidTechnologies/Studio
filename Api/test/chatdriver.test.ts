@@ -5,27 +5,24 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EModel } from '../../CommonTs/src/IModel';
-import { IModelConversationPrompt, EModelConversationRole} from '../../CommonTs/src/IModelDriver';
+import { EModel, EModelProvider, IModelConversationPrompt, EModelConversationRole} from '../../CommonTs/src/IModelDriver';
 import { getChatModelDriver, getDefaultChatModelDriver } from '../../CommonTs/src/IModelFactory';
 import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
-
-declare var process: any;
 
 describe("Chat Driver", function () {
 
    it("Needs pass a single line prompt", function () {
 
-      let driver1 = getChatModelDriver (EModel.kLarge);
+      let driver1 = getChatModelDriver (EModel.kLarge, EModelProvider.kOpenAI);
       let driver2 = getDefaultChatModelDriver ();
 
-      expect(driver1.getDrivenModelType ()).toEqual(driver2.getDrivenModelType ());    
+      expect(driver1.drivenModelType).toEqual(driver2.drivenModelType);    
 
    });
 
    it("Needs pass a single line prompt", async function () {
 
-      let driver = getChatModelDriver (EModel.kLarge);
+      let driver = getChatModelDriver (EModel.kLarge, EModelProvider.kOpenAI);
 
       let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
 
@@ -36,7 +33,7 @@ describe("Chat Driver", function () {
 
    it("Needs pass a multi line prompt", async function () {
 
-      let driver = getChatModelDriver (EModel.kLarge);
+      let driver = getChatModelDriver (EModel.kLarge, EModelProvider.kOpenAI);
 
       let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
          history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};

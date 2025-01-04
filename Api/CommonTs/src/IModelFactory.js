@@ -13,31 +13,31 @@
  * while abstracting the concrete model implementation details.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefaultModel = getDefaultModel;
-exports.getModel = getModel;
+exports.getDefaultTextChunker = getDefaultTextChunker;
+exports.getTextChunker = getTextChunker;
 exports.getDefaultEmbeddingModelDriver = getDefaultEmbeddingModelDriver;
 exports.getEmbeddingModelDriver = getEmbeddingModelDriver;
 exports.getDefaultChatModelDriver = getDefaultChatModelDriver;
 exports.getChatModelDriver = getChatModelDriver;
-const Model_OAI_1 = require("./Model.OAI");
 const ModelDrivers_OAI_1 = require("./ModelDrivers.OAI");
 /**
- * Returns the default model which is an instance of GPT4oMini.
+ * Returns the default model which is an instance of GPT4o.
  * @returns {IModel} The default model.
  */
-function getDefaultModel() {
-    return new Model_OAI_1.GPT4();
+function getDefaultTextChunker() {
+    return new ModelDrivers_OAI_1.OpenAITextChunker();
 }
 /**
  * Returns an instance of IModel based on the provided EModel type.
  *
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns An instance of IModel corresponding to the specified EModel type.
  */
-function getModel(model) {
+function getTextChunker(model, provider) {
     switch (model) {
         default:
-            return new Model_OAI_1.GPT4();
+            return new ModelDrivers_OAI_1.OpenAITextChunker();
     }
 }
 /**
@@ -50,9 +50,10 @@ function getDefaultEmbeddingModelDriver() {
 /**
  * Returns an instance of IEmbeddingModelDriver based on the provided EModel type.
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns {IEmbeddingModelDriver} An instance of IEmbeddingModelDriver corresponding to the specified EModel type.
  */
-function getEmbeddingModelDriver(model) {
+function getEmbeddingModelDriver(model, provider) {
     switch (model) {
         default:
             return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
@@ -64,9 +65,10 @@ function getDefaultChatModelDriver() {
 /**
  * Returns an instance of IChatModelDriver based on the provided EModel type.
  * @param model - The EModel type to determine the model.
+ * @param provider - The EModelProvider type to determine the provider.
  * @returns {IChatModelDriver} An instance of IChatModelDriver corresponding to the specified EModel type.
  */
-function getChatModelDriver(model) {
+function getChatModelDriver(model, provider) {
     switch (model) {
         default:
             return new ModelDrivers_OAI_1.OpenAIChatModelDriver();

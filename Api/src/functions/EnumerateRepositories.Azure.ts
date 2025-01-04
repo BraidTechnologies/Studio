@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 /**
  * @module EnumerateRepositories
@@ -17,8 +17,6 @@ import { IEnumerateRepositoriesRequest, IEnumerateReposotoriesResponse} from "..
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure"
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
-
-
 
 /**
  * Asynchronous function to send back details of installed repositories - used to keep Python code consistent with Typescript 

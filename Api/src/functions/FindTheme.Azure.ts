@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 /**
  * @module FindTheme
@@ -12,8 +12,6 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 
 import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility.Azure";
 
@@ -42,7 +40,7 @@ async function findThemeCall(text: string, length: number): Promise<string> {
       prompt: text
    }
 
-   let response = await modelDriver.generateResponse (EPromptPersona.kClassifier, prompt, {wordTarget: length});
+   let response = await modelDriver.generateResponse (EPromptPersona.kThemeFinder, prompt, {wordTarget: length});
 
    return (response.content);
 }

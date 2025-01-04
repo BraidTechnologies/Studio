@@ -12,7 +12,28 @@
  * - IModelConversationPrompt: Interface for complete conversation contexts
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EModelConversationRole = void 0;
+exports.EModelConversationRole = exports.EModelProvider = exports.EModel = void 0;
+// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * Enum representing different sizes of a model.
+ *
+ * @enum {string}
+ */
+var EModel;
+(function (EModel) {
+    EModel["kSmall"] = "Small";
+    EModel["kLarge"] = "Large";
+})(EModel || (exports.EModel = EModel = {}));
+;
+/**
+ * Enum representing different providers of a model.
+ *
+ * @enum {string}
+ */
+var EModelProvider;
+(function (EModelProvider) {
+    EModelProvider["kOpenAI"] = "OpenAI";
+})(EModelProvider || (exports.EModelProvider = EModelProvider = {}));
 /**
  * Enum representing the roles in a conversation with a model.
  *
