@@ -106,7 +106,7 @@ export function getChatPersona (persona: EPromptPersona, userPrompt: string, par
          surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
          + wordString  +
          " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
-         + wordString + " words. Make each distinct point a separate paragraph. Be as positive as reasonably possible.";
+         + wordString + " words. Make each distinct point a separate paragraph.";
 
          surveyTemplate.itemPrompt = userPrompt;
          return surveyTemplate;
