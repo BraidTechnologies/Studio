@@ -11,18 +11,17 @@
  */
 
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
-import { getDefaultModel, } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultEmbeddingModelDriver, getDefaultTextChunker, } from "../../../CommonTs/src/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
 import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";
-import { getEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
 
-const model = getDefaultModel();
-const driver = getEmbeddingModelDriver(model.implementsModel);
+const chunker = getDefaultTextChunker();
+const driver = getDefaultEmbeddingModelDriver();
 
 /**
  * Embed function processes a request to embed text data using CalculateEmbedding function.
@@ -46,8 +45,8 @@ export async function embed(request: HttpRequest, context: InvocationContext): P
          if ((text && text.length > 0)) {
 
             // If the text is bigger than available context, we have to summarise it
-            if (!model.fitsInEmbeddingChunk(text)) {
-               text = await recursiveSummarize(spec.persona, text, 0, model.embeddingChunkSize)
+            if (!chunker.fitsInEmbeddingChunk(text)) {
+               text = await recursiveSummarize(spec.persona, text, 0, chunker.embeddingChunkSize)
 
                context.log("Summarised to fit in maximum chunk.");
             }

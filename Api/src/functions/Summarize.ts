@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 /**
  * @module Summarize
  * 
@@ -17,14 +17,14 @@
  * 
  * Deployment:
  * - 'func azure functionapp publish Braid-Api' to publish to Azure
- * - 'npm start' to run locally
+ * - 'func start' to run locally
  */
 
-import { getDefaultChatModelDriver, getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
 
-const model = getDefaultModel();
+const chunker = getDefaultTextChunker();
 
 /**
  * Splits the input text into chunks of maximum size defined by the model
@@ -35,7 +35,7 @@ const model = getDefaultModel();
  */
 function chunkText(text: string, overlapWords: number): Array<string> {
 
-   const chunks = model.chunkText(text, undefined, overlapWords);
+   const chunks = chunker.chunkText(text, undefined, overlapWords);
 
    return chunks;
 }
@@ -76,7 +76,7 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
    const chunks = chunkText(text, 0);
    const summaries = new Array<string>();
 
-   const recursizeSummarySize = model.defaultChunkSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
+   const recursizeSummarySize = chunker.defaultChunkSize / 5 / 10; // 5 tokens per word, and we compress by a factor of 10
 
    if (chunks.length > 1) {
       // If the text was > threshold, we break it into chunks.

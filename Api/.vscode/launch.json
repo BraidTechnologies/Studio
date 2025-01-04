@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/chatdriver.test.ts"
+           "${workspaceFolder}/test/*query*.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

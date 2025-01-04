@@ -17,12 +17,12 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { getDefaultModel } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 import { IChunkRequest, IChunkResponse } from "../../../CommonTs/src/ChunkApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure";
 
-const model = getDefaultModel();
+const chunker = getDefaultTextChunker();
 
 /**
  * Splits the input text into chunks based on the specified chunk size and overlap words.
@@ -34,7 +34,7 @@ const model = getDefaultModel();
  */
 function chunkText(text: string, chunkSize: number | undefined, overlapWords: number | undefined): Array<string> {
 
-   const chunks = model.chunkText(text, chunkSize, overlapWords);
+   const chunks = chunker.chunkText(text, chunkSize, overlapWords);
 
    return chunks;
 }

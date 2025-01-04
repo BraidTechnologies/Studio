@@ -1,7 +1,7 @@
 'use strict';
 // Copyright Braid Technologies Ltd, 2024
 // 'func azure functionapp publish Braid-Api' to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 /**
  * @module LoginWithLinkedIn

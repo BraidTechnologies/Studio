@@ -14,7 +14,7 @@
 
 'use strict';
 // 'func azure functionapp publish Braid-Api to publish to Azure
-// 'npm start' to run locally
+// 'func start' to run locally
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";

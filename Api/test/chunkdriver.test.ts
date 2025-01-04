@@ -5,32 +5,32 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EModel } from '../../CommonTs/src/IModel';
-import { getDefaultModel, getModel } from '../../CommonTs/src/IModelFactory';
+import { EModel, EModelProvider } from '../../CommonTs/src/IModelDriver';
+import { getDefaultTextChunker, getTextChunker } from '../../CommonTs/src/IModelFactory';
 
-describe("Model", async function () {
+describe("Chunk Driver", async function () {
 
    it("Needs to provide default model", async function () {
       
-      let model = getDefaultModel();
+      let model = getDefaultTextChunker();
 
-      expect (model.deploymentName.length > 0).toBe (true) ;   
+      expect (model.drivenModelProvider.length > 0).toBe (true) ;   
       expect (model.defaultChunkSize > 0).toBe (true) ;             
 
    });
 
    it("Needs to provide specific model", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
 
-      expect (model.deploymentName.length > 0).toBe (true) ;   
+      expect (model.drivenModelProvider.length > 0).toBe (true) ;   
       expect (model.defaultChunkSize > 0).toBe (true) ;   
 
    });
 
    it("Needs to judge small text", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
       let text = "small text";
 
       expect (model.fitsInDefaultChunk(text)).toBe (true) ;     
@@ -39,7 +39,7 @@ describe("Model", async function () {
 
    it("Needs to judge large text", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
 
       let text = "small text";
       for (let i = 0; i < 12; i++)
@@ -51,7 +51,7 @@ describe("Model", async function () {
 
    it("Needs to chunk small text", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
       let text = "small text";
 
       expect (model.chunkText(text, undefined, undefined).length).toBe (1);
@@ -60,7 +60,7 @@ describe("Model", async function () {
 
    it("Needs to chunk large text", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
 
       let text = "small text ";
       for (let i = 0; i < 12; i++)
@@ -71,7 +71,7 @@ describe("Model", async function () {
 
    it("Needs to chunk large text with overlaps", async function () {
       
-      let model = getModel(EModel.kSmall);
+      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
 
       let text = "small text ";
       for (let i = 0; i < 12; i++)
