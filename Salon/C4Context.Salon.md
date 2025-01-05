@@ -1,10 +1,17 @@
 ```mermaid
-graph TD
-    User["User"] -->|interacts with| Salon["Salon"]
-    subgraph Salon
-        api_to_test_code["api_to_test_code"]
-        repo_to_text["repo_to_text"]
-    end
-    api_to_test_code -->|generates| Python_Test_Code["Python Test Code"]
-    repo_to_text -->|analyzes| Codebase["Codebase"]
+C4Context
+title System Context for Salon
+
+Boundary(user, "User") {
+    Person(user, "User", "Interacts with the Salon tools")
+}
+
+Boundary(salon, "Salon") {
+    System(api_to_test_code, "api_to_test_code", "Generates Python test code from API specifications")
+    System(repo_to_text, "repo_to_text", "Processes and analyzes codebases for LLM interaction")
+}
+
+Rel(user, api_to_test_code, "Uses for API test generation")
+Rel(user, repo_to_text, "Uses for codebase analysis")
+Rel(api_to_test_code, "OpenAI API", "Generates context-aware test code")
 ```

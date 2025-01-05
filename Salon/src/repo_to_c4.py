@@ -92,8 +92,7 @@ class RepoToC4:
                 
                 if have_readme_and_salon_files:
                     print(f"Found 'readme.md' and 'ReadMe.Salon.Md' in the directory: {d}")
-                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system "
-                    prompt += "Generate a single diagram, not a set of diagrams. Include the User."
+                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system. Include the User."
                     prompt += "\n\n"                
                     prompt += readme_text
 
@@ -112,7 +111,6 @@ class RepoToC4:
                         print(f"Error writing to {output_file}: {e}")
 
                     prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system "
-                    prompt += "Generate a single diagram, not a set of diagrams. Enclose related components in a System_Boundary."
                     prompt += "\n\n"                
                     prompt += readme_text
 
