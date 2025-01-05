@@ -99,7 +99,7 @@ class RepoToC4:
 
                     summary = summarise_code(prompt)
                     
-                    # Write the C4 context diagram to a file
+                    # Write the C4 Context diagram to a file
                     output_file = os.path.join(self.repo_path, d, 'C4Context.Salon.md')
                     try:                    
                         # Remove file if it exists
@@ -110,6 +110,25 @@ class RepoToC4:
                         print(f"Wrote C4 context diagram to {output_file}")
                     except IOError as e:
                         print(f"Error writing to {output_file}: {e}")
+
+                    prompt = "Please generate a C4 Component diagram in mermaid format from the following description of a software system "
+                    prompt += "Generate a single diagram, not a set of diagrams. Enclose related components in a System_Boundary."
+                    prompt += "\n\n"                
+                    prompt += readme_text
+
+                    summary = summarise_code(prompt)
+                    
+                    # Write the C4 Component diagram to a file
+                    output_file = os.path.join(self.repo_path, d, 'C4Component.Salon.md')
+                    try:                    
+                        # Remove file if it exists
+                        if os.path.exists(output_file):
+                            os.remove(output_file)
+                        with open(output_file, 'w') as f:
+                            f.write(summary)
+                        print(f"Wrote C4 Component diagram to {output_file}")
+                    except IOError as e:
+                        print(f"Error writing to {output_file}: {e}")                        
 
             
 def parse_arguments():
