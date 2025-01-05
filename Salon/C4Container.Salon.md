@@ -2,7 +2,7 @@
 C4Container
   title Salon System Context
 
-  System_Boundary(Salon) {
+  System_Boundary(s0, Salon) {
     Container(api_to_test_code, "api_to_test_code", "Script", "Generates Python test code from API specs")
     Container(repo_to_text, "repo_to_text", "Script", "Processes and analyzes codebases")
 
