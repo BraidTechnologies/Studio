@@ -7,7 +7,9 @@ Person(user, "User", "Educational content curator")
 Person(leadership, "Leadership", "Receives analysis reports")
 }
 
+System_Boundary(waterfall, "Waterfall Framework") {
 System(waterfall, "Waterfall Framework", "Python framework for AI-powered document processing and analysis")
+}
 
 System_Boundary(external_systems, "External Systems") {
 System_Ext(googleSearch, "Google Search API", "Provides search results for content discovery")
