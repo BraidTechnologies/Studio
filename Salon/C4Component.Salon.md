@@ -2,14 +2,14 @@
 C4Component
 title Component diagram for Salon
 
-Container_Boundary(api_to_test, "api_to_test_code") 
+System_Boundary(api_to_test, "api_to_test_code") 
     Component(arg_parser1, "parse_arguments", "Python", "Parses command-line arguments for input file path")
     Component(code_extractor, "extract_code", "Python", "Extracts Python code snippets using markers")
     Component(api_loader, "load_api_data", "Python", "Loads and parses API data from JSON/YAML")
     Component(main1, "main", "Python", "Orchestrates test generation process")
 
 
-Container_Boundary(repo_to_text, "repo_to_text") 
+System_Boundary(repo_to_text, "repo_to_text") 
     Component(arg_parser2, "parse_arguments", "Python", "Parses command-line arguments")
     Component(yaml_loader, "load_yaml", "Python", "Loads configuration from YAML")
     Component(validator, "validate_args", "Python", "Validates paths and arguments")
