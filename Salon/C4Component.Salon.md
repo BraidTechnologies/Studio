@@ -21,9 +21,11 @@ System_Boundary(repo_to_text, "repo_to_text") {
     Component(dir_summary, "SummarisedDirectory", "Python", "Stores directory names and summaries")
 }
 
-System_Ext(openai, "OpenAI API", "LLM service")
-System_Ext(git, "Git Repository", "Source code")
-ContainerDb(fs, "File System", "Stores outputs")
+System_Boundary(external_systems, "external_systems") { 
+    System_Ext(openai, "OpenAI API", "LLM service")
+    System_Ext(git, "Git Repository", "Source code")
+    ContainerDb(fs, "File System", "Stores outputs")
+}
 
 Rel(main1, arg_parser1, "Uses")
 Rel(main1, api_loader, "Uses")
