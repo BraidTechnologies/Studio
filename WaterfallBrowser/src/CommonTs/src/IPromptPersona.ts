@@ -18,6 +18,7 @@ export enum EPromptPersona {
    kDefault = "Default",
    kArticleSummariser = "ArticleSummariser", 
    kCodeSummariser = "CodeSummariser",
+   kC4Diagrammer = "C4Diagrammer",
    kSurveySummariser = "SurveySummariser",
    kTestForSummariseFail = "TestForSummariseFail",
    kClassifier = "Classifier",
