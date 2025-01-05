@@ -11,14 +11,5 @@ graph TB
         Defusc["Defusc - Base64 decoding utility"]
         reportWebVitals["reportWebVitals - Performance monitoring"]
         UIString["UIString - UI text constants"]
-
-        User --> App
-        App --> ChunkRetriever
-        ChunkRetriever --> ChunkView
-        ChunkRetriever --> ChunkViewLoading
-        ChunkRetriever --> ChunkViewError
-        ChunkRetriever --> Defusc
-        App --> reportWebVitals
-        App --> UIString
     end
 ```

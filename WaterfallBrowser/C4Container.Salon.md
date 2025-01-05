@@ -2,7 +2,7 @@
 C4Container
    title Waterfall Browser
 
-    Container_Boundary(b1, "Waterfall Browser") {
+    System_Boundary(b1, "Waterfall Browser") {
         Component(app, "App", "React Component", "Main application component handling routing and layout")
         Component(chunkRetriever, "ChunkRetriever", "React Component", "Manages data fetching logic and state")
         Component(chunkView, "ChunkView", "React Component", "Displays individual chunk data with navigation options")
@@ -13,12 +13,4 @@ C4Container
         Component(uiString, "UIString", "Module", "UI text constants")
     }
 
-    b1 --> app
-    b1 --> chunkRetriever
-    b1 --> chunkView
-    b1 --> chunkViewLoading
-    b1 --> chunkViewError
-    b1 --> defusc
-    b1 --> reportWebVitals
-    b1 --> uiString
 ```

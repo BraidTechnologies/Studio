@@ -14,8 +14,10 @@ System_Boundary(salon, "Salon") {
     ContainerDb(output_summaries, "Code Summaries", "Text files", "Processed and summarized code content")
 }
 
-System_Ext(openai, "OpenAI API", "LLM service for code generation and analysis")
-System_Ext(git, "Git Repository", "Source code repository")
+System_Boundary(external_systems, "External Systems") {
+    System_Ext(openai, "OpenAI API", "LLM service for code generation and analysis")
+    System_Ext(git, "Git Repository", "Source code repository")
+}
 
 Rel(developer, api_to_test, "Provides API specs")
 Rel(developer, repo_to_text, "Provides repo path")
