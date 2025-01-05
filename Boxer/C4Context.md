@@ -29,5 +29,4 @@ C4Context
     Rel(core, cosmos, "Stores/retrieves data", "HTTPS")
     Rel(core, local_storage, "Stores session data", "Local API")
     
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```mermaid
