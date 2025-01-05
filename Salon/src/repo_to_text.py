@@ -71,10 +71,19 @@ BASE_URL = 'http://localhost:7071/api'
 SESSION_KEY = os.environ['SessionKey']
 
 def summarise_endpoint_url():
-    # Construct the full URL for the summary endpoint
+    """Construct the full URL for the summary endpoint"""
     return f'{BASE_URL}/Summarize?session=' + SESSION_KEY
 
 def summarise_code(source: str) -> str:
+    """
+    Summarize source code text using an API endpoint.
+    
+    Args:
+        source (str): The source code text to summarize
+        
+    Returns:
+        str: The summarized text if successful, None otherwise
+    """
 
 
     payload = {

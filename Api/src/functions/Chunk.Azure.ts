@@ -9,7 +9,7 @@
  * 
  * Usage:
  * - Deployed via 'func azure functionapp publish Braid-Api'
- * - Local development via 'npm start'
+ * - Local development via 'func start'
  * 
  * The chunking process respects session validation and handles errors appropriately,
  * returning standardized API responses.
