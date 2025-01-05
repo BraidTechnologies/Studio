@@ -29,4 +29,4 @@ C4Context
     Rel(core, cosmos, "Stores/retrieves data", "HTTPS")
     Rel(core, local_storage, "Stores session data", "Local API")
     
-```mermaid
+```
