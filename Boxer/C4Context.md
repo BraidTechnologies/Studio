@@ -7,6 +7,10 @@ C4Context
     System_Boundary(s1, "Systems") {
         System(boxer, "Boxer System", "AI-powered real-time chat application with collaborative features")
     }
+    System_Boundary(s4, "Containers") {
+        Container(ui, "Boxer UI", "TypeScript/React", "Web interface for chat interactions")
+        Container(core, "Boxer Core", "TypeScript", "Business logic and data management")
+    }
     System_Boundary(s2, "External APIs") {
         System_Ext(fluid, "Fluid Framework", "Handles real-time collaboration and shared state")
         System_Ext(llm, "LLM Service", "AI language model for chat enrichment")
@@ -15,10 +19,7 @@ C4Context
         SystemDb(cosmos, "Braid Cosmos DB", "Stores activities, messages, and embeddings")
         SystemDb(local_storage, "Local Storage", "Stores user secrets and session data")
     }
-    System_Boundary(s4, "Containers") {
-        Container(ui, "Boxer UI", "TypeScript/React", "Web interface for chat interactions")
-        Container(core, "Boxer Core", "TypeScript", "Business logic and data management")
-    }
+
     
     Rel(user, ui, "Uses", "HTTPS")
     Rel(ui, core, "Uses")
