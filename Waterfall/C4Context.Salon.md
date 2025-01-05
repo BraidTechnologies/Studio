@@ -1,38 +1,24 @@
 ```mermaid
 C4Context
-title Waterfall System Context
+title Waterfall System Context Diagram
 
-Person(Developer, "User") <--> System
+Person(user, "User", "Educational content curator")
+Person(leadership, "Leadership", "Receives analysis reports")
 
-System_Boundary(Waterfall, "Waterfall") {
-    SystemComponent(Boxer_Pipeline, "Boxer Pipeline", "Builds a knowledge base using web and YouTube content")
-    SystemComponent(Waterfall_Pipeline, "Waterfall Pipeline", "Core pipeline for document processing and analysis using AI")
-    SystemComponent(Waterfall_Components, "Components") {
-        Component(Google_Search_API, "Google Search API", "Retrieves documents")
-        Component(Summariser, "Summariser", "Generates summaries")
-        Component(Embedder, "Embedder", "Generates embeddings")
-        Component(YoutubePlaylistSearcher, "YouTubePlaylistSearcher", "Searches YouTube playlists")
-        Component(HtmlLinkCrawler, "HtmlLinkCrawler", "Crawls HTML links")
-        Component(HtmlFileDownloader, "HtmlFileDownloader", "Downloads HTML files")
-        Component(YouTubeTranscriptDownloader, "YouTubeTranscriptDownloader", "Downloads YouTube transcripts")
-        Component(YouTubeTranscriptChunker, "YouTubeTranscriptChunker", "Chunks YouTube transcripts")
-    }
-    SystemComponent(Boxer_Interface, "Boxer Interface", "Enables semantic search using processed knowledge base")
-    SystemComponent(Email_Notifications, "Email Notifications", "Sends summarized insights to leadership")
-}
+System(waterfall, "Waterfall Framework", "Python framework for AI-powered document processing and analysis")
 
-Developer --> Boxer_Pipeline
-Developer --> Waterfall_Pipeline
-Waterfall_Pipeline --> Google_Search_API
-Waterfall_Pipeline --> Summariser
-Waterfall_Pipeline --> Embedder
-Boxer_Pipeline --> YoutubePlaylistSearcher
-Boxer_Pipeline --> HtmlLinkCrawler
-Boxer_Pipeline --> HtmlFileDownloader
-Boxer_Pipeline --> YouTubeTranscriptDownloader
-Boxer_Pipeline --> YouTubeTranscriptChunker
-Boxer_Pipeline --> Summariser
-Boxer_Pipeline --> Embedder
-Boxer_Pipeline --> Boxer_Interface
-Boxer_Pipeline --> Email_Notifications
+System_Ext(googleSearch, "Google Search API", "Provides search results for content discovery")
+System_Ext(youtube, "YouTube Platform", "Source of educational video content")
+System_Ext(webContent, "Web Content", "Educational articles and documentation")
+System_Ext(aiApi, "AI Services", "External AI APIs for summarization and embeddings")
+System_Ext(gmail, "Gmail API", "Email service for report delivery")
+
+Rel(user, waterfall, "Configures and runs pipelines")
+Rel(waterfall, leadership, "Sends analysis reports", "Email")
+
+Rel(waterfall, googleSearch, "Searches for relevant content")
+Rel(waterfall, youtube, "Downloads video transcripts and playlist info")
+Rel(waterfall, webContent, "Crawls and downloads content")
+Rel(waterfall, aiApi, "Generates summaries and embeddings")
+Rel(waterfall, gmail, "Sends reports")
 ```
