@@ -5,7 +5,7 @@ title Salon System Context Diagram
 Person(user, "User")
 
 System_Boundary(s0, Salon_Boundary, "Salon") {
-    System_Salon("Salon", "Automated API Testing & Code Analysis", "Technology demonstrator for automated software development tools using Large Language Models (LLMs).") {
+    System_Salon(s1, "Salon", "Automated API Testing & Code Analysis", "Technology demonstrator for automated software development tools using Large Language Models (LLMs).") {
         Container(api_to_test_code, "API to Test Code", "Automated generation of Python test code from API specifications.")
         Container(repo_to_text, "Repo to Text", "Processing and analysis of codebases.")
     }
