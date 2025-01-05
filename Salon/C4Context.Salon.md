@@ -13,5 +13,4 @@ System_Boundary(s1, "Salon") {
 
 Rel(user, api_to_test_code, "Uses for API test generation")
 Rel(user, repo_to_text, "Uses for codebase analysis")
-Rel(api_to_test_code, "OpenAI API", "Generates context-aware test code")
 ```
