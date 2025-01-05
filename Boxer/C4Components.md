@@ -41,8 +41,6 @@ C4Container
     Rel(ai_connection, embedding_cache, "Caches embeddings")
     
     Rel(fluid_connection, fluid, "Syncs real-time data", "WebSocket")
-    
-    Rel(auth_manager, embedding_cache, "Stores secrets")
 
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```
