@@ -53,11 +53,13 @@ Rel(summarizerComponent, summaryRepo, "Stores summaries")
 Rel(htmlDownloader, textRepo, "Stores content")
 Rel(fileRepoComponent, dbRepoComponent, "Persists data")
 
+Container_Boundary(external_systems, "External Systems") {
 System_Ext(googleApi, "Google Search API")
 System_Ext(youtubeApi, "YouTube API")
 System_Ext(aiApi, "AI Services API")
 System_Ext(filesystem, "File System")
 System_Ext(database, "BraidApis Database")
+}  
 
 Rel(webSearcher, googleApi, "Searches")
 Rel(youtubeSearcher, youtubeApi, "Fetches playlists")
