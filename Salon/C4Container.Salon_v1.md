@@ -1,30 +1,25 @@
-```markdown
 ```mermaid
-  C4Container
+C4Container
     title Salon System
 
-    Person(person_user, "User", "Developer interacting with the system")
+    Person(developer, "Developer", "Uses Salon to assist in API testing and code analysis")
 
-    System_Boundary(salon_system, "Salon") {
-    
-      Container(api_to_test_code, "api_to_test_code", "Python Script", "Generates Python test code from API specifications", $tags="App")
-      Container(repo_to_text, "repo_to_text", "Python Script", "Processes and analyzes codebases into text files", $tags="App")
-      
-      Container(application, "ApiTest", "Application", "Uses api_to_test_code for test coverage")
-      
-      Container_Db(logs_db, "Logs DB", "Database", "Stores error logs and generated code")
-      
-      Container(openai_api, "OpenAI API", "API", "Provides LLM-based code generation and analysis")
+    System_Boundary(Salon_Boundary, "Salon") {
+        Container(api_to_test_code, "API to Test Code", "Python Script", "Generates Python test code from API specifications.")
+        Container(repo_to_text, "Repo to Text", "Python Script", "Processes and analyzes codebases.")
 
-      Rel(api_to_test_code, application, "Test generation")
-      Rel(application, logs_db, "Logs errors and generated code")
-      Rel(api_to_test_code, logs_db, "Stores error handling and logging")
-      Rel(api_to_test_code, openai_api, "Requests context-aware prompts for test generation")
-      Rel(repo_to_text, openai_api, "Performs LLM-based code analysis")
-      Rel(person_user, application, "Interacts with ApiTest application")
-      Rel(person_user, api_to_test_code, "Generates Pytest code")
-      Rel(person_user, repo_to_text, "Processes repositories")
+        Container(api_to_test_code_script, "api_to_test_code.py", "Python script", "Generates Pytest code from API data provided in JSON or YAML format.")
+        Container(repo_to_text_script, "repo_to_text.py", "Python script", "Processes codebases into text files for LLM-based analysis.")
+
+        System(api_to_test_code_openai, "OpenAI", "External Service", "Provides context-aware prompts for accurate test generation.")
+        System(repo_to_text_notebooklm, "NotebookLM", "External Service", "Interactive code exploration.")
+
+        api_to_test_code <-> api_to_test_code_openai : "Uses context-aware prompts"
+        repo_to_text <-> repo_to_text_notebooklm : "Inspired by functionality"
     }
 
-```
+    developer -> Salon_Boundary : "Uses"
+
+    api_to_test_code -> api_to_test_code_script : "Executes"
+    repo_to_text -> repo_to_text_script : "Executes"
 ```
