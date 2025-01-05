@@ -1,24 +1,24 @@
 ```mermaid
 C4Context
-title Salon System Context Diagram
+    title Salon Context Diagram
 
-Person(user, "User")
+    Person(User, "User")
 
-System_Boundary(s0, Salon_Boundary, "Salon") {
-    Container (salon, "Automated API Testing & Code Analysis", "Technology demonstrator for automated software development tools using Large Language Models (LLMs).") {
-        Container(api_to_test_code, "API to Test Code", "Automated generation of Python test code from API specifications.")
-        Container(repo_to_text, "Repo to Text", "Processing and analysis of codebases.")
+    System(Salon, "Salon Technology Demonstrator", "Automated software development tools using LLMs")
+
+    Container_Boundary(Salon_Boundary, "Salon") {
+        Container(api_to_test_code, "api_to_test_code", "Python Script", "Generates Python test code from API specifications")
+        Container(repo_to_text, "repo_to_text", "Python Script", "Processes and analyzes codebases")
+
+        ContainerDb(api_data, "API Data", "JSON/YAML", "API specifications")
+        ContainerDb(processed_repo, "Processed Repository", "Text Files", "Concatenated source files for code analysis")
     }
-    ContainerDb(api_spec_storage, "API Specification Storage", "JSON/YAML API specifications")
-    ContainerDb(repo_storage, "Repository Storage", "Source code repositories")
-}
 
-Rel(user, api_to_test_code, "Provides API specifications")
-Rel(api_to_test_code, api_spec_storage, "Reads from and writes to", "JSON/YAML API specifications")
-Rel(api_to_test_code, repo_to_text, "Uses for further analysis")
-Rel(user, repo_to_text, "Provides source code to analyze")
-Rel(repo_to_text, repo_storage, "Reads from and writes to", "Source code repositories")
-
-Rel_D(api_to_test_code, "OpenAI", "Sends requests for code suggestions")
-Rel_B(repo_to_text, "Summarized Code Storage", "Stores summarized code results")
+    Rel(User, Salon, "Uses")
+    Rel(Salon, api_to_test_code, "Uses")
+    Rel(api_to_test_code, api_data, "Reads from")
+    Rel(api_to_test_code, processed_repo, "Generates test code")
+    Rel(Salon, repo_to_text, "Uses")
+    Rel(repo_to_text, processed_repo, "Reads from and writes to")
+    Rel(repo_to_text, api_data, "Reads config")
 ```
