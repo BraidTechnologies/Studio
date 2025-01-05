@@ -1,31 +1,43 @@
 ```mermaid
-flowchart TB
+---
+title: Salon System Components
+---
+C4Context
+    boundary System_Boundary {
+        System(salon, "Salon", "Automated Software Development Tools") {
+            Component(api_to_test_code, "API to Test Code", "Generates Python test code from API specs")
+            Component(repo_to_text, "Repo to Text", "Processes and analyzes codebases")
+            
+            Component(api_to_test_code_script, "api_to_test_code.py", "Generates Pytest code from API specifications")
+            component_a <- group Container(api_to_test_code, &) {
+                Component(parse_arguments_1, "parse_arguments")
+                Component(extract_code, "extract_code")
+                Component(load_api_data, "load_api_data")
+                Component(main_api, "main")
+            }
 
-subgraph System_Boundary
-    subgraph api_to_test_code
-        atc_main(Main Execution Function)
-        atc_parse_arguments(parse_arguments)
-        atc_extract_code(extract_code)
-        atc_load_api_data(load_api_data)
-        atc_generate_pytest_code(OpenAI Assistant)
-        
-        atc_main --> atc_parse_arguments
-        atc_main --> atc_load_api_data
-        atc_main --> atc_generate_pytest_code
-        atc_generate_pytest_code --> atc_extract_code
-    end
-
-    subgraph repo_to_text
-        rpt_main(process_repo)
-        rpt_summarised_directory(SummarisedDirectory)
-        rpt_repo_processor(RepoContentProcessor)
-        
-        rpt_repo_processor -->|init| rpt_main
-        rpt_repo_processor -->|process_file| rpt_main
-        rpt_repo_processor -->|save_current_content| rpt_main
-        rpt_main --> rpt_summarised_directory
-        
-        rpt_repo_processor --> rpt_summarised_directory
-    end
-end
+            Component(repo_to_text_script, "repo_to_text.py", "Processes and analyzes codebases")
+            component_b <- group Container(repo_to_text, &) {
+                Component(SummarisedDirectory, "SummarisedDirectory")
+                Component(RepoContentProcessor, "RepoContentProcessor", "
+                    - `__init__`
+                    - `make_common_file_name`
+                    - `format_file_block`
+                    - `count_words`
+                    - `is_in_git_directory`
+                    - `is_skip_dir`
+                    - `is_in_common_dir`
+                    - `should_resummarise_code`
+                    - `save_current_content`
+                    - `process_file`
+                    - `process_repo`
+                ")
+                Component(summarise_code, "summarise_code")
+                Component(load_yaml, "load_yaml")
+                Component(main_repo, "main")
+                Component(parse_arguments_2, "parse_arguments")
+                Component(validate_args, "validate_args")
+            }
+        }
+    }
 ```

@@ -93,7 +93,7 @@ class RepoToC4:
                 if have_readme_and_salon_files:
                     print(f"Found 'readme.md' and 'ReadMe.Salon.Md' in the directory: {d}")
                     prompt = "Please generate a C4 Context diagram in mermaid format from the following description of a software system "
-                    prompt += "Generate a single diagram, not a set of diagrams. Enclose related components in a System_Boundary."
+                    prompt += "Generate a single diagram, not a set of diagrams. Enclose related components in a System_Boundary. Include the User."
                     prompt += "\n\n"                
                     prompt += readme_text
 
