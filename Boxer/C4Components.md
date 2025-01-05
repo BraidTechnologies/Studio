@@ -20,9 +20,11 @@ C4Container
         ContainerDb(embedding_cache, "Embedding Cache", "Local Storage", "Stores embeddings and session data locally")
     }
 
-    System_Ext(fluid, "Fluid Framework", "Real-time collaboration service")
-    System_Ext(llm, "LLM Service", "AI language model service")
-    SystemDb(cosmos, "Braid Cosmos DB", "Stores activities and messages")
+    System_Boundary(boxer, "External Systems") {
+        System_Ext(fluid, "Fluid Framework", "Real-time collaboration service")
+        System_Ext(llm, "LLM Service", "AI language model service")
+        SystemDb(cosmos, "Braid Cosmos DB", "Stores activities and messages")
+    }
 
     Rel(user, web_app, "Uses", "HTTPS")
     

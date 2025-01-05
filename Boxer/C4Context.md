@@ -4,9 +4,6 @@ C4Context
     System_Boundary(s0, "User") {   
         Person(user, "User", "A person who wants to participate in AI-enhanced chat conversations")
     }
-    System_Boundary(s1, "Systems") {
-        System(boxer, "Boxer System", "AI-powered real-time chat application with collaborative features")
-    }
     System_Boundary(s4, "Containers") {
         Container(ui, "Boxer UI", "TypeScript/React", "Web interface for chat interactions")
         Container(core, "Boxer Core", "TypeScript", "Business logic and data management")
