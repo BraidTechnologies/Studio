@@ -92,7 +92,7 @@ class RepoToC4:
                 
                 if have_readme_and_salon_files:
                     print(f"Found 'readme.md' and 'ReadMe.Salon.Md' in the directory: {d}")
-                    prompt = "Please generate a C4 Context diagram in mermaid format from the following description of a software system "
+                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system "
                     prompt += "Generate a single diagram, not a set of diagrams. Include the User."
                     prompt += "\n\n"                
                     prompt += readme_text
@@ -107,26 +107,26 @@ class RepoToC4:
                             os.remove(output_file)
                         with open(output_file, 'w') as f:
                             f.write(summary)
-                        print(f"Wrote C4 context diagram to {output_file}")
+                        print(f"Wrote C4Context diagram to {output_file}")
                     except IOError as e:
                         print(f"Error writing to {output_file}: {e}")
 
-                    prompt = "Please generate a C4 Component diagram in mermaid format from the following description of a software system "
+                    prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system "
                     prompt += "Generate a single diagram, not a set of diagrams. Enclose related components in a System_Boundary."
                     prompt += "\n\n"                
                     prompt += readme_text
 
                     summary = summarise_code(prompt)
                     
-                    # Write the C4 Component diagram to a file
-                    output_file = os.path.join(self.repo_path, d, 'C4Component.Salon.md')
+                    # Write the C4 Container diagram to a file
+                    output_file = os.path.join(self.repo_path, d, 'C4Container.Salon.md')
                     try:                    
                         # Remove file if it exists
                         if os.path.exists(output_file):
                             os.remove(output_file)
                         with open(output_file, 'w') as f:
                             f.write(summary)
-                        print(f"Wrote C4 Component diagram to {output_file}")
+                        print(f"Wrote C4 Container diagram to {output_file}")
                     except IOError as e:
                         print(f"Error writing to {output_file}: {e}")                        
 
