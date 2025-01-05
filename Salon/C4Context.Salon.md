@@ -1,16 +1,23 @@
 ```mermaid
 C4Context
-title System Context for Salon
+title System Context diagram for Salon
 
-System_Boundary(u0, "User") {
-    Person(user, "User", "Interacts with the Salon tools")
-}
+Person(developer, "Software Developer", "Developer working with APIs and codebases")
 
-System_Boundary(s1, "Salon") {
-    System(api_to_test_code, "api_to_test_code", "Generates Python test code from API specifications")
-    System(repo_to_text, "repo_to_text", "Processes and analyzes codebases for LLM interaction")
-}
+System(salon, "Salon", "Automated software development tools using LLMs")
 
-Rel(user, api_to_test_code, "Uses for API test generation")
-Rel(user, repo_to_text, "Uses for codebase analysis")
+System_Ext(openai, "OpenAI API", "LLM service for code generation and analysis")
+System_Ext(git, "Git Repository", "Source code repository")
+
+Rel(developer, salon, "Uses")
+Rel(salon, openai, "Generates tests and analyzes code using")
+Rel(salon, git, "Reads from")
+
+Container(api_to_test, "api_to_test_code", "Python tool that generates test code from API specifications")
+Container(repo_to_text, "repo_to_text", "Python utility for processing and analyzing codebases")
+
+Rel(salon, api_to_test, "Contains")
+Rel(salon, repo_to_text, "Contains")
+Rel(api_to_test, openai, "Generates tests using")
+Rel(repo_to_text, git, "Processes code from")
 ```
