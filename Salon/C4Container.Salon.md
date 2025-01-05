@@ -2,7 +2,7 @@
 C4Container
 title Salon System
 
-Container_Salon(Salon, "Salon System", "Technology demonstrator for automated software development tools using LLMs") {
+Container(Salon, "Salon System", "Technology demonstrator for automated software development tools using LLMs") {
     Component(api_to_test_code_py, "api_to_test_code.py", "Script", "Generates Pytest code from API data")
     Component(repo_to_text_py, "repo_to_text.py", "Script", "Processes and analyzes codebases")
 
