@@ -25,14 +25,12 @@ System_Ext(openai, "OpenAI API", "LLM service")
 System_Ext(git, "Git Repository", "Source code")
 ContainerDb(fs, "File System", "Stores outputs")
 
-' api_to_test_code relationships
 Rel(main1, arg_parser1, "Uses")
 Rel(main1, api_loader, "Uses")
 Rel(main1, code_extractor, "Uses")
 Rel(main1, openai, "Generates tests")
 Rel(main1, fs, "Writes test files")
 
-' repo_to_text relationships
 Rel(main2, arg_parser2, "Uses")
 Rel(main2, yaml_loader, "Uses")
 Rel(main2, validator, "Uses")
