@@ -1,4 +1,4 @@
-...mermaid
+```mermaid
 C4Context
     title System Context diagram for Cascade and Waterfall Systems
 
@@ -35,4 +35,4 @@ C4Context
     Rel(waterfall, external_apis, "Processes content")
     Rel(external_apis, cosmos_db, "Stores processed data")
     Rel(waterfall, file_system, "Stores temporary data")
-...
+```
