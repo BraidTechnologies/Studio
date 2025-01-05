@@ -2,9 +2,10 @@
 C4Container
 title Waterfall System Container Diagram
 
+System_Boundary(users, "Users") {
 Person(user, "User", "Educational content curator")
 Person(leadership, "Leadership", "Receives analysis reports")
-
+}
 System_Boundary(waterfall, "Waterfall Framework") {
     Container(waterfallPipeline, "Waterfall Pipeline", "Python", "Core pipeline for document retrieval, enrichment, and analysis")
     Container(boxerPipeline, "Boxer Pipeline", "Python", "Knowledge base builder for web and video content")
@@ -19,12 +20,13 @@ System_Boundary(waterfall, "Waterfall Framework") {
     ContainerDb(dbRepo, "Database Repository", "BraidApis DB", "Stores chunks in hierarchical structure")
 }
 
+System_Boundary(external, "External APIs") {
 System_Ext(googleSearch, "Google Search API", "Content discovery")
 System_Ext(youtube, "YouTube Platform", "Video content")
 System_Ext(webContent, "Web Content", "Articles & docs")
 System_Ext(aiApi, "AI Services", "Summarization & embeddings")
 System_Ext(gmail, "Gmail API", "Report delivery")
-
+}
 Rel(user, waterfallPipeline, "Configures and runs")
 Rel(user, boxerPipeline, "Configures and runs")
 
