@@ -1,9 +1,4 @@
-```
-%%{
-  init: {
-    'theme': 'base',
-  }
-}%%
+```mermaid
 C4Context
 title Salon System Context Diagram
 
