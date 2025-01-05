@@ -19,6 +19,7 @@ var EPromptPersona;
     EPromptPersona["kDefault"] = "Default";
     EPromptPersona["kArticleSummariser"] = "ArticleSummariser";
     EPromptPersona["kCodeSummariser"] = "CodeSummariser";
+    EPromptPersona["kC4Diagrammer"] = "C4Diagrammer";
     EPromptPersona["kSurveySummariser"] = "SurveySummariser";
     EPromptPersona["kTestForSummariseFail"] = "TestForSummariseFail";
     EPromptPersona["kClassifier"] = "Classifier";

@@ -52,6 +52,32 @@ class RepoToC4:
         # Convert relative path to absolute path
         self.repo_path = Path(repo_path).resolve()
     
+    def write_file_version(self, dir_name, file_name, content):
+
+        output_file = os.path.join(self.repo_path, dir_name, file_name)
+        try:
+            written = False
+            # Add version number to filename if file exists
+            version = 1
+            base_path = Path(output_file)
+            while os.path.exists(output_file) and not written:
+                # Get the parent directory and filename parts
+                parent = base_path.parent
+                stem = base_path.stem
+                suffix = base_path.suffix
+                # Create new filename with version number
+                output_file = str(
+                    parent / f"{stem}_v{version}{suffix}")
+                version += 1
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                    print(f"Wrote diagram to {output_file}")
+                    written = True
+        except IOError as e:
+           print(f"Error writing to {output_file}: {e}")
+
+
+
     def process_repo(self):
         """
         Walk through the repository directory and process files.
@@ -71,7 +97,7 @@ class RepoToC4:
             if readme_file:
                 print(f"Found 'readme.md' (or a case variation of that file name) in the directory: {d}")
                 readme_text = ""
-                with open(os.path.join(self.repo_path, d, readme_file), 'r') as file:
+                with open(os.path.join(self.repo_path, d, readme_file), 'r', encoding='utf-8') as file:
                     readme_text = file.read()
 
                 sub_dirs = os.listdir(os.path.join(self.repo_path, d))
@@ -85,48 +111,33 @@ class RepoToC4:
                             have_readme_and_salon_files = True
                             print(f"Found 'ReadMe.Salon.Md' (or a case variation of that file name) in the subdirectory: {
                                 sub_dir_path}")
-                            with open(os.path.join(self.repo_path, d, sub_dir_path, readme_salon_file), 'r') as file:
+                            with open(os.path.join(self.repo_path, d, sub_dir_path, readme_salon_file), 'r', encoding='utf-8') as file:
                                 readme_salon_text = file.read() 
                                 readme_text += "\n\n"
                                 readme_text += readme_salon_text    
                 
                 if have_readme_and_salon_files:
                     print(f"Found 'readme.md' and 'ReadMe.Salon.Md' in the directory: {d}")
-                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system. Include the User."
-                    prompt += "\n\n"                
+                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system. Include the User. Only generate mermaid content."
+                    prompt += "\n\n"
                     prompt += readme_text
 
-                    summary = summarise_code(prompt)
-                    
-                    # Write the C4 Context diagram to a file
-                    output_file = os.path.join(self.repo_path, d, 'C4Context.Salon.md')
-                    try:                    
-                        # Remove file if it exists
-                        if os.path.exists(output_file):
-                            os.remove(output_file)
-                        with open(output_file, 'w') as f:
-                            f.write(summary)
-                        print(f"Wrote C4Context diagram to {output_file}")
-                    except IOError as e:
-                        print(f"Error writing to {output_file}: {e}")
+                    summary = summarise_code(prompt)                    
+                    self.write_file_version(d, 'C4Context.Salon.md', summary)
 
-                    prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system "
-                    prompt += "\n\n"                
+                    prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system. Only generate mermaid content. "
+                    prompt += "\n\n"
                     prompt += readme_text
 
-                    summary = summarise_code(prompt)
-                    
-                    # Write the C4 Container diagram to a file
-                    output_file = os.path.join(self.repo_path, d, 'C4Container.Salon.md')
-                    try:                    
-                        # Remove file if it exists
-                        if os.path.exists(output_file):
-                            os.remove(output_file)
-                        with open(output_file, 'w') as f:
-                            f.write(summary)
-                        print(f"Wrote C4 Container diagram to {output_file}")
-                    except IOError as e:
-                        print(f"Error writing to {output_file}: {e}")                        
+                    summary = summarise_code(prompt)                    
+                    self.write_file_version(d, 'C4Container.Salon.md', summary)
+
+                    prompt = "Please generate a C4Component diagram in mermaid format from the following description of a software system. Only generate mermaid content. "
+                    prompt += "\n\n"
+                    prompt += readme_text
+
+                    summary = summarise_code(prompt)     
+                    self.write_file_version(d, 'C4Component.Salon.md', summary)                       
 
             
 def parse_arguments():
