@@ -1,4 +1,3 @@
-```markdown
 ```mermaid
 C4Context
 title Salon
@@ -14,6 +13,4 @@ Rel(customer, api_to_test_code, "Uses to generate test code from API specificati
 Rel(customer, repo_to_text, "Uses to process codebases")
 
 Rel(api_to_test_code, repo_to_text, "Interaction for code analysis and test generation")
-```
-```
 ```
