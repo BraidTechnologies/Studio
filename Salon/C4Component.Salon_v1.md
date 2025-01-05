@@ -1,4 +1,3 @@
-```markdown
 ```mermaid
 C4Component
     title Salon Software System
@@ -37,5 +36,4 @@ C4Component
     Rel(load_yaml, repo_main, "Called by")
     Rel(arguments_parser, repo_main, "Called by")
     Rel(validate_args, repo_main, "Called by")
-```
 ```
