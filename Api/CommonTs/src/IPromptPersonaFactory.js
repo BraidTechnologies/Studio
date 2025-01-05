@@ -35,6 +35,11 @@ const CodeSummariserPersona = {
     systemPrompt: "",
     itemPrompt: ""
 };
+const C4DiagrammerPersona = {
+    name: IPromptPersona_1.EPromptPersona.kC4Diagrammer,
+    systemPrompt: "",
+    itemPrompt: ""
+};
 const SurveySummariserPersona = {
     name: IPromptPersona_1.EPromptPersona.kSurveySummariser,
     systemPrompt: "",
@@ -80,7 +85,7 @@ function getChatPersona(persona, userPrompt, params) {
             surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
                 + wordString +
                 " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
-                + wordString + " words. Make each distinct point a separate paragraph. Be as positive as reasonably possible.";
+                + wordString + " words. Make each distinct point a separate paragraph.";
             surveyTemplate.itemPrompt = userPrompt;
             return surveyTemplate;
         case IPromptPersona_1.EPromptPersona.kCodeSummariser:
@@ -91,6 +96,12 @@ function getChatPersona(persona, userPrompt, params) {
                 + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
             codeTemplate.itemPrompt = userPrompt;
             return codeTemplate;
+        case IPromptPersona_1.EPromptPersona.kC4Diagrammer:
+            const c4Template = C4DiagrammerPersona;
+            c4Template.systemPrompt = "You are an AI asistant that generates a diagram in mermaid format from a description of a software system "
+                + "to help explain the system to new developers.";
+            c4Template.itemPrompt = userPrompt;
+            return c4Template;
         case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
             const testForSummariseFailTemplate = TestForSummariseFailPersona;
             testForSummariseFailTemplate.systemPrompt = "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. The summariser may apologise for this, or may say there is not enough relevant information to summarise, or may state the text contains only web page navigation, all of which are failed summaries."

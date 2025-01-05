@@ -130,7 +130,7 @@ export function getChatPersona (persona: EPromptPersona, userPrompt: string, par
 
       case EPromptPersona.kC4Diagrammer:
          const c4Template = C4DiagrammerPersona;
-         c4Template.systemPrompt = "You are an AI asistant that generates a C4 diagram is mermaid format from a description of a software system "
+         c4Template.systemPrompt = "You are an AI asistant that generates a diagram in mermaid format from a description of a software system "
                                  + "to help explain the system to new developers.";
    
          c4Template.itemPrompt = userPrompt;
