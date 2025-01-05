@@ -25,8 +25,6 @@ C4Component
     }
 
     Rel(api_to_test_code, repo_to_text, "Utilizes for code analysis")
-    Rel(api_to_test_code_structure, api_to_test_code, "Part of")
-    Rel(repo_to_text_structure, repo_to_text, "Part of")
     Rel(parse_arguments, api_main, "Called by")
     Rel(extract_code, api_main, "Called by")
     Rel(load_api_data, api_main, "Called by")
