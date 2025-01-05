@@ -1,4 +1,3 @@
-```markdown
 ```mermaid
   C4Container
     title Salon System
@@ -26,5 +25,4 @@
       Rel(person_user, repo_to_text, "Processes repositories")
     }
 
-```
 ```
