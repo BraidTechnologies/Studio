@@ -10,10 +10,10 @@ Container_Boundary(waterfallPipeline, "Waterfall Pipeline") {
 }
 
 Container_Boundary(boxerPipeline, "Boxer Pipeline") {
+    Component(htmlCrawler, "HtmlLinkCrawler", "Python", "Crawls web pages for links")
     Component(youtubeSearcher, "YoutubePlaylistSearcher", "Python", "Searches YouTube playlists")
     Component(transcriptDownloader, "YouTubeTranscriptDownloader", "Python", "Downloads video transcripts")
     Component(transcriptChunker, "YouTubeTranscriptChunker", "Python", "Chunks video transcripts")
-    Component(htmlCrawler, "HtmlLinkCrawler", "Python", "Crawls web pages for links")
 }
 
 Container_Boundary(processingComponents, "Processing Components") {
