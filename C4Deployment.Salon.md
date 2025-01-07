@@ -25,12 +25,13 @@ C4Deployment
     }
     }
 
-
+   System_Boundary(c4, "external services") {
     Container(azure_openai, "Azure OpenAI", "External API", "Provides LLM services for text processing")
     Rel(api_layer, azure_openai, "Requests text summarization, classification and embedding")
     Rel(boxer_container, azure_openai, "Requests text summarization, classification and embedding")
 
     Container(google_gemini, "Google Gemini", "External API", "Provides LLM services for quality evaluation")
     Rel(waterfall_container, google_gemini, "Requests quality evaluation") 
+   }
 
 ```      
