@@ -21,6 +21,18 @@ Salon is a technology demonstrator for automated software development tools usin
  Enables LLM-based code analysis and question answering
  Adapted from [NotebookLM solution for interactive code exploration](https://jmlbeaujour.medium.com/introducing-notebooklm-as-a-solution-for-interactive-code-exploration-704a44e690a6)
 
+### repo_to_c4.py
+A tool that generates C4 architecture diagrams from GitHub repositories.
+**Features:**
+- Traverses and analyzes repository structure
+- Generates comprehensive C4 architectural diagrams
+- Includes API integration for code summarization
+- Provides file version management
+- Handles command-line configuration
+- Processes directories recursively
+- Automated diagram generation
+
+
 Example use:
 ```
 py src\repo_to_text.py --cfg config.yaml --repo_path . -o test_output
