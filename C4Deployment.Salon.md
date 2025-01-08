@@ -30,9 +30,9 @@ C4Deployment
     }
 
    System_Boundary(c5, "external services") {
-    Container(azure_openai, "Azure OpenAI", "External API", "Provides LLM services for text processing")
+    Container(azure_openai, "Azure OpenAI", "External API", "Provides LLM services for text and code processing")
     Rel(api_layer, azure_openai, "Requests text summarization, classification and embedding")
-    Rel(salon_container, azure_openai, "USes Assitant API for code generation and lifecycle stages")
+    Rel(salon_container, azure_openai, "Uses Assistant API for AI-enabledsoftware development automation")
 
     Container(google_gemini, "Google Gemini", "External API", "Provides LLM services for quality evaluation")
     Rel(waterfall_container, google_gemini, "Requests quality evaluation") 
