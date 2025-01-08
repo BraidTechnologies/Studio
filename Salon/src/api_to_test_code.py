@@ -101,7 +101,7 @@ def main() -> None:
     try:
         assistant = client.beta.assistants.create(
             name="API Test Code Generator",
-            instructions="You are a Python expert. Generate Pytest test cases for all endpoints in the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'.",
+            instructions="You are a Python expert. Generate Pytest test cases for the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'. If there is no specific endpoint listed, genaerate a placeholder call that takes the 'Request' as input and returns the 'Response'",
             tools=[{"type": "code_interpreter"}],
             model="gpt-4o",
         )
