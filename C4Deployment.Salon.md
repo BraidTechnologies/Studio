@@ -10,9 +10,13 @@ C4Deployment
         Container(teams_plugin, "Teams Plugin", "Typescript", "Teams plug-in that brings Boxer & Waterfall into the Teams environment.")          
     }
 
-    System_Boundary(c3, "Back End") {
-       Container(waterfall_container, "Waterfall", "Python", "Data analysis backend pipeline for downloading, summarising, and topic clustering of web pages.")
+    System_Boundary(c2, "Command Line / Offline") {
+        Container(waterfall_container, "Waterfall", "Python", "Data analysis backend pipeline for downloading, summarising, and topic clustering of web pages.")
+        Container(salon_container, "Salon", "Python", "AI enabled software development tools.")
+    }
 
+    System_Boundary(c3, "Back End") {
+    
        Container(api_layer, "API Layer", "Python", "Provides endpoints for summarization, classification, and embedding generation")
        Rel(boxer_container, api_layer, "Requests summarization, classification, embedding")
        Rel(waterfall_container, api_layer, "Provides access to summaries, classification, embeddings.")
