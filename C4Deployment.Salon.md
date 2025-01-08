@@ -19,6 +19,7 @@ C4Deployment
     
        Container(api_layer, "API Layer", "Python", "Provides endpoints for summarization, classification, and embedding generation")
        Rel(boxer_container, api_layer, "Requests summarization, classification, embedding")
+       Rel(salon_container, api_layer, "Requests summarization")
        Rel(waterfall_container, api_layer, "Provides access to summaries, classification, embeddings.")
        Rel(cascade_container, api_layer, "Triggers for backend analysis")   
        Rel(teams_plugin, api_layer, "Integrates Boxer & Waterfall")            
@@ -31,6 +32,7 @@ C4Deployment
    System_Boundary(c5, "external services") {
     Container(azure_openai, "Azure OpenAI", "External API", "Provides LLM services for text processing")
     Rel(api_layer, azure_openai, "Requests text summarization, classification and embedding")
+    Rel(salon_container, azure_openai, "USes Assitant API for code generation and lifecycle stages")
 
     Container(google_gemini, "Google Gemini", "External API", "Provides LLM services for quality evaluation")
     Rel(waterfall_container, google_gemini, "Requests quality evaluation") 
