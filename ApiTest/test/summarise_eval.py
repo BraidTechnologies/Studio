@@ -21,7 +21,7 @@ def test_basic_sports_summary():
     """Test basic summarization with a simple sports event description"""
     request_data = {"request": {
         "persona": "ArticleSummariser",         
-        "text": "An LLM generated the following text. The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 30 points.",
+        "text": "The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 30 points.",
         "lengthInWords": 3
     }}
     
@@ -36,7 +36,7 @@ def test_same_game_different_wording():
     """Test that different wording of the same event produces similar summary"""
     request_data = {"request": {
         "persona": "ArticleSummariser", 
-        "text": "An LLM generated the following text. The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 30 points.",
+        "text": "The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 30 points.",
         "lengthInWords": 3
     }}
     
@@ -51,7 +51,7 @@ def test_different_game_different_summary():
     """Test that a different game produces a different summary"""
     request_data = {"request": {
         "persona": "ArticleSummariser",         
-        "text": "An LLM generated the following text.The Warriors defeated the Lakers 120-110 in a regular season NBA game. LeBron James scored 0 points.",
+        "text": "The Warriors defeated the Lakers 120-110 in a regular season NBA game. LeBron James scored 0 points.",
         "lengthInWords": 3
     }}
     
