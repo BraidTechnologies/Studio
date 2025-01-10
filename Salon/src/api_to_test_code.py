@@ -2,6 +2,7 @@
 
 
 import argparse
+import sys
 import json
 import os
 import logging
@@ -20,14 +21,33 @@ api_key = os.environ.get("OPENAI_API_KEY")
 START_POINT_CODE = '```python'
 END_POINT_CODE = '```'
 
+
+class LocalArgumentParser(argparse.ArgumentParser):
+    """
+    Custom argument parser that overrides the default error handling.
+
+    This class extends `argparse.ArgumentParser` to provide a custom error
+    method that writes an error message to stderr, displays the help message,
+    and exits the program with a status code of 2.
+
+    Methods:
+        error(message): Overrides the default error handling to display a
+        custom error message and help information before exiting.
+    """
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
+
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for the script.
     
     Returns:
         argparse.Namespace: Parsed command-line arguments containing the input file path.
     """
-    parser = argparse.ArgumentParser(description="Generate Pytest code from API data in JSON or YAML format.")
+    parser = LocalArgumentParser (description="Generate Pytest code from API data in JSON or YAML format.")
     parser.add_argument("input_path", type=str, help="Path to the input JSON or YAML file.")
+    parser.add_argument("--eval", action='store_true', help="Optional argument. If true, generate evaluation cases assuming successful operation of the API. If false (default), generate traditional test cases.")
     return parser.parse_args()
 
 
@@ -92,17 +112,24 @@ def main() -> None:
     file_type = "JSON" if args.input_path.endswith('.json') else "YAML"
 
     # Generate the content for the prompt with file type context
+    if (args.eval):
+       prompt = "Based on the 'request' data type as input, and the 'response' data type as output, generate three test cases in Python using Pytest for an API that takes the input and retruns the output.  The first test case should be a test of miniumum function - a very simple input to produce a certain output. The second should be a small variation of the input that should produse the same output. The third shuld be a small variation of the input that produces a different output. Use the domain of sports to produce example inputs and outputs."
+    else:
+       prompt = "Based on the 'request' data type as input, and the 'response' data type as output, generate test cases in Python using Pytest for an API that takes the input and retruns the output. The tests should cover all combinations of input fields, with appropriate assertions. If there is no specific endpoint listed, generate a placeholder call that takes the 'Request' as input and returns the 'Response'"
     content = (
-        f"Please generate comprehensive Pytest test code from the following API data in {file_type} format:\n"
+        f"Please generate Pytest code from the following API data in {file_type} format:\n"
         f"{json.dumps(api_data) if file_type == 'JSON' else yaml.dump(api_data)}"
     )
 
     # Set up assistant and thread for code generation
     try:
-        # You are a Python test code generator. Based on the 'request' data type as input, and the 'response' data type as output, generate three test cases n Python using Pytest for an API that takes the input and retruns the output.  The first test case should be miniumum function - a very simple input to produce a certain output. th second should be a small variation of the input that should produse the same output. The thirst shuld be a small variation of the input that produces a different output. Use the domain of sports to produce example inputs and outputs. 
+        if (args.eval):
+           prompt = "You are a Python code generator."
+        else:
+           prompt = "You are a Python code generator."
         assistant = client.beta.assistants.create(
             name="API Test Code Generator",
-            instructions="You are a Python test code generator. Generate Pytest test cases for the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'. If there is no specific endpoint listed, genaerate a placeholder call that takes the 'Request' as input and returns the 'Response'",
+            instructions=prompt,
             tools=[{"type": "code_interpreter"}],
             model="gpt-4o",
         )
@@ -119,14 +146,17 @@ def main() -> None:
         exit(1)
 
     # Print static message to indicate response generation without delay
-    print("Generating code...")
+    if (args.eval):
+       print("Generating eval code...")
+    else:
+       print("Generating test code...")
 
     # Poll for code generation results
     try:
         run = client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
             assistant_id=assistant.id,
-            instructions="Return the error-free test code"
+            instructions="Return the test code"
         )
         if run.status != 'completed':
             logger.error(f"Code generation failed with status: {run.status}")
@@ -147,7 +177,11 @@ def main() -> None:
 
         if extracted_code:
             # Save extracted code to a .py file in the same directory as the input file
-            output_path = os.path.splitext(args.input_path)[0] + '_test.py'
+            if (args.eval):
+               output_path = os.path.splitext(args.input_path)[0] + '_eval.py'
+            else:
+               output_path = os.path.splitext(args.input_path)[0] + '_test.py'
+
             with open(output_path, 'w') as output_file:
                 output_file.write(extracted_code)
             logger.info(f"Generated test code saved to {output_path}")
