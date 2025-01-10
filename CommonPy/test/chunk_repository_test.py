@@ -8,12 +8,12 @@ import logging
 import uuid
 import datetime
 
-from src.chunk_repository_api import ChunkRepository, IStoredChunk, IStoredEmbedding, IStoredTextRendering
-
 test_root = os.path.dirname(__file__)
 parent = os.path.abspath(os.path.join(test_root, '..'))
 src_dir = os.path.join(parent, 'src')
 sys.path.extend([parent, src_dir])
+
+from src.chunk_repository_api import ChunkRepository, IStoredChunk, IStoredEmbedding, IStoredTextRendering
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.WARNING,
