@@ -99,9 +99,10 @@ def main() -> None:
 
     # Set up assistant and thread for code generation
     try:
+        # You are a Python test code generator. Based on the 'request' data type as input, and the 'response' data type as output, generate three test cases n Python using Pytest for an API that takes the input and retruns the output.  The first test case should be miniumum function - a very simple input to produce a certain output. th second should be a small variation of the input that should produse the same output. The thirst shuld be a small variation of the input that produces a different output. Use the domain of sports to produce example inputs and outputs. 
         assistant = client.beta.assistants.create(
             name="API Test Code Generator",
-            instructions="You are a Python expert. Generate Pytest test cases for the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'. If there is no specific endpoint listed, genaerate a placeholder call that takes the 'Request' as input and returns the 'Response'",
+            instructions="You are a Python test code generator. Generate Pytest test cases for the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'. If there is no specific endpoint listed, genaerate a placeholder call that takes the 'Request' as input and returns the 'Response'",
             tools=[{"type": "code_interpreter"}],
             model="gpt-4o",
         )

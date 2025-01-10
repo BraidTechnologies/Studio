@@ -21,7 +21,7 @@ import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
 import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
-const minimumTextLength = 64;
+const minimumTextLength = 50;
 
 /**
  * Asynchronous function to find a common theme from a number of paragraphs of text.
