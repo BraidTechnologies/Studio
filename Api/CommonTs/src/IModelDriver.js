@@ -23,6 +23,7 @@ var EModel;
 (function (EModel) {
     EModel["kSmall"] = "Small";
     EModel["kLarge"] = "Large";
+    EModel["kReasoning"] = "Reasoning";
 })(EModel || (exports.EModel = EModel = {}));
 ;
 /**

@@ -31,7 +31,7 @@ describe("Chat Driver", function () {
 
    }).timeout(10000);
 
-   it("Needs pass a multi line prompt", async function () {
+   it("Needs to pass a multi line prompt", async function () {
 
       let driver = getChatModelDriver (EModel.kLarge, EModelProvider.kOpenAI);
 
@@ -42,6 +42,19 @@ describe("Chat Driver", function () {
       expect(response.content.includes("10:30")).toEqual(true);   
 
    }).timeout(10000);   
+
+   it("Needs to pass a small  model", async function () {
+
+      let driver = getChatModelDriver (EModel.kSmall, EModelProvider.kOpenAI);
+
+      let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
+         history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      expect(response.content.includes("10:30")).toEqual(true);   
+      expect(driver.drivenModelType).toEqual(EModel.kSmall);
+
+   }).timeout(10000);    
 
 });
 

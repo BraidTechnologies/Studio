@@ -19,13 +19,15 @@ exports.getDefaultEmbeddingModelDriver = getDefaultEmbeddingModelDriver;
 exports.getEmbeddingModelDriver = getEmbeddingModelDriver;
 exports.getDefaultChatModelDriver = getDefaultChatModelDriver;
 exports.getChatModelDriver = getChatModelDriver;
+// Internal imports
+const IModelDriver_1 = require("./IModelDriver");
 const ModelDrivers_OAI_1 = require("./ModelDrivers.OAI");
 /**
  * Returns the default model which is an instance of GPT4o.
  * @returns {IModel} The default model.
  */
 function getDefaultTextChunker() {
-    return new ModelDrivers_OAI_1.OpenAITextChunker();
+    return new ModelDrivers_OAI_1.OpenAITextChunker(new ModelDrivers_OAI_1.OpenAiGpt4oTextChunkerInit());
 }
 /**
  * Returns an instance of IModel based on the provided EModel type.
@@ -36,8 +38,13 @@ function getDefaultTextChunker() {
  */
 function getTextChunker(model, provider) {
     switch (model) {
+        case IModelDriver_1.EModel.kReasoning:
+            return new ModelDrivers_OAI_1.OpenAITextChunker(new ModelDrivers_OAI_1.OpenAiO1TextChunkerInit());
+        case IModelDriver_1.EModel.kSmall:
+            return new ModelDrivers_OAI_1.OpenAITextChunker(new ModelDrivers_OAI_1.OpenAiGpt4oMiniTextChunkerInit());
+        case IModelDriver_1.EModel.kLarge:
         default:
-            return new ModelDrivers_OAI_1.OpenAITextChunker();
+            return new ModelDrivers_OAI_1.OpenAITextChunker(new ModelDrivers_OAI_1.OpenAiGpt4oTextChunkerInit());
     }
 }
 /**
@@ -45,7 +52,7 @@ function getTextChunker(model, provider) {
  * @returns {IEmbeddingModelDriver} The default embedding model driver.
  */
 function getDefaultEmbeddingModelDriver() {
-    return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
+    return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver(new ModelDrivers_OAI_1.OpenAiEmbed3EmbeddingModelInit());
 }
 /**
  * Returns an instance of IEmbeddingModelDriver based on the provided EModel type.
@@ -55,12 +62,16 @@ function getDefaultEmbeddingModelDriver() {
  */
 function getEmbeddingModelDriver(model, provider) {
     switch (model) {
+        case IModelDriver_1.EModel.kSmall:
+            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver(new ModelDrivers_OAI_1.OpenAiAda2EmbeddingModelInit());
+        case IModelDriver_1.EModel.kLarge:
+        case IModelDriver_1.EModel.kReasoning:
         default:
-            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver();
+            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver(new ModelDrivers_OAI_1.OpenAiEmbed3EmbeddingModelInit());
     }
 }
 function getDefaultChatModelDriver() {
-    return new ModelDrivers_OAI_1.OpenAIChatModelDriver();
+    return new ModelDrivers_OAI_1.OpenAIChatModelDriver(new ModelDrivers_OAI_1.OpenAi4oChatModelInit());
 }
 /**
  * Returns an instance of IChatModelDriver based on the provided EModel type.
@@ -70,8 +81,13 @@ function getDefaultChatModelDriver() {
  */
 function getChatModelDriver(model, provider) {
     switch (model) {
+        case IModelDriver_1.EModel.kReasoning:
+            return new ModelDrivers_OAI_1.OpenAIChatModelDriver(new ModelDrivers_OAI_1.OpenAiO1ChatModelInit());
+        case IModelDriver_1.EModel.kSmall:
+            return new ModelDrivers_OAI_1.OpenAIChatModelDriver(new ModelDrivers_OAI_1.OpenAi4oMiniChatModelInit());
+        case IModelDriver_1.EModel.kLarge:
         default:
-            return new ModelDrivers_OAI_1.OpenAIChatModelDriver();
+            return new ModelDrivers_OAI_1.OpenAIChatModelDriver(new ModelDrivers_OAI_1.OpenAi4oChatModelInit());
     }
 }
 //# sourceMappingURL=IModelFactory.js.map

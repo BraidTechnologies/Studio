@@ -14,7 +14,10 @@
 
 // Internal imports
 import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, ITextChunker } from './IModelDriver';
-import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker } from './ModelDrivers.OAI';
+import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker, 
+   OpenAi4oChatModelInit, OpenAiO1ChatModelInit, OpenAi4oMiniChatModelInit,
+   OpenAiO1TextChunkerInit, OpenAiGpt4oTextChunkerInit, OpenAiGpt4oMiniTextChunkerInit, 
+   OpenAiEmbed3EmbeddingModelInit, OpenAiAda2EmbeddingModelInit } from './ModelDrivers.OAI';
 
 /**
  * Returns the default model which is an instance of GPT4o.
@@ -22,7 +25,7 @@ import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker } 
  */
 export function getDefaultTextChunker () : ITextChunker  {
 
-   return new OpenAITextChunker();   
+   return new OpenAITextChunker(new OpenAiGpt4oTextChunkerInit());   
 }
 
 /**
@@ -35,11 +38,15 @@ export function getDefaultTextChunker () : ITextChunker  {
 export function getTextChunker (model: EModel, provider: EModelProvider) : ITextChunker  {
 
    switch (model) {
-      default:
-         return new OpenAITextChunker();
+      case EModel.kReasoning:
+         return new OpenAITextChunker(new OpenAiO1TextChunkerInit());
+      case EModel.kSmall:     
+         return new OpenAITextChunker(new OpenAiGpt4oMiniTextChunkerInit());
+      case EModel.kLarge:
+      default:      
+         return new OpenAITextChunker(new OpenAiGpt4oTextChunkerInit());
    }
 }
-
 
 /**
  * Returns an instance of IEmbeddingModelDriver for the default embedding model.
@@ -48,7 +55,7 @@ export function getTextChunker (model: EModel, provider: EModelProvider) : IText
 
 export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
 
-   return new OpenAIEmbeddingModelDriver();   
+   return new OpenAIEmbeddingModelDriver(new OpenAiEmbed3EmbeddingModelInit());   
 }
 
 /**
@@ -60,14 +67,18 @@ export function getDefaultEmbeddingModelDriver () : IEmbeddingModelDriver  {
 export function getEmbeddingModelDriver (model: EModel, provider: EModelProvider) : IEmbeddingModelDriver  {
 
    switch (model) {
+      case EModel.kSmall:
+         return new OpenAIEmbeddingModelDriver(new OpenAiAda2EmbeddingModelInit());
+      case EModel.kLarge:
+      case EModel.kReasoning:
       default:
-         return new OpenAIEmbeddingModelDriver();
+         return new OpenAIEmbeddingModelDriver(new OpenAiEmbed3EmbeddingModelInit());
    }
 }
 
 export function getDefaultChatModelDriver () : IChatModelDriver  {
 
-   return new OpenAIChatModelDriver();   
+   return new OpenAIChatModelDriver(new OpenAi4oChatModelInit());   
 }
 
 /**
@@ -79,7 +90,12 @@ export function getDefaultChatModelDriver () : IChatModelDriver  {
 export function getChatModelDriver (model: EModel, provider: EModelProvider) : IChatModelDriver  {
 
    switch (model) {
+      case EModel.kReasoning:
+         return new OpenAIChatModelDriver(new OpenAiO1ChatModelInit());
+      case EModel.kSmall:         
+         return new OpenAIChatModelDriver(new OpenAi4oMiniChatModelInit());          
+      case EModel.kLarge:
       default:
-         return new OpenAIChatModelDriver();
+         return new OpenAIChatModelDriver(new OpenAi4oChatModelInit());
    }
 }

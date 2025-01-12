@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/*query*.test.ts"
+           "${workspaceFolder}/test/*embedding*.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

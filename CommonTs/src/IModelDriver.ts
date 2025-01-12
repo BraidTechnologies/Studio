@@ -21,7 +21,8 @@
 export enum EModel {
 
    kSmall = "Small", 
-   kLarge = "Large"  
+   kLarge = "Large",
+   kReasoning = "Reasoning"
 };
 
 /**
@@ -133,7 +134,7 @@ export interface IChatModelDriver {
 export interface ITextChunker {
 
    drivenModelProvider: EModelProvider;
-
+   drivenModelType: EModel;   
    defaultChunkSize : number;
    maximumChunkSize : number;
    embeddingChunkSize : number;

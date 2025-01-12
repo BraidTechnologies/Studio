@@ -21,10 +21,11 @@ describe("Chunk Driver", async function () {
 
    it("Needs to provide specific model", async function () {
       
-      let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
+      let model = getTextChunker(EModel.kLarge, EModelProvider.kOpenAI);
 
       expect (model.drivenModelProvider.length > 0).toBe (true) ;   
       expect (model.defaultChunkSize > 0).toBe (true) ;   
+      expect (model.drivenModelType).toEqual(EModel.kLarge);
 
    });
 

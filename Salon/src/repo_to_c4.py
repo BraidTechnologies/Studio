@@ -118,21 +118,21 @@ class RepoToC4:
                 
                 if have_readme_and_salon_files:
                     print(f"Found 'readme.md' and 'ReadMe.Salon.Md' in the directory: {d}")
-                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system. Include the User. Only generate mermaid content."
+                    prompt = "Please generate a C4Context diagram in mermaid format from the following description of a software system. Include the User. Only generate mermaid content. Group components with container boundaies if possible, but pay attention to syntax - a small diagram this is syntactically correct is better than a large diagram with errors."
                     prompt += "\n\n"
                     prompt += readme_text
 
                     summary = summarise_code(prompt)                    
                     self.write_file_version(d, 'C4Context.Salon.md', summary)
 
-                    prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system. Only generate mermaid content. "
+                    prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system. Only generate mermaid content. Group components with container boundaies if possible, but pay attention to syntax - a small diagram this is syntactically correct is better than a large diagram with errors. "
                     prompt += "\n\n"
                     prompt += readme_text
 
                     summary = summarise_code(prompt)                    
                     self.write_file_version(d, 'C4Container.Salon.md', summary)
 
-                    prompt = "Please generate a C4Component diagram in mermaid format from the following description of a software system. Only generate mermaid content. "
+                    prompt = "Please generate a C4Component diagram in mermaid format from the following description of a software system. Only generate mermaid content. Group components with container boundaies if possible, but pay attention to syntax - a small diagram this is syntactically correct is better than a large diagram with errors."
                     prompt += "\n\n"
                     prompt += readme_text
 
