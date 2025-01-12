@@ -1,39 +1,51 @@
 ```mermaid
-C4Component
-title Salon
-
-Container_Boundary(cb_Salon, "Salon") {
-    Component(c_api_to_test_code, "api_to_test_code", "Python Tool", "Automatically generates Python test code from API specifications")
-    Component(c_repo_to_text, "repo_to_text", "Python Utility", "Processes and analyzes codebases")
-    Component(c_repo_to_c4, "repo_to_c4.py", "Python Tool", "Generates C4 architecture diagrams from GitHub repositories")
-
-    Container_Boundary(cb_Pagerepository, "Pagerepository") {
-        Component(c_ApiTest, "ApiTest.py", "PyTest Module", "Imports pytest, tests API interactions, and mocks responses")
-    }
-
-    Container_Boundary(cb_parser, "api_to_test_code.py") {
-        Component(c_parse_arguments, "parse_arguments", "Function", "Parses command-line arguments")
-        Component(c_extract_code, "extract_code", "Function", "Extracts Python code snippets")
-        Component(c_load_api_data, "load_api_data", "Function", "Loads and parses API data")
-        Component(c_main, "main", "Function", "Coordinates code generation process")
-    }
-
-    Container_Boundary(cb_repo_to_c4, "repo_to_c4.py") {
-        Component(c_summarise_endpoint_url, "summarise_endpoint_url", "Function", "Constructs API URL for summaries")
-        Component(c_summarise_code, "summarise_code", "Function", "Interacts with API to generate code summaries")
-        Component(c_RepoToC4, "RepoToC4", "Class", "Handles repository traversal and processing")
-        Component(c_write_file_version, "write_file_version", "Function", "Manages file versions")
-        Component(c_process_repo, "process_repo", "Function", "Processes directories and generates C4 diagrams")
-    }
-
-    Container_Boundary(cb_repo_to_text, "repo_to_text.py") {
-        Component(c_SummarisedDirectory, "SummarisedDirectory", "Class", "Stores directory name and summary text")
-        Component(c_load_yaml, "load_yaml", "Function", "Loads configuration from a YAML file")
-        Component(c_summarise_code, "summarise_code", "Class Method", "Summarizes source code piece")
-        Component(c_RepoContentProcessor, "RepoContentProcessor", "Class", "Processes repository files")
-        Component(c_parse_arguments, "parse_arguments", "Function", "Parses command-line arguments")
-        Component(c_validate_args, "validate_args", "Function", "Validates command-line arguments")
-        Component(c_main, "main", "Function", "Entry point for the script")
-    }
-}
+flowchart TB
+    subgraph Salon
+        subgraph api_to_test_code
+            A1[parse_arguments]
+            A2[extract_code]
+            A3[load_api_data]
+            A4[main]
+            A5[error handling and logging]
+        end
+        subgraph repo_to_text
+            B1[SummarisedDirectory]
+            B2[load_yaml(fname)]
+            B3[summarise_endpoint_url]
+            B4[summarise_code(source)]
+            B5[RepoContentProcessor]
+            B6[parse_arguments()]
+            B7[validate_args(args)]
+        end
+        subgraph repo_to_c4.py
+            C1[repo traversal and file processing]
+            C2[summarise_endpoint_url()]
+            C3[summarise_code()]
+            C4[RepoToC4]
+            C5[parse_arguments()]
+            C6[validate_args()]
+            C7[main()]
+            C8[generate C4 diagrams]
+        end
+        subgraph UnitTests
+            D1[PagerepositoryApi.Types_test.py]
+        end
+        classDef box fill:#f9f,stroke:#333,stroke-width:4px;
+        api_to_test_code:::box
+        repo_to_text:::box
+        repo_to_c4.py:::box
+        UnitTests:::box
+        
+        B5 <--> B2
+        B5 <--> B4
+        B5 <--> B6
+        B5 <--> B7
+        C4 <--> C1
+        C4 <--> C2
+        C4 <--> C3
+        C4 <--> C5
+        C4 <--> C6
+        C4 <--> C7
+        C4 <--> C8
+    end
 ```
