@@ -30,7 +30,7 @@ def test_basic_sports_summary():
     
     assert response.status_code == 200
     assert "summary" in result
-    assert result["summary"].find("Lakers defeated Warriors") != -1 or result["summary"].find("Warriors beat Lakers") != -1
+    assert result["summary"].find("Lakers defeated Warriors") != -1 or result["summary"].find("Lakers beat Warriers") != -1
 
 def test_same_game_different_wording():
     """Test that different wording of the same event produces similar summary"""
@@ -45,7 +45,7 @@ def test_same_game_different_wording():
     
     assert response.status_code == 200
     assert "summary" in result
-    assert result["summary"].find("Lakers defeated Warriors") != -1 or result["summary"].find("Warriors beat Lakers") != -1
+    assert result["summary"].find("Lakers defeated Warriors") != -1 or result["summary"].find("Lakers beat Warriers") != -1
 
 def test_different_game_different_summary():
     """Test that a different game produces a different summary"""

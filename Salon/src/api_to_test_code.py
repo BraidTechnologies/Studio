@@ -113,7 +113,7 @@ def main() -> None:
 
     # Generate the content for the prompt with file type context
     if (args.eval):
-       prompt = "Based on the 'request' data type as input, and the 'response' data type as output, generate three test cases in Python using Pytest for an API that takes the input and retruns the output.  The first test case should be a test of miniumum function - a very simple input to produce a certain output. The second should be a small variation of the input that should produse the same output. The third shuld be a small variation of the input that produces a different output. Use the domain of sports to produce example inputs and outputs."
+       prompt = "Based on the 'request' data type as input, and the 'response' data type as output, generate three test cases in Python using Pytest for an API that takes the input and returns the output.  The first test case should be a test of miniumum function - a very simple input to produce a certain output. The second should be a small variation of the input that should produse the same output. The third shuld be a small variation of the input that produces a different output. Use the domain of sports to produce example inputs and outputs."
     else:
        prompt = "Based on the 'request' data type as input, and the 'response' data type as output, generate test cases in Python using Pytest for an API that takes the input and retruns the output. The tests should cover all combinations of input fields, with appropriate assertions. If there is no specific endpoint listed, generate a placeholder call that takes the 'Request' as input and returns the 'Response'"
     content = (
