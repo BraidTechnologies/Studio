@@ -201,7 +201,14 @@ class WaterfallDataPipeline:
             summarised = None
             embedded = None
 
-            downloaded = downloader.download(item)
+            # Download the HTML file - added specific exception handling bcs we seem to get some fails, no reason not to continue if others requests can succe
+            try:
+                downloaded = downloader.download(item)
+            except Exception as e:
+                logger.error(f"Error downloading {item.path}: {str(e)}")
+                downloaded = None
+                continue
+
             if downloaded:
                 summarised = summariser.summarise(downloaded)
             if summarised:

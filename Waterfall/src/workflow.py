@@ -124,6 +124,7 @@ class WebSearchPipelineSpec(PipelineSpec):
         super().__init__()
         self.pages = 1  # default is to pull back one page
         self.search_key = None
+        self.query_additions = None
         self.mail_to = None
 
         self._freeze()

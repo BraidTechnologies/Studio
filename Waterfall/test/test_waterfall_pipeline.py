@@ -12,7 +12,8 @@ from src.web_searcher import (AI_SUPPLY_STACK_SEARCH_ENGINE_ID,
                               AI_DEMAND_STACK_SEARCH_ENGINE_ID,
                               AI_TELECOM_SEARCH_ENGINE_ID,
                               AI_NATIONWIDE_SEARCH_ENGINE_ID,
-                              AI_BNY_SEARCH_ENGINE_ID)
+                              AI_BNY_SEARCH_ENGINE_ID,
+                              AI_VODAFONE_SEARCH_ENGINE_ID)
 
 test_root = os.path.dirname(__file__)
 
@@ -70,19 +71,20 @@ def test_with_search_demand ():
 @pytest.mark.timeout(9000)
 def test_with_search_telecom ():
     os.chdir (test_root)
-    test_output_location = 'telecom_output'
+    test_output_location = 'vodafone_output'
 
     pipeline = WaterfallDataPipeline (test_output_location)
 
     pipeline_spec = WebSearchPipelineSpec()
-    pipeline_spec.search_key = AI_TELECOM_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 1
-    pipeline_spec.clusters = 3
-    pipeline_spec.clusters_in_summary = 2
-    pipeline_spec.description = "GenAI Telecoms"
+    pipeline_spec.search_key = AI_VODAFONE_SEARCH_ENGINE_ID
+    pipeline_spec.pages = 10
+    pipeline_spec.clusters = 7
+    pipeline_spec.clusters_in_summary = 5
+    pipeline_spec.description = "Vodafone GenAI"
     pipeline_spec.mail_to = "jon@braidtech.ai"
-    pipeline_spec.output_chart_name = 'telco_cluster.html'
-    pipeline_spec.output_data_name = "telco_cluster_output.json"
+    pipeline_spec.output_chart_name = 'vodafone_cluster.html'
+    pipeline_spec.output_data_name = "vodafone_cluster_output.json"
+    pipeline_spec.query_additions = "Vodafone"
 
     links = pipeline.search_dynamic (pipeline_spec)
     assert len(links) >= 1

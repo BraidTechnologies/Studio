@@ -24,6 +24,7 @@ AI_DEMAND_STACK_SEARCH_ENGINE_ID = '22fafd262192b4c06'
 AI_TELECOM_SEARCH_ENGINE_ID = '7789e6bd5a1d54069'
 AI_NATIONWIDE_SEARCH_ENGINE_ID= '3498036ca64b54980'
 AI_BNY_SEARCH_ENGINE_ID= 'a4521230dc31a4716'
+AI_VODAFONE_SEARCH_ENGINE_ID= '1482b42ca30924b1c'
 
 class WebSearcher:
     '''
@@ -47,6 +48,8 @@ class WebSearcher:
 
         # the search query you want
         query = 'Generative AI'
+        if pipeline.query_additions:
+            query += ' ' + pipeline.query_additions
 
         # Pull back 1- pages of results (100 items ...)
         for page in range(1, pipeline.pages + 1):

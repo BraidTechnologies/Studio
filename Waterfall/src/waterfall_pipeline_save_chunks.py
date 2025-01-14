@@ -118,8 +118,6 @@ def save_chunk_tree(output_location: str,
         - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
         '''
 
-    write_chart (output_location, items, themes, spec)
-
     logger.debug('Writing chunk tree to DB')
     embedder = Embedder(output_location)
     db_repository = DbRepository (waterfall_application_name, spec.description)

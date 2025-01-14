@@ -67,7 +67,7 @@ class Summariser (PipelineStep):
             SESSION_KEY}'
         input_json = {
             'request': {
-                'persona': "SurveySummariser",
+                'persona': "ArticleSummariser",
                 'text': pipeline_item.text,
                 'lengthInWords': 50
             }
