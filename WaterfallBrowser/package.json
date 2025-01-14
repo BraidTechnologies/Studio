@@ -22,7 +22,7 @@
    "scripts": {
       "clean": "rimraf src/CommonTs/src",
       "pull": "bash -c 'mkdir -p src/CommonTs/src && cp -r ../CommonTs/src/* src/CommonTs/src'",      
-      "build": "npm run pull && npx esbuild src/App.tsx --outfile=dist/waterfall.pack.js --bundle",
+      "build": "npm run pull && npx esbuild src/App.tsx --outfile=dist/waterfall.min.js --minify --bundle",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.tsx",
       "start-react": "react-scripts start",
       "build-react": "npm run pull && react-scripts build",
