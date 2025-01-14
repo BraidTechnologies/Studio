@@ -56,7 +56,7 @@ function mapRelated (value: string, index: number, all: Array<string>) : ReactNo
  * @returns An array of non-empty strings obtained by splitting the input text.
  */
 function splitByNewlines(text: string): string[] {
-   if (!text.includes('\n\n')) {
+   if (text.includes('\n\n')) {
       return text.split('\n\n').filter(str => str.trim().length > 0);
    }
    return text.split('\n').filter(str => str.trim().length > 0);

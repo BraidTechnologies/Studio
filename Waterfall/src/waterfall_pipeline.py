@@ -14,7 +14,7 @@ from src.embedder import Embedder
 from src.cluster_analyser import ClusterAnalyser
 from src.theme_finder import ThemeFinder
 from src.embedding_finder import EmbeddingFinder
-from src.waterfall_pipeline_report_common import write_details_json
+from src.waterfall_pipeline_report_common import write_details_json, write_chart
 from src.waterfall_pipeline_save_chunks import save_chunk_tree
 from src.text_repository_facade import TextRespositoryFacade
 
@@ -310,6 +310,7 @@ class WaterfallDataPipeline:
         - send_final - set to false to suppress ending the report - used in testing
         '''
         write_details_json(self.output_location, items, themes, spec)
+        write_chart(self.output_location, items, themes, spec)
         save_chunk_tree(self.output_location, items, themes, spec)
 
     def load_file(self, filename: str) -> str:

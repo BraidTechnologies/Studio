@@ -30,6 +30,27 @@ interface OpenAIChatElement {
 
 const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
 
+export interface IOpenAiEmbeddingModelInit {
+   deploymentName: string;
+   urlElement: string;
+   drivenModelType: EModel;
+   drivenModelProvider: EModelProvider;
+}
+
+export class OpenAiEmbed3EmbeddingModelInit implements IOpenAiEmbeddingModelInit {
+   deploymentName: string = "Embed-3";
+   urlElement: string = "StudioEmbeddingLarge";
+   drivenModelType: EModel = EModel.kLarge;
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+}
+
+export class OpenAiAda2EmbeddingModelInit implements IOpenAiEmbeddingModelInit {
+   deploymentName: string = "Ada-2";
+   urlElement: string = "StudioEmbeddingSmall";
+   drivenModelType: EModel = EModel.kSmall;
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+}
+
 /**
  * Class representing an OpenAI embedding model driver.
  * Implements the IEmbeddingModelDriver interface.
@@ -42,11 +63,19 @@ const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
 export class OpenAIEmbeddingModelDriver implements IEmbeddingModelDriver {
 
    deploymentName : string = "Embed-3";  
+   urlElement: string = "StudioEmbeddingLarge";
    drivenModelType: EModel = EModel.kLarge;
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
 
+   constructor(params: IOpenAiEmbeddingModelInit) {
+      this.deploymentName = params.deploymentName;
+      this.urlElement = params.urlElement;
+      this.drivenModelType = params.drivenModelType;
+      this.drivenModelProvider = params.drivenModelProvider;
+   }
+
    embed(text: string): Promise<Array<number>> {
-      return calculateEmbedding(text);
+      return calculateEmbedding(text, this.urlElement);
    }
 }
 
@@ -55,9 +84,10 @@ export class OpenAIEmbeddingModelDriver implements IEmbeddingModelDriver {
  * Asynchronously calculates the embedding for the given text using the Azure AI service.
  * 
  * @param text The text for which the embedding needs to be calculated.
+ * @param urlElement The element of the URL to use for the embedding.
  * @returns A Promise that resolves to an array of numbers representing the calculated embedding.
  */
-export async function calculateEmbedding(text: string): Promise<Array<number>> {
+export async function calculateEmbedding(text: string, urlElement: string): Promise<Array<number>> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -69,7 +99,8 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
    });
 
    try {
-      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioEmbeddingLarge/embeddings?api-version=2024-06-01', {
+      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/' 
+         + urlElement + '/embeddings?api-version=2024-06-01', {
          input: text,
       },
          {
@@ -92,21 +123,70 @@ export async function calculateEmbedding(text: string): Promise<Array<number>> {
 }
 
 /**
+ * Interface defining initialization parameters for OpenAI chat models.
+ * Used to configure model instances with deployment details and model characteristics.
+ * 
+ * @interface IOpenAiChatModelInit
+ * @property {string} deploymentName - The name of the model deployment to use
+ * @property {EModel} drivenModelType - The type/size category of the model
+ * @property {EModelProvider} drivenModelProvider - The provider of the model (OpenAI)
+ */
+export interface IOpenAiChatModelInit {
+   deploymentName: string;
+   urlElement: string;
+   drivenModelType: EModel;
+   drivenModelProvider: EModelProvider;
+}
+
+export class OpenAi4oChatModelInit implements IOpenAiChatModelInit {
+   deploymentName : string = "GTP4o";
+   urlElement: string = "StudioLarge";
+   drivenModelType: EModel = EModel.kLarge;
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+}
+
+export class OpenAi4oMiniChatModelInit implements IOpenAiChatModelInit {
+   deploymentName : string = "GTP4o";
+   urlElement: string = "StudioSmall";
+   drivenModelType: EModel = EModel.kSmall;
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+}
+
+export class OpenAiO1ChatModelInit implements IOpenAiChatModelInit {
+   deploymentName : string = "o1";
+   urlElement: string = "StudioReasoning";
+   drivenModelType: EModel = EModel.kReasoning;
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+}
+
+/**
  * Class representing a driver for OpenAI chat models.
  * Implements the IChatModelDriver interface to provide methods for
  * retrieving the model type and generating responses to conversation prompts.
  */
 export class OpenAIChatModelDriver implements IChatModelDriver {
 
-
    deploymentName : string = "GTP4o";
+   urlElement: string = "StudioLarge";
    drivenModelType: EModel = EModel.kLarge;
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+
+   /**
+    * Creates an instance of OpenAIChatModelDriver.
+    * Initializes with default deployment name, model type, and provider.
+    */
+   constructor(params: IOpenAiChatModelInit) {
+      this.deploymentName = params.deploymentName;
+      this.urlElement = params.urlElement;
+      this.drivenModelType = params.drivenModelType;
+      this.drivenModelProvider = params.drivenModelProvider;
+   }
+
 
    generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
       params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
-      return chat(persona, prompt, params);
+      return chat(persona, this.urlElement, prompt, params);
    }
 }
 
@@ -114,12 +194,13 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * Asynchronously generates a chat response using the Azure OpenAI service.
  * 
  * @param persona The type of persona (ArticleSummariser, CodeSummariser, or SurveySummariser) to use for the response
+ * @param urlElement The element of the URL to use for the chat
  * @param prompt The conversation prompt containing the system and user messages
  * @param params The parameters for the prompt
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
-async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelConversationPrompt, 
    params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
@@ -156,7 +237,8 @@ async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt,
    });
 
    try {
-      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/StudioLarge/chat/completions?api-version=2024-06-01', {
+      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/' 
+         + urlElement + '/chat/completions?api-version=2024-06-01', {
          messages: messages
       },
       {
@@ -176,6 +258,56 @@ async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt,
 
 }
 
+export interface IOpenAiTextChunkerInit {
+   drivenModelProvider: EModelProvider;
+   drivenModelType: EModel;
+   defaultChunkSize: number;
+   maximumChunkSize: number;
+   embeddingChunkSize: number;
+   defaultChunkSizeWithBuffer: number;
+   maximumChunkSizeWithBuffer: number;
+   embeddingChunkSizeWithBuffer: number;
+   implementsModel: EModel;    
+}
+
+export class OpenAiGpt4oMiniTextChunkerInit implements IOpenAiTextChunkerInit {
+
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+   drivenModelType: EModel = EModel.kLarge;
+   defaultChunkSize = 8192;
+   maximumChunkSize = 65536;
+   embeddingChunkSize = 8191;
+   defaultChunkSizeWithBuffer = (8192 - 256)
+   embeddingChunkSizeWithBuffer = (8191 - 256)
+   maximumChunkSizeWithBuffer = (65536 - 256) 
+   implementsModel: EModel = EModel.kLarge;   
+}
+export class OpenAiGpt4oTextChunkerInit implements IOpenAiTextChunkerInit {
+
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+   drivenModelType: EModel = EModel.kLarge;
+   defaultChunkSize = 8192;
+   maximumChunkSize = 65536;
+   embeddingChunkSize = 8191;
+   defaultChunkSizeWithBuffer = (8192 - 256)
+   embeddingChunkSizeWithBuffer = (8191 - 256)
+   maximumChunkSizeWithBuffer = (65536 - 256) 
+   implementsModel: EModel = EModel.kLarge;   
+}
+
+export class OpenAiO1TextChunkerInit implements IOpenAiTextChunkerInit {
+
+   drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+   drivenModelType: EModel = EModel.kReasoning;
+   defaultChunkSize = 8192;
+   maximumChunkSize = 65536;
+   embeddingChunkSize = 8191;
+   defaultChunkSizeWithBuffer = (8192 - 256)
+   embeddingChunkSizeWithBuffer = (8191 - 256)
+   maximumChunkSizeWithBuffer = (65536 - 256) 
+   implementsModel: EModel = EModel.kReasoning;   
+}
+
 /**
  * GPT4 class implementing ITextChunker interface.
  * Represents a model with specific deployment settings and context window sizes.
@@ -183,24 +315,26 @@ async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt,
 export class OpenAITextChunker implements ITextChunker {
 
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
+   drivenModelType: EModel = EModel.kLarge;
+   defaultChunkSize = 8192;
+   maximumChunkSize = 65536;
+   embeddingChunkSize = 8191;
+   defaultChunkSizeWithBuffer = (8192 - 256)
+   embeddingChunkSizeWithBuffer = (8191 - 256)
+   maximumChunkSizeWithBuffer = (65536 - 256) 
+   implementsModel: EModel = EModel.kLarge;  
 
-   defaultChunkSize: number;
-   maximumChunkSize: number;
-   embeddingChunkSize: number;
-   defaultChunkSizeWithBuffer: number;
-   maximumChunkSizeWithBuffer: number;
-   embeddingChunkSizeWithBuffer: number;
+   public constructor(params: IOpenAiTextChunkerInit) {
 
-   implementsModel: EModel = EModel.kLarge;
-
-   public constructor() {
-
-      this.defaultChunkSize = 8192;
-      this.maximumChunkSize = 65536;
-      this.embeddingChunkSize = 8191;
-      this.defaultChunkSizeWithBuffer = (8192 - 256)
-      this.embeddingChunkSizeWithBuffer = (8191 - 256)
-      this.maximumChunkSizeWithBuffer = (65536 - 256)      
+      this.drivenModelProvider = params.drivenModelProvider;
+      this.drivenModelType = params.drivenModelType;
+      this.defaultChunkSize = params.defaultChunkSize;
+      this.maximumChunkSize = params.maximumChunkSize;
+      this.embeddingChunkSize = params.embeddingChunkSize;
+      this.defaultChunkSizeWithBuffer = params.defaultChunkSizeWithBuffer
+      this.embeddingChunkSizeWithBuffer = params.embeddingChunkSizeWithBuffer
+      this.maximumChunkSizeWithBuffer = params.maximumChunkSizeWithBuffer      
+      this.implementsModel = params.implementsModel;
    }
 
    /**
