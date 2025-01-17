@@ -39,6 +39,7 @@ generated code.
 **Future Vision:**
 
 *   Enhanced code analysis capabilities, including dependency mapping and adherence to architecture standards.
+*   Enhanced Data Visualisation: Explore more advanced visualisation techniques to present codebases in an easy-to-understand manner.
 *   Integration with development tools.
 *   Improved user interface to make tools more accessible and easy to use.
 
