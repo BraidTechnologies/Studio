@@ -45,10 +45,6 @@ The primary users of the Waterfall application include:
 - **Security**: The system must protect sensitive data and ensure the integrity of the process, utilizing session keys for API authentication.
 - **Maintainability**: Ensure the code is easy to maintain and extend for future development.
 
-## 7. Alignment with Braid's Strategy
-
-The Waterfall application directly supports Braid’s mission of using modern AI technology to enhance AI learning and business intelligence. By providing automated insights and supporting the Boxer application, Waterfall enables Braid to adapt to rapidly evolving information landscapes and deliver high-quality educational and decision-making tools.
-
 ## 8. Future Considerations
 
 - **Enhanced Data Visualisation**: Explore more advanced visualisation techniques to present the clustered data in an easy-to-understand manner.
