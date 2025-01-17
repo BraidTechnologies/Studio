@@ -44,8 +44,8 @@ export class OpenAiEmbed3EmbeddingModelInit implements IOpenAiEmbeddingModelInit
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
 }
 
-export class OpenAiAda2EmbeddingModelInit implements IOpenAiEmbeddingModelInit {
-   deploymentName: string = "Ada-2";
+export class OpenAiEmbed3SmallEmbeddingModelInit implements IOpenAiEmbeddingModelInit {
+   deploymentName: string = "Embed-3-Small";
    urlElement: string = "StudioEmbeddingSmall";
    drivenModelType: EModel = EModel.kSmall;
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
