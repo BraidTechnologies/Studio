@@ -30,7 +30,7 @@ Boxer addresses these challenges by providing an integrated platform that combin
 *   **Improved user Confidence**: By providing links to source material alongside AI responses, Boxer provides information that can be more easily validated.
 *   **Flexible Content Processing:** Boxer processes various types of content such as YouTube videos, GitHub repositories, and HTML text. This content is then used to build a database of summarized documents which can be queried by the LLM.
 *   **Contextual Enrichment:** The core feature is the ability to ask questions and receive answers, along with relevant document references. Boxer enriches responses with links to specific and relevant chunks from the database of material, enabling more effective learning.
-*   **Multi-user:** The systms used the Microsoft Fluent Framework to replicate conversations across a team.
+*   **Multi-user:** The system uses the Microsoft Fluent Framework to replicate conversations across a team.
 
 **Target Users:**
 
