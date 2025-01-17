@@ -33,16 +33,11 @@ The primary users of the Waterfall application include:
 - **Test and Evaluation**: A testing framework using Pytest ensures code quality and validates the AI functions.
 - **Session Management**: Session keys provide a basic level of authentication for the API.
 
-## 5. Strategic Goals
-
-- **Efficiency**: Deliver timely and relevant summaries, insights, and content for Waterfall users.
-- **Accuracy**: Ensure the reliability and accuracy of the analysis through effective testing and evaluation of AI models.
-- **Scalability**: Develop a system that can robustly handle a large volume of input data as the needs of the company grow.
 
 ## 6. Non-Functional Requirements
 
 - **Performance**: The system must be able to process and summarise a large number of web pages and YouTube transcripts (1,000s) in a reasonable time.
-- **Security**: The system must protect sensitive data and ensure the integrity of the process, utilizing session keys for API authentication.
+- **Security**: The system must constrain access to authorised users. 
 - **Maintainability**: Ensure the code is easy to maintain and extend for future development.
 
 ## 8. Future Considerations

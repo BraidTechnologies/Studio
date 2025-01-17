@@ -1,8 +1,8 @@
-**Solution Vision: Boxer - AI-Enabled Learning Assistant for Generative AI Development**
+**Solution Vision: Boxer**
 
 **Vision Statement:**
 
-Boxer is an AI-enabled learning assistant, empowering developers to rapidly build generative AI applications by providing **contextualised access to curated learning materials and direct interaction with AI models**. Boxer reduces the time to competency in generative AI, enhancing developer productivity.
+Boxer is an **AI-enabled learning assistant**, empowering developers to rapidly build generative AI applications by providing contextualised access to curated learning materials and direct interaction with AI models. Boxer reduces the time to competency in generative AI, enhancing developer productivity.
 
 **Problem Statement:**
 
@@ -18,7 +18,7 @@ Boxer addresses these challenges by providing an integrated platform that combin
 
 *   **AI-Powered Knowledge Base**: Boxer automatically processes and summarizes open-source learning materials from various sources (YouTube videos, GitHub repos, HTML text). It uses AI to generate summaries and organize the content in a document store.
 *   **Contextualized Information Retrieval**: The Boxer front-end allows users to ask questions, which are then passed to a Large Language Model (LLM), specifically **GPT-4 on Azure**, and enriched with links to relevant document chunks from the knowledge base. This ensures developers receive precise and relevant information based on their specific needs.
-*   **Proactive Suggestions**: Based on student interaction, the model suggests additional relevant content to enhance learning.
+*   **Proactive Suggestions**: Based on learner interaction, the model suggests additional relevant content to enhance learning.
 *   **Teams Integration**: Boxer integrates with Microsoft Teams via a plug-in, bringing the learning assistant directly into the a team's workflow.
 *   **Rapid Content Updates**: The system adapts to rapidly evolving AI fields by processing and summarizing current knowledge.
 
