@@ -45,4 +45,4 @@ Boxer addresses these challenges by providing an integrated platform that combin
 *   More sophisticated personalisation of content for individual users and their team.
 *   Addition of more advanced features to enable collaboration and knowledge sharing between users.
 
-This Solution Vision provides a clear picture of what Boxer is, the problem it solves, and its key benefits, making it suitable for communicating the direction of the product to stakeholders and development teams alike.
+This solution vision should be used to guide ongoing development and enhancement of the Boxer application to support Braid's business goals.
