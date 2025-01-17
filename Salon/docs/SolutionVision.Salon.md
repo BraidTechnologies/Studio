@@ -27,8 +27,7 @@ Salon addresses these challenges by providing a suite of AI-powered tools to aut
 *   **Improved Code Quality:** Automatically generated tests enhance test coverage and help identify bugs early in the development process.
 *   **Focus on Automation:** Salon is designed to automate key aspects of the development process, freeing up developers to focus on more strategic work.
 *   **Integration with LLMs:** By leveraging LLMs, Salon can offer actionable insights to lareg code bases. 'Chat to your code' makes it easier for team members to understand the code base and evaluate the approach to making changes. 
-*   **Context-Aware Code Generation:** By providing machine-readable output, Salon provides context aware prompts software tools such as GitHib Copilot or Cursor.ai, which results in even more useful and more relevant 
-generated code.
+*   **Context-Aware Code Generation:** By providing machine-readable output, Salon provides context aware prompts for software tools such as GitHib Copilot or Cursor.ai, which results in even more useful and more relevant generated code.
 
 **Target Users:**
 
