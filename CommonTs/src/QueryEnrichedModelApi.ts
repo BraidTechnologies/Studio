@@ -13,7 +13,7 @@ import axios from 'axios';
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
-import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from './EnrichedQuery';
+import { IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse } from './EnrichedQuery.Api.Types';
 
 /**
  * Represents a QueryModelApi class that interacts with the specified environment to query models with enrichment and generate questions.
@@ -39,7 +39,7 @@ export class QueryModelApi extends Api {
     * @param query - The enriched query data to be sent.
     * @returns A promise that resolves to the enriched response data, or undefined if an error occurs.
     */
-   async queryModelWithEnrichment (query: IEnrichedQuery) : Promise<IEnrichedResponse | undefined> {
+   async queryModelWithEnrichment (query: IEnrichedQueryRequest) : Promise<IEnrichedResponse | undefined> {
 
       let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
       var response: any;
@@ -47,7 +47,7 @@ export class QueryModelApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            data: query
+            request: query
          });
 
          if (response.status === 200) {
@@ -70,7 +70,7 @@ export class QueryModelApi extends Api {
     * @param query - The data containing persona prompt, question generation prompt, and summary.
     * @returns A promise that resolves to the generated question response, or undefined if an error occurs.
     */
-   async generateQuestion (query: IGenerateQuestionQuery) : Promise<IQuestionGenerationResponse | undefined> {
+   async generateQuestion (query: IGenerateQuestionRequest) : Promise<IQuestionGenerationResponse | undefined> {
 
       let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
       var response: any;

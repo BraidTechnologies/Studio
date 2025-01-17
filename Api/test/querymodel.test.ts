@@ -10,8 +10,8 @@ declare var process: any;
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
-import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
-import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
+import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 import { IModelConversationElement, EModelConversationRole } from '../../CommonTs/src/IModelDriver';
 
 let question = "What are the main user interface considerations for building an application using an LLM?"

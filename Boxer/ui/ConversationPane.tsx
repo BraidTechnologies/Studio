@@ -41,7 +41,7 @@ import { EConfigNumbers, EConfigStrings }  from '../core/ConfigStrings';
 import { Persona } from '../core/Persona';
 import { Message } from '../core/Message';
 import { EUIStrings } from './UIStrings';
-import { innerColumnFooterStyles, textFieldStyles } from './ColumnStyles';
+import { innerColumnFooterStyles } from './ColumnStyles';
 import { SessionKey, ConversationKey } from '../core/Keys';
 import { JoinDetails } from '../core/JoinDetails';
 import { AnimatedIconButton, EAnimatedIconButtonTypes } from './AnimatedIconButton';
@@ -49,7 +49,7 @@ import { MessagePrompt } from './ConversationMessagePrompt';
 import { Media } from '../core/Media';
 import { SharedEmbedding, findInMap } from '../core/SharedEmbedding';
 
-import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedChunk';
+import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 
 export interface IConversationHeaderProps {
 

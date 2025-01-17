@@ -12,7 +12,7 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../CommonTs/src/EnrichedChunk";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";

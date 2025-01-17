@@ -8,7 +8,7 @@
  */
 
 // Internal import
-import {IRelevantEnrichedChunk, IChunkQueryRelevantToSummarySpec, IEnrichedChunkSummary, IChunkQueryRelevantToUrlSpec} from '../../../CommonTs/src/EnrichedChunk';
+import {IRelevantEnrichedChunk, IChunkQueryRelevantToSummarySpec, IEnrichedChunkSummary, IChunkQueryRelevantToUrlSpec} from '../../../CommonTs/src/EnrichedQuery.Api.Types';
 
 export const kDefaultSearchChunkCount: number = 2;
 export const kDefaultMinimumCosineSimilarity = 0.5;

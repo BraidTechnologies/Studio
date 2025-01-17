@@ -13,13 +13,13 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IQuestionGenerationResponse, IGenerateQuestionQuery} from "../../../CommonTs/src/EnrichedQuery";
+import { IQuestionGenerationResponse, IGenerateQuestionRequest} from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
 import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
 
-async function askModel(query: IGenerateQuestionQuery): Promise<IQuestionGenerationResponse> {
+async function askModel(query: IGenerateQuestionRequest): Promise<IQuestionGenerationResponse> {
 
    let modelDriver = getDefaultChatModelDriver();
    let prompt : IModelConversationPrompt = {
@@ -44,7 +44,7 @@ export async function generateQuestion(request: HttpRequest, context: Invocation
       try {
          const jsonRequest = await request.json();
                   
-         const query = (jsonRequest as any)?.data as IGenerateQuestionQuery;
+         const query = (jsonRequest as any)?.data as IGenerateQuestionRequest;
 
          context.log (query);
          const response = await askModel(query);

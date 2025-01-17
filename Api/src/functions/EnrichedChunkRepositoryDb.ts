@@ -19,8 +19,7 @@
 // Copyright (c) 2024 Braid Technologies Ltd
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedChunk";
-import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IRelevantEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { EnrichedChunkRepositoryInMemory } from "./EnrichedChunkRepository";
 import { throwIfFalse } from "../../../CommonTs/src/Asserts";
 import { ConsoleLogger, loadStorables } from "./StorableApi.Cosmos";

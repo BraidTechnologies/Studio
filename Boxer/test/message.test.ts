@@ -5,7 +5,7 @@ import { Message} from '../core/Message';
 import { IKeyGenerator } from '../core/IKeyGenerator';
 import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';
 
-import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedChunk';
+import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
