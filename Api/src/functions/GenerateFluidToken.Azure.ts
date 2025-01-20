@@ -95,7 +95,7 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
 };
 
 app.http('GenerateFluidToken', {
-   methods: ['GET', 'POST'],
+   methods: ['POST'],
    authLevel: 'anonymous',
    handler: generateFluidToken
 });

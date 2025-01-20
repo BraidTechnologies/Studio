@@ -87,7 +87,7 @@ export async function boxer(
    }
 
 app.http("boxer", {
-      methods: ["GET"],
+      methods: ["GET", "POST"],
       authLevel: "anonymous",
       handler: boxer,
    });
