@@ -22,7 +22,7 @@ for dir in "${directories[@]}"; do
             fi
         else
             echo "No package.json found, running pytest..."
-            pytest
+            python3 -m pytest
         fi
         
         # Go back to the original directory
