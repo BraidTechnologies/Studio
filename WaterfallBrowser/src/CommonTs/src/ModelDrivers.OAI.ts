@@ -106,7 +106,7 @@ export async function calculateEmbedding(text: string, urlElement: string): Prom
          {
             headers: {
                'Content-Type': 'application/json',
-               'api-key': process.env.AzureAiKey
+               'api-key': process.env.AZURE_OPENAI_API_KEY
             }
          }
       );
@@ -244,7 +244,7 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
       {
          headers: {
             'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
+            'api-key': process.env.AZURE_OPENAI_API_KEY
          }
       });
 

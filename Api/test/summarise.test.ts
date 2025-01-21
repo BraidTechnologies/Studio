@@ -32,7 +32,6 @@ describe("Summarise", async function () {
          });
 
          summary = (response.data as ISummariseResponse).summary;
-         console.log (summary);
   
       } catch (e: any) {       
 
@@ -89,7 +88,7 @@ describe("Summarise", async function () {
       let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.summariseApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.summariseApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validSummaryCall (apiUrl, sampleText);
 
@@ -108,7 +107,7 @@ describe("Summarise", async function () {
 
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.summariseApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.summariseApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validSummaryCall (apiUrl, sampleText);
 
@@ -122,7 +121,7 @@ describe("Summarise", async function () {
       let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.summariseApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.summariseApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validSummaryCall (apiUrl, sampleText);
 
@@ -140,7 +139,7 @@ describe("Summarise", async function () {
 
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.summariseApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.summariseApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validSummaryCall (apiUrl, sampleText);
 

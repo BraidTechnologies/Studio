@@ -84,7 +84,7 @@ describe("TestForSummariseFail", async function () {
 
          let environment = getEnvironment(EEnvironment.kLocal);
   
-         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.SessionKey.toString();
+         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
          let failCode = await validCall (apiUrl, sampleText, 10);
 
@@ -114,7 +114,7 @@ describe("TestForSummariseFail", async function () {
 
          let environment = getEnvironment(EEnvironment.kProduction);
   
-         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.SessionKey.toString();
+         let apiUrl = environment.testForSummariseFail() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
          let failCode = await validCall (apiUrl, sampleText, 10);
 

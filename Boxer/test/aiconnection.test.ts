@@ -100,7 +100,7 @@ describe("AIConnection", async function () {
 
       throwIfUndefined(process);
       throwIfUndefined(process.env);
-      throwIfUndefined(process.env.SessionKey);        
+      throwIfUndefined(process.env.BRAID_SESSION_KEY);        
 
       let query = AIConnection.buildEnrichmentQuery (messages, authors);
 
@@ -116,9 +116,9 @@ describe("AIConnection", async function () {
 
       throwIfUndefined(process);
       throwIfUndefined(process.env);
-      throwIfUndefined(process.env.SessionKey);        
+      throwIfUndefined(process.env.BRAID_SESSION_KEY);        
 
-      let caller = new AIConnection (new SessionKey (process.env.SessionKey));                
+      let caller = new AIConnection (new SessionKey (process.env.BRAID_SESSION_KEY));                
       let fullQuery = AIConnection.buildEnrichmentQuery (messages, authors);
       let message = new Message();
 
@@ -150,9 +150,9 @@ describe("AIConnection", async function () {
      
       throwIfUndefined(process);
       throwIfUndefined(process.env);
-      throwIfUndefined(process.env.SessionKey); 
+      throwIfUndefined(process.env.BRAID_SESSION_KEY); 
 
-      let caller = new AIConnection (new SessionKey (process.env.SessionKey));             
+      let caller = new AIConnection (new SessionKey (process.env.BRAID_SESSION_KEY));             
       let message = new Message();
 
       let result = await caller.makeFollowUpCall ("This article explains how Transformers work.");
@@ -201,7 +201,7 @@ describe("AIConnection", async function () {
 
       throwIfUndefined(process);
       throwIfUndefined(process.env);
-      throwIfUndefined(process.env.SessionKey);        
+      throwIfUndefined(process.env.BRAID_SESSION_KEY);        
 
       let query = AIConnection.buildEnrichmentQuery (messages, authors);
 
@@ -220,7 +220,7 @@ describe("AIConnection", async function () {
 
       throwIfUndefined(process);
       throwIfUndefined(process.env);
-      throwIfUndefined(process.env.SessionKey);        
+      throwIfUndefined(process.env.BRAID_SESSION_KEY);        
 
       let query = AIConnection.buildEnrichmentQuery (messages, authors);
 

@@ -36,7 +36,6 @@ describe("FindTheme", async function () {
          });
 
          theme = (response.data as IFindThemeResponse).theme;
-         console.log (theme);
   
       } catch (e: any) {       
 
@@ -80,7 +79,7 @@ describe("FindTheme", async function () {
       let sampleText = themedText ;      
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.findThemeApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validThemeCall (apiUrl, sampleText, 10);
 
@@ -107,7 +106,7 @@ describe("FindTheme", async function () {
       let sampleText = themedText;      
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.findThemeApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.findThemeApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validThemeCall (apiUrl, sampleText, 10);
 

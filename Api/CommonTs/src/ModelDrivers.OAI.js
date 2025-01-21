@@ -102,7 +102,7 @@ function calculateEmbedding(text, urlElement) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'api-key': process.env.AzureAiKey
+                    'api-key': process.env.AZURE_OPENAI_API_KEY
                 }
             });
             const embedding = response.data.data[0].embedding;
@@ -211,7 +211,7 @@ function chat(persona, urlElement, prompt, params) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'api-key': process.env.AzureAiKey
+                    'api-key': process.env.AZURE_OPENAI_API_KEY
                 }
             });
             return { role: IModelDriver_1.EModelConversationRole.kAssistant,

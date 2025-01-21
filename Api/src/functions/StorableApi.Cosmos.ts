@@ -150,7 +150,7 @@ export async function findStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
@@ -210,7 +210,7 @@ export async function loadStorable(id: string | undefined,
    if (!id)
       return undefined;
    
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<IStorable | undefined>(function (resolve, reject) {
 
@@ -263,7 +263,7 @@ export async function loadStorable(id: string | undefined,
  */
 export async function saveStorable(record: IStorable, params: ICosmosStorableParams, context: ILoggingContext): Promise<boolean> {
 
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<boolean>(function (resolve, reject) {
 
@@ -310,7 +310,7 @@ export async function removeStorable(id: string | undefined, params: ICosmosStor
    if (!id)
       return false;
    
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<boolean>(function (resolve, reject) {
 
@@ -353,7 +353,7 @@ export async function loadRecentStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<Array<IStorable>>(function (resolve, reject) {
 
@@ -413,7 +413,7 @@ export async function loadStorables(querySpec: IStorableMultiQuerySpec,
    context: ILoggingContext,
    transformer: StorableTransformer | undefined = undefined): Promise<Array<IStorable>> {
 
-   const dbkey = process.env.CosmosApiKey;
+   const dbkey = process.env.COSMOS_API_KEY;
 
    const done = new Promise<Array<IStorable>>(async function (resolve, reject) {
 

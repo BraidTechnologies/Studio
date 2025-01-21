@@ -18,10 +18,9 @@ describe("Make new container", function () {
 
       let fluidMessagesConnection = new BraidFluidConnection(local);
 
-      throwIfUndefined(process.env.SessionKey);
-      fluidMessagesConnection.createNew (new SessionKey (process.env.SessionKey), true).then (conversationKey_ => {
+      throwIfUndefined(process.env.BRAID_SESSION_KEY);
+      fluidMessagesConnection.createNew (new SessionKey (process.env.BRAID_SESSION_KEY), true).then (conversationKey_ => {
         
-         console.log ("Created conversation:" + conversationKey_);
 
       }).catch ((e : any) => {
       

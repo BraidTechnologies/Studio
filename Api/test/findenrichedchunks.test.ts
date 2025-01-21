@@ -36,7 +36,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
 
       for (let i = 0; i < summaries.length; i++) {
 
-         let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+         let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
          let urlQuery = {
             maxCount: 2,
             repositoryId: repo,
@@ -45,12 +45,9 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          };
 
          let response = await api.findRelevantChunksFromSummary(urlQuery);
-         console.log("\nLooking for:" + urlQuery.summary);
-         for (let i = 0; i < response.length; i++) {
-            console.log(response[i].chunk.summary);
-            console.log(response[i].relevance.toString());
+         if (response.length <= 0) {
+            console.log(response);
          }
-         console.log("\n");
          expect(response.length > 0).toBe(true);
       }
 
@@ -58,7 +55,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
 
    it("Needs to find relevant chunks from a matching URL.", async function () {
 
-      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
 
       for (let i = 0; i < urls.length; i++) {
          let urlQuery = {
@@ -69,8 +66,9 @@ async function commonChunkStoreTests(repo: EChunkRepository,
          };
 
          let response = await api.findRelevantChunksFromUrl(urlQuery);
-         console.log("Looking for:" + urlQuery.url);
-         console.log(response);
+         if (response.length <= 0) {
+            console.log(response);
+         }
 
          expect(response.length > 0).toBe(true);
       }
@@ -78,7 +76,7 @@ async function commonChunkStoreTests(repo: EChunkRepository,
 
    it("Needs to find chunks from a matching URL.", async function () {
 
-      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new FindEnrichedChunkApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
 
       for (let i = 0; i < urls.length; i++) {
          let urlQuery = {

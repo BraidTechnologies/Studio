@@ -11,7 +11,7 @@ for identifying the main theme of input text. The tests verify the API's ability
 correctly identify sports themes and maintain consistent theme detection for similar content.
 
 Environment Variables Required:
-    - SessionKey: Authentication token for API access
+    - BRAID_SESSION_KEY: Authentication token for API access
 '''
 
 
@@ -21,7 +21,7 @@ import requests  # assuming the API is accessed via HTTP
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Construct the full URL to the /chunk endpoint
 API_ENDPOINT = f'{BASE_URL}/findtheme?session=' + SESSION_KEY

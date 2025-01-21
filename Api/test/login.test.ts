@@ -15,7 +15,7 @@ describe("Login", async function () {
 
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let api = new LoginApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new LoginApi (getEnvironment (EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
 
       let session = await api.login ();
 
@@ -36,7 +36,7 @@ describe("Login", async function () {
 
   it("Needs to succeed with valid key in production environment", async function () {
       
-   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
+   let api = new LoginApi (getEnvironment (EEnvironment.kProduction), process.env.BRAID_SESSION_KEY.toString());
 
    let session = await api.login ();
 

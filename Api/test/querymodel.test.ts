@@ -26,7 +26,7 @@ describe("QueryModel", async function () {
 
    it("Needs to make a simple query.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
          history: new Array<IModelConversationElement>(),
@@ -50,7 +50,7 @@ describe("QueryModel", async function () {
 
    it("Needs to make a query with history.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
          history: [{role: EModelConversationRole.kUser, content: priorQuestions[0]}, 
@@ -78,7 +78,7 @@ describe("QueryModel", async function () {
 
    it("Needs to generate a questions based on a summary", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          summary: summary,
          wordTarget: 10

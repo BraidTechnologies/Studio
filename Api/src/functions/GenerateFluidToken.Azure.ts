@@ -17,7 +17,7 @@ import { generateToken } from "@fluidframework/server-services-client";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { IFluidTokenRequest } from "../../../CommonTs/src/Fluid";
 
-const key = process.env.ConversationKey;
+const key = process.env.FLUID_TENANT_KEY;
 const tenantId = "b9576484-5c2e-4613-bfdf-039948cdd521";
 
 // WARNING - this is a redefinition of a type from inside the Fluid library. Does not seem to be exported at present, and we need it. 

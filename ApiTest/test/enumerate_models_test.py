@@ -22,7 +22,7 @@ from CommonPy.src.request_utilities import request_timeout
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Construct the full URL to the /enumerateModels endpoint
 enumerate_models_url = f'{BASE_URL}/enumerateModels?session=' + SESSION_KEY

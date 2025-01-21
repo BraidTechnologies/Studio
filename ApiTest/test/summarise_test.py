@@ -23,7 +23,7 @@ Dependencies:
     - os: Environment variable access
 
 Environment Variables:
-    - SessionKey: Required for API authentication
+    - BRAID_SESSION_KEY: Required for API authentication
     - BASE_URL: API endpoint (defaults to http://localhost:7071/api)
 """
 
@@ -36,7 +36,7 @@ from CommonPy.src.request_utilities import request_timeout
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 SURVEY_TEXT = (
     "The course meets my overall expectations:'Agree'" +
