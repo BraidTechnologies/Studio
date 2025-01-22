@@ -114,7 +114,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
          grant_type: 'authorization_code',
          code: code,
          client_id: process.env.LINKEDIN_APP_ID,
-         client_secret: process.env.LinkedInSecret,
+         client_secret: process.env.LINKEDIN_APP_SECRET,
          redirect_uri: environment.authFromLinkedInApi()
       };
 
@@ -188,10 +188,10 @@ async function processAuthFromLinkedIn(request: HttpRequest, context: Invocation
       }
    }
 
-   if ((isSessionValid(request, context))
+   if ((session === process.env.BRAID_SESSION_KEY) || (session === process.env.BRAID_SESSION_KEY_2)
       && code && secret) {
 
-      return await redirectBackHomeWithFullPath(code, session as string, conversation, secret as string, context);
+      return await redirectBackHomeWithFullPath(code as string, session as string, conversation, secret as string, context);
    } else {
       context.log("Failed session key validation:" + session);
       return {
