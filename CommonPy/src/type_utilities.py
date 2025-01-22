@@ -35,7 +35,7 @@ def safe_dict_to_object(val, default=None) -> object:
 
     try:
         if val:
-           obj = DictToObject(val)
+            obj = DictToObject(val)
     except (ValueError, TypeError):
         return obj
 
@@ -58,7 +58,7 @@ def safe_cast(val, to_type, default=None) -> object:
     obj = default
 
     try:
-        if val:        
-           return to_type(val)
+        if val:
+            return to_type(val)
     except (ValueError, TypeError):
         return obj

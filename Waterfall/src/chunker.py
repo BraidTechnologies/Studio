@@ -30,7 +30,7 @@ headers = {
 class Chunker (PipelineStep):
     '''PipelineStep to chunk a text string'''
 
-    # pylint: disable-next=useless-parent-delegation 
+    # pylint: disable-next=useless-parent-delegation
     def __init__(self, output_location: str):
         '''
         Initializes the Chunker object with the provided output location.
@@ -76,7 +76,7 @@ class Chunker (PipelineStep):
                 }
             }
 
-        response = session.post(summary_url, json=input_json, 
+        response = session.post(summary_url, json=input_json,
                                 headers=headers,
                                 timeout=request_timeout)
         pipeline_chunks = []  # If there is an error in the API, return an empty list

@@ -37,6 +37,7 @@ def chunk_request_data():
         'overlapWords': 2
     }
 
+# pylint: disable=redefined-outer-name
 def test_chunk_endpoint(chunk_request_data):
 
     wrapped = {

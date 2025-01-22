@@ -7,7 +7,7 @@ from glob import glob
 
 from src.file_repository import FileRespository
 
-SPEC = "embed.txt"
+SPEC = 'embed.txt'
 
 def read_file_names(path: str, file_spec: str):
     """

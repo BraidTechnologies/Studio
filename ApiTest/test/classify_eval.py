@@ -15,6 +15,7 @@ Environment Variables Required:
     - BRAID_SESSION_KEY: Authentication token for API access
 '''
 
+from CommonPy.src.request_utilities import request_timeout
 import os
 import pytest
 import requests
@@ -27,40 +28,44 @@ SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 API_ENDPOINT = f'{BASE_URL}/classify?session=' + SESSION_KEY
 
 def test_basic_basketball_classification():
-    """Test basic basketball-related text classification"""
-    request_data = {"request": {
-        "text": "Shooting hoops at the basketball court",
-        "classifications": ["basketball", "soccer", "tennis"]
+    '''Test basic basketball-related text classification'''
+    request_data = {'request': {
+        'text': 'Shooting hoops at the basketball court',
+        'classifications': ['basketball', 'soccer', 'tennis']
     }}
-    
-    response = requests.post(API_ENDPOINT, json=request_data)
+
+    response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
     assert response.status_code == 200
-    
+
     result = response.json()
-    assert result["classification"] == "basketball"
+    assert result['classification'] == 'basketball'
+
 
 def test_similar_basketball_classification():
-    """Test similar basketball text with different wording should yield same classification"""
-    request_data = {"request": {
-        "text": "Shooting hoops at the gym",
-        "classifications": ["basketball", "soccer", "tennis"]
+    '''Test similar basketball text with different wording should yield same classification'''
+    request_data = {'request': {
+        'text': 'Shooting hoops at the gym',
+        'classifications': ['basketball', 'soccer', 'tennis']
     }}
-    
-    response = requests.post(API_ENDPOINT, json=request_data)
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
     assert response.status_code == 200
-    
+
     result = response.json()
-    assert result["classification"] == "basketball"
+    assert result['classification'] == 'basketball'
+
 
 def test_different_sport_classification():
-    """Test different sport text should yield different classification"""
-    request_data = {"request": {
-        "text": "Practicing free serves on the court",
-        "classifications": ["basketball", "soccer", "tennis"]
+    '''Test different sport text should yield different classification'''
+    request_data = {'request': {
+        'text': 'Practicing free serves on the court',
+        'classifications': ['basketball', 'soccer', 'tennis']
     }}
-    
-    response = requests.post(API_ENDPOINT, json=request_data)
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
     assert response.status_code == 200
-    
+
     result = response.json()
-    assert result["classification"] == "tennis"
+    assert result['classification'] == 'tennis'
