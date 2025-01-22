@@ -15,7 +15,6 @@ import * as QueryString from "qs";
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { getDefaultEnvironment } from "../../../CommonTs/src/IEnvironmentFactory";
-import { EEnvironment } from "../../../CommonTs/src/IEnvironment";
 
 export async function LoginWithLinkedIn(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
@@ -26,7 +25,7 @@ export async function LoginWithLinkedIn(request: HttpRequest, context: Invocatio
          requestedSession = value;
    }
 
-   if ((requestedSession === process.env.BRAID_SESSION_KEY) || (requestedSession === process.env.SessionKey2)) {
+   if ((requestedSession === process.env.BRAID_SESSION_KEY) || (requestedSession === process.env.BRAID_SESSION_KEY_2)) {
 
       context.log("Passed session key validation:" + requestedSession);
 
@@ -188,7 +187,7 @@ async function processAuthFromLinkedIn(request: HttpRequest, context: Invocation
       }
    }
 
-   if (((session === process.env.BRAID_SESSION_KEY) || (session === process.env.SessionKey2))
+   if (((session === process.env.BRAID_SESSION_KEY) || (session === process.env.BRAID_SESSION_KEY_2))
       && code && secret) {
 
       return await redirectBackHomeWithFullPath(code, session, conversation, secret, context);
