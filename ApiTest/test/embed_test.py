@@ -34,7 +34,7 @@ def test_embedding_request_structure():
         'request' : valid_request
     }     
 
-    # Simulate sending the request to the API
+    # Send the request to the API
     response = requests.post(embed_url, json=wrapped, timeout=request_timeout)
 
     # Check for successful response
@@ -58,7 +58,7 @@ def test_invalid_request_structure():
     wrapped = {
         'request' : invalid_request
     }   
-    # Simulate sending the request to the API
+    # Send the request to the API
     response = requests.post(embed_url, json=wrapped, timeout=request_timeout)
 
     # Expecting a 400 status code for bad request
