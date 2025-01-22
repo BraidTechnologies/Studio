@@ -35,7 +35,10 @@ export function isSessionValid(request: HttpRequest, context: InvocationContext)
          requestedSession = value;
    }
 
-   if ((requestedSession === process.env.BRAID_SESSION_KEY) || (requestedSession === process.env.SessionKey2)) {
+   context.log("Requested session:" + requestedSession);
+   context.log("Session key 1:" + process.env.BRAID_SESSION_KEY?.toString());
+   context.log("Session key 2:" + process.env.BRAID_SESSION_KEY_2?.toString());  
+   if ((requestedSession === process.env.BRAID_SESSION_KEY?.toString()) || (requestedSession === process.env.BRAID_SESSION_KEY_2?.toString())) {
       context.log("Passed session key validation:" + requestedSession);
       return true;
    }
