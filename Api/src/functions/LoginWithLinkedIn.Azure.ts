@@ -15,6 +15,7 @@ import * as QueryString from "qs";
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { getDefaultEnvironment } from "../../../CommonTs/src/IEnvironmentFactory";
+import { isSessionValid } from "./Utility.Azure";
 
 export async function LoginWithLinkedIn(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
@@ -25,7 +26,7 @@ export async function LoginWithLinkedIn(request: HttpRequest, context: Invocatio
          requestedSession = value;
    }
 
-   if ((requestedSession === process.env.BRAID_SESSION_KEY) || (requestedSession === process.env.BRAID_SESSION_KEY_2)) {
+   if (isSessionValid(request, context)) {
 
       context.log("Passed session key validation:" + requestedSession);
 
@@ -113,7 +114,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
          grant_type: 'authorization_code',
          code: code,
          client_id: process.env.LINKEDIN_APP_ID,
-         client_secret: process.env.LinkedInSecret,
+         client_secret: process.env.LINKEDIN_APP_SECRET,
          redirect_uri: environment.authFromLinkedInApi()
       };
 
@@ -187,11 +188,12 @@ async function processAuthFromLinkedIn(request: HttpRequest, context: Invocation
       }
    }
 
-   if (((session === process.env.BRAID_SESSION_KEY) || (session === process.env.BRAID_SESSION_KEY_2))
+   if ((session === process.env.BRAID_SESSION_KEY) || (session === process.env.BRAID_SESSION_KEY_2)
       && code && secret) {
 
-      return await redirectBackHomeWithFullPath(code, session, conversation, secret, context);
+      return await redirectBackHomeWithFullPath(code as string, session as string, conversation, secret as string, context);
    } else {
+      context.log("Failed session key validation:" + session);
       return {
          status: 400
       };
