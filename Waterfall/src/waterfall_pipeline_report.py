@@ -4,7 +4,6 @@
 # Standard Library Imports
 import logging
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
-from src.waterfall_pipeline_report_common import write_chart
 from src.google_office_mailer import send_mail
 
 # Set up logging to display information about the execution of the script

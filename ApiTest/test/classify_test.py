@@ -60,4 +60,4 @@ def test_invalid_classification_request(invalid_data):
 
 if __name__ == '__main__':
     pytest.main()
-    
+

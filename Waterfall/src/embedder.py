@@ -74,7 +74,7 @@ class Embedder (PipelineStep):
             }
         }
 
-        response = session.post(embed_url, json=json_input, 
+        response = session.post(embed_url, json=json_input,
                                 headers=headers,
                                 timeout=request_timeout)
 
@@ -89,11 +89,11 @@ class Embedder (PipelineStep):
 
             return pipeline_item
         else:
-            logger.error("Unable to calculate embedding item: %s", pipeline_item.path)
+            logger.error("Unable to calculate embedding item: %s",
+                         pipeline_item.path)
             return None
-        
 
-    def embed_text (self, text: str) -> list[float]:
+    def embed_text(self, text: str) -> list[float]:
         """
         Generates an embedding for the given text using an external API.
 
@@ -118,7 +118,7 @@ class Embedder (PipelineStep):
             }
         }
 
-        response = session.post(embed_url, json=json_input, 
+        response = session.post(embed_url, json=json_input,
                                 headers=headers,
                                 timeout=request_timeout)
 
@@ -129,4 +129,4 @@ class Embedder (PipelineStep):
             return embedding
         else:
             logger.error("Unable to calculate embedding: %s", text)
-            return None        
+            return None

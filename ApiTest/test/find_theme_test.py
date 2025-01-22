@@ -20,43 +20,44 @@ BASE_URL = 'http://localhost:7071/api'
 SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Construct the full URL to the /chunk endpoint
-find_theme_url = f"{BASE_URL}/findtheme?session=" + SESSION_KEY
+find_theme_url = f'{BASE_URL}/findtheme?session=' + SESSION_KEY
 
 @pytest.fixture
 def valid_request_data():
     return {
-        "text": "Sample text input about magazines, books, literature, moves, films, records, CDs, vinyl, newspapers.",
-        "length": 123
+        'text': 'Sample text input about magazines, books, literature, moves, films, records, CDs, vinyl, newspapers.',
+        'length': 123
     }
 
+# pylint: disable=redefined-outer-name
 def test_find_theme_with_valid_request(valid_request_data):
     wrapped = {
         'request' : valid_request_data
     }
     response = requests.post(find_theme_url, json=wrapped, timeout=request_timeout)
-    assert response.status_code == 200, "Expected status code 200 for a valid request"
+    assert response.status_code == 200, 'Expected status code 200 for a valid request'
     data = response.json()
-    assert "theme" in data, "Response should contain 'theme'"
+    assert 'theme' in data, 'Response should contain \'theme\''
 
 def test_find_theme_with_missing_text():
     request_data = {
-        "length": 123
+        'length': 123
     }
     wrapped = {
         'request' : request_data
     }
     response = requests.post(find_theme_url, json=wrapped, timeout=request_timeout)
-    assert response.status_code == 400, "Expected status code 400 for missing 'text'"
+    assert response.status_code == 400, 'Expected status code 400 for missing \'text\''
 
 def test_find_theme_with_missing_length():
     request_data = {
-        "text": "Sample text input"
+        'text': 'Sample text input'
     }
     wrapped = {
         'request' : request_data
     }
     response = requests.post(find_theme_url, json=wrapped, timeout=request_timeout)
-    assert response.status_code == 400, "Expected status code 400 for missing 'length'"    
+    assert response.status_code == 400, 'Expected status code 400 for missing \'length\''    
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     pytest.main()

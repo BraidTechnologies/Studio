@@ -64,7 +64,7 @@ class YouTubeTranscriptDownloader (PipelineStep):
         Initializes the YouTubeTranscriptDownloader object with the provided output location.
         '''
         super(YouTubeTranscriptDownloader, self).__init__(
-            output_location)  
+            output_location)
 
     def download(self, pipeline_item: PipelineItem) -> PipelineItem:
         '''
