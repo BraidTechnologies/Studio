@@ -10,8 +10,8 @@ declare var process: any;
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
-import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
-import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
+import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 import { IModelConversationElement, EModelConversationRole } from '../../CommonTs/src/IModelDriver';
 
 let question = "What are the main user interface considerations for building an application using an LLM?"
@@ -26,7 +26,7 @@ describe("QueryModel", async function () {
 
    it("Needs to make a simple query.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
          history: new Array<IModelConversationElement>(),
@@ -50,7 +50,7 @@ describe("QueryModel", async function () {
 
    it("Needs to make a query with history.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
          history: [{role: EModelConversationRole.kUser, content: priorQuestions[0]}, 
@@ -78,7 +78,7 @@ describe("QueryModel", async function () {
 
    it("Needs to generate a questions based on a summary", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          summary: summary,
          wordTarget: 10

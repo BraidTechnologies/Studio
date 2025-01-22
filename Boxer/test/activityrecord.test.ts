@@ -23,7 +23,7 @@ describe("ActivityRepository", function () {
       this.timeout(10000);
    });
       
-   let sessionKey = process.env.SessionKey;
+   let sessionKey = process.env.BRAID_SESSION_KEY;
    throwIfUndefined (sessionKey);
    let repository = getRecordRepository(new SessionKey (sessionKey));
 

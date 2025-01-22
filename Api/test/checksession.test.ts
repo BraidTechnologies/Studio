@@ -15,7 +15,7 @@ describe("CheckSession", async function () {
 
    it("Needs to succeed with valid key in local environment", async function () {
       
-      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new SessionApi (getEnvironment (EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
 
       let session = await api.checkSessionKey ();
 
@@ -25,7 +25,7 @@ describe("CheckSession", async function () {
 
    it("Needs to succeed with valid key in production environment", async function () {
       
-      let api = new SessionApi (getEnvironment (EEnvironment.kProduction), process.env.SessionKey.toString());
+      let api = new SessionApi (getEnvironment (EEnvironment.kProduction), process.env.BRAID_SESSION_KEY.toString());
 
       let session = await api.checkSessionKey ();
 

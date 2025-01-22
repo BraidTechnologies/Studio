@@ -20,9 +20,8 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IModelConversationElement, EModelConversationRole, IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
-import { IEnrichedQuery, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery";
-import { IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedChunk";
+import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { IRelevantEnrichedChunk, IEnrichedQueryRequest, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
@@ -38,7 +37,7 @@ const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half 
  * @param query - The enriched query object containing details for the model to process.
  * @returns A promise that resolves to an enriched response object with the model's answer and relevant enriched chunks.
  */
-export async function askModel(query: IEnrichedQuery): Promise<IEnrichedResponse> {
+export async function askModel(query: IEnrichedQueryRequest): Promise<IEnrichedResponse> {
 
    let modelDriver = getDefaultChatModelDriver();
 
@@ -98,7 +97,7 @@ export async function queryModelWithEnrichment(request: HttpRequest, context: In
    if (isSessionValid(request, context)) {
 
       try {
-         const query = (jsonRequest as any)?.data as IEnrichedQuery;
+         const query = (jsonRequest as any)?.request as IEnrichedQueryRequest;
 
          context.log (query);
          const response = await askModel(query);

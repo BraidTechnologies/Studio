@@ -44,8 +44,8 @@ export class OpenAiEmbed3EmbeddingModelInit implements IOpenAiEmbeddingModelInit
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
 }
 
-export class OpenAiAda2EmbeddingModelInit implements IOpenAiEmbeddingModelInit {
-   deploymentName: string = "Ada-2";
+export class OpenAiEmbed3SmallEmbeddingModelInit implements IOpenAiEmbeddingModelInit {
+   deploymentName: string = "Embed-3-Small";
    urlElement: string = "StudioEmbeddingSmall";
    drivenModelType: EModel = EModel.kSmall;
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
@@ -106,7 +106,7 @@ export async function calculateEmbedding(text: string, urlElement: string): Prom
          {
             headers: {
                'Content-Type': 'application/json',
-               'api-key': process.env.AzureAiKey
+               'api-key': process.env.AZURE_OPENAI_API_KEY
             }
          }
       );
@@ -244,7 +244,7 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
       {
          headers: {
             'Content-Type': 'application/json',
-            'api-key': process.env.AzureAiKey
+            'api-key': process.env.AZURE_OPENAI_API_KEY
          }
       });
 

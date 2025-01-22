@@ -29,7 +29,7 @@ describe("StorableActivity", async function () {
    }
 
    let env = getEnvironment (EEnvironment.kLocal);
-   let api = new ActivityRepostoryApi (env, process.env.SessionKey.toString());
+   let api = new ActivityRepostoryApi (env, process.env.BRAID_SESSION_KEY.toString());
 
    it("Needs to succeed with valid key", async function () {
       

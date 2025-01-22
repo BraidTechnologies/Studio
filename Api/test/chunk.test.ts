@@ -111,7 +111,7 @@ describe("Chunk", async function () {
 
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.chunkApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let chunkResponse = await validChunkCall(apiUrl, sampleText);
 
@@ -127,7 +127,7 @@ describe("Chunk", async function () {
 
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.chunkApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.chunkApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let chunkResponse = await validChunkCall(apiUrl, sampleText);
 

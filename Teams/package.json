@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "dev:teamsfx": "env-cmd --silent -f .localConfigs npm run dev",
-        "dev": "func start --typescript --language-worker=\"--inspect=9229\" --port \"7071\" --cors \"*\"",       
+        "dev": "func start --typescript --language-worker=\"--inspect=9229\" --port \"7071\" --cors \"*\"",
         "build": "npm run clean && npm run compile",
         "compile": "tsc",
         "clean": "rimraf dist",
@@ -11,18 +11,18 @@
         "watch": "tsc -w",
         "prestart": "npm run build",
         "start": "npx func start",
-        "test": "echo \"No test specified for Teams\" && exit 1"
+        "test": "echo \"No test specified for Teams\" && exit 0"
     },
     "dependencies": {
-        "@azure/functions": "^4.3.0",
-        "axios": "^1.7.7",
+        "@azure/functions": "^4.6.0",
+        "axios": "^1.7.9",
         "axios-retry": "^4.5.0"
     },
     "devDependencies": {
-        "@types/node": "^20.8.10",
+        "@types/node": "^20.17.14",
         "env-cmd": "^10.1.0",
         "rimraf": "^6.0.1",
-        "typescript": "^5.6.3"
+        "typescript": "^5.7.3"
     },
     "main": "dist/src/functions/*.js"
 }

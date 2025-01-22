@@ -23,7 +23,7 @@ from CommonPy.src.request_utilities import request_timeout
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Test helper function to validate a response against a schema definition
 

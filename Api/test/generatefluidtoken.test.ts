@@ -63,7 +63,7 @@ describe("Generate Fluid Token", async function () {
          documentId: documentUuid         
       }
 
-      let fluidApi = new FluidApi (environment, process.env.SessionKey.toString());
+      let fluidApi = new FluidApi (environment, process.env.BRAID_SESSION_KEY.toString());
 
       token = await fluidApi.generateToken(request);
   
@@ -83,7 +83,7 @@ describe("Generate Fluid Token", async function () {
          documentId: documentUuid         
       }
 
-      let fluidApi = new FluidApi (environment, process.env.SessionKey.toString());
+      let fluidApi = new FluidApi (environment, process.env.BRAID_SESSION_KEY.toString());
 
       token = await fluidApi.generateToken(request);
   
@@ -93,7 +93,7 @@ describe("Generate Fluid Token", async function () {
 
    it("Needs to connect to a Fluid container.", async function () {
 
-      let session = process.env.SessionKey.toString();
+      let session = process.env.BRAID_SESSION_KEY.toString();
 
       let user: IFluidTokenRequest = {
          local: true,

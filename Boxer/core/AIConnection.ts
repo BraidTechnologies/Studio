@@ -27,11 +27,10 @@ import { AssertionFailedError } from "./Errors";
 import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
 import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EChunkRepository, IRelevantEnrichedChunk} from '../../CommonTs/src/EnrichedChunk';
-
-import { IEnrichedQuery, IEnrichedResponse, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { EChunkRepository} from '../../CommonTs/src/EnrichedChunk';
+import { IEnrichedQueryRequest, IEnrichedResponse, IRelevantEnrichedChunk, IGenerateQuestionRequest, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 import { EModelConversationRole, IModelConversationElement } from "../../CommonTs/src/IModelDriver";
-import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
+import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
 
 // We allow for the equivalent of 10 minutes of chat. 10 mins * 60 words = 600 words = 2400 tokens. 
 const kMaxTokens : number= 4096;
@@ -53,7 +52,7 @@ export class AIConnection {
    // Makes an Axios call to call web endpoint
    // Make two queries - one to get the answer to the direct question, another to ask for a reference summary. 
    // The reference summary is then used to look up good articles to add to the response.  
-   async makeEnrichedCall  (responseShell: Message, query: IEnrichedQuery) : Promise<Message | undefined> {
+   async makeEnrichedCall  (responseShell: Message, query: IEnrichedQueryRequest) : Promise<Message | undefined> {
 
       let response = await this._queryModelApi.queryModelWithEnrichment (query);
 
@@ -169,7 +168,7 @@ export class AIConnection {
       return this._activeCallCount !== 0;
    }
 
-   static buildEnrichmentQuery (messages: Array<Message>, authors: Map<string, Persona>): IEnrichedQuery {
+   static buildEnrichmentQuery (messages: Array<Message>, authors: Map<string, Persona>): IEnrichedQueryRequest {
 
       let history = new Array<IModelConversationElement> ();
       let question = "";    
@@ -237,7 +236,7 @@ export class AIConnection {
       return query; 
    }   
 
-   static buildQueryForQuestionPrompt (summary: string): IGenerateQuestionQuery {
+   static buildQueryForQuestionPrompt (summary: string): IGenerateQuestionRequest {
 
       let query = {
          wordTarget: 10,

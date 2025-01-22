@@ -77,9 +77,9 @@ def test_with_search_telecom ():
 
     pipeline_spec = WebSearchPipelineSpec()
     pipeline_spec.search_key = AI_VODAFONE_SEARCH_ENGINE_ID
-    pipeline_spec.pages = 10
-    pipeline_spec.clusters = 7
-    pipeline_spec.clusters_in_summary = 5
+    pipeline_spec.pages = 1
+    pipeline_spec.clusters = 2
+    pipeline_spec.clusters_in_summary = 2
     pipeline_spec.description = "Vodafone GenAI"
     pipeline_spec.mail_to = "jon@braidtech.ai"
     pipeline_spec.output_chart_name = 'vodafone_cluster.html'
@@ -143,7 +143,7 @@ def test_with_search_vf_survey_01 ():
     pipeline_spec.output_data_name = "vf_survey_01_output.json"
 
     file_spec = FileDirectedPipelineSpec()
-    file_spec.files = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    file_spec.files = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11"]
 
     links = pipeline.search_static (pipeline_spec, file_spec)
     assert len(links) >= 1

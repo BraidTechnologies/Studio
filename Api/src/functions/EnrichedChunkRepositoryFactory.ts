@@ -12,6 +12,7 @@
 import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
+import { InvalidParameterError } from "../../../CommonTs/src/Errors";
 
 let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
 
@@ -31,10 +32,11 @@ export function getEnrichedChunkRepository (repository: EChunkRepository) : IEnr
 
       case EChunkRepository.kWaterfall:
       case EChunkRepository.kBoxer:             
-      default:
          if (!waterfallRepository)
             waterfallRepository = new EnrichedChunkRepositoryDb()
-         return waterfallRepository;   
+         return waterfallRepository;  
+      default:          
+         throw new InvalidParameterError(`Invalid repository type: ${repository}`);
    }
 }
 

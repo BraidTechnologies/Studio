@@ -15,7 +15,6 @@ import * as QueryString from "qs";
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { getDefaultEnvironment } from "../../../CommonTs/src/IEnvironmentFactory";
-import { EEnvironment } from "../../../CommonTs/src/IEnvironment";
 
 export async function LoginWithLinkedIn(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
@@ -26,7 +25,7 @@ export async function LoginWithLinkedIn(request: HttpRequest, context: Invocatio
          requestedSession = value;
    }
 
-   if ((requestedSession === process.env.SessionKey) || (requestedSession === process.env.SessionKey2)) {
+   if ((requestedSession === process.env.BRAID_SESSION_KEY) || (requestedSession === process.env.BRAID_SESSION_KEY_2)) {
 
       context.log("Passed session key validation:" + requestedSession);
 
@@ -65,7 +64,7 @@ async function redirectToLinkedIn(request: HttpRequest, context: InvocationConte
    const environment = getDefaultEnvironment();
 
    // https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin%2Fcontext&tabs=HTTPS1
-   const clientID = process.env.LinkedInAppId;
+   const clientID = process.env.LINKEDIN_APP_ID;
    const redirectUrl = environment.authFromLinkedInApi();
    const scope = 'openid profile email';
    const state = stringifiedQuery;
@@ -113,7 +112,7 @@ async function redirectBackHomeWithFullPath(code: string, session: string, conve
       const data = {
          grant_type: 'authorization_code',
          code: code,
-         client_id: process.env.LinkedInAppId,
+         client_id: process.env.LINKEDIN_APP_ID,
          client_secret: process.env.LinkedInSecret,
          redirect_uri: environment.authFromLinkedInApi()
       };
@@ -188,7 +187,7 @@ async function processAuthFromLinkedIn(request: HttpRequest, context: Invocation
       }
    }
 
-   if (((session === process.env.SessionKey) || (session === process.env.SessionKey2))
+   if (((session === process.env.BRAID_SESSION_KEY) || (session === process.env.BRAID_SESSION_KEY_2))
       && code && secret) {
 
       return await redirectBackHomeWithFullPath(code, session, conversation, secret, context);

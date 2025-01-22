@@ -67,7 +67,7 @@ describe("Caucus", function () {
 
       newConnection = new BraidFluidConnection(persona);
 
-      let checked = process.env.SessionKey;
+      let checked = process.env.BRAID_SESSION_KEY;
       throwIfUndefined(checked);
       id = await newConnection.createNew(new SessionKey (checked), false);
 
@@ -220,7 +220,7 @@ describe("Caucus", function () {
       
       let end = new Date();
 
-      console.log ('Loading phase:' + (middle.getTime() - start.getTime()).toString() + '\n', 
+      console.info ('Loading phase:' + (middle.getTime() - start.getTime()).toString() + '\n', 
                    'Reading phase:' + (end.getTime() - middle.getTime()).toString() + '\n');
 
       expect(caucus.currentAsArray().length).toEqual(1000);

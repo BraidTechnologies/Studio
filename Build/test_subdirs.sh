@@ -15,9 +15,14 @@ for dir in "${directories[@]}"; do
         if [ -f "package.json" ]; then
             echo "Running npm run test..."
             npm run test
+            # Exit if npm run test fails
+            if [ $? -ne 0 ]; then
+                echo "npm run test failed in directory: $dir. Exiting script."
+                exit 1
+            fi
         else
-            echo "No package.json found, skipping..."
-            pytest
+            echo "No package.json found, running pytest..."
+            python3 -m pytest
         fi
         
         # Go back to the original directory

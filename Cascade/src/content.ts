@@ -220,15 +220,12 @@ function startScrape (key: string) : void {
 // Listen to messages from the popup.js script 
 chrome.runtime.onMessage.addListener(function (message: any) {
 	
-   console.log ("Got message");   
 
    if (message.type === "Key" && !haveStartedScrape) {
-      console.log ("Starting scrape");
       haveStartedScrape = true;
       startScrape (message.text);
    }
 });    
 
-console.log ("Content script loaded");
 
 //startScrape ("49b65194-26e1-4041-ab11-4078229f478a");

@@ -14,7 +14,7 @@ for dir in "${directories[@]}"; do
         # Check if package.json exists
         if [ -f "package.json" ]; then
             echo "Running npm run build..."
-            npm run build
+            npm run build || { echo "npm run build failed in $dir. Exiting script."; exit 1; }
         else
             echo "No package.json found, skipping..."
         fi

@@ -31,7 +31,8 @@ import { makeSummaryCall } from '../core/ApiCalls';
 
 import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
 import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { IEnrichedChunkSummary, EChunkRepository, kDefaultSimilarityThreshold } from '../../CommonTs/src/EnrichedChunk';
+import { IEnrichedChunkSummary } from '../../CommonTs/src/EnrichedQuery.Api.Types';
+import { EChunkRepository, kDefaultSimilarityThreshold } from '../../CommonTs/src/EnrichedChunk';
 import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
 
 export interface IConversationControllerProps {

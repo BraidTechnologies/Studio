@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.WARNING,
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',

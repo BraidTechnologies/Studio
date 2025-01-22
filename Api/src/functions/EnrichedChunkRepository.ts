@@ -8,10 +8,9 @@
  */
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedChunk";
-import { IRelevantEnrichedChunk, IChunkQuerySpec } from "../../../CommonTs/src/EnrichedChunk";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunkSummary, IEnrichedChunk, IChunkQuerySpec, IRelevantEnrichedChunk } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
-import { getEmbeddingModelDriver, getDefaultTextChunker, getDefaultEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultEmbeddingModelDriver } from "../../../CommonTs/src/IModelFactory";
 
 /**
  * Calculates the cosine similarity between two vectors.

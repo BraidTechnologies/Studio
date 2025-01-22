@@ -63,7 +63,7 @@ function getDefaultEmbeddingModelDriver() {
 function getEmbeddingModelDriver(model, provider) {
     switch (model) {
         case IModelDriver_1.EModel.kSmall:
-            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver(new ModelDrivers_OAI_1.OpenAiAda2EmbeddingModelInit());
+            return new ModelDrivers_OAI_1.OpenAIEmbeddingModelDriver(new ModelDrivers_OAI_1.OpenAiEmbed3SmallEmbeddingModelInit());
         case IModelDriver_1.EModel.kLarge:
         case IModelDriver_1.EModel.kReasoning:
         default:

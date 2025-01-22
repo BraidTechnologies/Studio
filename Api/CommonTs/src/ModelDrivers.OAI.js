@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OpenAITextChunker = exports.OpenAiO1TextChunkerInit = exports.OpenAiGpt4oTextChunkerInit = exports.OpenAiGpt4oMiniTextChunkerInit = exports.OpenAIChatModelDriver = exports.OpenAiO1ChatModelInit = exports.OpenAi4oMiniChatModelInit = exports.OpenAi4oChatModelInit = exports.OpenAIEmbeddingModelDriver = exports.OpenAiAda2EmbeddingModelInit = exports.OpenAiEmbed3EmbeddingModelInit = void 0;
+exports.OpenAITextChunker = exports.OpenAiO1TextChunkerInit = exports.OpenAiGpt4oTextChunkerInit = exports.OpenAiGpt4oMiniTextChunkerInit = exports.OpenAIChatModelDriver = exports.OpenAiO1ChatModelInit = exports.OpenAi4oMiniChatModelInit = exports.OpenAi4oChatModelInit = exports.OpenAIEmbeddingModelDriver = exports.OpenAiEmbed3SmallEmbeddingModelInit = exports.OpenAiEmbed3EmbeddingModelInit = void 0;
 exports.calculateEmbedding = calculateEmbedding;
 // Copyright (c) 2024 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
@@ -43,15 +43,15 @@ class OpenAiEmbed3EmbeddingModelInit {
     }
 }
 exports.OpenAiEmbed3EmbeddingModelInit = OpenAiEmbed3EmbeddingModelInit;
-class OpenAiAda2EmbeddingModelInit {
+class OpenAiEmbed3SmallEmbeddingModelInit {
     constructor() {
-        this.deploymentName = "Ada-2";
+        this.deploymentName = "Embed-3-Small";
         this.urlElement = "StudioEmbeddingSmall";
         this.drivenModelType = IModelDriver_1.EModel.kSmall;
         this.drivenModelProvider = IModelDriver_1.EModelProvider.kOpenAI;
     }
 }
-exports.OpenAiAda2EmbeddingModelInit = OpenAiAda2EmbeddingModelInit;
+exports.OpenAiEmbed3SmallEmbeddingModelInit = OpenAiEmbed3SmallEmbeddingModelInit;
 /**
  * Class representing an OpenAI embedding model driver.
  * Implements the IEmbeddingModelDriver interface.
@@ -102,7 +102,7 @@ function calculateEmbedding(text, urlElement) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'api-key': process.env.AzureAiKey
+                    'api-key': process.env.AZURE_OPENAI_API_KEY
                 }
             });
             const embedding = response.data.data[0].embedding;
@@ -211,7 +211,7 @@ function chat(persona, urlElement, prompt, params) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'api-key': process.env.AzureAiKey
+                    'api-key': process.env.AZURE_OPENAI_API_KEY
                 }
             });
             return { role: IModelDriver_1.EModelConversationRole.kAssistant,

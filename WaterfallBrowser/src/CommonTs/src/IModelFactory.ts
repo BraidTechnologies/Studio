@@ -17,7 +17,7 @@ import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, ITextC
 import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker, 
    OpenAi4oChatModelInit, OpenAiO1ChatModelInit, OpenAi4oMiniChatModelInit,
    OpenAiO1TextChunkerInit, OpenAiGpt4oTextChunkerInit, OpenAiGpt4oMiniTextChunkerInit, 
-   OpenAiEmbed3EmbeddingModelInit, OpenAiAda2EmbeddingModelInit } from './ModelDrivers.OAI';
+   OpenAiEmbed3EmbeddingModelInit, OpenAiEmbed3SmallEmbeddingModelInit } from './ModelDrivers.OAI';
 
 /**
  * Returns the default model which is an instance of GPT4o.
@@ -68,7 +68,7 @@ export function getEmbeddingModelDriver (model: EModel, provider: EModelProvider
 
    switch (model) {
       case EModel.kSmall:
-         return new OpenAIEmbeddingModelDriver(new OpenAiAda2EmbeddingModelInit());
+         return new OpenAIEmbeddingModelDriver(new OpenAiEmbed3SmallEmbeddingModelInit());
       case EModel.kLarge:
       case EModel.kReasoning:
       default:

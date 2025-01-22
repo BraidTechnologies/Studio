@@ -22,7 +22,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { IStudioBoxerResponseEnrichment} from "../../../CommonTs/src/StudioApi.Types";
-import { IEnrichedQuery } from "../../../CommonTs/src/EnrichedQuery";
+import { IEnrichedQueryRequest } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
 import { defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { askModel } from "./QueryModelWithEnrichment";
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
@@ -51,7 +51,7 @@ export async function boxerQuery(request: HttpRequest, context: InvocationContex
          context.log(question);
 
          // Translate from the simple MSTeams API to the one we use in Boxer app allowing more enrichments
-         const passOnSpec: IEnrichedQuery = {
+         const passOnSpec: IEnrichedQueryRequest = {
 
             repositoryId : EChunkRepository.kBoxer,
             similarityThreshold: kDefaultMinimumCosineSimilarity,

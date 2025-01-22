@@ -39,7 +39,7 @@ describe("StorablePage", async function () {
    let now = new Date().toUTCString();
 
    let env = getEnvironment(EEnvironment.kLocal);
-   let api = new PageRepostoryApi(env, process.env.SessionKey.toString());
+   let api = new PageRepostoryApi(env, process.env.BRAID_SESSION_KEY.toString());
 
    let key = randomKey();
    let htmlFromFile = loadHtmlFromFile ("test/page_test.html");

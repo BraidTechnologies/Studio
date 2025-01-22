@@ -18,7 +18,7 @@ import requests
 from CommonPy.src.request_utilities import request_timeout
 
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 def summarise_endpoint_url():
     # Construct the full URL for the summary endpoint
