@@ -32,11 +32,13 @@ Boxer
 
 *   **As a user, I want to ask questions to an LLM, and get both an answer and a link to relevant content, so that I can learn about AI**.
 
-*   **As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
-
 *   **As a user, I want to get suggestions based on content I have interacted with, so that I can discover related information**.
 
+*   **As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
+
 *   **As a user, I want to use a system that adapts to rapidly evolving AI fields by processing and summarizing current content, so that I can stay up-to-date with developments in the field**.
+
+*   **As a user, I want a system that has been evaluated for completeness of coverage so I can be confident in getting a good anwser to my questions**.
 
 *   **As a user, I want to explore AI capabilities firsthand through interactive tools, so that I can get hands-on experience with AI**.
 
@@ -54,9 +56,6 @@ Boxer
 
 *   **As a user, I want to have the option to get a recap of a conversation**.
 
-*   **As a user, I want a system that has been evaluated for completeness of coverage so I can be confident in getting a good anwser to my questions**.
-
-*   **As a user, I want the system to have been tested with different personas such as tester, developer, and business analyst**.
 
 *   **As a user, I want to be able delete my messages**.
 

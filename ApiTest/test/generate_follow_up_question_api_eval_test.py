@@ -1,3 +1,8 @@
+'''
+Test the generate_follow_up_question API
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-002-Suggest-related-content.feature.md
+'''
+
 import os
 import pytest
 import requests
