@@ -6,5 +6,10 @@
    "debug.internalConsoleOptions": "neverOpen",
    "azureFunctions.projectLanguageModel": 4,
    "azureFunctions.preDeployTask": "npm prune (functions)",
-   "azureFunctions.projectSubpath": "Api"
+   "azureFunctions.projectSubpath": "Api",
+   "python.testing.pytestArgs": [
+      "ApiTest"
+   ],
+   "python.testing.unittestEnabled": false,
+   "python.testing.pytestEnabled": true
 }

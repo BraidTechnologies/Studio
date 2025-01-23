@@ -212,8 +212,6 @@ def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrich
         response.status_code}"
 
 # pylint: disable=redefined-outer-name
-
-
 def test_enriched_query_timeout(valid_request_payload_fixture: IEnrichedQueryRequest):
     '''
     Test the enriched query API with a timeout.

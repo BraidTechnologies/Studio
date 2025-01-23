@@ -32,7 +32,7 @@ Boxer
 
 *   **As a user, I want to ask questions to an LLM, and get both an answer and a link to relevant content, so that I can learn about AI**.
 
-*   **As a user, I want to process open-source documents from the web (YouTube videos, GitHub repositories, and plain HTML text) so that I can load AI-generated summaries into a document store**.
+*   **As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
 
 *   **As a user, I want to get suggestions based on content I have interacted with, so that I can discover related information**.
 

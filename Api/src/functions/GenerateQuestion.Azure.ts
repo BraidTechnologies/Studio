@@ -44,7 +44,7 @@ export async function generateQuestion(request: HttpRequest, context: Invocation
       try {
          const jsonRequest = await request.json();
                   
-         const query = (jsonRequest as any)?.data as IGenerateQuestionRequest;
+         const query = (jsonRequest as any)?.request as IGenerateQuestionRequest;
 
          context.log (query);
          const response = await askModel(query);
@@ -57,7 +57,7 @@ export async function generateQuestion(request: HttpRequest, context: Invocation
          };
       }
       catch (e: any) {
-         context.error (e);
+         context.error (e.response?.data?.error? e.response.data.error : e);
          return defaultErrorResponse();
       }
    }
