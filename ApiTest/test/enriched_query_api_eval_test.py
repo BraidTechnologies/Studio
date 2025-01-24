@@ -42,6 +42,9 @@ SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 # Construct the full URL to the /chunk endpoint
 EMBED_URL = f'{BASE_URL}/embed?session=' + SESSION_KEY
 
+PAGE_SUMMARY = 'The State of Open Source AI Book discusses the role of hardware in machine learning, specifically GPUs. GPUs are well-suited for AI computations due to their parallelization capabilities and specialized hardware for deep learning operations.'
+VIDEO_SUMMARY = 'The video discusses the patterns for augmenting language models with external context, including retrieval augmentation, chaining, and tool use. It explores the limitations of language models and the need for additional data and tools to enhance their performance. The video provides an overview of information retrieval techniques and explains how to make the most of the limited context window of language models.'
+ 
 
 def embed_text(text_to_embed: str) -> list[float]:
 
@@ -61,6 +64,13 @@ SAMPLE_RESPONSE = (
     "coherent and contextually relevant text."
 )
 
+SAMPLE_YOUTUBE_RESPONSE = (
+   "Welcome to CS25s introductory lecture on Transformers, a course created and taught at Stanford "
+   "in Fall 2021. This course focuses on deep learning models known as transformers, which have "
+   "revolutionized fields such as NLP, computer vision, and reinforcement learning. The lecture "
+   "introduces the instructors and covers the basics of transformer architecture, including "
+   "self-attention mechanisms, encoder-decoder structure, and their advantages and drawbacks."
+)
 
 sampleqas = [
     {'q': "How do I integrate an LLM into my Python application?",
@@ -175,12 +185,20 @@ def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrich
 
 
 @pytest.mark.skip(reason='Helper function, not a test')
-def test_enriched_query_success(payload: IEnrichedQueryRequest, expected_chunks: int, expected_embedding: list[float], threshold: float):
+def test_enriched_query_success(payload: IEnrichedQueryRequest, 
+                                expected_chunks: int, 
+                                expected_embedding: list[float], 
+                                threshold: float, 
+                                is_youtube: bool = False,
+                                dont_care = True):
     '''
     Test the enriched query API with a successful response.
     Makes a request to the API and checks the response, including checking cosine similarity against a target response,
     then enumerating relevant chunks and also testing their cosine similarity
     '''
+    has_youtube = False
+    has_non_youtube = False
+
     try:
        enriched_query_api = EnrichedQueryApi()
        enriched_response = enriched_query_api.enriched_query(payload)
@@ -206,8 +224,18 @@ def test_enriched_query_success(payload: IEnrichedQueryRequest, expected_chunks:
         for chunk in enriched_response.chunks:
             # pylint: disable=no-member
             embedded_chunk = embed_text(chunk.chunk.summary)
+            if chunk.chunk.url.lower().find("youtube") != -1:
+                has_youtube = True
+            else:
+                has_non_youtube = True
             assert cosine_similarity(
                 embedded_chunk, expected_embedding) > threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+
+    if not dont_care:
+      if is_youtube:
+        assert has_youtube, "Expected YouTube URL in the response"
+      else:
+        assert has_non_youtube, "Expected non-YouTube URL in the response"
 
 
 def test_enriched_simple_function():
@@ -262,6 +290,33 @@ def test_enriched_simple_function_list():
         except requests.exceptions.RequestException as e:
             pytest.fail(f"Function from sample list failed: {e}")
 
+def test_enriched_from_youtube():
+    '''
+    Test the enriched query API with a simple function where we specifically want a youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(VIDEO_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + VIDEO_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, True, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Youtube test failed: {e}")
+
+def test_enriched_from_html():
+    '''
+    Test the enriched query API with a simple function where we specifically want a non-youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(PAGE_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + PAGE_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, False, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Html content test failed: {e}")
 
 if __name__ == '__main__':
     pytest.main()

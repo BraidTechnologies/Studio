@@ -14,7 +14,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 from .request_utilities import request_timeout
 from .embed_api_types import IEmbedRequest, IEmbedResponse
-from .type_utilities import safe_dict_to_object, safe_cast
+from .type_utilities import safe_dict_to_object
 
 # Set up logging to display information about the execution of the script
 logging.basicConfig(level=logging.WARNING,
@@ -74,5 +74,4 @@ class EmbeddingApi:
             raise RuntimeError('Error returned from API:' + response.text)
 
         return None
-    
-    
+
