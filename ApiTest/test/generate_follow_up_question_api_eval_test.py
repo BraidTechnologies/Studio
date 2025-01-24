@@ -3,39 +3,14 @@ Test the generate_follow_up_question API
 @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-002-Suggest-related-content.feature.md
 '''
 
-import os
 import pytest
-import requests
+
+from CommonPy.src.enriched_query_api import EnrichedQueryApi
 from CommonPy.src.enriched_query_api_types import IGenerateQuestionRequest, IQuestionGenerationResponse
-from CommonPy.src.type_utilities import safe_dict_to_object
-from CommonPy.src.request_utilities import request_timeout
 
-# Configure the base URL for the API.
-BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['BRAID_SESSION_KEY']
-
-# Construct the full URL to the /GenerateQuestion endpoint
-GENERATE_FOLLOWUP_QUESTION_API_URL = f'{BASE_URL}/GenerateQuestion?session=' + SESSION_KEY
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-}
-
-def suggest_content(request: IGenerateQuestionRequest):
-    wrapped = {
-        'request': request.__dict__
-    }
-
-    # send the request to the API
-    response = requests.post(GENERATE_FOLLOWUP_QUESTION_API_URL, json=wrapped, headers=headers, timeout=request_timeout)
-
-    # Check for successful response
-    assert response.status_code == 200, f'Unexpected status code: {
-        response.status_code}'
-    
-    return safe_dict_to_object (response.json(), IQuestionGenerationResponse)
+def suggest_content(request: IGenerateQuestionRequest) -> IQuestionGenerationResponse:
+    enriched_query_api = EnrichedQueryApi()
+    return enriched_query_api.generate_question(request)
 
 @pytest.fixture
 def suggest_content_fixture():
