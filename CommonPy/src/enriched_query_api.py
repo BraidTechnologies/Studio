@@ -1,4 +1,9 @@
-'''API to store data in the Chunk table of the Braid Apis '''
+'''
+API client for the enriched query service.
+
+This module provides a client for interacting with the enriched query API endpoints,
+which handle semantic search, question generation, and retrieval of enriched text chunks.
+'''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -26,6 +31,19 @@ headers = {
 }
 
 class EnrichedQueryApi:
+    '''
+    API client for the enriched query service.
+
+    This class provides a client for interacting with the enriched query API endpoints,
+    which handle semantic search, question generation, and retrieval of enriched text chunks.
+
+    Attributes:
+        session: A requests Session object configured with retry logic
+
+    Methods:
+        generate_question: Generates follow-up questions based on provided text
+        enriched_query: Performs semantic search and retrieves enriched text chunks
+    '''
 
 
     def __init__(self):

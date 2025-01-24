@@ -30,8 +30,10 @@ import requests
 
 from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedResponse
 from CommonPy.src.enriched_query_api import EnrichedQueryApi
-from CommonPy.src.request_utilities import request_timeout
 from CommonPy.src.cosine_similarity import cosine_similarity
+
+from CommonPy.src.embed_api import EmbeddingApi
+from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -43,27 +45,13 @@ EMBED_URL = f'{BASE_URL}/embed?session=' + SESSION_KEY
 
 def embed_text(text_to_embed: str) -> list[float]:
 
-    # Define a valid request payload according to the JSON schema
-    valid_request = {
-        'text': text_to_embed
-    }
-
-    wrapped = {
-        'request': valid_request
-    }
-
-    # send the request to the API
-    response = requests.post(EMBED_URL, json=wrapped, timeout=request_timeout)
-
-    # Check for successful response
-    assert response.status_code == 200, f'Unexpected status code: {
-        response.status_code}'
-
-    # Validate response structure
-    response_data = response.json()
+    embed_api = EmbeddingApi()
+    embed_request = IEmbedRequest()
+    embed_request.text = text_to_embed
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
 
     # Check if embedding is a list
-    return response_data.get('embedding')
+    return embed_response.embedding
 
 
 SAMPLE_RESPONSE = (
