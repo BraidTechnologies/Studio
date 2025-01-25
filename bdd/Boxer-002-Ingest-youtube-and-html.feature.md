@@ -1,0 +1,1 @@
+**As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
