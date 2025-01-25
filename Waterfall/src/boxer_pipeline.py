@@ -1,5 +1,6 @@
 '''driver for the entire Boxer data generation pipeline '''
 # Copyright (c) 2024 Braid Technologies Ltd
+# @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-004-Search-dynamic-list-of-content.md
 
 # Standard Library Imports
 import logging
@@ -25,7 +26,7 @@ logging.getLogger().setLevel(logging.WARNING)
 
 class BoxerDataPipeline:
     '''
-    Searches for HTML & YouTube  from a list of links.
+    Searches for HTML & YouTube from a list of links.
 
     Returns:
        list[str]: A list of HTML content downloaded from the specified links.

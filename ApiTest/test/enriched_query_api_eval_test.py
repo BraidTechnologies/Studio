@@ -20,6 +20,7 @@ The objective of this module is to evaluate the accuracy of the enriched query A
 
 @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-001-Question-with-0-many-related-documents.feature.md
 @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-003-Ingest-youtube-and-html.feature.md
+@link 
 
 '''
 
@@ -27,10 +28,11 @@ The objective of this module is to evaluate the accuracy of the enriched query A
 
 import os
 import copy
+import random
 import pytest
 import requests
 
-from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedResponse
+from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse
 from CommonPy.src.enriched_query_api import EnrichedQueryApi
 from CommonPy.src.cosine_similarity import cosine_similarity
 
@@ -187,10 +189,10 @@ def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrich
 
 
 @pytest.mark.skip(reason='Helper function, not a test')
-def test_enriched_query_success(payload: IEnrichedQueryRequest, 
-                                expected_chunks: int, 
-                                expected_embedding: list[float], 
-                                threshold: float, 
+def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                expected_chunks: int,
+                                expected_embedding: list[float],
+                                threshold: float,
                                 is_youtube: bool = False,
                                 dont_care = True):
     '''
@@ -319,6 +321,51 @@ def test_enriched_from_html():
         test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, False, False)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Html content test failed: {e}")
+
+def test_evaluate_coverage():
+    '''
+    Test the enriched query API with a list of primed questions and answers.
+    '''
+
+    valid_request = copy.deepcopy(valid_request_payload())
+    valid_request.question = 'What is an LLM?'
+    enriched_query_api = EnrichedQueryApi()
+    last_chunk_url = ''
+
+    relevances: list[float] = [];
+                
+    count = 50
+    for i in range(count):
+       try:
+          enriched_response = enriched_query_api.enriched_query(valid_request)
+
+          if (enriched_response.chunks is not None and len(enriched_response.chunks) > 0):
+             relevances.append(enriched_response.chunks[0].relevance)
+
+             #If we pull back the same chaunk as last time, try a new question
+             if last_chunk_url == enriched_response.chunks[0].chunk.url:
+                 valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']
+             else:
+                 last_chunk_url = enriched_response.chunks[0].chunk.url
+
+                 follow_up_question_request: IGenerateQuestionRequest = IGenerateQuestionRequest()
+                 follow_up_question_request.summary = enriched_response.chunks[0].chunk.summary
+                 follow_up_question_request.wordTarget = 15
+                 new_question : IQuestionGenerationResponse= enriched_query_api.generate_question(follow_up_question_request)
+                 valid_request.question = new_question.question
+          else:
+             print(f'No relevant document found for question: {valid_request.question}')
+             valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']             
+
+       except requests.exceptions.RequestException as e:
+          pytest.fail(f"API request failed: {e}")
+
+    
+    print(f'{len(relevances)} relevances, average: {sum(relevances) / len(relevances)}')
+
+    assert len(relevances) > count * 0.95, "Less than 95% of relevances found"
+    assert sum(relevances) / len(relevances) > 0.5, "Average relevance is less than 50%"
+
 
 if __name__ == '__main__':
     pytest.main()

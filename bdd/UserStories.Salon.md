@@ -34,7 +34,7 @@ Boxer
 
 *   **As a user, I want to get suggestions based on content I have interacted with, so that I can discover related information**.
 
-*   **As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
+*   **As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can access AI-related material from both source types**
 
 *   **As a user, I want to use a system that adapts to rapidly evolving AI fields by processing and summarizing current content, so that I can stay up-to-date with developments in the field**.
 
@@ -55,7 +55,6 @@ Boxer
 *   **As a user, I want to be able to 'like' and 'dislike' specific documents provided in response to my question**.*
 
 *   **As a user, I want to have the option to get a recap of a conversation**.
-
 
 *   **As a user, I want to be able delete my messages**.
 
