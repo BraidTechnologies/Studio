@@ -1,4 +1,4 @@
-**As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can load AI-generated summaries into a document store**.
+**As a user, I want to process open-source documents from the web (YouTube videos, and plain HTML text) so that I can access AI-related material from both source types**.
 
 ### Scenario: YouTube Content Found
 **Given** I ask a question that matches YouTube content  
