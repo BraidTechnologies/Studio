@@ -164,7 +164,7 @@ export function getChatPersona (persona: EPromptPersona, userPrompt: string, par
 
       case EPromptPersona.kDeveloperQuestionGenerator:
          const developerQuestionGeneratorTemplate = DeveloperQuestionGeneratorPersona;
-         developerQuestionGeneratorTemplate.systemPrompt = "You are an AI asistant that generates a question after a developer has read an article about AI. The question is a single sentence of no more than 10 words. The question is one that the developer might ask as a follow up to reading the article.";
+         developerQuestionGeneratorTemplate.systemPrompt = "You are an AI asistant that generates a question after a developer has read an article about AI. The question is a single sentence of no more than 10 words. The question is one that the developer might ask as a follow up to reading the article. The question must be about generative AI or LLMs.";
          developerQuestionGeneratorTemplate.itemPrompt = userPrompt;
          return developerQuestionGeneratorTemplate;
 

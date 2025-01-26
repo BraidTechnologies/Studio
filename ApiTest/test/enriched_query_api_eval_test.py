@@ -328,6 +328,7 @@ def test_evaluate_coverage():
     '''
 
     valid_request = copy.deepcopy(valid_request_payload())
+    valid_request.similarityThreshold = 0.35
     valid_request.question = 'What is an LLM?'
     enriched_query_api = EnrichedQueryApi()
     last_chunk_url = ''

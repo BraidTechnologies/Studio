@@ -78,7 +78,7 @@ export class QueryModelApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            data: query
+            request: query
          });
 
          if (response.status === 200) {
