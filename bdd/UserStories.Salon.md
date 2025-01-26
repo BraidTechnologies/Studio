@@ -3,8 +3,6 @@ Waterfall
 
 *   **As a user, I want to conduct a web search, download relevant web pages, summarise them, and find common topics using cluster analysis.**
 
-*   **As a user, when downloading web pages, I want the system to ignore irrelevant text such as web page navigation and javascript.**
-
 *   **As a user, I want to generate an interactive report on the most common topics found from a set of documents.**
 
 *   **As a user, when looking at reports, I want to navigate between related chunks of data, so that I can explore interconnected information.**
@@ -39,6 +37,8 @@ Boxer
 *   **As a user, I want to use a system that adapts to rapidly evolving AI fields by processing and summarizing current content, so that I can stay up-to-date with developments in the field**.
 
 *   **As a user, I want a system that has been evaluated for completeness of coverage so I can be confident in getting a good anwser to my questions**.
+
+*   **As a user, when I look at summarised web pages, I want the system to have ignored irrelevant text such as web page navigation and javascript.**
 
 *   **As a user, I want to explore AI capabilities firsthand through interactive tools, so that I can get hands-on experience with AI**.
 
