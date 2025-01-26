@@ -16,8 +16,12 @@ FUNC_PID=$!
 sleep 10
 
 # This starts the server to preload the repository from CosmosDB
-npm run test-warm > /dev/null 2>&1 &
+npm run test-warm& > /dev/null 2>&1 &
+TEST_WARM_PID=$!
 cd ..
+
+# Wait for 20 seconds to allow database to warm up
+sleep 30
 
 # Function to cleanup fluid process on script exit
 cleanup() {
@@ -27,6 +31,9 @@ cleanup() {
       echo "Cleaning up func process..."
       kill $FUNC_PID
       wait $FUNC_PID 2>/dev/null
+      echo "Cleaning up test-warm process..."
+      kill $TEST_WARM_PID
+      wait $TEST_WARM_PID 2>/dev/null
 }
 
 # Register cleanup function to run on script exit
