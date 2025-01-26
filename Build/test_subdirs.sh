@@ -3,6 +3,33 @@
 # List of directories to process
 directories=("CommonTs" "CommonPy" "Api" "ApiTest" "Cascade" "Waterfall" "WaterfallBrowser" "Boxer" "Teams")
 
+# Start npm run local-fluid in Api directory
+cd Api
+npm run local-fluid &
+FLUID_PID=$!
+
+# Start func start in Api directory
+func start&
+FUNC_PID=$!
+
+# This starts the server to preload the repository from CosmosDB
+npm run test-warm
+cd ..
+
+# Function to cleanup fluid process on script exit
+cleanup() {
+      echo "Cleaning up local-fluid process..."
+      kill $FLUID_PID
+      wait $FLUID_PID 2>/dev/null
+      echo "Cleaning up func process..."
+      kill $FUNC_PID
+      wait $FUNC_PID 2>/dev/null
+}
+
+# Register cleanup function to run on script exit
+trap cleanup EXIT
+
+
 # Iterate through the specified directories
 for dir in "${directories[@]}"; do
     if [ -d "$dir" ]; then

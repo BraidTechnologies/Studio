@@ -85,7 +85,7 @@ class QueryModelApi extends Api_1.Api {
             let empty = undefined;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: query
+                    request: query
                 });
                 if (response.status === 200) {
                     return response.data;
