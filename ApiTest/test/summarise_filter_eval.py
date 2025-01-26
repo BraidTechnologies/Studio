@@ -1,5 +1,6 @@
 """
 Test the summarise filter
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-006-System-ignores-html.feature.md
 """
 
 import os
