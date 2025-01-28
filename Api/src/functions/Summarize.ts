@@ -20,9 +20,9 @@
  * - 'func start' to run locally
  */
 
-import { getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
+import { getChatModelDriver, getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
-import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { IModelConversationPrompt, EModel, EModelProvider } from "../../../CommonTs/src/IModelDriver";
 
 const chunker = getDefaultTextChunker();
 
@@ -51,6 +51,12 @@ function chunkText(text: string, overlapWords: number): Array<string> {
 async function singleShotSummarize(persona: EPromptPersona, text: string, words: number): Promise<string> {
 
    let modelDriver = getDefaultChatModelDriver();
+
+   // TODO - consider a getDriverforPersona() function
+   if (persona === EPromptPersona.kC4Diagrammer) {
+      modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
+   }
+
    let prompt : IModelConversationPrompt = {
       history: [],
       prompt: text

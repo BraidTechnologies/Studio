@@ -11,8 +11,6 @@ Waterfall
 
 *   **As a user, I want to access Waterfall from within the Teams environment, so that I can use them in my workflow with my colleagues.**
 
-*   **As a user, I want to generate a database of useful material by downloading AI content from web URLs and YouTube playlists, so that I can use it to enrich search in Boxer.**
-
 
 
 Salon

@@ -12,6 +12,7 @@ The main class RepoToC4 handles the repository traversal and processing logic.
 
 import os
 import argparse
+import time
 from pathlib import Path
 import requests
 
@@ -24,8 +25,8 @@ def summarise_endpoint_url():
     # Construct the full URL for the summary endpoint
     return f'{BASE_URL}/Summarize?session=' + SESSION_KEY
 
-def summarise_code(source: str) -> str:
 
+def summarise_code(source: str) -> str:
 
     payload = {
         'persona': 'C4Diagrammer',
@@ -35,12 +36,20 @@ def summarise_code(source: str) -> str:
     wrapped = {
         'request': payload
     }
-    response = requests.post(summarise_endpoint_url(),
-                             json=wrapped, timeout=request_timeout)
-    if response.status_code == 200:
-        data = response.json()
-        if 'summary' in data:
-            return data['summary']
+
+    # Sleep for 30 seconds to allow rate limit to subside
+    print("Sleeping for 120 seconds to allow rate limit to subside")
+    time.sleep(120)
+    try:
+        response = requests.post(summarise_endpoint_url(),
+                                 json=wrapped, timeout=request_timeout*3)
+        if response.status_code == 200:
+           data = response.json()
+           if 'summary' in data:
+              return data['summary']
+    except Exception as e:
+        print(f"Error during summarise_code: {e}, continuing.")
+        return None
 
     return None
 
@@ -89,13 +98,11 @@ class RepoToC4:
         for d in dirs:
             have_readme_and_salon_files = False    
 
-            print(f"Processing directory: {d}")
             # Check if there is a file named 'readme.md' (or a case variation) in the directory
             readme_file = next((f for f in os.listdir(
                 os.path.join(self.repo_path, d)) if f.lower() == 'readme.md'), None)
             
             if readme_file:
-                print(f"Found 'readme.md' (or a case variation of that file name) in the directory: {d}")
                 readme_text = ""
                 with open(os.path.join(self.repo_path, d, readme_file), 'r', encoding='utf-8') as file:
                     readme_text = file.read()
@@ -109,8 +116,6 @@ class RepoToC4:
                             sub_dir_path) if f.lower() == 'readme.salon.md'), None)
                         if readme_salon_file:
                             have_readme_and_salon_files = True
-                            print(f"Found 'ReadMe.Salon.Md' (or a case variation of that file name) in the subdirectory: {
-                                sub_dir_path}")
                             with open(os.path.join(self.repo_path, d, sub_dir_path, readme_salon_file), 'r', encoding='utf-8') as file:
                                 readme_salon_text = file.read() 
                                 readme_text += "\n\n"
@@ -122,22 +127,25 @@ class RepoToC4:
                     prompt += "\n\n"
                     prompt += readme_text
 
-                    summary = summarise_code(prompt)                    
-                    self.write_file_version(d, 'C4Context.Salon.md', summary)
+                    summary = summarise_code(prompt)  
+                    if summary:              
+                       self.write_file_version(d, 'C4Context.Salon.md', summary)
 
                     prompt = "Please generate a C4Container diagram in mermaid format from the following description of a software system. Only generate mermaid content. Group components with container boundaies if possible, but pay attention to syntax - a small diagram that is syntactically correct is better than a large diagram with errors. "
                     prompt += "\n\n"
                     prompt += readme_text
 
-                    summary = summarise_code(prompt)                    
-                    self.write_file_version(d, 'C4Container.Salon.md', summary)
+                    summary = summarise_code(prompt)
+                    if summary:                                     
+                       self.write_file_version(d, 'C4Container.Salon.md', summary)
 
                     prompt = "Please generate a C4Component diagram in mermaid format from the following description of a software system. Only generate mermaid content. Group components with container boundaies if possible, but pay attention to syntax - a small diagram that is syntactically correct is better than a large diagram with errors."
                     prompt += "\n\n"
                     prompt += readme_text
 
-                    summary = summarise_code(prompt)     
-                    self.write_file_version(d, 'C4Component.Salon.md', summary)                       
+                    summary = summarise_code(prompt)
+                    if summary:                     
+                       self.write_file_version(d, 'C4Component.Salon.md', summary)                       
 
             
 def parse_arguments():

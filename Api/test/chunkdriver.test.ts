@@ -29,7 +29,7 @@ describe("Chunk Driver", async function () {
 
    });
 
-   it("Needs to judge small text", async function () {
+   it("Needs to chunk small text", async function () {
       
       let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
       let text = "small text";
@@ -38,7 +38,7 @@ describe("Chunk Driver", async function () {
 
    });   
 
-   it("Needs to judge large text", async function () {
+   it("Needs to chunk large text", async function () {
       
       let model = getTextChunker(EModel.kSmall, EModelProvider.kOpenAI);
 
@@ -83,5 +83,14 @@ describe("Chunk Driver", async function () {
 
       expect (overlappedLength > baseLength).toBe (true) ;   
    });  
+
+   it("Needs to provide DeepSeek compatible model", async function () {
+      
+      let model = getTextChunker(EModel.kLarge, EModelProvider.kDeepSeek);
+
+      expect (model.drivenModelProvider.length > 0).toBe (true) ;   
+      expect (model.defaultChunkSize > 0).toBe (true) ;   
+      expect (model.drivenModelType).toEqual(EModel.kReasoning);
+   });   
 
 });
