@@ -239,16 +239,18 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
 
    try {
       if (! useAzure) {
+         const apiKey = process.env.OPENAI_API_KEY;
+
          const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             messages: messages,
-            model: 'o1'        
+            model: 'gpt-4o'
          },
-            {
-               headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`                   
-               }
-            });
+         {
+            headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${apiKey}`
+            }
+         })
 
          return {
             role: EModelConversationRole.kAssistant,

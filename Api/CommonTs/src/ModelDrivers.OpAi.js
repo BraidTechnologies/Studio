@@ -207,13 +207,14 @@ function chat(persona, urlElement, prompt, params, useAzure) {
         });
         try {
             if (!useAzure) {
+                const apiKey = process.env.OPENAI_API_KEY;
                 const response = yield axios_1.default.post('https://api.openai.com/v1/chat/completions', {
                     messages: messages,
-                    model: 'o1'
+                    model: 'gpt-4o'
                 }, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+                        'Authorization': `Bearer ${apiKey}`
                     }
                 });
                 return {
