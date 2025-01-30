@@ -1,5 +1,5 @@
 /**
- * @module IModelDrivers.OAI
+ * @module ModelDrivers.OpAi
  * 
  * This module provides OpenAI-specific implementations for embedding model drivers.
  * It includes functionality to calculate text embeddings using Azure OpenAI services.
@@ -23,12 +23,12 @@ import { InvalidParameterError } from './Errors';
 
 import GPT4Tokenizer from 'gpt4-tokenizer';
 
-interface OpenAIChatElement {
+const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
+
+export interface OpenAIChatElement {
    role: string;
    content: string;
 }
-
-const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });
 
 export interface IOpenAiEmbeddingModelInit {
    deploymentName: string;
@@ -186,7 +186,7 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
    generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
       params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
-      return chat(persona, this.urlElement, prompt, params);
+      return chat(persona, this.urlElement, prompt, params, this.drivenModelType !== EModel.kReasoning);
    }
 }
 
@@ -197,11 +197,12 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * @param urlElement The element of the URL to use for the chat
  * @param prompt The conversation prompt containing the system and user messages
  * @param params The parameters for the prompt
+ * @param useAzure Whether to use the Azure OpenAI service or the OpenAI service
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
 async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelConversationPrompt, 
-   params: IChatModelDriverParams): Promise<IModelConversationElement> {
+   params: IChatModelDriverParams, useAzure: boolean): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
    axiosRetry(axios, {
@@ -237,19 +238,42 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
    });
 
    try {
-      const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/' 
-         + urlElement + '/chat/completions?api-version=2024-06-01', {
-         messages: messages
-      },
-      {
-         headers: {
-            'Content-Type': 'application/json',
-            'api-key': process.env.AZURE_OPENAI_API_KEY
-         }
-      });
+      if (! useAzure) {
+         const apiKey = process.env.OPENAI_API_KEY;
 
-      return {role: EModelConversationRole.kAssistant, 
-         content: response.data.choices[0].message.content};
+         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            messages: messages,
+            model: 'gpt-4o'
+         },
+         {
+            headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${apiKey}`
+            }
+         })
+
+         return {
+            role: EModelConversationRole.kAssistant,
+            content: response.data.choices[0].message.content
+         };
+      }
+      else {
+         const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/' 
+            + urlElement + '/chat/completions?api-version=2024-06-01', {
+            messages: messages
+         },
+         {
+            headers: {
+               'Content-Type': 'application/json',
+               'api-key': process.env.AZURE_OPENAI_API_KEY
+            }
+         });
+
+         return {
+            role: EModelConversationRole.kAssistant,
+            content: response.data.choices[0].message.content
+         };
+      }
    }
    catch (error) {
       console.error(error);
