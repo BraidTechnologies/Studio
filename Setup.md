@@ -9,6 +9,7 @@ Azure Functions Core Tools https://learn.microsoft.com/en-us/azure/azure-functio
 
 # Environment Variables #
 AZURE_OPENAI_API_KEY=
+BRAID_ENVIRONMENT=
 BRAID_SESSION_KEY=
 BRAID_SESSION_KEY_2=
 COSMOS_API_KEY=
@@ -17,4 +18,5 @@ LINKEDIN_APP_ID=
 LINKEDIN_APP_SECRET=
 GOOGLE_DEVELOPER_API_KEY=
 OPENAI_API_KEY=
+GROQ_API_KEY=
 PYTHONPATH=[Path to Braid Studio repo root]

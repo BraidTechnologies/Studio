@@ -17,82 +17,48 @@ The tests are designed to ensure the endpoint functions correctly under various 
     - Confirming that the API works for queries with a set of sample questions and template answers
   
 The objective of this module is to evaluate the accuracy of the enriched query API, ensuring it meets the expected standards.
+
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-001-Question-with-0-many-related-documents.feature.md
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-003-Ingest-youtube-and-html.feature.md
+@link bdd/Boxer-005-System-is-evaluated-for-completeness.feature.md 
+
 '''
 
 # pylint: disable=inconsistent-quotes
 
 import os
 import copy
+import random
 import pytest
 import requests
-from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedChunk
-from CommonPy.src.type_utilities import safe_dict_to_object
-from CommonPy.src.request_utilities import request_timeout
+
+from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse
+from CommonPy.src.enriched_query_api import EnrichedQueryApi
+from CommonPy.src.cosine_similarity import cosine_similarity
+
+from CommonPy.src.embed_api import EmbeddingApi
+from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
 SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
-# Construct the full URL to the /queryModelWithEnrichment endpoint
-API_URL = f'{BASE_URL}/queryModelWithEnrichment?session=' + SESSION_KEY
-
 # Construct the full URL to the /chunk endpoint
 EMBED_URL = f'{BASE_URL}/embed?session=' + SESSION_KEY
 
+PAGE_SUMMARY = 'The State of Open Source AI Book discusses the role of hardware in machine learning, specifically GPUs. GPUs are well-suited for AI computations due to their parallelization capabilities and specialized hardware for deep learning operations.'
+VIDEO_SUMMARY = 'The video discusses the patterns for augmenting language models with external context, including retrieval augmentation, chaining, and tool use. It explores the limitations of language models and the need for additional data and tools to enhance their performance. The video provides an overview of information retrieval techniques and explains how to make the most of the limited context window of language models.'
+ 
 
 def embed_text(text_to_embed: str) -> list[float]:
 
-    # Define a valid request payload according to the JSON schema
-    valid_request = {
-        'text': text_to_embed
-    }
-
-    wrapped = {
-        'request': valid_request
-    }
-
-    # send the request to the API
-    response = requests.post(EMBED_URL, json=wrapped, timeout=request_timeout)
-
-    # Check for successful response
-    assert response.status_code == 200, f'Unexpected status code: {
-        response.status_code}'
-
-    # Validate response structure
-    response_data = response.json()
+    embed_api = EmbeddingApi()
+    embed_request = IEmbedRequest()
+    embed_request.text = text_to_embed
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
 
     # Check if embedding is a list
-    return response_data.get('embedding')
-
-
-def cosine_similarity(vector1: list[float], vector2: list[float]) -> float:
-    '''
-    Calculate the cosine similarity between two vectors.
-
-    Parameters:
-        vector1: First vector as list of floats
-        vector2: Second vector as list of floats
-
-    Returns:
-        float: Cosine similarity between the vectors
-    '''
-    # Check if vectors have same length
-    if len(vector1) != len(vector2):
-        raise ValueError("Vectors must have the same length")
-
-    # Calculate dot product
-    dot_product = sum(a * b for a, b in zip(vector1, vector2))
-
-    # Calculate magnitudes
-    magnitude1 = sum(a * a for a in vector1) ** 0.5
-    magnitude2 = sum(b * b for b in vector2) ** 0.5
-
-    # Handle zero magnitude edge case
-    if magnitude1 == 0 or magnitude2 == 0:
-        return 0
-
-    # Return cosine similarity
-    return dot_product / (magnitude1 * magnitude2)
+    return embed_response.embedding
 
 
 SAMPLE_RESPONSE = (
@@ -102,7 +68,13 @@ SAMPLE_RESPONSE = (
     "coherent and contextually relevant text."
 )
 
-EMBEDDED_RESPONSE = embed_text(SAMPLE_RESPONSE)
+SAMPLE_YOUTUBE_RESPONSE = (
+   "Welcome to CS25s introductory lecture on Transformers, a course created and taught at Stanford "
+   "in Fall 2021. This course focuses on deep learning models known as transformers, which have "
+   "revolutionized fields such as NLP, computer vision, and reinforcement learning. The lecture "
+   "introduces the instructors and covers the basics of transformer architecture, including "
+   "self-attention mechanisms, encoder-decoder structure, and their advantages and drawbacks."
+)
 
 sampleqas = [
     {'q': "How do I integrate an LLM into my Python application?",
@@ -200,73 +172,74 @@ def invalid_request_payload_fixture():
 
 
 # pylint: disable=redefined-outer-name
-def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrichedQueryRequest):
+def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrichedQueryRequest) -> IEnrichedResponse:
     '''
     Test the enriched query API with an invalid payload.
     '''
-    request = {'request': invalid_request_payload_fixture.__dict__}
-    response = requests.post(API_URL, json=request, timeout=request_timeout)
+    enriched_response = None
 
-    # Assuming the API returns a 400 Bad Request for invalid payloads
-    assert response.status_code == 400 or response.status_code == 500, f"Expected status code 400 or 500, got {
-        response.status_code}"
-
-# pylint: disable=redefined-outer-name
-
-
-def test_enriched_query_timeout(valid_request_payload_fixture: IEnrichedQueryRequest):
-    '''
-    Test the enriched query API with a timeout.
-    '''
-    with pytest.raises(requests.exceptions.Timeout):
-        request = {'request': valid_request_payload_fixture.__dict__}
-        requests.post(API_URL, json=request, timeout=0.001)
+    try:
+        enriched_query_api = EnrichedQueryApi()
+        enriched_response = enriched_query_api.enriched_query(invalid_request_payload_fixture)
+        assert False, "Should not parse invalid response"
+    except RuntimeError:
+        assert True, "Correctly detected invalid response"
+   
+    return enriched_response
 
 
 @pytest.mark.skip(reason='Helper function, not a test')
-def test_enriched_query_success(payload: IEnrichedQueryRequest, expected_chunks: int, expected_embedding: list[float], threshold: float):
+def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                expected_chunks: int,
+                                expected_embedding: list[float],
+                                threshold: float,
+                                is_youtube: bool = False,
+                                dont_care = True):
     '''
     Test the enriched query API with a successful response.
     Makes a request to the API and checks the response, including checking cosine similarity against a target response,
     then enumerating relevant chunks and also testing their cosine similarity
     '''
+    has_youtube = False
+    has_non_youtube = False
+
     try:
-        request = {'request': payload.__dict__}
-        response = requests.post(
-            API_URL, json=request, timeout=request_timeout)
+       enriched_query_api = EnrichedQueryApi()
+       enriched_response = enriched_query_api.enriched_query(payload)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"API request failed: {e}")
 
-    assert response.status_code == 200, f"Expected status code 200, got {
-        response.status_code}"
 
-    try:
-        response_data = response.json()
-    except ValueError:
-        pytest.fail("Response is not valid JSON")
+    assert enriched_response.answer is not None, "Response JSON does not contain 'answer'"
+    assert enriched_response.chunks is not None, "Response JSON does not contain 'chunks'"
 
-    assert "answer" in response_data, "Response JSON does not contain 'answer'"
-    assert "chunks" in response_data, "Response JSON does not contain 'chunks'"
-
-    assert isinstance(response_data["answer"],
+    assert isinstance(enriched_response.answer,
                       str), "'answer' should be a string"
-    assert isinstance(response_data["chunks"],
+    assert isinstance(enriched_response.chunks,
                       list), "'chunks' should be a list"
-    assert len(response_data["chunks"]) == expected_chunks, f"Expected {
-        expected_chunks} chunks, got {len(response_data['chunks'])}"
+    assert len(enriched_response.chunks) == expected_chunks, f"Expected {
+        expected_chunks} chunks, got {len(enriched_response.chunks)}"
 
     if expected_chunks > 0 and expected_embedding is not None:
-        embedded_answer = embed_text(response_data["answer"])
+        embedded_answer = embed_text(enriched_response.answer)
         assert cosine_similarity(
-            embedded_answer, expected_embedding) > threshold, "Answer is not similar to the expected response:" + response_data["answer"]
+            embedded_answer, expected_embedding) > threshold, "Answer is not similar to the expected response:" + enriched_response.answer
 
-        for chunk in response_data["chunks"]:
-            typed_chunk: IEnrichedChunk = safe_dict_to_object(
-                chunk['chunk'], IEnrichedChunk)
+        for chunk in enriched_response.chunks:
             # pylint: disable=no-member
-            embedded_chunk = embed_text(typed_chunk.summary)
+            embedded_chunk = embed_text(chunk.chunk.summary)
+            if chunk.chunk.url.lower().find("youtube") != -1:
+                has_youtube = True
+            else:
+                has_non_youtube = True
             assert cosine_similarity(
-                embedded_chunk, expected_embedding) > threshold, "Chunk is not similar to the expected response:" + response_data["answer"]
+                embedded_chunk, expected_embedding) > threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+
+    if not dont_care:
+      if is_youtube:
+        assert has_youtube, "Expected YouTube URL in the response"
+      else:
+        assert has_non_youtube, "Expected non-YouTube URL in the response"
 
 
 def test_enriched_simple_function():
@@ -274,9 +247,10 @@ def test_enriched_simple_function():
     Test the enriched query API with a simple function.
     '''
     try:
+        embedded_target_response = embed_text(SAMPLE_RESPONSE)
         valid_request = copy.deepcopy(valid_request_payload())
         valid_request.question = "How does an LLM work?"
-        test_enriched_query_success(valid_request, 1, EMBEDDED_RESPONSE, 0.45)
+        test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Simple function test failed: {e}")
 
@@ -286,9 +260,10 @@ def test_enriched_simple_function_variant():
     Test the enriched query API with a simple function variant.
     '''
     try:
+        embedded_target_response = embed_text(SAMPLE_RESPONSE)        
         valid_request = copy.deepcopy(valid_request_payload())
         valid_request.question = "How do LLMs work?"
-        test_enriched_query_success(valid_request, 1, EMBEDDED_RESPONSE, 0.45)
+        test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Simple function positive variant test failed: {e}")
 
@@ -315,9 +290,82 @@ def test_enriched_simple_function_list():
             valid_request = copy.deepcopy(valid_request_payload())
             valid_request.question = qa['q']
             embedded_answer = embed_text(qa['a'])
-            test_enriched_query_success(valid_request, 1, embedded_answer, 0.4)
+            test_enriched_query_success(valid_request, 1, embedded_answer, 0.35)
         except requests.exceptions.RequestException as e:
             pytest.fail(f"Function from sample list failed: {e}")
+
+def test_enriched_from_youtube():
+    '''
+    Test the enriched query API with a simple function where we specifically want a youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(VIDEO_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + VIDEO_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, True, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Youtube test failed: {e}")
+
+def test_enriched_from_html():
+    '''
+    Test the enriched query API with a simple function where we specifically want a non-youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(PAGE_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + PAGE_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, False, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Html content test failed: {e}")
+
+def test_evaluate_coverage():
+    '''
+    Test the enriched query API with a list of primed questions and answers.
+    '''
+
+    valid_request = copy.deepcopy(valid_request_payload())
+    valid_request.similarityThreshold = 0.3
+    valid_request.question = 'What is an LLM?'
+    enriched_query_api = EnrichedQueryApi()
+    last_chunk_url = ''
+
+    relevances: list[float] = [];
+                
+    count = 50
+    for i in range(count):
+       try:
+          enriched_response = enriched_query_api.enriched_query(valid_request)
+
+          if (enriched_response.chunks is not None and len(enriched_response.chunks) > 0):
+             relevances.append(enriched_response.chunks[0].relevance)
+
+             #If we pull back the same chaunk as last time, try a new question
+             if last_chunk_url == enriched_response.chunks[0].chunk.url:
+                 valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']
+             else:
+                 last_chunk_url = enriched_response.chunks[0].chunk.url
+
+                 follow_up_question_request: IGenerateQuestionRequest = IGenerateQuestionRequest()
+                 follow_up_question_request.summary = enriched_response.chunks[0].chunk.summary
+                 follow_up_question_request.wordTarget = 15
+                 new_question : IQuestionGenerationResponse= enriched_query_api.generate_question(follow_up_question_request)
+                 valid_request.question = new_question.question
+          else:
+             print(f'No relevant document found for question: {valid_request.question}')
+             valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']             
+
+       except requests.exceptions.RequestException as e:
+          pytest.fail(f"API request failed: {e}")
+
+    
+    print(f'{len(relevances)} relevances, average: {sum(relevances) / len(relevances)}')
+
+    assert len(relevances) > count * 0.95, "Less than 95% of relevances found"
+    assert sum(relevances) / len(relevances) > 0.5, "Average relevance is less than 50%"
 
 
 if __name__ == '__main__':

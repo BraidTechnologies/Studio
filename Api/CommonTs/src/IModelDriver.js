@@ -34,6 +34,7 @@ var EModel;
 var EModelProvider;
 (function (EModelProvider) {
     EModelProvider["kOpenAI"] = "OpenAI";
+    EModelProvider["kDeepSeek"] = "DeepSeek";
 })(EModelProvider || (exports.EModelProvider = EModelProvider = {}));
 /**
  * Enum representing the roles in a conversation with a model.

@@ -14,7 +14,8 @@
     "prestart": "npm run clean && npm run clean_js && npm run compile && md CommonTs && md CommonTs\\src && npm run pull_js && npm run pull_js_map",
     "start": "func start --typescript",
     "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
-    "test-mini": "mocha --debug-brk --exit --require ts-node/register test/*query*.test.ts",
+    "test-mini": "mocha --debug-brk --exit --require ts-node/register test/*driver*.test.ts",
+    "test-warm": "mocha --debug-brk --exit --require ts-node/register test/*enriched*.test.ts",
     "local-fluid": "npx @fluidframework/azure-local-service@latest"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "azure-functions-core-tools": "^4.0.6821",
     "eslint": "^9.18.0",
     "expect": "^29.7.0",
+    "groq-sdk": "^0.12.0",
     "mocha": "^11.0.1",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",

@@ -56,5 +56,54 @@ describe("Chat Driver", function () {
 
    }).timeout(10000);    
 
+   it("Needs to pass a single line prompt with o1", async function () {
+
+      let driver = getChatModelDriver (EModel.kReasoning, EModelProvider.kOpenAI);
+
+      let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      expect(response.content.length > 0).toEqual(true);   
+
+   }).timeout(10000);   
+
+   
+   it("Needs to pass a multi line prompt with o1", async function () {
+
+      let driver = getChatModelDriver (EModel.kReasoning, EModelProvider.kOpenAI);
+
+      let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
+         history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      console.log (response.content);
+      expect(response.content.toLowerCase().includes("10:30")).toEqual(true);   
+
+   }).timeout(10000); 
+
+   it("Needs to pass a single line prompt with DeepSeek", async function () {
+
+      let driver = getChatModelDriver (EModel.kLarge, EModelProvider.kDeepSeek);
+
+      let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      expect(response.content.length > 0).toEqual(true);   
+
+   }).timeout(10000);   
+
+   
+   it("Needs to pass a multi line prompt with DeepSeek", async function () {
+
+      let driver = getChatModelDriver (EModel.kLarge, EModelProvider.kDeepSeek);
+
+      let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
+         history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
+
+      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      console.log (response.content);
+      expect(response.content.toLowerCase().includes("10:30")).toEqual(true);   
+
+   }).timeout(10000);   
 });
 
