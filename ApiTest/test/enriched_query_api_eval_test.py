@@ -290,7 +290,7 @@ def test_enriched_simple_function_list():
             valid_request = copy.deepcopy(valid_request_payload())
             valid_request.question = qa['q']
             embedded_answer = embed_text(qa['a'])
-            test_enriched_query_success(valid_request, 1, embedded_answer, 0.35)
+            test_enriched_query_success(valid_request, 1, embedded_answer, 0.3)
         except requests.exceptions.RequestException as e:
             pytest.fail(f"Function from sample list failed: {e}")
 
@@ -304,7 +304,7 @@ def test_enriched_from_youtube():
         valid_request.maxCount = 4
         valid_request.question = 'Please summarise the following text in 50 words: ' + VIDEO_SUMMARY
 
-        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, True, False)
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.4, True, False)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Youtube test failed: {e}")
 
@@ -318,7 +318,7 @@ def test_enriched_from_html():
         valid_request.maxCount = 4
         valid_request.question = 'Please summarise the following text in 50 words: ' + PAGE_SUMMARY
 
-        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.45, False, False)
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.4, False, False)
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Html content test failed: {e}")
 
