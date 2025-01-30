@@ -17,7 +17,8 @@ import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, ITextC
 import { OpenAIEmbeddingModelDriver, OpenAIChatModelDriver, OpenAITextChunker, 
    OpenAi4oChatModelInit, OpenAiO1ChatModelInit, OpenAi4oMiniChatModelInit,
    OpenAiO1TextChunkerInit, OpenAiGpt4oTextChunkerInit, OpenAiGpt4oMiniTextChunkerInit, 
-   OpenAiEmbed3EmbeddingModelInit, OpenAiEmbed3SmallEmbeddingModelInit } from './ModelDrivers.OAI';
+   OpenAiEmbed3EmbeddingModelInit, OpenAiEmbed3SmallEmbeddingModelInit } from './ModelDrivers.OpAi';
+import { DeepSeekR1ChatModelDriver, DeepSeekR1ChatModelInit, DeepSeekR1TextChunkerInit } from './ModelDrivers.DpSk';
 
 /**
  * Returns the default model which is an instance of GPT4o.
@@ -35,16 +36,23 @@ export function getDefaultTextChunker () : ITextChunker  {
  * @param provider - The EModelProvider type to determine the provider.
  * @returns An instance of IModel corresponding to the specified EModel type.
  */
-export function getTextChunker (model: EModel, provider: EModelProvider) : ITextChunker  {
+export function getTextChunker(model: EModel, provider: EModelProvider): ITextChunker {
 
-   switch (model) {
-      case EModel.kReasoning:
-         return new OpenAITextChunker(new OpenAiO1TextChunkerInit());
-      case EModel.kSmall:     
-         return new OpenAITextChunker(new OpenAiGpt4oMiniTextChunkerInit());
-      case EModel.kLarge:
-      default:      
-         return new OpenAITextChunker(new OpenAiGpt4oTextChunkerInit());
+   switch (provider) {
+     case EModelProvider.kDeepSeek:
+        return new OpenAITextChunker(new DeepSeekR1TextChunkerInit());
+
+      case EModelProvider.kOpenAI:
+      default:
+         switch (model) {
+            case EModel.kReasoning:
+               return new OpenAITextChunker(new OpenAiO1TextChunkerInit());
+            case EModel.kSmall:
+               return new OpenAITextChunker(new OpenAiGpt4oMiniTextChunkerInit());
+            case EModel.kLarge:
+            default:
+               return new OpenAITextChunker(new OpenAiGpt4oTextChunkerInit());
+         }
    }
 }
 
@@ -87,15 +95,22 @@ export function getDefaultChatModelDriver () : IChatModelDriver  {
  * @param provider - The EModelProvider type to determine the provider.
  * @returns {IChatModelDriver} An instance of IChatModelDriver corresponding to the specified EModel type.
  */
-export function getChatModelDriver (model: EModel, provider: EModelProvider) : IChatModelDriver  {
+export function getChatModelDriver(model: EModel, provider: EModelProvider): IChatModelDriver {
 
-   switch (model) {
-      case EModel.kReasoning:
-         return new OpenAIChatModelDriver(new OpenAiO1ChatModelInit());
-      case EModel.kSmall:         
-         return new OpenAIChatModelDriver(new OpenAi4oMiniChatModelInit());          
-      case EModel.kLarge:
+   switch (provider) {
+      case EModelProvider.kDeepSeek:
+         return new DeepSeekR1ChatModelDriver(new DeepSeekR1ChatModelInit());
+
+      case EModelProvider.kOpenAI:
       default:
-         return new OpenAIChatModelDriver(new OpenAi4oChatModelInit());
+         switch (model) {
+            case EModel.kReasoning:
+               return new OpenAIChatModelDriver(new OpenAiO1ChatModelInit());
+            case EModel.kSmall:
+               return new OpenAIChatModelDriver(new OpenAi4oMiniChatModelInit());
+            case EModel.kLarge:
+            default:
+               return new OpenAIChatModelDriver(new OpenAi4oChatModelInit());
+         }
    }
 }

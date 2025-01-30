@@ -32,7 +32,8 @@ export enum EModel {
  */
 export enum EModelProvider {
 
-   kOpenAI = "OpenAI"
+   kOpenAI = "OpenAI",
+   kDeepSeek = "DeepSeek"
 }
 
 import { EPromptPersona } from './IPromptPersona';
