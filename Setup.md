@@ -9,6 +9,7 @@ Azure Functions Core Tools https://learn.microsoft.com/en-us/azure/azure-functio
 
 # Environment Variables #
 AZURE_OPENAI_API_KEY=
+BRAID_ENVIRONMENT=
 BRAID_SESSION_KEY=
 COSMOS_API_KEY=
 FLUID_TENANT_KEY=
