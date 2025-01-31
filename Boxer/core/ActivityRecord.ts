@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module ActivityRecord
  * @description Defines interfaces and utilities for storing user activity records in Braid.

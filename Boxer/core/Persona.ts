@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module Persona
  * @description Provides a class for managing personas in the Boxer application.

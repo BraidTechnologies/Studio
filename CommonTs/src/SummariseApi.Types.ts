@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the Summarise API
 /**
  * @module SummariseApi.Types
@@ -21,6 +21,17 @@ export interface ISummariseRequest{
    persona: EPromptPersona;
    text: string;
    lengthInWords?: number | undefined;
+}
+
+/**
+ * Defines the structure of a summarise context request object.
+ */
+export interface ISummariseContextRequest{
+
+   persona: EPromptPersona;
+   context: string;
+   chunk: string;
+   lengthInWords?: number | undefined;   
 }
 
 /**

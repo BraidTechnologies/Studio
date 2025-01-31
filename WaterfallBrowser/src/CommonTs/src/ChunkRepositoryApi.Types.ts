@@ -11,7 +11,7 @@
  * - IStoredChunk: The main chunk interface that combines text, embeddings, and metadata
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the ChunkRepository API
 
 import { IStorable} from "./IStorable";

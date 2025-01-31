@@ -55,7 +55,7 @@ export async function generateFluidToken(request: HttpRequest, context: Invocati
 
       try {
          const jsonRequest = await request.json();
-         const fluidRequest = (jsonRequest as any).data as IFluidTokenRequest;
+         const fluidRequest = (jsonRequest as any).request as IFluidTokenRequest;
 
          // tenantId, documentId, userId and userName are required parameters
          const documentId = fluidRequest.documentId;

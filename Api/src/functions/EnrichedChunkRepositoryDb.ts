@@ -16,7 +16,7 @@
  * 
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
 import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IRelevantEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedQuery.Api.Types";

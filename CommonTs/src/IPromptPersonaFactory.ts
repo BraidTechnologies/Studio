@@ -12,7 +12,7 @@
  *   customized word count targets
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 
 import { IChatModelDriverParams } from "./IModelDriver";
@@ -35,6 +35,13 @@ const DeveloperAssistantPersona: IPromptPersona = {
 const ArticleSummariserPersona: IPromptPersona = {
 
    name: EPromptPersona.kArticleSummariser,
+   systemPrompt: "",
+   itemPrompt: ""   
+}
+
+const ArticleContextSummariserPersona: IPromptPersona = {
+
+   name: EPromptPersona.kArticleContextSummariser,
    systemPrompt: "",
    itemPrompt: ""   
 }
@@ -186,10 +193,17 @@ export function getChatPersona (persona: EPromptPersona, userPrompt: string, par
          const articleTemplate = ArticleSummariserPersona;          
          articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
          + wordString  +
-         " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
-         + wordString  + " words. Translate to English if necessary. Make each distinct point a separate paragraph.";
+         " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text.  Translate to English if necessary. Make each distinct point a separate paragraph.";
          articleTemplate.itemPrompt = userPrompt;
          return ArticleSummariserPersona;
+
+      case EPromptPersona.kArticleContextSummariser:
+         const articleContextTemplate = ArticleContextSummariserPersona;
+         articleContextTemplate.systemPrompt = "You are an AI asistant that summarises text in "
+         + wordString  +
+         " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
+         articleContextTemplate.itemPrompt = userPrompt;
+         return ArticleContextSummariserPersona;
 
       default:
          const defaultTemplate = DefaultPersona;          

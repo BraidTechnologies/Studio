@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module UuidKeyGenerator
  * @description Provides a class for generating UUIDs and secrets in the Boxer application.

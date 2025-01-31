@@ -4,7 +4,7 @@
  * This module provides functions for compressing and decompressing strings using the deflate algorithm.
  * It supports both Node.js and browser environments.
  */
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 import * as pako from 'pako';
 
 

@@ -12,7 +12,7 @@
  * authentication through session keys and user contexts.
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Implementation of the Fluid connection API
 
 import { AzureRemoteConnectionConfig, AzureClientProps, ITokenProvider, ITokenResponse } from "@fluidframework/azure-client";

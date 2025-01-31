@@ -12,7 +12,7 @@
  *   customized word count targets
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 
 import { IChatModelDriverParams } from "./IModelDriver";

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 /**
  * @module FluidApi
@@ -53,7 +53,7 @@ export class FluidApi extends Api {
          });
 
          response = await axios.post(apiUrl, {
-            data: query
+            request: query
          });
 
          if (response.status === 200) {

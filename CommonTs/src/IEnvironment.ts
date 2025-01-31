@@ -14,7 +14,7 @@
  * - Integration endpoints (LinkedIn, Fluid, Teams)
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 export const BRAID_ENVIRONMENT_KEY = "BRAID_ENVIRONMENT"
 
@@ -31,12 +31,14 @@ export interface IEnvironment {
    hostProtocolAndName(): string;
    checkSessionApi () : string;
    summariseApi () : string;
+   summariseContextApi() : string;
    findThemeApi(): string;
    chunkApi () : string;   
    classifyApi () : string;
    embedApi() : string;
    testForSummariseFail(): string;
    saveActivityApi(): string;
+
    removeActivityApi(): string;
    getActivityApi(): string;   
    findActivityApi(): string;      

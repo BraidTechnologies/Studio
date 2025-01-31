@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module ActivityRepository
  * @description Provides repository implementation for storing and retrieving user activities in Braid.

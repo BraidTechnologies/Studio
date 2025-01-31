@@ -14,7 +14,7 @@
  * - Integration endpoints (LinkedIn, Fluid, Teams)
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 export const BRAID_ENVIRONMENT_KEY = "BRAID_ENVIRONMENT"
 

@@ -13,7 +13,7 @@
  * type safety when working with AI-enriched conversations and queries.
  */
 
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the Query API
 
 import { EChunkRepository} from "./EnrichedChunk";

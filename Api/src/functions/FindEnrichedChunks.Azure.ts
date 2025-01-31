@@ -22,7 +22,7 @@ export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest
    if (isSessionValid(request, context)) {
 
       try {
-         const spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).data as IChunkQueryRelevantToSummarySpec;
+         const spec: IChunkQueryRelevantToSummarySpec = (await (request.json() as any)).request as IChunkQueryRelevantToSummarySpec;
 
          const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
@@ -48,7 +48,7 @@ export async function FindRelevantEnrichedChunksFromUrl (request: HttpRequest, c
    if (isSessionValid(request, context)) {
 
       try {
-         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).request as IChunkQueryRelevantToUrlSpec;
 
          const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
@@ -74,7 +74,7 @@ export async function FindEnrichedChunkFromUrl (request: HttpRequest, context: I
    if (isSessionValid(request, context)) {
 
       try {
-         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).data as IChunkQueryRelevantToUrlSpec;
+         const spec: IChunkQueryRelevantToUrlSpec = (await (request.json() as any)).request as IChunkQueryRelevantToUrlSpec;
 
          const repository = getEnrichedChunkRepository(EChunkRepository.kWaterfall);
 
