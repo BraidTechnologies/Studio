@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module IPromptPersona
  * @description Defines interfaces and enums for managing different prompt personas.
@@ -18,6 +18,7 @@ var EPromptPersona;
 (function (EPromptPersona) {
     EPromptPersona["kDefault"] = "Default";
     EPromptPersona["kArticleSummariser"] = "ArticleSummariser";
+    EPromptPersona["kArticleContextSummariser"] = "ArticleContextSummariser";
     EPromptPersona["kCodeSummariser"] = "CodeSummariser";
     EPromptPersona["kC4Diagrammer"] = "C4Diagrammer";
     EPromptPersona["kSurveySummariser"] = "SurveySummariser";

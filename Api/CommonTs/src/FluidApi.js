@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -60,7 +60,7 @@ class FluidApi extends Api_1.Api {
                     }
                 });
                 response = yield axios_1.default.post(apiUrl, {
-                    data: query
+                    request: query
                 });
                 if (response.status === 200) {
                     return response.data;

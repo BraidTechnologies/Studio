@@ -25,7 +25,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { ISummariseRequest, ISummariseContextRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
-import { recursiveSummarize } from "./Summarize";
+import { recursiveSummarize, summarizeContextForSingleChunk} from "./Summarize";
+import { getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
 
 
 /**
@@ -70,8 +71,9 @@ export async function summarize(request: HttpRequest, context: InvocationContext
             };
          }
          else {
-            context.error("Text is below minimum length or invalid length for summary.");
-            return invalidRequestResponse("Text is below minimum length or invalid length for summary.")
+            let errorDescription = "Text is below minimum length or invalid text for summary.";
+            context.error(errorDescription);
+            return invalidRequestResponse(errorDescription);
          }
       }
       catch (e: any) {
@@ -94,7 +96,7 @@ export async function summarize(request: HttpRequest, context: InvocationContext
  */
 export async function summarizeContext (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-   let text: string | undefined = undefined;
+   let contextText: string | undefined = undefined;
    let words: number = 50;
    let overallSummary: string | undefined = undefined;
    let minimumTextLength: number = 64;
@@ -105,16 +107,24 @@ export async function summarizeContext (request: HttpRequest, context: Invocatio
          const jsonRequest = await request.json();
          context.log(jsonRequest);
 
+         let chunker = getDefaultTextChunker();
+
          const summariseSpec = (jsonRequest as any).request as ISummariseContextRequest;
 
-         text = summariseSpec.context;
+         let fullPrompt = `<document>\n${summariseSpec.context}\n</document>\nHere is the chunk we want to situate within the whole document:\n<chunk>\n${summariseSpec.chunk}\n</chunk>\n` +
+                          'Please give a short succinct context to situate this chunk within the overall document for the purppose of improving sarch retrieval of the chunk.' +
+                          'Answer only with the succinct contxt and nothing else.';
+
+         let buffer = " ".repeat(256);
+
+         const persona = summariseSpec.persona;         
+         contextText = summariseSpec.context;
          words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
-         const persona = summariseSpec.persona;
 
-         if (text && text.length >= minimumTextLength && words > 0) {
-            const definitelyText: string = text;
-            overallSummary = await recursiveSummarize(persona, definitelyText, 0, words);
+         if (contextText && chunker.fitsInMaximumChunk(fullPrompt + buffer)) {
 
+            overallSummary = await summarizeContextForSingleChunk(persona, fullPrompt, words);
+            
             const summariseResponse: ISummariseResponse = {
                summary: overallSummary
             }
@@ -127,9 +137,11 @@ export async function summarizeContext (request: HttpRequest, context: Invocatio
             };
          }
          else {
-            context.error("Text is below minimum length or invalid length for summary.");
-            return invalidRequestResponse("Text is below minimum length or invalid length for summary.")
+            let errorDescription = "Text is too long to fit withing context window. You need to summarise or chunk the text before submission.";
+            context.error(errorDescription);
+            return invalidRequestResponse(errorDescription);
          }
+
       }
       catch (e: any) {
          context.error(e);
@@ -141,11 +153,6 @@ export async function summarizeContext (request: HttpRequest, context: Invocatio
       return sessionFailResponse();
    }
 };
-
-let fullPrompt = `<document>\n${context}\n</document>\nHere is the chunk we want to situate within the whole document:\n<chunk>\n${chunk}\n</chunk>\n` +
-'Please give a short succinct context to situate this chunk within the overall document for the purppose of improving sarch retrieval of the chunk.' +
-'Answer only with the succinct contxt and nothing else.';
-
 
 app.http('Summarize', {
    methods: ['GET', 'POST'],

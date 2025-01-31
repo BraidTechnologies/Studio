@@ -13,7 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EModelConversationRole = exports.EModelProvider = exports.EModel = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * Enum representing different sizes of a model.
  *

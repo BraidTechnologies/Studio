@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeepSeekR1ChatModelDriver = exports.DeepSeekR1ChatModelInit = exports.DeepSeekR1TextChunkerInit = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 const groq_sdk_1 = __importDefault(require("groq-sdk"));
 let deepSeekModel = "deepseek-r1-distill-llama-70b";
 const groq = new groq_sdk_1.default({ apiKey: process.env.GROQ_API_KEY });

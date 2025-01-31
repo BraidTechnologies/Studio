@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module IModelFactory
  * @description Factory module for creating AI model instances.

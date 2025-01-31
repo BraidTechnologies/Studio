@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the SuppressSummariseFail API
 /**
  * @module TestForSummariseFailApi.Types

@@ -1,13 +1,16 @@
 "use strict";
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
- * @module QueryModelApi
- * @description Provides an API for querying models with enrichment and generating questions.
+ * @module SummariseApi
+ * @description Provides functionality for text summarization through the Summarise API.
  *
- * This module contains the QueryModelApi class, which handles the interaction with the specified environment
- * to query models with enrichment and generate questions. It provides methods for:
- * - Querying models with enrichment
- * - Generating questions
+ * This module contains the SummariseApi class which handles:
+ * - Text summarization with configurable personas
+ * - Context-aware summarization
+ * - Integration with the base API functionality
+ *
+ * The class supports different summarization approaches based on the provided
+ * prompt persona and handles communication with the backend summarization service.
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -22,16 +25,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryModelApi = void 0;
+exports.SummariseApi = void 0;
 const axios_1 = __importDefault(require("axios"));
 const Api_1 = require("./Api");
+const IPromptPersona_1 = require("./IPromptPersona");
 /**
- * Represents a QueryModelApi class that interacts with the specified environment to query models with enrichment and generate questions.
- * @constructor
- * @param environment_ - The environment to interact with.
- * @param sessionKey_ - The session key for authentication.
+ * Class representing an API for summarising text.
  */
-class QueryModelApi extends Api_1.Api {
+class SummariseApi extends Api_1.Api {
     /**
      * Initializes a new instance of the class with the provided environment and session key.
      *
@@ -41,21 +42,19 @@ class QueryModelApi extends Api_1.Api {
     constructor(environment_, sessionKey_) {
         super(environment_, sessionKey_);
     }
-    /**
-     * Asynchronously queries the model with enrichment data.
-     *
-     * @param query - The enriched query data to be sent.
-     * @returns A promise that resolves to the enriched response data, or undefined if an error occurs.
-     */
-    queryModelWithEnrichment(query) {
+    summarise(persona, text) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.queryModelWithEnrichment() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.summariseApi() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {
+                let summariseRequest = {
+                    persona: persona,
+                    text: text
+                };
                 response = yield axios_1.default.post(apiUrl, {
-                    request: query
+                    request: summariseRequest
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -71,21 +70,20 @@ class QueryModelApi extends Api_1.Api {
             }
         });
     }
-    /**
-     * Asynchronously generates a question based on the provided query data.
-     *
-     * @param query - The data containing persona prompt, question generation prompt, and summary.
-     * @returns A promise that resolves to the generated question response, or undefined if an error occurs.
-     */
-    generateQuestion(query) {
+    summariseContext(context, chunk) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            let apiUrl = this.environment.generateQuestion() + "?session=" + this.sessionKey.toString();
+            let apiUrl = this.environment.summariseContextApi() + "?session=" + this.sessionKey.toString();
             var response;
             let empty = undefined;
             try {
+                let summariseRequest = {
+                    persona: IPromptPersona_1.EPromptPersona.kArticleContextSummariser,
+                    context: context,
+                    chunk: chunk
+                };
                 response = yield axios_1.default.post(apiUrl, {
-                    request: query
+                    rquest: summariseRequest
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -102,5 +100,5 @@ class QueryModelApi extends Api_1.Api {
         });
     }
 }
-exports.QueryModelApi = QueryModelApi;
-//# sourceMappingURL=QueryEnrichedModelApi.js.map
+exports.SummariseApi = SummariseApi;
+//# sourceMappingURL=SummariseApi.js.map

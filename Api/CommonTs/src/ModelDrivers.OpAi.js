@@ -25,7 +25,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OpenAITextChunker = exports.OpenAiO1TextChunkerInit = exports.OpenAiGpt4oTextChunkerInit = exports.OpenAiGpt4oMiniTextChunkerInit = exports.OpenAIChatModelDriver = exports.OpenAiO1ChatModelInit = exports.OpenAi4oMiniChatModelInit = exports.OpenAi4oChatModelInit = exports.OpenAIEmbeddingModelDriver = exports.OpenAiEmbed3SmallEmbeddingModelInit = exports.OpenAiEmbed3EmbeddingModelInit = void 0;
 exports.calculateEmbedding = calculateEmbedding;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
 const axios_retry_1 = __importDefault(require("axios-retry"));
 // Internal imports

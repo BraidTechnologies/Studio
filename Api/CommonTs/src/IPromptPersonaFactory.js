@@ -30,6 +30,11 @@ const ArticleSummariserPersona = {
     systemPrompt: "",
     itemPrompt: ""
 };
+const ArticleContextSummariserPersona = {
+    name: IPromptPersona_1.EPromptPersona.kArticleContextSummariser,
+    systemPrompt: "",
+    itemPrompt: ""
+};
 const CodeSummariserPersona = {
     name: IPromptPersona_1.EPromptPersona.kCodeSummariser,
     systemPrompt: "",
@@ -145,10 +150,16 @@ function getChatPersona(persona, userPrompt, params) {
             const articleTemplate = ArticleSummariserPersona;
             articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
                 + wordString +
-                " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Please summarise the following text in "
-                + wordString + " words. Translate to English if necessary. Make each distinct point a separate paragraph.";
+                " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text.  Translate to English if necessary. Make each distinct point a separate paragraph.";
             articleTemplate.itemPrompt = userPrompt;
             return ArticleSummariserPersona;
+        case IPromptPersona_1.EPromptPersona.kArticleContextSummariser:
+            const articleContextTemplate = ArticleContextSummariserPersona;
+            articleContextTemplate.systemPrompt = "You are an AI asistant that summarises text in "
+                + wordString +
+                " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
+            articleContextTemplate.itemPrompt = userPrompt;
+            return ArticleContextSummariserPersona;
         default:
             const defaultTemplate = DefaultPersona;
             defaultTemplate.systemPrompt = "You are an AI asistant that provides assistance to developers building AI with Python. You provide concise answers of 50 words or less.";

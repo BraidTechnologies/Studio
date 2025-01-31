@@ -110,3 +110,31 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
    return overallSummary;
 }
 
+/**
+ * Asynchronously summarizes the given text using an AI assistant. 
+ * This is intended for Context aware chunking, so there is no recursive summarisation.
+ * Chunks must fit within the avilable context window
+ * 
+ * @param persona - The persona to use for the summarisation
+ * @param text The text to be summarized.
+ * @param words The number of words to use for the summary.
+ * @returns A Promise that resolves to the summarized text.
+ */
+export async function summarizeContextForSingleChunk(persona: EPromptPersona, text: string, words: number): Promise<string> {
+
+   let modelDriver = getDefaultChatModelDriver();
+
+   // TODO - consider a getDriverforPersona() function
+   if (persona === EPromptPersona.kC4Diagrammer) {
+      modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
+   }
+
+   let prompt : IModelConversationPrompt = {
+      history: [],
+      prompt: text
+   }
+
+   let response = await modelDriver.generateResponse (persona, prompt, {wordTarget: words});
+
+   return response.content;
+}

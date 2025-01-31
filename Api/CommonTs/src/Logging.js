@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /**
  * @module Logging
  * @description Provides logging functionality for different parts of the application.

@@ -16,7 +16,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EEnvironment = exports.BRAID_ENVIRONMENT_KEY = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 exports.BRAID_ENVIRONMENT_KEY = "BRAID_ENVIRONMENT";
 var EEnvironment;
 (function (EEnvironment) {

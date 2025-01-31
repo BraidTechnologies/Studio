@@ -16,7 +16,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.kDefaultSimilarityThreshold = exports.EChunkRepository = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the Chunk API
 // We have an ID to distinguish different Chunk repostories. 
 var EChunkRepository;

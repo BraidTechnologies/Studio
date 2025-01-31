@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductionEnvironment = exports.StagingEnvironment = exports.DevelopmentEnvironment = void 0;
 /**
@@ -21,6 +21,9 @@ class DevelopmentEnvironment {
     }
     summariseApi() {
         return "http://localhost:7071/api/Summarize";
+    }
+    summariseContextApi() {
+        return "http://localhost:7071/api/SummarizeContext";
     }
     findThemeApi() {
         return "http://localhost:7071/api/FindTheme";
@@ -128,6 +131,9 @@ class StagingEnvironment {
     summariseApi() {
         return "https://braid-api.azurewebsites.net/api/Summarize";
     }
+    summariseContextApi() {
+        return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+    }
     findThemeApi() {
         return "https://braid-api.azurewebsites.net/api/FindTheme";
     }
@@ -233,6 +239,9 @@ class ProductionEnvironment {
     }
     summariseApi() {
         return "https://braid-api.azurewebsites.net/api/Summarize";
+    }
+    summariseContextApi() {
+        return "https://braid-api.azurewebsites.net/api/SummarizeContext";
     }
     findThemeApi() {
         return "https://braid-api.azurewebsites.net/api/FindTheme";

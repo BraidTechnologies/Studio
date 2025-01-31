@@ -1,5 +1,5 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.throwIfFalse = exports.throwIfNull = exports.throwIfUndefined = void 0;
 /**

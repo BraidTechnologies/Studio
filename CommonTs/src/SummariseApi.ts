@@ -48,7 +48,7 @@ export class SummariseApi extends Api {
             text: text
          }
          response = await axios.post(apiUrl, {
-            rquest: summariseRequest
+            request: summariseRequest
          });
 
          if (response.status === 200) {
@@ -79,7 +79,7 @@ export class SummariseApi extends Api {
          }
 
          response = await axios.post(apiUrl, {
-            rquest: summariseRequest
+            request: summariseRequest
          });
 
          if (response.status === 200) {
