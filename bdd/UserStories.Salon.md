@@ -21,7 +21,12 @@ Salon
 
 *   **As a developer, I want the system to generate architecture diagrams, so that I can understand a large codebase code more quickly.**
 
-*   **As an AI developer, I want to have a tool that generates Python evals for LLM calls, so that I can be confident in the quality of LLM results.**
+*   **As an AI engineer, I want to have a tool that generates Python evals for LLM calls, so that I can be confident in the quality of LLM results.**
+
+*    **As an AI engineer, I want Salon to be well structured, using the 'Visitor' design pattern so I can easily change the prompts and approaches for code and documentation generation, and I can add more sophisticated logic to speed up runtime performance.**
+
+*   **As an AI engineer, I want Salon to be able to generate system summaries and diagrams for Braid client systems.**
+
 
 
 Boxer
