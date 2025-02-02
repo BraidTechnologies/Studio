@@ -8,6 +8,9 @@ Cursor Latest https://www.cursor.com/
 Azure CLI https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 Azure Functions Core Tools https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local
 
+To test the Teams plug-in:
+Azure Teams Toolkit https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/install-teams-toolkit?tabs=vscode
+
 To run the entire multi-directory build system on Windows; 
 https://www.cygwin.com/
 
