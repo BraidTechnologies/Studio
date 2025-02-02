@@ -12,7 +12,7 @@ To run the entire multi-directory build system on Windows;
 https://www.cygwin.com/
 
 To run the entire multi-directory build system on Mac:
-https://www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/
+https://dev.to/bphogan/use-modern-bash-shell-on-macos-22a6 
 
 # Environment Variables #
 AZURE_OPENAI_API_KEY=
