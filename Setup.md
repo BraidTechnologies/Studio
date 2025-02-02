@@ -1,3 +1,4 @@
+The Braid repo requires the following tools to be installed:
 
 # Development Tools #
 Git https://git-scm.com/downloads
@@ -6,6 +7,12 @@ Python 3.12 https://www.python.org/downloads/
 Cursor Latest https://www.cursor.com/
 Azure CLI https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 Azure Functions Core Tools https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local
+
+To run the entire multi-directory build system on Windows; 
+https://www.cygwin.com/
+
+To run the entire multi-directory build system on Mac:
+https://www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/
 
 # Environment Variables #
 AZURE_OPENAI_API_KEY=
