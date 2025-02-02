@@ -53,9 +53,9 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
    let modelDriver = getDefaultChatModelDriver();
 
    // TODO - consider a getDriverforPersona() function
-   if (persona === EPromptPersona.kC4Diagrammer) {
-      modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
-   }
+   //if (persona === EPromptPersona.kC4Diagrammer) {
+   //   modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
+   //}
 
    let prompt : IModelConversationPrompt = {
       history: [],
@@ -125,9 +125,9 @@ export async function summarizeContextForSingleChunk(persona: EPromptPersona, te
    let modelDriver = getDefaultChatModelDriver();
 
    // TODO - consider a getDriverforPersona() function
-   if (persona === EPromptPersona.kC4Diagrammer) {
-      modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
-   }
+   //if (persona === EPromptPersona.kC4Diagrammer) {
+   //   modelDriver = getChatModelDriver (EModel.kReasoning, EModelProvider.kDeepSeek);
+   //}
 
    let prompt : IModelConversationPrompt = {
       history: [],

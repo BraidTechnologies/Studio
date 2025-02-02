@@ -38,8 +38,6 @@ def summarise_code(source: str) -> str:
     }
 
     # Sleep for 30 seconds to allow rate limit to subside
-    print("Sleeping for 120 seconds to allow rate limit to subside")
-    time.sleep(120)
     try:
         response = requests.post(summarise_endpoint_url(),
                                  json=wrapped, timeout=request_timeout*3)

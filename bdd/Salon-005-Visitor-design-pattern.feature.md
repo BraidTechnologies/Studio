@@ -85,3 +85,14 @@ Feature: Directory Walker with Visitor Pattern
     Then the visitor should generate new C4 diagrams
     But if the newest schematic is newer than all READMEs
     Then the visitor should skip diagram generation
+
+  Scenario: Processing visitors with dependencies
+    Given I have multiple visitors configured with different priorities
+      | visitor                   | priority |
+      | DocumentationGenerator    | 1        |
+      | SchematicGenerator        | 2        |
+    When I run the directory walker
+    Then the walker should sort visitors by priority
+    And process visitors in ascending priority order
+    And each visitor should have access to data from higher priority visitors (e.g. if a new file is written, the next visotor must have access to it)
+
