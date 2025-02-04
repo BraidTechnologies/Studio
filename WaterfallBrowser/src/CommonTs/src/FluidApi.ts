@@ -53,7 +53,7 @@ export class FluidApi extends Api {
          });
 
          response = await axios.post(apiUrl, {
-            data: query
+            request: query
          });
 
          if (response.status === 200) {

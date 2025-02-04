@@ -23,9 +23,13 @@ export class DevelopmentEnvironment implements IEnvironment {
       return "http://localhost:7071/api/Summarize"; 
 
    }
+   summariseContextApi() : string {
+      return "http://localhost:7071/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "http://localhost:7071/api/FindTheme";
    }
+
    classifyApi () : string {
       return "http://localhost:7071/api/Classify"; 
    }
@@ -129,9 +133,13 @@ export class StagingEnvironment implements IEnvironment {
    summariseApi () : string {
       return "https://braid-api.azurewebsites.net/api/Summarize"; 
    }
+   summariseContextApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
+
    classifyApi () : string {
       return "https://braid-api.azurewebsites.net/api/Classify"; 
    }
@@ -236,9 +244,13 @@ export class ProductionEnvironment implements IEnvironment {
       return "https://braid-api.azurewebsites.net/api/Summarize"; 
 
    }
+   summariseContextApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
+
    classifyApi () : string {
       return "https://braid-api.azurewebsites.net/api/Classify"; 
    }

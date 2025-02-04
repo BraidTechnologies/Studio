@@ -24,6 +24,17 @@ export interface ISummariseRequest{
 }
 
 /**
+ * Defines the structure of a summarise context request object.
+ */
+export interface ISummariseContextRequest{
+
+   persona: EPromptPersona;
+   context: string;
+   chunk: string;
+   lengthInWords?: number | undefined;   
+}
+
+/**
  * Defines the structure of a summarise response object.
  */
 export interface ISummariseResponse {

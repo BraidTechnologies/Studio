@@ -31,12 +31,14 @@ export interface IEnvironment {
    hostProtocolAndName(): string;
    checkSessionApi () : string;
    summariseApi () : string;
+   summariseContextApi() : string;
    findThemeApi(): string;
    chunkApi () : string;   
    classifyApi () : string;
    embedApi() : string;
    testForSummariseFail(): string;
    saveActivityApi(): string;
+
    removeActivityApi(): string;
    getActivityApi(): string;   
    findActivityApi(): string;      
