@@ -83,7 +83,7 @@ class SummariseApi extends Api_1.Api {
                     chunk: chunk
                 };
                 response = yield axios_1.default.post(apiUrl, {
-                    rquest: summariseRequest
+                    request: summariseRequest
                 });
                 if (response.status === 200) {
                     return response.data;
