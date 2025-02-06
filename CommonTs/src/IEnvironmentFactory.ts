@@ -1,4 +1,21 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+
+/**
+ * @module IEnvironmentFactory
+ * 
+ * Factory module for creating environment instances that define application behavior
+ * across different deployment contexts (Development, Staging, Production).
+ * 
+ * This module provides factory functions to create appropriate environment instances
+ * based on the current execution context (browser vs Node.js) and configuration.
+ * It supports automatic environment detection and explicit environment selection
+ * through the getEnvironment function.
+ * 
+ * The module handles three main scenarios:
+ * - Default environment detection
+ * - Fluid-specific environment configuration
+ * - Login-specific environment configuration
+ */
 
 // Internal imports
 import {EEnvironment, IEnvironment} from './IEnvironment';

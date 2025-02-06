@@ -1,7 +1,12 @@
 "use strict";
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductionEnvironment = exports.StagingEnvironment = exports.DevelopmentEnvironment = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module Environment
+ *
+ * This module provides a base class for interacting with an environment.
+ */
 const IEnvironment_1 = require("./IEnvironment");
 /**
  * Class representing the Development Environment with methods to retrieve various API endpoints.
@@ -17,6 +22,9 @@ class DevelopmentEnvironment {
     summariseApi() {
         return "http://localhost:7071/api/Summarize";
     }
+    summariseContextApi() {
+        return "http://localhost:7071/api/SummarizeContext";
+    }
     findThemeApi() {
         return "http://localhost:7071/api/FindTheme";
     }
@@ -29,8 +37,8 @@ class DevelopmentEnvironment {
     embedApi() {
         return "http://localhost:7071/api/Embed";
     }
-    suppressSummariseFail() {
-        return "http://localhost:7071/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "http://localhost:7071/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "http://localhost:7071/api/SaveActivity";
@@ -54,7 +62,7 @@ class DevelopmentEnvironment {
         return "http://localhost:7071/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "http://localhost:1337/aibot.html";
+        return "http://localhost:1337/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";
@@ -123,6 +131,9 @@ class StagingEnvironment {
     summariseApi() {
         return "https://braid-api.azurewebsites.net/api/Summarize";
     }
+    summariseContextApi() {
+        return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+    }
     findThemeApi() {
         return "https://braid-api.azurewebsites.net/api/FindTheme";
     }
@@ -135,8 +146,8 @@ class StagingEnvironment {
     embedApi() {
         return "https://braid-api.azurewebsites.net/api/Embed";
     }
-    suppressSummariseFail() {
-        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "https://braid-api.azurewebsites.net/api/SaveActivity";
@@ -160,7 +171,7 @@ class StagingEnvironment {
         return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "https://braidapps.io/aibot.html";
+        return "https://braidapps.io/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
@@ -229,6 +240,9 @@ class ProductionEnvironment {
     summariseApi() {
         return "https://braid-api.azurewebsites.net/api/Summarize";
     }
+    summariseContextApi() {
+        return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+    }
     findThemeApi() {
         return "https://braid-api.azurewebsites.net/api/FindTheme";
     }
@@ -241,8 +255,8 @@ class ProductionEnvironment {
     embedApi() {
         return "https://braid-api.azurewebsites.net/api/Embed";
     }
-    suppressSummariseFail() {
-        return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+    testForSummariseFail() {
+        return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
     }
     saveActivityApi() {
         return "https://braid-api.azurewebsites.net/api/SaveActivity";
@@ -266,7 +280,7 @@ class ProductionEnvironment {
         return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn";
     }
     boxerHome() {
-        return "https://braidapps.io/aibot.html";
+        return "https://braidapps.io/boxer.html";
     }
     findRelevantEnrichedChunksFromUrl() {
         return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";

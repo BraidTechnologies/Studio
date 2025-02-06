@@ -8,13 +8,15 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from CommonPy.src.request_utilities import request_timeout
+
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
@@ -57,7 +59,10 @@ class ThemeFinder:
             }
         }
 
-        response = session.post(summary_url, json=input_json, headers=headers)
+        response = session.post(summary_url, json=input_json, 
+                                headers=headers,
+                                timeout=request_timeout)
+        
         if response.status_code == 200:
             response_json = json.loads(response.text)
             theme = response_json['theme']

@@ -20,10 +20,10 @@ from src.workflow import WebSearchPipelineSpec
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 def send_mail(output_location: str, body: str, attachment: str, spec: WebSearchPipelineSpec):
@@ -72,6 +72,8 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
     for guides on implementing OAuth2 for the application.
     '''
 
+    ok = False
+
     try:
         # create gmail api client
         message = EmailMessage()
@@ -96,13 +98,13 @@ def send_message_with_attachment(service, output_location: str, body: str, attac
             with open(attachment_path, 'rb') as fp:
                 attachment_data = fp.read()
             message.add_attachment(attachment_data, maintype, subtype)
-        
+
         # pylint: disable-broad-exception-caught
         except Exception:
+            # pylint: disable-broad-exception-caught
             # we allow the message to be sent event if we have an error adding the attachment
             ok = True
-            ok
-         
+
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
         create_message = {'raw': encoded_message}

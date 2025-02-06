@@ -4,23 +4,22 @@
    "description": "",
    "main": "src/content.ts",
    "scripts": {
-      "build": "npm run compile",
-      "package-content": "copy dist\\src\\content.js public",
-      "package-popup": "copy src\\popup.js public",
-      "package-all": "npm run compile && npm run package-content && npm run package-popup",
+      "build": "npm run compile && npm run package",
+      "package-content": "cp dist/src/content.js public",
+      "package-popup": "cp src/popup.js public",
+      "package": "npm run package-content && npm run package-popup",
       "compile": "tsc -b",
       "clean": "rimraf dist",
       "prestart": "npm run clean && npm run build",
-      "test-mini": "mocha --debug-brk --require ts-node/register -g Caucus*"
+      "test": "echo \"No test specified for Cascade\" && exit 0"
    },
    "dependencies": {
-      "axios": "^1.7.2"
+      "axios": "^1.7.9"
    },
    "devDependencies": {
-      "ts-loader": "^9.5.1",
-      "tsc": "^2.0.4",
-      "typescript": "^5.5.3",
-      "webpack": "^5.93.0",
+      "rimraf": "^6.0.1",
+      "typescript": "^5.7.3",
+      "webpack": "^5.97.1",
       "webpack-cli": "^5.1.4",
       "webpack-obfuscator": "^3.5.1"
    }

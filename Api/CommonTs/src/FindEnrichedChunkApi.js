@@ -1,4 +1,17 @@
 "use strict";
+/**
+ * @module   FindEnrichedChunkApi
+ * @description Provides an API for finding and retrieving enriched chunks.
+ *
+ * This module contains the FindEnrichedChunkApi class which handles various API calls
+ * related to finding enriched chunks based on URLs and summaries. It provides methods
+ * for retrieving both individual chunk summaries and arrays of relevant chunks.
+ *
+ * The API supports:
+ * - Finding single enriched chunk summaries by URL
+ * - Finding relevant enriched chunks by URL
+ * - Finding relevant enriched chunks by summary
+ */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FindEnrichedChunkApi = void 0;
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 const axios_1 = __importDefault(require("axios"));
 const Api_1 = require("./Api");
 /**
@@ -43,7 +56,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = undefined;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -73,7 +86,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -103,7 +116,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;

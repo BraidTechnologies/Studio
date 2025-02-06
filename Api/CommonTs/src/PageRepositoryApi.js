@@ -1,5 +1,18 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module PageRepositoryApi
+ * @description Provides an API for managing page storage and retrieval.
+ *
+ * This module contains the PageRepositoryApi class which handles storage operations
+ * for pages in the application. It provides methods for:
+ * - Saving pages to persistent storage
+ * - Compressing page content for efficient storage
+ *
+ * The module extends the base Api class and implements IStorablePageRepositoryApiWrapper
+ * to provide consistent storage patterns while handling page-specific requirements
+ * like content compression.
+ */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

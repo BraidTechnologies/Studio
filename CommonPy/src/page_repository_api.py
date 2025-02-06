@@ -1,4 +1,4 @@
-'''Module to store data in the Page table of the BraidApis '''
+'''API to store data in the Page table of the Braid Apis '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -16,12 +16,12 @@ page_class_name = 'Page'
 page_schema_version = '1'
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
@@ -61,8 +61,8 @@ class PageRepository:
 
         page.amended = utc_time_string
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
-        page_url = f'http://localhost:7071/api/SavePage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/SavePage?session={
+        #page_url = f'http://localhost:7071/api/SavePage?session={
             SESSION_KEY}'
         json_input = {
             'request': page.__dict__
@@ -93,8 +93,8 @@ class PageRepository:
 
         logger.debug('Finding: %s', record_id)
 
-        # page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
-        page_url = f'http://localhost:7071/api/GetPage?session={
+        page_url = f'https://braid-api.azurewebsites.net/api/GetPage?session={
+        #page_url = f'http://localhost:7071/api/GetPage?session={
             SESSION_KEY}&id={record_id}'
 
         response = self.session.post(

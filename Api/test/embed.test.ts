@@ -9,6 +9,7 @@ import axios from 'axios';
 import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { IEmbedRequest, IEmbedResponse } from "../../CommonTs/src/EmbedApi.Types";
+import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
 
 declare var process: any;
 
@@ -18,6 +19,7 @@ describe("Embed", async function () {
 
       let embedding: Array<number> | undefined = undefined;
       let embeddingRequest: IEmbedRequest = {
+         persona: EPromptPersona.kArticleSummariser,
          text: text
       }
 
@@ -31,7 +33,6 @@ describe("Embed", async function () {
 
          let embeddingResponse = (response.data as IEmbedResponse);
          embedding = embeddingResponse.embedding;
-         console.log (embeddingResponse);
   
       } catch (e: any) {       
 
@@ -88,7 +89,7 @@ describe("Embed", async function () {
       let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.embedApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let embedding = await validEmbedCall (apiUrl, sampleText);
 
@@ -101,7 +102,7 @@ describe("Embed", async function () {
       let sampleText = "My name is Jon and I am founding an AI project acceleration company." ;      
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.embedApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let embedding = await validEmbedCall (apiUrl, sampleText);
 
@@ -119,7 +120,7 @@ describe("Embed", async function () {
 
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.embedApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.embedApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validEmbedCall (apiUrl, sampleText);
 

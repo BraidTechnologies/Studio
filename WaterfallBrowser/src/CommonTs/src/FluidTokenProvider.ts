@@ -1,4 +1,18 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module FluidTokenProvider
+ * @description Provides token management and connection configuration for Azure Fluid Relay services.
+ * 
+ * This module implements the necessary components to establish and manage connections
+ * to Azure Fluid Relay, including:
+ * - Token generation and management via FluidTokenProvider
+ * - Connection configuration via FluidConnectionConfig
+ * - Client properties setup via FluidClientProps
+ * 
+ * The implementation supports both local and remote environments, with configurable
+ * authentication through session keys and user contexts.
+ */
+
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Implementation of the Fluid connection API
 
 import { AzureRemoteConnectionConfig, AzureClientProps, ITokenProvider, ITokenResponse } from "@fluidframework/azure-client";
@@ -54,8 +68,6 @@ export class FluidTokenProvider implements ITokenProvider {
          userName: this._user.userName,
          documentId: documentId? documentId : ""
       }
-
-      console.log ("Requesting token for:" + JSON.stringify(request) + " tenantId:" + tenantId);
       
       const response = await this._api.generateToken(request);
       if (!response)

@@ -9,10 +9,10 @@ import requests
 from src.workflow import PipelineItem, WebSearchPipelineSpec
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 # get the API KEY here: https://developers.google.com/custom-search/v1/overview
 GOOGLE_DEVELOPER_API_KEY = os.environ['GOOGLE_DEVELOPER_API_KEY']
@@ -24,6 +24,7 @@ AI_DEMAND_STACK_SEARCH_ENGINE_ID = '22fafd262192b4c06'
 AI_TELECOM_SEARCH_ENGINE_ID = '7789e6bd5a1d54069'
 AI_NATIONWIDE_SEARCH_ENGINE_ID= '3498036ca64b54980'
 AI_BNY_SEARCH_ENGINE_ID= 'a4521230dc31a4716'
+AI_VODAFONE_SEARCH_ENGINE_ID= '1482b42ca30924b1c'
 
 class WebSearcher:
     '''
@@ -47,6 +48,8 @@ class WebSearcher:
 
         # the search query you want
         query = 'Generative AI'
+        if pipeline.query_additions:
+            query += ' ' + pipeline.query_additions
 
         # Pull back 1- pages of results (100 items ...)
         for page in range(1, pipeline.pages + 1):

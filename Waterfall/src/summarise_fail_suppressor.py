@@ -9,14 +9,15 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 from src.workflow import PipelineItem, PipelineStep
+from CommonPy.src.request_utilities import request_timeout
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
@@ -53,7 +54,7 @@ class SummariseFailSuppressor (PipelineStep):
                         status_forcelist=[500, 502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
 
-        summary_url = f'https://braid-api.azurewebsites.net/api/SuppressSummariseFail?session={
+        summary_url = f'https://braid-api.azurewebsites.net/api/TestForSummariseFail?session={
             SESSION_KEY}'
         input_json = {
             'request': {
@@ -61,11 +62,14 @@ class SummariseFailSuppressor (PipelineStep):
             }
         }
 
-        response = session.post(summary_url, json=input_json, headers=headers)
+        response = session.post(summary_url, json=input_json, 
+                                headers=headers,
+                                timeout=request_timeout)
+
         keep: bool = True  # If there is an error in the API, we default to 'keep'
         if response.status_code == 200:
             response_json = json.loads(response.text)
-            keep = response_json['isValidSummary'] == 'Yes'
+            keep = response_json['isValidSummary'] == 'SummarySucceeded'
 
         if keep:
             return pipeline_item

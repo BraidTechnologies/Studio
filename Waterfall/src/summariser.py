@@ -11,14 +11,15 @@ from requests.adapters import HTTPAdapter, Retry
 
 from src.workflow import PipelineItem, PipelineStep
 from src.summary_repository_facade import SummaryRespositoryFacade
+from CommonPy.src.request_utilities import request_timeout
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
@@ -35,7 +36,7 @@ class Summariser (PipelineStep):
         '''
         Initializes the Summariser object with the provided output location.
         '''
-        # pylint: disable-next=useless-parent-delegation         
+        # pylint: disable-next=useless-parent-delegation
         super(Summariser, self).__init__(output_location)
 
     def summarise(self, pipeline_item: PipelineItem) -> PipelineItem:
@@ -61,19 +62,22 @@ class Summariser (PipelineStep):
 
         print("Summarising: " + pipeline_item.path)
 
-        # summary_url = f'http://localhost:7071/api/Summarize?session={
+        #summary_url = f'http://localhost:7071/api/Summarize?session={
         summary_url = f'https://braid-api.azurewebsites.net/api/Summarize?session={
             SESSION_KEY}'
         input_json = {
             'request': {
+                'persona': "ArticleSummariser",
                 'text': pipeline_item.text,
                 'lengthInWords': 50
             }
         }
 
-        response = session.post(summary_url, json=input_json, headers=headers)
+        response = session.post(summary_url, json=input_json, 
+                                headers=headers,
+                                timeout=request_timeout)
 
-        if (response.status_code == 200):
+        if response.status_code == 200:
             response_json = json.loads(response.text)
             summary = response_json['summary']
 

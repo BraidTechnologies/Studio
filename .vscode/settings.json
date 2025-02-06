@@ -1,10 +1,15 @@
 {
-   "azureFunctions.deploySubpath": "BraidApi",
+   "azureFunctions.deploySubpath": "Api",
    "azureFunctions.postDeployTask": "npm install (functions)",
    "azureFunctions.projectLanguage": "TypeScript",
    "azureFunctions.projectRuntime": "~4",
    "debug.internalConsoleOptions": "neverOpen",
    "azureFunctions.projectLanguageModel": 4,
    "azureFunctions.preDeployTask": "npm prune (functions)",
-   "azureFunctions.projectSubpath": "Api"
+   "azureFunctions.projectSubpath": "Api",
+   "python.testing.pytestArgs": [
+      "ApiTest"
+   ],
+   "python.testing.unittestEnabled": false,
+   "python.testing.pytestEnabled": true
 }

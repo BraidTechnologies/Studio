@@ -3,8 +3,9 @@
 
 # Standard Library Imports
 import logging
+import os
 
-from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
+from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec, FileDirectedPipelineSpec, PipelineSpec
 from src.web_searcher import WebSearcher
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
@@ -13,15 +14,15 @@ from src.embedder import Embedder
 from src.cluster_analyser import ClusterAnalyser
 from src.theme_finder import ThemeFinder
 from src.embedding_finder import EmbeddingFinder
-from src.waterfall_pipeline_report import create_mail_report
-from src.waterfall_pipeline_report_common import write_details_json
-from src.waterfall_pipeline_save_chunks import save_chunks
+from src.waterfall_pipeline_report_common import write_details_json, write_chart
+from src.waterfall_pipeline_save_chunks import save_chunk_tree
+from src.text_repository_facade import TextRespositoryFacade
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 def sort_array_by_another(arr1: list[Theme], arr2: list[int]) -> list[Theme]:
@@ -44,6 +45,46 @@ def sort_array_by_another(arr1: list[Theme], arr2: list[int]) -> list[Theme]:
     return sorted_arr1
 
 
+def make_path(directory: str, filename: str) -> str:
+    '''
+    Concatenates a directory path and filename to create a full path.
+    Handles path separators appropriately for the current operating system.
+
+    Parameters:
+        directory (str): The directory path
+        filename (str): The filename to append
+
+    Returns:
+        str: The complete file path
+    '''
+    return os.path.join(directory, filename)
+
+
+def load_file(filename: str) -> str:
+    '''
+    Loads the contents of a text file.
+
+     Parameters:
+         filename (str): Path to the file to load
+
+     Returns:
+         str: Contents of the file
+
+     Raises:
+         FileNotFoundError: If the file doesn't exist
+         IOError: If there's an error reading the file
+     '''
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        logger.error(f"File not found: {filename}")
+        raise
+    except IOError as e:
+        logger.error(f"Error reading file {filename}: {str(e)}")
+        raise
+
+
 class WaterfallDataPipeline:
     '''
     Searches for HTML content from a list of links.
@@ -56,7 +97,7 @@ class WaterfallDataPipeline:
         self.output_location = output_location
         return
 
-    def search(self, spec: WebSearchPipelineSpec, send_final: bool) -> list[Theme]:
+    def search_dynamic(self, spec: WebSearchPipelineSpec) -> list[Theme]:
         '''
         Searches for HTML content from a list of links.
 
@@ -66,19 +107,35 @@ class WaterfallDataPipeline:
 
         items: list[WebSearchPipelineSpec] = self.search_and_cluster(spec)
 
-        themes: list[Theme] = self.create_themes(items, spec)
+        themes: list[Theme] = self.create_themes(items, spec.clusters)
 
-        self.create_report(items, themes, spec, send_final)
+        self.create_report(items, themes, spec)
+
+        return themes
+
+    def search_static(self, spec: PipelineSpec, file_spec: FileDirectedPipelineSpec) -> list[Theme]:
+        '''
+        Searches for HTML content from a list of links.
+
+        Returns:
+            list[Theme]: A list of Theme objects 
+        '''
+
+        items: list[WebSearchPipelineSpec] = self.cluster_from_files(
+            file_spec.files, spec.clusters)
+
+        themes: list[Theme] = self.create_themes(items, spec.clusters)
+
+        self.create_report(items, themes, spec)
 
         return themes
 
     def search_and_cluster(self, spec: WebSearchPipelineSpec) -> list[PipelineItem]:
         '''
-        Create themes based on the provided PipelineItems and PipelineSpec.
+        Create themes based on the provided PipelineSpec.
 
         Parameters:
-           items (list[PipelineItem]): A list of PipelineItem objects to create themes from.
-           spec (PipelineSpec): The PipelineSpec object containing specifications for 
+           spec (WebSearchPipelineSpec): The WebSearchPipelineSpec object containing specifications for 
            theme creation.
 
         Returns:
@@ -89,13 +146,54 @@ class WaterfallDataPipeline:
 
         input_items = searcher.search(spec)
 
-        items: list[PipelineItem] = []
+        return self.cluster(input_items, spec.clusters)
+
+    def cluster_from_files(self, items: list[str], clusters: int) -> list[PipelineItem]:
+        '''
+        Create themes based on the provided PipelineItems and PipelineSpec.
+
+        Parameters:
+           items (list[str]): A list of files to create themes from.
+           clusters (int): The number of clusters to create.
+
+        Returns:
+           list[Theme]: A list of Theme objects created based on the provided PipelineItems 
+           and PipelineSpec.
+        '''
+        pipeline_items: list[PipelineItem] = []
+
+        repository = TextRespositoryFacade(self.output_location)
+
+        for file in items:
+            file_path = make_path(self.output_location, file) + "." + repository.extension
+            file_contents = load_file(file_path)
+            pipeline_item: PipelineItem = PipelineItem()
+            pipeline_item.path = file
+            pipeline_item.text = file_contents
+            pipeline_items.append(pipeline_item)
+
+        return self.cluster(pipeline_items, clusters)
+
+    def cluster(self, input_items: list[PipelineItem], clusters: int) -> list[PipelineItem]:
+        '''
+        Create themes based on the provided PipelineItems.
+
+        Parameters:
+           input_items (list[PipelineItem]): A list of PipelineItem objects to create themes from.
+           clusters (int): The number of clusters to create.
+
+        Returns:
+           list[Theme]: A list of Theme objects created based on the provided PipelineItems 
+           and PipelineSpec.
+        '''
 
         downloader = HtmlFileDownloader(self.output_location)
         summariser = Summariser(self.output_location)
         suppressor = SummariseFailSuppressor(self.output_location)
         embedder = Embedder(self.output_location)
-        cluster_analyser = ClusterAnalyser(self.output_location, spec.clusters)
+        cluster_analyser = ClusterAnalyser(self.output_location, clusters)
+
+        items: list[PipelineItem] = []
 
         for item in input_items:
             downloaded = None
@@ -103,7 +201,14 @@ class WaterfallDataPipeline:
             summarised = None
             embedded = None
 
-            downloaded = downloader.download(item)
+            # Download the HTML file - added specific exception handling bcs we seem to get some fails, no reason not to continue if others requests can succe
+            try:
+                downloaded = downloader.download(item)
+            except Exception as e:
+                logger.error(f"Error downloading {item.path}: {str(e)}")
+                downloaded = None
+                continue
+
             if downloaded:
                 summarised = summariser.summarise(downloaded)
             if summarised:
@@ -113,11 +218,11 @@ class WaterfallDataPipeline:
             if embedded:
                 items.append(embedded)
 
-        items = cluster_analyser.analyse(items)
+        clustered_items = cluster_analyser.analyse(items)
 
-        return items
+        return clustered_items
 
-    def create_themes(self, items: list[PipelineItem], spec: WebSearchPipelineSpec) -> list[Theme]:
+    def create_themes(self, items: list[PipelineItem], clusters: int) -> list[Theme]:
         '''
         Create themes based on the provided PipelineItems and PipelineSpec.
 
@@ -132,10 +237,10 @@ class WaterfallDataPipeline:
         '''
         themes: list[Theme] = []
 
-        accumulated_summaries: list[str] = [''] * spec.clusters
-        accumulated_counts: list[int] = [0] * spec.clusters
-        accumulated_members: list[list[PipelineItem]] = [None] * spec.clusters
-        for x in range(spec.clusters):
+        accumulated_summaries: list[str] = [''] * clusters
+        accumulated_counts: list[int] = [0] * clusters
+        accumulated_members: list[list[PipelineItem]] = [None] * clusters
+        for x in range(clusters):
             accumulated_members[x] = []
 
         # Accumulate a set of summaries and counts of summaries according to classification
@@ -155,7 +260,8 @@ class WaterfallDataPipeline:
             theme = Theme()
             theme.member_pipeline_items = accumulated_members[i]
             theme.short_description = short_description
-            theme.long_description = long_description
+            theme.long_description = long_description + "\n\n" + "There are " + \
+                str(accumulated_counts[i]) + " members in this cluster."
             themes.append(theme)
 
         # Ask the embedding finder to find nearest article for each theme
@@ -193,8 +299,7 @@ class WaterfallDataPipeline:
 
     def create_report(self, items: list[PipelineItem],
                       themes: list[Theme],
-                      spec: WebSearchPipelineSpec,
-                      send_final: bool) -> None:
+                      spec: PipelineSpec) -> None:
         '''
         Generates a report based on the provided PipelineItems, Themes, and PipelineSpec. 
 
@@ -204,6 +309,30 @@ class WaterfallDataPipeline:
         - spec (PipelineSpec): The PipelineSpec object containing specifications for the report.
         - send_final - set to false to suppress ending the report - used in testing
         '''
-        write_details_json( self.output_location, items, themes, spec)
-        create_mail_report(self.output_location, items, themes, spec, send_final)
-        save_chunks (self.output_location, items, themes, spec)
+        write_details_json(self.output_location, items, themes, spec)
+        write_chart(self.output_location, items, themes, spec)
+        save_chunk_tree(self.output_location, items, themes, spec)
+
+    def load_file(self, filename: str) -> str:
+        '''
+        Loads the contents of a text file.
+
+        Parameters:
+            filename (str): Path to the file to load
+
+        Returns:
+            str: Contents of the file
+
+        Raises:
+            FileNotFoundError: If the file doesn't exist
+            IOError: If there's an error reading the file
+        '''
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                return file.read()
+        except FileNotFoundError:
+            logger.error(f"File not found: {filename}")
+            raise
+        except IOError as e:
+            logger.error(f"Error reading file {filename}: {str(e)}")
+            raise

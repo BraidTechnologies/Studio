@@ -98,7 +98,22 @@ class PipelineStep ():
         '''
         self.output_location = output_location
 
-class WebSearchPipelineSpec(Freezable):
+class PipelineSpec(Freezable):
+    '''The spec for a full run of the Waterfall workflow'''
+
+    def __init__(self):
+        '''
+        Initialize the PipelineSpec object with default attributes.
+        '''
+        self.clusters = 2
+        self.clusters_in_summary = 2
+        self.description = None
+        self.output_chart_name = None
+        self.output_data_name = None
+        self.themes = None
+
+
+class WebSearchPipelineSpec(PipelineSpec):
     '''The spec for a full run of the Waterfall workflow'''
 
     def __init__(self):
@@ -106,15 +121,11 @@ class WebSearchPipelineSpec(Freezable):
         Initialize the WebPipelineSpec object with default attributes and freeze the object.
         Freeze the object to prevent adding spurious variables.
         '''
+        super().__init__()
         self.pages = 1  # default is to pull back one page
-        self.clusters = 2
-        self.clusters_in_summary = 2
         self.search_key = None
-        self.description = None
+        self.query_additions = None
         self.mail_to = None
-        self.themes = None
-        self.output_chart_name = None
-        self.output_data_name = None
 
         self._freeze()
 
@@ -145,6 +156,18 @@ class HtmlDirectedPipelineSpec(Freezable):
 
         self._freeze()
 
+class FileDirectedPipelineSpec(Freezable):
+    '''The spec for a batch of web pages to download'''
+
+    def __init__(self):
+        '''
+        Initialize the WebDirectedPipelineSpec object with default attributes and freeze the object.
+        Freeze the object to prevent adding spurious variables.
+        '''
+        self.files = list[str]
+
+        self._freeze()
+
 class PipelineFileSpec(Freezable):
     '''The spec for a full run of the Waterfall workflow'''
 
@@ -154,5 +177,6 @@ class PipelineFileSpec(Freezable):
         Freeze the object to prevent adding spurious variables.
         '''
         self.output_data_name = None
+        self.description = None
 
         self._freeze()

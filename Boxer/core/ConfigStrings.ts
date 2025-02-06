@@ -1,4 +1,12 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module ConfigStrings
+ * @description Provides constants for configuration strings used in the Boxer application.
+ * 
+ * This module includes strings for logging categories, font names, URLs, Azure settings, and more.
+ * It also includes constants for various IDs and keys used in the application, such as session keys,
+ * conversation keys, and AI model IDs.
+ */
 
 export enum EConfigStrings {
 
@@ -8,12 +16,7 @@ export enum EConfigStrings {
 
    kFontNameForTextWrapCalculation = "12pt Segoe UI",
 
-   kHomeRelativeUrl= "/aibot.html",   
-
-   kCheckSessionUrl = "https://braid-api.azurewebsites.net/api/CheckSession",       
-   kSummariseUrl = "https://braid-api.azurewebsites.net/api/Summarize",     
-   kCheckSessionLocalUrl = "http://localhost:7071/api/CheckSession",        
-   kSummariseLocalUrl = "http://localhost:7071/api/Summarize",        
+   kHomeRelativeUrl= "/boxer.html",           
    
    kAzureTenantId = "b9576484-5c2e-4613-bfdf-039948cdd521",
    kAzureProductionFluidHost = "https://eu.fluidrelay.azure.com",

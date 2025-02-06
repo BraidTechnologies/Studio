@@ -1,6 +1,15 @@
 // NotificationFramework
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 /////////////////////////////////////////
+/**
+ * @module NotificationFramework
+ * @description Provides a framework for managing notifications in the Boxer application.
+ * 
+ * This module includes the Interest class which handles:
+ * - Creating and managing notification interests with unique IDs
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying interest objects from JSON or constructed sources
+ */
 
 
 /// <summary>

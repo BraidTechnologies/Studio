@@ -10,15 +10,11 @@ declare var process: any;
 import { EEnvironment } from '../../CommonTs/src/IEnvironment';
 import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
 import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
-import { QueryModelApi } from '../../CommonTs/src/QueryModelApi';
-import { IConversationElement, IEnrichedResponse, EConversationRole, IGenerateQuestionQuery, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery';
+import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
+import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
+import { IModelConversationElement, EModelConversationRole } from '../../CommonTs/src/IModelDriver';
 
-
-let personaPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to 50 words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.";
-let enrichmentDocumentPrompt = "You will be provided with a question about generative AI. Write a 50 word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'. \n\n ###The Question:";
 let question = "What are the main user interface considerations for building an application using an LLM?"
-
-let questionGenerationPrompt = "You will be provided with a short summary of article about building applications that use generative AI technology. Write a question of no more than 10 words that a reader might after they have read the article. \n\n ###The Summary of the Article:";
 let summary = "Financial services will adopt generative AI, powered by large language models (LLMs), faster than expected. LLMs can create new content by training on vast amounts of unstructured data, with unlimited computational power. This transformation has the potential to revolutionize the financial services market, going beyond traditional AI/ML capabilities.";
 
 let priorQuestions = ["How does an LLM work?", "What are LLMs bad at?"];
@@ -30,15 +26,14 @@ describe("QueryModel", async function () {
 
    it("Needs to make a simple query.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-         personaPrompt: personaPrompt,
-         enrichmentDocumentPrompt: enrichmentDocumentPrompt,
-         history: new Array<IConversationElement>(),
+         history: new Array<IModelConversationElement>(),
          question: question,
          similarityThreshold: 0.4,
-         maxCount: 2
+         maxCount: 2,
+         wordTarget: 50
       };
 
       let response = await api.queryModelWithEnrichment(query);
@@ -55,18 +50,17 @@ describe("QueryModel", async function () {
 
    it("Needs to make a query with history.", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
          repositoryId: EChunkRepository.kBoxer,
-         personaPrompt: personaPrompt,
-         enrichmentDocumentPrompt: enrichmentDocumentPrompt,
-         history: [{role: EConversationRole.kUser, content: priorQuestions[0]}, 
-                   {role: EConversationRole.kAssistant, content: priorAnswers[0]}, 
-                   {role: EConversationRole.kUser, content: priorQuestions[1]},
-                   {role: EConversationRole.kAssistant, content: priorAnswers[1]}],
+         history: [{role: EModelConversationRole.kUser, content: priorQuestions[0]}, 
+                   {role: EModelConversationRole.kAssistant, content: priorAnswers[0]}, 
+                   {role: EModelConversationRole.kUser, content: priorQuestions[1]},
+                   {role: EModelConversationRole.kAssistant, content: priorAnswers[1]}],
          question: question,
          similarityThreshold: 0.5,
-         maxCount: 2
+         maxCount: 2,
+         wordTarget: 50
       };
 
       let response = await api.queryModelWithEnrichment(query);
@@ -84,11 +78,10 @@ describe("QueryModel", async function () {
 
    it("Needs to generate a questions based on a summary", async function () {
 
-      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.SessionKey.toString());
+      let api = new QueryModelApi(getEnvironment(EEnvironment.kLocal), process.env.BRAID_SESSION_KEY.toString());
       let query = {
-         personaPrompt: personaPrompt,
-         questionGenerationPrompt: questionGenerationPrompt,
-         summary: summary
+         summary: summary,
+         wordTarget: 10
       };
 
       let response = await api.generateQuestion(query);

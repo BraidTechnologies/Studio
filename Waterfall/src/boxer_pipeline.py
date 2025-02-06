@@ -1,5 +1,6 @@
 '''driver for the entire Boxer data generation pipeline '''
 # Copyright (c) 2024 Braid Technologies Ltd
+# @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-004-Search-dynamic-list-of-content.md
 
 # Standard Library Imports
 import logging
@@ -14,17 +15,18 @@ from src.html_link_crawler import HtmlLinkCrawler
 from src.html_file_downloader import HtmlFileDownloader
 from src.summariser import Summariser
 from src.embedder import Embedder
+from src.waterfall_pipeline_save_chunks import save_chunks
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 class BoxerDataPipeline:
     '''
-    Searches for HTML & YouTube  from a list of links.
+    Searches for HTML & YouTube from a list of links.
 
     Returns:
        list[str]: A list of HTML content downloaded from the specified links.
@@ -103,6 +105,9 @@ class BoxerDataPipeline:
                 embedded = embedder.embed(summarised)
             if embedded:
                 all_enriched_chunks.append(embedded)
+
+        # Save all chunks to the DB
+        save_chunks(all_enriched_chunks, file_spec)
 
         output_results = []
         for chunk in all_enriched_chunks:

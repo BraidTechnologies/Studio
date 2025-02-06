@@ -1,4 +1,12 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * @module ChunkApi.Types
+ * @description Type definitions for the Chunk API, which handles text chunking operations.
+ * This module provides interfaces for chunk request and response objects used in text
+ * segmentation operations. It supports configurable chunk sizes and overlap between
+ * chunks for optimal text processing.
+ */
+
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the Chunk API
 
 /**

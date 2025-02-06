@@ -1,4 +1,12 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+
+/**
+ * @module Api
+ * 
+ * This module provides a base class for interacting with an API.
+ * It includes common properties and methods for all API classes.
+ */
+
 import axios from 'axios';
 
 import { IEnvironment } from "./IEnvironment";

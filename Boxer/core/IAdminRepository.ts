@@ -1,4 +1,11 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module IAdminRepository
+ * @description Provides an interface for checking if a user is an admin.
+ * 
+ * This module includes the IAdminRepository interface and the DefaultAdminRepository
+ * class, which is a local implementation of the interface.
+ */
 
 import { Persona} from "./Persona";
 import { EConfigStrings } from "./ConfigStrings";

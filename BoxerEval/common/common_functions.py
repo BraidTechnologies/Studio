@@ -1,3 +1,12 @@
+"""
+Common functions for the Braid LMS project.
+
+This module provides utility functions for the Braid LMS project, including directory creation,
+embedding generation, and API configuration handling.
+
+Copyright (c) 2024 Braid Technologies Ltd
+"""
+
 # Standard library imports
 import os
 from openai import AzureOpenAI

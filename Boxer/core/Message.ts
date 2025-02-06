@@ -1,4 +1,13 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Message
+ * @description Provides a class for managing messages in the Boxer application.
+ * 
+ * This module includes the Message class which handles:
+ * - Creating and managing message objects with text, author, responseTo, and timestamp
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying message objects from JSON or constructed sources
+ */
 
 import GPT4Tokenizer from 'gpt4-tokenizer';
 
@@ -8,7 +17,7 @@ import { IKeyGenerator } from './IKeyGenerator';
 import { getDefaultKeyGenerator } from './IKeyGeneratorFactory';
 import { MDynamicStreamable, DynamicStreamableFactory } from "./StreamingFramework";
 import { areSameDate, areSameDeepArray } from './Utilities';
-import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedChunk';
+import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedQuery.Api.Types';
 
 const keyGenerator: IKeyGenerator = getDefaultKeyGenerator();
 const tokenizer = new GPT4Tokenizer({ type: 'gpt3' });

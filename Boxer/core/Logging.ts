@@ -1,4 +1,10 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Logging
+ * @description Provides a logging system for the Boxer application.
+ * 
+ * This module includes the logCoreError, logDbError, logApiError, and logApiInfo functions which log errors and information to the console.
+ */
 
 import { log, LogLevel, tag } from 'missionlog';
 import { EConfigStrings } from './ConfigStrings';

@@ -1,6 +1,17 @@
-// Copyright (c) 2024 Braid Technologies Ltd
-import { SharedMap, IValueChanged } from "fluid-framework";
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module CaucusFramework
+ * @description Provides a framework for managing caucuses in the Boxer application.
+ * 
+ * This module includes the CaucusOf class which manages a shared map and provides
+ * methods for adding, removing, and updating elements in the map. It also includes
+ * static interests for notifications when elements are added, changed, or removed.
+ * 
+ * The CaucusOf class extends the Notifier class from the NotificationFramework module,
+ * which provides a mechanism for notifying observers of events.
+ */
 
+import { SharedMap, IValueChanged } from "fluid-framework/legacy";
 import { debounce } from './Debounce';
 import { MDynamicStreamable } from './StreamingFramework';
 import { Interest, NotificationFor, Notifier } from './NotificationFramework';

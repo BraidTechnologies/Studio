@@ -1,5 +1,17 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
 import axios from 'axios';
+/**
+ * @module SessionApi
+ * @description Provides an API for managing user sessions and authentication.
+ * 
+ * This module contains the SessionApi class which handles session validation
+ * and authentication operations. It provides methods for:
+ * - Checking session key validity
+ * - Managing session authentication state
+ * 
+ * The module extends the base Api class to provide consistent authentication
+ * patterns while handling session-specific requirements.
+ */
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";

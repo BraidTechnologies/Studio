@@ -33,7 +33,6 @@ describe("Classify", async function () {
          });
 
          classificationResponse = (response.data as IClassifyResponse);
-         console.log(classificationResponse);
 
       } catch (e: any) {
 
@@ -91,7 +90,7 @@ describe("Classify", async function () {
       let sampleText = "OpenAI have release a new large language model aimed at coding.";
       let environment = getEnvironment(EEnvironment.kProduction);
 
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validClassifyCall(apiUrl, sampleText);
 
@@ -104,7 +103,7 @@ describe("Classify", async function () {
       let sampleText = "OpenAI have released a new large language model aimed at coding.";
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validClassifyCall(apiUrl, sampleText);
 
@@ -118,7 +117,7 @@ describe("Classify", async function () {
       let sampleText = "The Coca-cola company has made a take-over bid for Pepsi.";
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validClassifyCall(apiUrl, sampleText);
 
@@ -132,7 +131,7 @@ describe("Classify", async function () {
       let sampleText = "The President is heading to emergecy talks with the German chancellor.";
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validClassifyCall(apiUrl, sampleText);
 
@@ -146,7 +145,7 @@ describe("Classify", async function () {
       let sampleText = "Taking a small dose of aspirin each day has been shown to reduce the chances of heart desease.";
       let environment = getEnvironment(EEnvironment.kLocal);
 
-      let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+      let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
 
       let summary = await validClassifyCall(apiUrl, sampleText);
 
@@ -161,7 +160,7 @@ describe("Classify", async function () {
        let sampleText = "OpenAI have release a new large language model aimed at coding." ;      
        let environment = getEnvironment(EEnvironment.kProduction);
  
-       let apiUrl = environment.classifyApi() + "?session=" + process.env.SessionKey.toString();
+       let apiUrl = environment.classifyApi() + "?session=" + process.env.BRAID_SESSION_KEY.toString();
  
        let summary = await validClassifyCall (apiUrl, sampleText);
  

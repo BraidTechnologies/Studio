@@ -14,7 +14,7 @@ from src.workflow import PipelineItem
 from src.summariser import Summariser
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 

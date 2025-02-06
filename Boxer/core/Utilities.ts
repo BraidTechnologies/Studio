@@ -1,4 +1,13 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Utilities
+ * @description Provides utility functions for the Boxer application.
+ * 
+ * This module includes the areSameDate, areSameShallowArray, and areSameDeepArray functions which handle:
+ * - Comparing dates
+ * - Comparing shallow arrays
+ * - Comparing deep arrays
+ */
 
 import { throwIfUndefined } from './Asserts';
 

@@ -1,7 +1,19 @@
 import React, { ReactNode } from 'react';
 import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
-import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
 import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
+
+
+/**
+ * Constructs a URL string by appending the given value as a query parameter.
+ *
+ * @param value - The string value to be appended as a query parameter.
+ * @returns The constructed URL string with the query parameter.
+ */
+function chunkUrl (value: string) : string {
+   return window.location.protocol + '//' + window.location.host + window.location.pathname + '?id=' + value.toString();
+}
+
+
 /**
  * Generates a ReactNode that provides a link back to a parent element.
  *
@@ -11,8 +23,7 @@ import { uiAppName, uiBackToParentChunk, uiRelatedChunks } from './UIString';
 function backToParent (value: string | undefined) : ReactNode {
 
    if (value) {
-      let relatedUrl = '/chunks/' + value.toString();
-
+      let relatedUrl = chunkUrl(value);
       return (<p>{uiBackToParentChunk} <a href={relatedUrl}>{value}</a> </p>)
    }
    else
@@ -30,21 +41,28 @@ function backToParent (value: string | undefined) : ReactNode {
  */
 function mapRelated (value: string, index: number, all: Array<string>) : ReactNode {
 
-   let relatedUrl = '/chunks/' + value.toString();
+   let relatedUrl = chunkUrl(value);
    let nodeWithKey : ReactNode = <p key={value}> <a href={relatedUrl}>{value}</a> </p>;
 
    return (nodeWithKey)
 }
 
 /**
- * Splits a string into an array of strings using double newlines as the delimiter.
- * Empty strings are filtered out from the result.
+ * Splits the input text into an array of strings based on double newline characters.
+ * If no double newline is found, splits by single newline characters.
+ * Filters out any empty or whitespace-only strings from the result.
  *
- * @param text - The input string to split
- * @returns An array of non-empty strings split by double newlines
+ * @param text - The input string to be split.
+ * @returns An array of non-empty strings obtained by splitting the input text.
  */
-function splitByDoubleNewline(text: string): string[] {
-   return text.split('\n\n').filter(str => str.trim().length > 0);
+function splitByNewlines(text: string): string[] {
+   if (text.includes('\\n\\n')) {
+      return text.split('\\n\\n').filter(str => str.trim().length > 0);
+   }   
+   if (text.includes('\n\n')) {
+      return text.split('\n\n').filter(str => str.trim().length > 0);
+   }
+   return text.split('\n').filter(str => str.trim().length > 0);
 }
 
 /**
@@ -60,17 +78,11 @@ export function ChunkView(props: {chunk: IStoredChunk}) {
     let url : string | undefined = undefined
 
     if (props.chunk.storedSummary?.text) {
-        splitSummary = splitByDoubleNewline (props.chunk.storedSummary?.text);
+        splitSummary = splitByNewlines (props.chunk.storedSummary?.text);
     }
 
-    if (!props.chunk.parentChunkId) {
 
-        let env = getDefaultEnvironment();    
-        url = env.hostProtocolAndName() + '/api/GetPage?id=' + props.chunk.id;
-    }
-    else {
-        url = props.chunk.url;
-    }
+   url = props.chunk.url;
 
     return (
         <div>

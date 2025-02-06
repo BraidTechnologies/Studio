@@ -1,4 +1,4 @@
-'''Module to store data in the Chunk table of the BraidApis '''
+'''API to store data in the Chunk table of the Braid Apis '''
 # Copyright (c) 2024 Braid Technologies Ltd
 
 # Standard Library Imports
@@ -9,17 +9,18 @@ import json
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from .request_utilities import request_timeout
 from .storable_types import IStorableQuerySpec
 from .chunk_repository_api_types import IStoredChunk, IStoredEmbedding, IStoredTextRendering
 from .type_utilities import safe_dict_to_object, safe_cast
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
@@ -45,13 +46,14 @@ class ChunkRepository:
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
         models_url = f'https://braid-api.azurewebsites.net/api/EnumerateModels?session={
+        #models_url = f'http://localhost:7071/api/EnumerateModels?session={
             SESSION_KEY}'
         json_input = {
             'request': ''
         }
 
         response = self.session.post(
-            models_url, json=json_input, headers=headers)
+            models_url, json=json_input, headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
             data = response.json()
@@ -93,7 +95,8 @@ class ChunkRepository:
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Saved: %s', chunk.id)
@@ -120,15 +123,16 @@ class ChunkRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Finding: %s', functional_key)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
 
@@ -152,8 +156,6 @@ class ChunkRepository:
 
             response_obj = safe_dict_to_object(response_json)
             safe_response: IStoredChunk = safe_cast(response_obj, IStoredChunk)
-
-
 
             logger.debug('Found: %s', functional_key)
             return safe_response
@@ -179,15 +181,16 @@ class ChunkRepository:
         spec.functionalSearchKey = None
         logger.debug('Finding: %s', record_id)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/GetChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/GetChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers, timeout=request_timeout)
 
         if response.status_code == 200:
 
@@ -229,15 +232,17 @@ class ChunkRepository:
         spec.functionalSearchKey = None
         logger.debug('Removing: %s', id)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/RemoveChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/RemoveChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, 
+            headers=headers,
+            timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Removed: %s', record_id)
@@ -261,15 +266,16 @@ class ChunkRepository:
         spec.functionalSearchKey = functional_key
         logger.debug('Checking existence of: %s', functional_key)
 
-        # chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
-        chunk_url = f'http://localhost:7071/api/FindChunk?session={
+        chunk_url = f'https://braid-api.azurewebsites.net/api/FindChunk?session={
+        #chunk_url = f'http://localhost:7071/api/FindChunk?session={
             SESSION_KEY}'
         json_input = {
             'request': spec.__dict__
         }
 
         response = self.session.post(
-            chunk_url, json=json_input, headers=headers)
+            chunk_url, json=json_input, headers=headers,
+            timeout=request_timeout)
 
         if response.status_code == 200:
             logger.debug('Found: %s', functional_key)

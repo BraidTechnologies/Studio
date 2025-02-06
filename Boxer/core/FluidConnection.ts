@@ -1,4 +1,19 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module FluidConnection
+ * @description Provides a base class for managing Fluid connections in the Boxer application.
+ * 
+ * This module includes the FluidConnection class which handles:
+ * - Creating and attaching to Fluid containers
+ * - Disconnecting from Fluid containers
+ * - Managing local caucuses for participants and messages
+ * - Tracking active call state
+ * 
+ * The connection requires a session key for authentication and uses the environment 
+ * configuration to determine appropriate API endpoints. It works with the QueryModelApi
+ * to make actual API calls while providing higher-level conversation management.
+ */
+
 import { IFluidContainer, ConnectionState } from "fluid-framework";
 import { AzureClient } from "@fluidframework/azure-client";
 
@@ -35,7 +50,7 @@ export abstract class FluidConnection {
          this.setupBeforeConnection (sessionKey_, forceProduction);
 
          throwIfUndefined (this._client);
-         const { container, services } = await this._client.createContainer(this.schema());
+         const { container, services } = await this._client.createContainer(this.schema(), "2");
          this._container = container;
 
          let self = this;
@@ -71,7 +86,7 @@ export abstract class FluidConnection {
          this.setupBeforeConnection (sessionKey_, forceProduction);
 
          throwIfUndefined (this._client);
-         const { container, services } = await this._client.getContainer(conversationKey_.toString(), this.schema());
+         const { container, services } = await this._client.getContainer(conversationKey_.toString(), this.schema(), "2");
          this._container = container;
 
          this.setupAfterConnection(this._container);

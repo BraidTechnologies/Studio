@@ -1,4 +1,12 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Debounce
+ * @description Provides a utility function for debouncing function calls.
+ * 
+ * This module includes the debounce function which takes a function and a delay,
+ * and returns a new function that will call the original function after the delay,
+ * but not more frequently than once per delay period.
+ */
 
 import { throwIfNull } from "./Asserts";
 

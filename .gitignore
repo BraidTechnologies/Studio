@@ -48,11 +48,12 @@ __queuestorage__
 __azurite_db*__.json
 feature/ask-llm-gemini
 
-
 Waterfall/test/supply_output
 Waterfall/test/demand_output
 Waterfall/test/telecom_output
 Waterfall/test/boxer_output
 Waterfall/test/nationwide_output
 Waterfall/test/bny_output
+Waterfall/test/vodafone_output
+Waterfall/test/vf_survey_01_output
 Waterfall/test/credential.json

@@ -38,7 +38,7 @@ describe("StorableChunk", async function () {
    }
 
    let env = getEnvironment(EEnvironment.kLocal);
-   let api = new ChunkRepostoryApi(env, process.env.SessionKey.toString());
+   let api = new ChunkRepostoryApi(env, process.env.BRAID_SESSION_KEY.toString());
 
    // Clean up temp objects we created
    afterEach (async function () {

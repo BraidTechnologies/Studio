@@ -1,4 +1,28 @@
+"""
+Test runner module for the Boxer Data Testing framework.
+
+This module orchestrates the execution of tests for LLM-related questions using the Boxer
+testing framework. It provides functionality to:
+- Load and process a predefined set of LLM-related test questions
+- Configure test environments and directories
+- Execute tests using either v1 or v2 of the BoxerDataTest implementation
+- Handle test outputs and logging
+
+The module supports different versions of the test implementation (v1/v2) and manages
+file system operations for test inputs and outputs.
+
+Usage:
+    Run this module directly to execute the full test suite with the configured
+    questions and settings.
+
+Dependencies:
+    - BoxerDataTest_v1 or BoxerDataTest_v2
+    - common.ApiConfiguration
+"""
+
 # Copyright (c) 2024 Braid Technologies Ltd
+
+
 # Standard Library Imports
 import os
 import sys

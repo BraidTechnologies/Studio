@@ -1,4 +1,22 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+
+/**
+ * @module ChunkRepositoryApi
+ * 
+ * This module provides an API wrapper for managing text chunking operations.
+ * It extends the base Api class and implements IStorableRepostoryApiWrapper interface
+ * to provide CRUD operations for text chunking.
+ * 
+ * The module handles:
+ * - Loading individual text chunks
+ * - Finding text chunks by search key
+ * - Saving new or updated text chunks
+ * - Removing text chunks
+ * - Retrieving recent text chunks with query specifications
+ * 
+ * All operations require proper authentication via session key and communicate
+ * with the appropriate environment-specific API endpoints.
+ */
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";

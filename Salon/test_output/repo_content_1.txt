@@ -1,0 +1,1754 @@
+****************************************
+config.yaml
+****************************************
+source_patterns:
+    - "*.ts"
+    - "*.tsx"
+    - "*.py"
+
+common_directories_patterns:
+    - "CommonTs"
+    - "CommonPy"
+
+skip_dirs:
+    - "__pycache__"
+    - "node_modules"
+    - "venv"
+    - ".idea"
+    - ".pytest_cache"
+    - ".vscode"
+    - ".coverage"
+    - "data"    
+    - "env"
+    - ".nyc_output"
+        
+skip_patterns:
+    - "*.pyc"
+    - "*.pyo"
+    - "*.so"
+    - "*.o"
+    - "*.jpg"
+    - "*.jpeg"
+    - "*.png"
+    - "*.gif"
+    - "*.pdf"
+    - "*.bin"
+    - "*.exe"
+    - "*.dll"
+    - "*.class"
+    - ".DS_Store"
+    - ".gitignore"
+    - "*.pkl"
+    - "*.pyd"
+    - "*.dylib"
+    - "*.json"    
+    - "*.gitignore"
+    - "*.log"
+    - "*.js"
+    - "*.map"
+    - "*.txt"    
+    - "*.mdd"       
+    - "*.vtt"       
+    - "*.html"
+    - "__init__.py"
+    - ".coverage"    
+    - "*.xlsx"
+    - "*.zip"
+    - "*.wav"
+    - "*.mov"
+    - "*.css"    
+    - "*.ico"
+****************************************
+
+****************************************
+README.md
+****************************************
+# Salon
+
+Salon is a technology demonstrator for automated software development tools using Large Language Models (LLMs). It provides a suite of tools to assist in API testing and code analysis.
+## Key Components
+
+### api_to_test_code
+ tool that automatically generates Python test code from API specifications.
+**Features:**
+ Supports both JSON and YAML API specification formats
+ Generates comprehensive Python test code
+ Used in **ApiTest** to achieve high test coverage with minimal input effort
+ Provides context-aware prompts to OpenAI for accurate test generation
+ Includes error handling and logging
+ Automated file output generation
+
+### repo_to_text
+ utility for processing and analyzing codebases.
+**Features:**
+ Processes entire directories of source code
+ Concatenates source files into consolidated text files
+ Enables LLM-based code analysis and question answering
+ Adapted from [NotebookLM solution for interactive code exploration](https://jmlbeaujour.medium.com/introducing-notebooklm-as-a-solution-for-interactive-code-exploration-704a44e690a6)
+
+Example use:
+```
+py src\repo_to_text.py --cfg config.yaml --repo_path . -o test_output
+```
+****************************************
+
+****************************************
+apis\ChunkApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ChunkApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IChunkRequest:
+      properties:
+        text:
+          title: IChunkRequest.text
+          type: string
+        chunkSize:
+          title: IChunkRequest.chunkSize
+          type: number
+        overlapWords:
+          title: IChunkRequest.overlapWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: IChunkRequest
+      description: >-
+        Interface for chunk reqiest API.
+
+        @property {string} text - The text content of the chunk.
+
+        @property {number | undefined} chunkSize - The size of the chunk in
+        tokens, if specified.
+
+        @property {number | undefined} overlapWords - The size of the overlap
+        between chunks, in words (=2 * tokens) if specified.
+      type: object
+    IChunkResponse:
+      properties:
+        chunks:
+          items:
+            type: string
+          title: IChunkResponse.chunks
+          type: array
+      required:
+        - chunks
+      additionalProperties: false
+      title: IChunkResponse
+      description: |-
+        Return type of chunk reqiest API.
+        @property {Array<string>} chunks - Array of text chunks
+      type: object
+****************************************
+
+****************************************
+apis\ChunkRepositoryApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ChunkRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ChunkRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\ChunkRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IStoredEmbedding:
+      properties:
+        modelId:
+          title: IStoredEmbedding.modelId
+          type: string
+        embedding:
+          items:
+            type: number
+          title: IStoredEmbedding.embedding
+          type: array
+      required:
+        - modelId
+        - embedding
+      additionalProperties: false
+      title: IStoredEmbedding
+      description: >-
+        Represents an interface for storing embeddings with a model ID and an
+        array of numbers representing the embedding.
+      type: object
+    IStoredTextRendering:
+      properties:
+        modelId:
+          title: IStoredTextRendering.modelId
+          type: string
+        text:
+          title: IStoredTextRendering.text
+          type: string
+      required:
+        - modelId
+        - text
+      additionalProperties: false
+      title: IStoredTextRendering
+      description: Defines the structure of a stored text rendering object.
+      type: object
+    IStoredChunk:
+      properties:
+        parentChunkId:
+          title: IStoredChunk.parentChunkId
+          type: string
+        originalText:
+          title: IStoredChunk.originalText
+          type: string
+        url:
+          title: IStoredChunk.url
+          type: string
+        storedEmbedding:
+          $ref: '#/components/schemas/IStoredEmbedding'
+          title: IStoredChunk.storedEmbedding
+        storedSummary:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedSummary
+        storedTitle:
+          $ref: '#/components/schemas/IStoredTextRendering'
+          title: IStoredChunk.storedTitle
+        relatedChunks:
+          items:
+            type: string
+          title: IStoredChunk.relatedChunks
+          type: array
+      required:
+        - parentChunkId
+        - originalText
+        - url
+        - storedEmbedding
+        - storedSummary
+        - storedTitle
+        - relatedChunks
+      additionalProperties: false
+      title: IStoredChunk
+      description: "Interface representing a chunk of data.\r\n\r\nCore data for a chunk:\r\n- parentChunkId: Primary key to parent document\r\n- originalText: Original text; 0 if undefined, it has been thrown away (as maybe it can be reconstructed)\r\n- url: string | undefined;                 // url to external resource, can be null  \r\n- storedEmbedding: Embedding of the original text\r\n- storedSummary: Summary of the original text - generated with application-specific prompt \r\n- storedTitle: A generated of the original text - generated with application-specific prompt\r\n- related: Array of IDs to related chunks"
+      type: object
+****************************************
+
+****************************************
+apis\ClassifyApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from ClassifyApi.Types.yaml with typeconv
+  version: '1'
+  x-id: ClassifyApi.Types.yaml
+  x-comment: >-
+    Generated from src\ClassifyApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IClassifyRequest:
+      properties:
+        text:
+          title: IClassifyRequest.text
+          type: string
+        classifications:
+          items:
+            type: string
+          title: IClassifyRequest.classifications
+          type: array
+      required:
+        - text
+        - classifications
+      additionalProperties: false
+      title: IClassifyRequest
+      description: >-
+        Represents a classification request object with text and
+        classifications.
+      type: object
+    IClassifyResponse:
+      properties:
+        classification:
+          title: IClassifyResponse.classification
+          type: string
+      required:
+        - classification
+      additionalProperties: false
+      title: IClassifyResponse
+      description: Interface for the classification response object.
+      type: object
+****************************************
+
+****************************************
+apis\EmbedApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from EmbedApi.Types.yaml with typeconv
+  version: '1'
+  x-id: EmbedApi.Types.yaml
+  x-comment: >-
+    Generated from src\EmbedApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IEmbedRequest:
+      properties:
+        text:
+          title: IEmbedRequest.text
+          type: string
+      required:
+        - text
+      additionalProperties: false
+      title: IEmbedRequest
+      description: Interface for the embedding request object.
+      type: object
+    IEmbedResponse:
+      properties:
+        embedding:
+          items:
+            type: number
+          title: IEmbedResponse.embedding
+          type: array
+      required:
+        - embedding
+      additionalProperties: false
+      title: IEmbedResponse
+      description: Interface for the embedding response object.
+      type: object
+****************************************
+
+****************************************
+apis\EnumerateModelsApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from EnumerateModelsApi.Types.yaml with typeconv
+  version: '1'
+  x-id: EnumerateModelsApi.Types.yaml
+  x-comment: >-
+    Generated from src\EnumerateModelsApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IEnumerateModelsRequest:
+      additionalProperties: false
+      title: IEnumerateModelsRequest
+      description: Interface for the EnumerateModels request object.
+      type: object
+    IEnumerateModelsResponse:
+      properties:
+        defaultId:
+          title: IEnumerateModelsResponse.defaultId
+          type: string
+        defaultEmbeddingId:
+          title: IEnumerateModelsResponse.defaultEmbeddingId
+          type: string
+        largeId:
+          title: IEnumerateModelsResponse.largeId
+          type: string
+        largeEmbeddingId:
+          title: IEnumerateModelsResponse.largeEmbeddingId
+          type: string
+        smallId:
+          title: IEnumerateModelsResponse.smallId
+          type: string
+        smallEmbeddingId:
+          title: IEnumerateModelsResponse.smallEmbeddingId
+          type: string
+      required:
+        - defaultId
+        - defaultEmbeddingId
+        - largeId
+        - largeEmbeddingId
+        - smallId
+        - smallEmbeddingId
+      additionalProperties: false
+      title: IEnumerateModelsResponse
+      description: Interface for the EnumerateModels response object.
+      type: object
+    IEnumerateRepositoriesRequest:
+      additionalProperties: false
+      title: IEnumerateRepositoriesRequest
+      description: Interface for the EnumerateRepositories request object.
+      type: object
+    IEnumerateReposotoriesResponse:
+      properties:
+        repositoryIds:
+          items: {}
+          title: IEnumerateReposotoriesResponse.repositoryIds
+          type: array
+      required:
+        - repositoryIds
+      additionalProperties: false
+      title: IEnumerateReposotoriesResponse
+      description: Interface for the EnumerateModels response object.
+      type: object
+****************************************
+
+****************************************
+apis\FindThemeApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from FindThemeApi.Types.yaml with typeconv
+  version: '1'
+  x-id: FindThemeApi.Types.yaml
+  x-comment: >-
+    Generated from src\FindThemeApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IFindThemeRequest:
+      properties:
+        text:
+          title: IFindThemeRequest.text
+          type: string
+        length:
+          title: IFindThemeRequest.length
+          type: number
+      required:
+        - text
+        - length
+      additionalProperties: false
+      title: IFindThemeRequest
+      description: Interface for the find theme request object.
+      type: object
+    IFindThemeResponse:
+      properties:
+        theme:
+          title: IFindThemeResponse.theme
+          type: string
+      required:
+        - theme
+      additionalProperties: false
+      title: IFindThemeResponse
+      description: Interface for the find theme response object.
+      type: object
+****************************************
+
+****************************************
+apis\FindThemeApi.Types_test.py
+****************************************
+import pytest
+import jsonschema
+from jsonschema import validate
+
+# Define the schema for request and response
+IFindThemeRequestSchema = {
+    "type": "object",
+    "properties": {
+        "text": {"type": "string", "title": "IFindThemeRequest.text"},
+        "length": {"type": "number", "title": "IFindThemeRequest.length"}
+    },
+    "required": ["text", "length"],
+    "additionalProperties": False
+}
+
+IFindThemeResponseSchema = {
+    "type": "object",
+    "properties": {
+        "theme": {"type": "string", "title": "IFindThemeResponse.theme"}
+    },
+    "required": ["theme"],
+    "additionalProperties": False
+}
+
+# Test cases for IFindThemeRequest
+def test_valid_ifind_theme_request():
+    # Valid example
+    payload = {
+        "text": "Find the theme",
+        "length": 17
+    }
+    # Test validation passes without exception
+    validate(instance=payload, schema=IFindThemeRequestSchema)
+
+def test_invalid_ifind_theme_request_missing_text():
+    # Invalid example: missing 'text'
+    payload = {
+        "length": 10
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeRequestSchema)
+
+def test_invalid_ifind_theme_request_missing_length():
+    # Invalid example: missing 'length'
+    payload = {
+        "text": "Missing length"
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeRequestSchema)
+
+def test_invalid_ifind_theme_request_additional_properties():
+    # Invalid example: additional property
+    payload = {
+        "text": "Theme with extra",
+        "length": 18,
+        "extra": "This should not be here"
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeRequestSchema)
+        
+def test_invalid_ifind_theme_request_wrong_type():
+    # Invalid example: 'length' is string instead of a number
+    payload = {
+        "text": "Theme with wrong type",
+        "length": "I am not a number"
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeRequestSchema)
+
+# Test cases for IFindThemeResponse
+def test_valid_ifind_theme_response():
+    # Valid example
+    payload = {
+        "theme": "Nature"
+    }
+    # Test validation passes without exception
+    validate(instance=payload, schema=IFindThemeResponseSchema)
+    
+def test_invalid_ifind_theme_response_missing_theme():
+    # Invalid example: missing 'theme'
+    payload = {}
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeResponseSchema)
+
+def test_invalid_ifind_theme_response_additional_properties():
+    # Invalid example: additional property
+    payload = {
+        "theme": "History",
+        "extra": "This should not be here"
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeResponseSchema)
+
+def test_invalid_ifind_theme_response_wrong_type():
+    # Invalid example: 'theme' is number instead of a string
+    payload = {
+        "theme": 12345
+    }
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        validate(instance=payload, schema=IFindThemeResponseSchema)
+
+# Run the tests
+pytest.main()
+****************************************
+
+****************************************
+apis\PageRepositoryApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from PageRepositoryApi.Types.yaml with typeconv
+  version: '1'
+  x-id: PageRepositoryApi.Types.yaml
+  x-comment: >-
+    Generated from src\PageRepositoryApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+components:
+  schemas:
+    IStoredPage:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    IStoredPageRequest:
+      additionalProperties: false
+      title: IStoredPageRequest
+      type: object
+    IStoredPageResponse:
+      properties:
+        html:
+          title: IStoredPage.html
+          type: string
+      required:
+        - html
+      additionalProperties: false
+      title: IStoredPageResponse, IStoredPage
+      description: "Interface representing a web page Chunk.\r\n\r\nCore data for a Page:\r\n- html: HTML content"
+      type: object
+    StoredPageApi:
+      title: StoredPageApi
+    paths:
+      /functions:
+        get:
+          operationId: get_page
+          summary: Returns a page. 
+          description: Returns a page. 
+          parameters:
+            - request: request
+              in: query
+              description: A spec for a Page
+              schema:
+                type: IStoredPageRequest
+              required: true
+          responses:
+            '200':
+              description: A Page
+              content:
+                application/json:
+                  schema:
+                    type: IStoredPageResponse    
+            '400':
+              description: An error 
+              content:
+                application/json:
+                  schema:
+                    type: string
+****************************************
+
+****************************************
+apis\PagerepositoryApi.Types_test.py
+****************************************
+import pytest
+import requests
+from unittest.mock import patch
+
+# Base URL for the API
+BASE_URL = "http://api.example.com"
+
+# Sample data for testing
+sample_successful_html = "<html><body>Sample Page</body></html>"
+
+def test_get_page_success():
+    url = f"{BASE_URL}/functions"
+    params = {
+        'request': {"dummy_param": "SampleValue"} 
+    }
+
+    # Mocking the requests.get call to simulate a successful response
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {"html": sample_successful_html}
+
+        response = requests.get(url, params=params)
+        assert response.status_code == 200
+        assert "html" in response.json()
+        assert response.json()["html"] == sample_successful_html
+
+def test_get_page_missing_param():
+    url = f"{BASE_URL}/functions"
+
+    # Missing required 'request' parameter
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 400
+        mock_get.return_value.json.return_value = "Bad Request: Missing required parameters"
+
+        response = requests.get(url)
+        assert response.status_code == 400
+        assert response.json() == "Bad Request: Missing required parameters"
+****************************************
+
+****************************************
+apis\ReadMe.Salon.md
+****************************************
+**FindThemeApi.Types_test.py**
+
+This code defines and validates JSON schemas for request and response using the `jsonschema` library and tests these schemas using the `pytest` framework.
+
+The `IFindThemeRequestSchema` specifies a request schema requiring `text` as a string and `length` as a number, with no additional properties allowed.
+
+The `IFindThemeResponseSchema` outlines a response schema needing a `theme` as a string, disallowing any extra properties.
+
+There are also test functions to validate the adherence to schemas. Functions like `test_valid_ifind_theme_request`, `test_invalid_ifind_theme_request_missing_text`, etc., check for valid and different invalid payloads, ensuring exceptions are raised when validations fail.
+
+**PagerepositoryApi.Types_test.py**
+
+This code is designed for testing an API endpoint at `http://api.example.com/functions` using the `pytest` framework and `unittest.mock` for mocking. 
+
+The `test_get_page_success` function tests a successful request with a dummy parameter, verifying a 200 status code and checking the response contains the expected HTML content.
+
+The `test_get_page_missing_param` function tests an unsuccessful request due to a missing required parameter, expecting a 400 status code and an appropriate error message in the response.
+
+The important methods in this module are `test_get_page_success` and `test_get_page_missing_param`.
+****************************************
+
+****************************************
+apis\StudioApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from StudioApi.Types.yaml with typeconv
+  version: '1'
+  x-id: StudioApi.Types.yaml
+  x-comment: >-
+    Generated from src\StudioApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    IStudioBoxerRequest:
+      properties:
+        question:
+          title: IStudioBoxerRequest.question
+          type: string
+      required:
+        - question
+      additionalProperties: false
+      title: IStudioBoxerRequest
+      description: Interface for the StudioBoxer request object.
+      type: object
+    IStudioBoxerResponseEnrichment:
+      properties:
+        id:
+          title: IStudioBoxerResponseEnrichment.id
+          type: string
+        summary:
+          title: IStudioBoxerResponseEnrichment.summary
+          type: string
+        title:
+          title: IStudioBoxerResponseEnrichment.title
+          type: string
+        url:
+          title: IStudioBoxerResponseEnrichment.url
+          type: string
+        iconUrl:
+          title: IStudioBoxerResponseEnrichment.iconUrl
+          type: string
+      required:
+        - id
+        - summary
+        - title
+        - url
+        - iconUrl
+      additionalProperties: false
+      title: IStudioBoxerResponseEnrichment
+      description: Interface for the IStudioBoxerResponseEnrichment response object.
+      type: object
+****************************************
+
+****************************************
+apis\SummariseApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from SummariseApi.Types.yaml with typeconv
+  version: '1'
+  x-id: SummariseApi.Types.yaml
+  x-comment: >-
+    Generated from src\SummariseApi.Types.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    ISummariseRequest:
+      properties:
+        text:
+          title: ISummariseRequest.text
+          type: string
+        lengthInWords:
+          title: ISummariseRequest.lengthInWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: ISummariseRequest
+      description: Defines the structure of a summarise request object.
+      type: object
+    ISummariseResponse:
+      properties:
+        summary:
+          title: ISummariseResponse.summary
+          type: string
+      required:
+        - summary
+      additionalProperties: false
+      title: ISummariseResponse
+      description: Defines the structure of a summarise response object.
+      type: object
+****************************************
+
+****************************************
+apis\SuppressSummariseFailApi.Types.yaml
+****************************************
+openapi: 3.0.0
+info:
+  title: Converted from SuppressSummariseFailApi.Types.yaml with typeconv
+  version: '1'
+  x-id: SuppressSummariseFailApi.Types.yaml
+  x-comment: >-
+    Generated from src\SuppressSummariseFailApi.Types.ts by
+    core-types-json-schema (https://github.com/grantila/core-types-json-schema)
+    on behalf of typeconv (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    ISuppressSummariseFailRequest:
+      properties:
+        text:
+          title: ISuppressSummariseFailRequest.text
+          type: string
+        lengthInWords:
+          title: ISuppressSummariseFailRequest.lengthInWords
+          type: number
+      required:
+        - text
+      additionalProperties: false
+      title: ISuppressSummariseFailRequest
+      description: Defines the structure of a summarise request object.
+      type: object
+    ISuppressSummariseFailResponse:
+      properties:
+        isValidSummary:
+          title: ISuppressSummariseFailResponse.isValidSummary
+      required:
+        - isValidSummary
+      additionalProperties: false
+      title: ISuppressSummariseFailResponse
+      description: Defines the structure of a summarise response object.
+      type: object
+****************************************
+
+****************************************
+docs\repo_to_text_article_medium.md
+****************************************
+# Introduction
+
+- Why large codebases are challenging
+- Introducing NotebookLM as a solution for interactive code exploration
+
+# Making the Code Chat-Ready
+- why transform the data (Limitations of NotebookLM) File and word limits
+- transforms a repository into NotebookLM-friendly text files
+
+# 8 Ways to "Chat" with Your Code
+
+1. Summarize All the Things: High-level and detailed summaries
+2. Debugging Detective: How NotebookLM assists in troubleshooting code
+3. Refactoring Coach: Suggestions for optimizing complex code sections
+4. New Feature Prototyping: Generating initial code for new features
+5. Test Case Generation: Proposing unit tests and edge case handling
+6. Dependency Detective: Mapping dependencies and understanding data flow
+7. Code Classroom: Educating and onboarding team members with code explanations
+
+# Advantages of NotebookLM Over Other Tools
+
+1. Contextually Grounded Responses: Staying focused on uploaded documents
+2. Structured Summaries and Explanations: Ideal for complex documentation and technical data
+3. Ease of Setup and Use: Minimal setup compared to RAG pipelines
+4. Interactivity with Document-Rich Repositories: Seamless Q&A on multiple sources
+5. Document Confidentiality and Security: Confidentiality benefits by avoiding external data pull
+
+# Disadvantage of NotebookLM
+
+# Conclusion
+
+----------------
+
+# introduction
+
+Working with large codebases is like navigating an unfamiliar city without a map: each module and function is a new street, every dependency an intersection, and understanding the bigger picture can feel like solving a puzzle in the dark. For developers, this often leads to hours of poring over code, deciphering poorly documented functions, and trying to untangle dependencies, all while keeping the broader goals in mind.
+
+To address these challenges, I turned to Google’s NotebookLM—a tool taht could be used for interactive exploration and document-based insights. With its powerful language model, NotebookLM lets me “converse” with a codebase, turning complex repositories into something closer to a dialogue. By uploading the code as text files, I can ask NotebookLM for summaries, explanations, and even new code suggestions. In short, it’s like having a knowledgeable (and very patient) coding partner, making large codebases easier to understand, manage, and expand.
+
+This article will show you how I use NotebookLM to turn sprawling repositories into clear, accessible resources. With NotebookLM, I can quickly understand core functionalities, uncover how different parts of the code work together, and identify where new code can build on existing structures. From deciphering complex logic to pinpointing useful features and guiding implementation, NotebookLM transforms the way I interact with large codebases—making it easier and faster to harness their full potential.
+
+For the purpose of this demo, I will use the repo of crewAI. crewAI is an agentic LLM framework. The repo is actually pretty well documented (https://docs.crewai.com/introduction), so this might be useful for repo that don't have that level of documentation.
+
+# Making the code Chat-Ready
+
+To interact with a large codebase using NotebookLM, the first step is transforming the code into a format that the tool can efficiently process. NotebookLM has specific limitations: it allows a maximum of 50 files per notebook, each capped at 500,000 words. While this capacity is ample for many text-based projects, a large repository with multiple files and thousands of lines of code can quickly surpass these limits.
+
+To work within these constraints, I developed a script to convert an entire repository into NotebookLM-friendly text files. The script consolidates the contents of the repo, merging files into larger text files that contain structured comments and headers for easy navigation. This transformation ensures that all classes, functions, and dependencies are represented in a way that NotebookLM can digest—allowing me to interact with the full scope of the codebase without exceeding NotebookLM’s file and word limits.
+
+The repo has the converted text files of the crewai repo as an example. 
+
+# 8 Ways to "Chat" with the Code
+
+First you upload the text files to your notebook.
+
+Once the code is prepared for NotebookLM, it becomes an interactive guide through the repository, providing a range of helpful insights. Here are eight ways NotebookLM can assist in navigating, optimizing, and building on complex codebases.
+
+1. Summarize All the Things
+
+With NotebookLM, you can request high-level summaries of entire modules or drill down to specific functions. These summaries quickly reveal the purpose and function of different code sections, providing a clear map of what the repository offers without needing to manually review each part. It’s like getting a high-level overview combined with specific insights, helping you quickly assess the code’s capabilities and structure.
+
+![prompt: generate a directory tree in ascii format](readme/repo_file_structure.png)
+
+2. Onboarding and Learning Path Suggestions
+
+NotebookLM can be a valuable tool for guiding beginners through a complex codebase with an onboarding path tailored to essential concepts and functions. By requesting an onboarding path, you can use NotebookLM to identify critical modules, functions, and dependencies in sequence, helping new team members navigate the repository in manageable steps. NotebookLM provides explanations of key classes and methods, often with relevant code snippets and usage examples, enabling beginners to understand each component’s role and interconnections within the codebase. This structured pathway allows newcomers to build foundational knowledge and gain hands-on familiarity with core functionalities, setting them up for success as they dive deeper into the project.
+
+![prompt: Can you suggest an onboarding path for beginners or new team members to understand and work with this repository? Focus on the essential modules, functions, and dependencies, and provide clear learning steps with goals for each stage. Include specific code examples, key methods to explore, and practical checkpoints where they can test their understanding. If possible, suggest a small project or exercise for hands-on practice using the core functionalities.](readme/onboarding_path.png)
+
+3. Generating Familiarization Code Snippets
+
+You can use NotebookLM to generate a code example that helps you get familiar with a repository’s functionalities by requesting a small, practical implementation. For instance, simply ask, “implement a very simple example of a crew of agents”.
+NotebookLM will reference the relevant parts of the codebase to provide an initial snippet, allowing you to see the function in action and understand how it interacts with other components, making it easier to start exploring and building on the repository’s capabilities.
+
+![prompt: generate a code snippet](readme/code_example.png)
+
+4. Dependency Detective
+
+Large codebases often involve intricate interdependencies, which can be challenging to untangle. NotebookLM can map out these relationships, providing a clear view of how different modules interact. By understanding data flow and function dependencies, you gain a deeper insight into how changes in one area may impact others, allowing for more informed development decisions.
+
+![prompt: Can you provide a detailed breakdown of the dependencies between the agent and task modules in the CrewAI framework? Include specific function calls, methods, or data structures where agent relies on task for execution. Also, list any parameter exchanges or direct references in the code, and if possible, provide code snippets that illustrate these dependencies.”](readme/agent_task_dependencies.png)
+
+5. Identifying Vulnerabilities
+
+One valuable use case for NotebookLM is performing a security review on a codebase to identify potential vulnerabilities before deployment. By guiding NotebookLM to examine areas prone to risks—such as code injection points, access control mechanisms, data handling practices, and dependencies—it can help flag sections of the code that may need tightening. For example, NotebookLM might pinpoint functions with unsanitized inputs, highlight dependency versions with known vulnerabilities, or recommend stronger access controls on sensitive modules. With these insights, developers can proactively address weaknesses, making the repository safer and more robust before it goes live.
+
+![prompt: Can you analyze this codebase for any security vulnerabilities that I should address before deploying? Specifically, look for risks related to code injection, inadequate access control, improper data handling, dependency vulnerabilities, and any other common security issues in repositories. Provide examples of code sections or functions that might need security improvements, along with recommendations for mitigating these risks.”](readme/crewai_vulnerabilities.png)
+
+6. Feature Exploration Guide
+
+NotebookLM can act as a feature exploration guide, outlining optional features, hidden modules, or “nice-to-have” functionalities within the codebase that might be less apparent. This is helpful for exploring the repo’s full potential and discovering lesser-used but valuable components.
+
+![prompt: Can you provide a feature exploration guide for this codebase? Outline any optional features, hidden modules, or ‘nice-to-have’ functionalities that may not be immediately obvious but could be valuable. Include a brief description of each feature, its purpose, and examples of how it might enhance or extend the core functionalities of the codebase”](readme/crewai_feature_exploration.png)
+
+
+
+4. New Feature Prototyping
+
+For expanding the functionality of a codebase, NotebookLM can propose starter code for new features based on the existing structure. By understanding the current architecture and dependencies, it suggests how to implement new modules or functions that integrate seamlessly with existing components. This feature accelerates prototyping by providing a solid foundation to build on.
+
+
+
+
+7. Code Classroom
+
+NotebookLM is an excellent tool for educating and onboarding team members, as it explains complex code sections in digestible language. For new developers or collaborators, NotebookLM can act as a “code classroom,” breaking down functions and algorithms to ensure everyone understands the code’s purpose and functionality. This is invaluable for bringing team members up to speed quickly and ensuring cohesive collaboration.
+
+Together, these features make NotebookLM a powerful conversational partner for navigating, improving, and expanding large repositories, turning code from an opaque resource into a manageable and insightful guide.
+****************************************
+
+****************************************
+src\api_to_test_code.py
+****************************************
+# Copyright (c) 2024 Braid Technologies Ltd
+
+
+import argparse
+import json
+import os
+import logging
+from typing import Optional, Union
+import yaml
+from openai import OpenAI
+
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+client = OpenAI()
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# Define code snippet markers for extraction
+START_POINT_CODE = '```python'
+END_POINT_CODE = '```'
+
+def parse_arguments() -> argparse.Namespace:
+    """Parse command-line arguments for the script.
+    
+    Returns:
+        argparse.Namespace: Parsed command-line arguments containing the input file path.
+    """
+    parser = argparse.ArgumentParser(description="Generate Pytest code from API data in JSON or YAML format.")
+    parser.add_argument("input_path", type=str, help="Path to the input JSON or YAML file.")
+    return parser.parse_args()
+
+
+def extract_code(content: str) -> Optional[str]:
+    """Extracts the Python code snippet between specified start and end markers.
+    
+    Args:
+        content (str): The content from which to extract the code snippet.
+    
+    Returns:
+        Optional[str]: The extracted Python code snippet, or None if markers are not found.
+    """
+    start_index = content.find(START_POINT_CODE)
+    end_index = content.rfind(END_POINT_CODE)
+
+    if start_index != -1 and end_index != -1:
+        start_index += len(START_POINT_CODE)
+        return content[start_index:end_index].strip()
+    else:
+        logger.warning("Could not find code markers in the generated content.")
+    return None
+
+
+def load_api_data(file_path: str) -> Union[dict, None]:
+    """Loads API data from a JSON or YAML file.
+    
+    Args:
+        file_path (str): The path to the JSON or YAML file.
+    
+    Returns:
+        Union[dict, None]: Parsed JSON or YAML data as a dictionary, or None on failure.
+    """
+    try:
+        with open(file_path, 'r') as file:
+            if file_path.endswith('.json'):
+                data = json.load(file)
+                logger.info("Successfully loaded input JSON file containing API data.")
+            elif file_path.endswith('.yaml') or file_path.endswith('.yml'):
+                data = yaml.safe_load(file)
+                logger.info("Successfully loaded input YAML file containing API data.")
+            else:
+                logger.error("Unsupported file format. Only JSON and YAML files are accepted.")
+                return None
+            return data
+    except (FileNotFoundError, json.JSONDecodeError, yaml.YAMLError) as e:
+        logger.error(f"Failed to load data from {file_path}: {e}")
+        return None
+
+
+def main() -> None:
+    """Main function to generate Pytest code from API data in JSON or YAML format."""
+    args = parse_arguments()
+
+    # Load API data from input file
+    api_data = load_api_data(args.input_path)
+    if api_data is None:
+        logger.critical("Exiting program due to failure in loading API data.")
+        print("Error: Failed to load API data. Please check the input file and try again.")
+        exit(1)
+
+    # Determine the file type based on the input file extension for prompt context
+    file_type = "JSON" if args.input_path.endswith('.json') else "YAML"
+
+    # Generate the content for the prompt with file type context
+    content = (
+        f"Please generate comprehensive Pytest test code from the following API data in {file_type} format:\n"
+        f"{json.dumps(api_data) if file_type == 'JSON' else yaml.dump(api_data)}"
+    )
+
+    # Set up assistant and thread for code generation
+    try:
+        assistant = client.beta.assistants.create(
+            name="API Test Code Generator",
+            instructions="You are a Python expert. Generate Pytest test cases for all endpoints in the given API data. The tests should cover positive, negative, and edge cases, with appropriate assertions. The inputs to the API will usually have the word 'Request' in the name of the data structure, and the outputs will have 'Response'.",
+            tools=[{"type": "code_interpreter"}],
+            model="gpt-4o",
+        )
+        thread = client.beta.threads.create()
+        client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=content
+        )
+        print(f"Successfully initialized assistant and sent API data in {file_type} format for test code generation.")
+    except Exception as e:
+        logger.error(f"Failed to initialize assistant or thread: {e}")
+        print("Error: Unable to set up assistant for code generation.")
+        exit(1)
+
+    # Print static message to indicate response generation without delay
+    print("Generating code...")
+
+    # Poll for code generation results
+    try:
+        run = client.beta.threads.runs.create_and_poll(
+            thread_id=thread.id,
+            assistant_id=assistant.id,
+            instructions="Return the error-free test code"
+        )
+        if run.status != 'completed':
+            logger.error(f"Code generation failed with status: {run.status}")
+            print("Error: Code generation did not complete successfully.")
+            exit(1)
+    except Exception as e:
+        logger.error(f"Error during code generation: {e}")
+        print("Error: There was an issue during code generation.")
+        exit(1)
+
+    # Retrieve generated code from messages
+    try:
+        messages = client.beta.threads.messages.list(thread_id=thread.id).data
+        generated_content = "\n".join(
+            text_block.text.value for msg in messages for text_block in msg.content
+        )
+        extracted_code = extract_code(generated_content)
+
+        if extracted_code:
+            # Save extracted code to a .py file in the same directory as the input file
+            output_path = os.path.splitext(args.input_path)[0] + '_test.py'
+            with open(output_path, 'w') as output_file:
+                output_file.write(extracted_code)
+            logger.info(f"Generated test code saved to {output_path}")
+            print(f"Test code successfully generated and saved to {output_path}")
+        else:
+            logger.warning("No code snippet was extracted from the generated content.")
+            print("Warning: No valid test code was generated. Please review the API data.")
+    except Exception as e:
+        logger.error(f"Failed to retrieve or process messages: {e}")
+        print("Error: Could not retrieve the generated code.")
+        exit(1)
+
+
+if __name__ == "__main__":
+    main()
+****************************************
+
+****************************************
+src\ReadME.md
+****************************************
+## Features
+
+- **Supports JSON and YAML API Specifications**: Accepts input in both JSON and YAML formats, adapting the output accordingly.
+- **Prompt-Optimized Code Generation**: Provides context-aware prompts to OpenAI for more accurate and relevant test code generation.
+- **Error Handling and Logging**: Logs critical issues and informs the user with helpful messages in case of any issues.
+- **Automated File Output**: Saves generated test code directly to a Python file in the same directory as the input file.
+- **Simple CLI Interface**: Command-line interface with clear prompts and instructions for easy usage.
+
+## Installation
+
+1. **Install Required Packages**:
+   Ensure that you have the required Python packages installed. You can do this by running:
+
+   ```bash
+   pip install openai pyyaml
+   ```
+
+2. **Set Up Environment Variable**:
+   Set up your OpenAI API key as an environment variable:
+   ```bash
+   export OPENAI_API_KEY="your_openai_api_key"
+   ```
+
+## Usage
+
+### Command-Line Interface
+
+Run the script from the command line with a single argument specifying the path to the JSON or YAML API specification file.
+
+```bash
+python api_to_test_code.py <path_to_api_file>
+```
+
+### Example
+
+```bash
+python api_to_test_code.py sample_api.json
+```
+
+### Output
+
+The generated Pytest code will be saved in the same directory as the input file, with `_test.py` appended to the original filename.
+
+## Code Overview
+
+### 1. Argument Parsing
+
+The `parse_arguments()` function parses the command-line arguments to accept a single input file path, which should point to either a JSON or YAML file.
+
+### 2. Loading API Data
+
+The `load_api_data(file_path: str) -> Union[dict, None]` function reads the JSON or YAML file, validates its content, and converts it into a Python dictionary. The function supports both file types and logs an error if the file format is unsupported or if parsing fails.
+
+### 3. Setting Up the Assistant and Thread
+
+The assistant is initialized using OpenAI’s API to generate Pytest code based on the provided API data. The assistant is configured with prompt instructions that include file format information to ensure precise code generation.
+
+### 4. Extracting the Code Snippet
+
+The `extract_code(content: str) -> Optional[str]` function isolates the generated Python code snippet, which is returned in a `Python` code block format. This is extracted by locating the `START_POINT_CODE` and `END_POINT_CODE` markers.
+
+### 5. Generating and Saving Test Code
+
+Once the code is generated, it is saved as a `.py` file with the original input file’s name followed by `_test.py`. This file is then saved in the same directory as the input file.
+
+### 6. Logging and Error Handling
+
+The tool uses logging to track errors, warnings, and other critical steps throughout the script. The logging level is set to `ERROR` to minimize verbosity unless the developer overrides this.
+
+## Sample Output
+
+After running the script, the generated Pytest code will be saved in a file named `<input_file_name>_test.py` (e.g., `sample_api_test.py`).
+
+## Error Handling
+
+In case of an error (such as an invalid input file or failure in code generation), clear and concise error messages will be displayed, and the program will exit gracefully.
+
+## Dependencies
+
+- `openai`: For connecting to the OpenAI API.
+- `pyyaml`: For parsing YAML input files.
+- `argparse`, `json`, `logging`, and `os`: Standard Python libraries for command-line argument parsing, JSON handling, logging, and file management.
+
+## License
+
+© 2024 Braid Technologies Ltd. All rights reserved.
+****************************************
+
+****************************************
+src\ReadMe.Salon.md
+****************************************
+**api_to_test_code.py**
+
+This script generates Pytest code from API data provided in JSON or YAML format.
+
+**parse_arguments**: Parses command-line arguments to get the input file path.
+
+**extract_code**: Extracts Python code snippets from a string using specified start and end markers.
+
+**load_api_data**: Loads and parses API data from the specified JSON or YAML file, logging errors if the file is not found or contains invalid data.
+
+**main**: The main execution function. It parses input arguments, loads API data, and sets up an OpenAI assistant to generate Pytest code. Generated code is saved to a new Python file.
+
+**Classes/Functions**: `parse_arguments`, `extract_code`, `load_api_data`, `main`.
+
+**repo_to_text.py**
+
+### Important Classes and Functions:
+
+1. **SummarisedDirectory**: Stores directory names and their summaries.
+
+2. **RepoContentProcessor**: Handles repository processing:
+   - `__init__`: Initializes the processor with paths, configurations, and word limits.
+   - `make_common_file_name`: Creates unique identifiers for common files.
+   - `format_file_block`: Formats content blocks with consistent indentation.
+   - `count_words`: Utilizes NLTK to count words in a text.
+   - `is_in_git_directory`, `is_skip_dir`, `is_in_common_dir`: Identifies paths to skip.
+   - `should_resummarise_code`: Decides if a source file should be re-summarized.
+   - `save_current_content`: Saves accumulated content into a text file.
+   - `process_file`: Processes an individual file and accumulates its content.
+   - `process_repo`: Orchestrates repository processing and stores summaries.
+
+3. **summarise_code**: Summarizes source code using an external service.
+
+4. **load_yaml**: Loads configuration from a YAML file, handles file and error management.
+
+5. **parse_arguments**: Parses command-line arguments for script options and input paths.
+
+6. **validate_args**: Validates parsed arguments to ensure paths exist and are directories.
+
+### Script Workflow:
+
+- **Argument Handling**: Arguments are parsed and validated.
+- **Initialization**: Creates `RepoContentProcessor` with repository path, configuration, and max words.
+- **Skip Patterns and Directories**: Updates processor with additional patterns or directories to skip.
+- **Working Directory**: Changes to specified output directory.
+- **Processing**: Calls `process_repo()` to process the repository.
+- **Error Handling**: Catches exceptions, prints errors, and exits with a status code of 1.
+
+### Entry Point:
+- The script starts execution with the `main()` function when run directly.
+****************************************
+
+****************************************
+src\repo_to_text.py
+****************************************
+"""
+repo_to_text.py
+
+This script processes a local GitHub repository by concatenating the contents of its files into text files, 
+with a specified word limit per file.
+When it encounters a source file it creates a summary, and acccumulates summaries for all source files ina given directory. 
+These are written out at the end. 
+
+Usage:
+    python repo_to_text.py --cfg <path_to_config_yaml_file> --repo_path <path-to-repo> [options]
+
+Options:
+    --cfg             Path to the config file 
+    --repo_path       Path to the local GitHub repository (absolute or relative).
+    -w, --max_words   Maximum number of words per output file (default: 200,000).
+    -o, --output_dir  Directory to save the output files (default: current directory).
+    --skip_patterns   Additional file patterns to skip (e.g., "*.md" "*.txt").
+    --skip_dirs       Additional directories to skip.
+    -v, --verbose     Enable verbose output.
+
+Example:
+    python src/repo_to_text.py --cfg config.yaml --repo_path . -o test_output
+    python src/repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
+"""
+
+
+import os
+import fnmatch
+import argparse
+from datetime import datetime
+from pathlib import Path
+import requests
+import yaml
+import nltk
+from nltk.tokenize import word_tokenize
+
+from CommonPy.src.request_utilities import request_timeout
+
+nltk.download('punkt', quiet=True)
+
+SUMMARY_FILENAME='ReadMe.Salon.md'
+
+class SummarisedDirectory:
+    def __init__(self):
+        self.name = ''
+        self.summary = ''
+
+
+# Dictionary to store processed content with string keys
+directories = {}
+
+# Dictionary to store common files with string keys
+common_files = {}
+
+def load_yaml(fname):
+    # Load configuration from the YAML config file
+    try:
+        with open(fname, 'r') as config_file:
+            config = yaml.safe_load(config_file)
+    except FileNotFoundError:
+        print(f"Error: Configuration file '{fname}' not found.")
+        config = {}
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML file: {e}")
+        config = {}
+
+    return config
+
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['SessionKey']
+
+def summarise_endpoint_url():
+    # Construct the full URL for the summary endpoint
+    return f'{BASE_URL}/Summarize?session=' + SESSION_KEY
+
+def summarise_code(source: str) -> str:
+
+
+    payload = {
+        'persona': 'CodeSummariser',
+        'text': source,
+        'lengthInWords': 100
+    }
+    wrapped = {
+        'request': payload
+    }
+    response = requests.post(summarise_endpoint_url(),
+                             json=wrapped, timeout=request_timeout)
+    if response.status_code == 200:
+        data = response.json()
+        if 'summary' in data:
+            return data['summary']
+
+    return None
+    
+    
+
+class RepoContentProcessor:
+    def __init__(self, repo_path, config_path={}, max_words=200000):
+        # Convert relative path to absolute path
+        self.repo_path = Path(repo_path).resolve()
+        self.content = ""
+        self.file_counter = 1
+        self.current_word_count = 0
+        self.MAX_WORDS = max_words
+        
+        config = load_yaml(config_path)
+
+        # Define directories to skip
+        self.skip_dirs = config.get("skip_dirs", [])
+        # Define file patterns to skip
+        self.skip_patterns = config.get("skip_patterns", [])
+        # Define file patterns to use a source for chunk size assessment & active code summarisation
+        self.source_patterns = config.get("source_patterns", [])
+        # Define common directories to use for skipping duplicates where the directories are copied around for deployment reasons
+        self.common_directories_patterns = config.get("common_directories_patterns", [])
+
+    def make_common_file_name (self, directory_name, file_name):
+        """Make a common file name by combining directory and file name"""
+        return directory_name + "-" + file_name
+    
+    def format_file_block(self, relative_path, file_content):
+        """Format a file's content block with consistent indentation"""
+        separator = "*" * 40
+        return f"{separator}\n{relative_path}\n{separator}\n{file_content}\n{separator}\n"
+
+    def count_words(self, text):
+        """Count words in the given text using NLTK tokenizer"""
+        return len(word_tokenize(text))
+    
+    def is_in_git_directory(self, path):
+        """Check if the path is inside a .git directory"""
+        parts = path.relative_to(self.repo_path).parts
+        return '.git' in parts
+    
+    def is_skip_dir (self, path):
+        """Check if the path includes a component in the skip_dirs list"""
+        for skip_item in self.skip_dirs:
+            if skip_item in path.parts:
+               return True
+        return False
+
+    def is_in_common_dir (self, path):
+        """Check if the path includes a component in the common_directories_patterns list"""
+        for common_dir in self.common_directories_patterns:
+            if common_dir in path.parts:
+               return True
+        return False
+    
+    def extract_common_dir (self, path):
+        """Extract the common directory from the path"""
+        for common_dir in self.common_directories_patterns:
+            if common_dir in path.parts:
+               return common_dir
+        return None
+        
+    def is_summary_file(self, path):
+        """
+        Check if a path is a summary file
+        """
+
+        if SUMMARY_FILENAME in path.parts:
+            return True
+        
+        return False
+            
+    def is_source_file(self, path):
+        """
+        Check if a path is a source file
+        """
+
+        if path.is_file():
+            base_name = os.path.basename(path)
+            skip1 = any(fnmatch.fnmatch(base_name, pattern)
+                      for pattern in self.source_patterns)
+            if skip1:
+                return True
+        
+        return False
+    
+    def should_resummarise_code(self, path):
+        """
+        Check if a path should be resummarised
+        """
+        earliest = datetime(1970, 1, 2)
+        readme_timestamp = earliest.timestamp()
+
+        # If there is no readme, we need to summarise
+        directory = os.path.dirname(path)
+        readme_path = os.path.join(directory, SUMMARY_FILENAME)
+        if not os.path.exists(readme_path):
+            return True
+        
+        # If the readme is older than the source file, we need to summarise
+        readme_timestamp = os.path.getmtime(readme_path)
+        
+        # Check if any source files are newer than the readme
+        for file in os.listdir(directory):
+            file_path = os.path.join(directory, file)
+            if os.path.isfile(file_path) and self.is_source_file(Path(file_path)):
+                file_timestamp = os.path.getmtime(file_path)
+                if file_timestamp > readme_timestamp:
+                    return True
+                    
+        return False
+    
+    def should_skip_path(self, path):
+        """
+        Check if a path should be skipped
+        """
+        # Skip anything in .git directory
+        if self.is_in_git_directory(path):
+            return True
+            
+        # Skip directories in skip_dirs
+        if self.is_skip_dir(path):
+            return True
+            
+        # Skip summary files where there are amended- we add them later on
+        if self.is_summary_file(path) and self.should_resummarise_code(path):
+            return True
+        
+        # Skip files matching patterns
+        if path.is_file():
+            base_name = os.path.basename(path)
+            skip1 = any(fnmatch.fnmatch(base_name, pattern)
+                      for pattern in self.skip_patterns)
+            if skip1:
+                return True
+        
+        return False
+    
+    def save_directory_content(self):
+        """
+        Save the directory summaries to the repo path
+        """
+        
+        # Save current working directory 
+        current_working_directory = os.getcwd()
+
+        # Change to the repo path
+        os.chdir(self.repo_path)
+
+        # Save current directory summaries 
+        for directory, item in directories.items():
+            if len (item.summary) > 0:
+                full_file_path = os.path.join(item.name, SUMMARY_FILENAME)
+                with open(full_file_path, 'w+', encoding='utf-8') as f:
+                    f.write(item.summary)                
+                    print(f"Created {full_file_path}")
+        
+        os.chdir(current_working_directory)
+
+        # Add summaries to the text accumulation buckets
+        for directory, item in directories.items():
+            if len (item.summary) > 0:
+                full_file_path = os.path.join(item.name, SUMMARY_FILENAME)
+                repo_path = os.path.join(self.repo_path, full_file_path)
+                self.process_file(Path(repo_path))                           
+
+
+    def save_current_content(self):
+        """Save current content to a numbered file"""
+        if self.content:
+            output_file = f'repo_content_{self.file_counter}.txt'
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(self.content.rstrip() + "\n")  # Ensure single newline at end of file
+            print(f"Created {output_file} with {self.current_word_count} words")
+            self.file_counter += 1
+            self.content = ""
+            self.current_word_count = 0
+    
+        
+    def process_file(self, file_path):
+        """Process a single file and add its content to the accumulator"""
+        try:
+            # Skip if the file is in a common directory and we have already processed a copy of it
+            if self.is_in_common_dir(file_path):
+                common_file_name = self.make_common_file_name(self.extract_common_dir (file_path), file_path.name)
+                if common_file_name in common_files:
+                    print(f"Skipping duplicate common file {file_path}")                    
+                    return
+            
+            print(f"Processing: {file_path}")            
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_content = f.read().rstrip()  # Remove trailing whitespace
+            
+            # Create the content block with consistent formatting
+            relative_path = str(file_path.relative_to(self.repo_path))
+            path_block = self.format_file_block(relative_path, file_content)
+            
+            # Count words in the new block
+            block_word_count = self.count_words(path_block)
+            
+            # Check if adding this block would exceed the word limit
+            if self.current_word_count + block_word_count > self.MAX_WORDS:
+                self.save_current_content()
+            
+            # Add the new block with a single newline for separation
+            if self.content:
+                self.content += "\n"  # Add separator line only between blocks
+            self.content += path_block
+            self.current_word_count += block_word_count
+            
+            if self.is_in_common_dir(file_path):
+                common_file_name = self.make_common_file_name(self.extract_common_dir (file_path), file_path.name)
+                common_files[common_file_name] = True    
+
+        except (UnicodeDecodeError, IOError) as e:
+            print(f"Skipping {file_path}: {str(e)}")
+    
+    def process_repo(self):
+        """Process all files in the repository"""
+        print(f"Processing repository at: {self.repo_path}")
+        
+        if not self.repo_path.exists():
+            raise ValueError(f"Path does not exist: {self.repo_path}")
+        
+        file_count = 0
+        skipped_count = 0
+        skipped_dirs = set()
+        
+        # Use Path.rglob instead of os.walk for better path handling
+        for file_path in self.repo_path.rglob('*'):
+            try:
+                rel_path = file_path.relative_to(self.repo_path)                
+                # Skip if path should be skipped
+                if self.should_skip_path(file_path):
+                    if file_path.is_dir():
+                        if str(rel_path) not in skipped_dirs:
+                            skipped_dirs.add(str(rel_path))
+                    else:
+                        skipped_count += 1
+                    continue
+                else:
+                    # Ingest only files, not directories
+                    if file_path.is_file():
+                        self.process_file(file_path)
+                        file_count += 1
+
+                        if self.is_source_file(file_path) and self.should_resummarise_code(file_path):
+                            file_content = ""
+                            summary = None
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                file_content = f.read().rstrip()  # Remove trailing whitespace
+                            if (len(file_content) > 250):
+                                summary = summarise_code(file_content)
+                            if summary:
+                                file_name = file_path.name
+                                directory_path = file_path.parent
+                                directory_rel_path = str(directory_path.relative_to(self.repo_path))
+                                if directory_rel_path not in directories:
+                                    directories[directory_rel_path] = SummarisedDirectory()
+                                    (directories[directory_rel_path]).name = str(directory_rel_path)
+                                name_and_summary = '**' + file_name + "**\n\n" + summary + '\n\n'
+                                existing_summary = directories[directory_rel_path].summary
+                                if existing_summary:
+                                    accumulated_summary = existing_summary + name_and_summary
+                                else:
+                                    accumulated_summary = name_and_summary
+                                directories[directory_rel_path].summary  = accumulated_summary
+                    else:
+                        # Keep a dictionary of directories - when we find source files, we add to the summary
+                        print(f"Directory: {rel_path}")
+                        directories[str(rel_path)] = SummarisedDirectory()
+                        (directories[str(rel_path)]).name = str(rel_path)
+                                                
+                    
+            except ValueError as e:
+                print(f"Error processing path {file_path}: {e}")
+                continue
+        
+        # Save the directory summaries
+        self.save_directory_content()
+                
+        # Save any remaining content
+        if self.content:
+            self.save_current_content()
+            
+        print(f"\nProcessed {file_count} files, skipped {skipped_count} files")
+
+
+
+
+def parse_arguments():
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(
+        description='Process a GitHub repository and concatenate file contents with word limit.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    parser.add_argument(
+        '--cfg',
+        type=str,
+        default="config.yaml",
+        help='Path to the config.yaml file'
+    )
+    
+    parser.add_argument(
+        '--repo_path',
+        type=str,
+        help='Path to the local GitHub repository (absolute or relative)'
+    )
+    
+    parser.add_argument(
+        '-w', '--max_words',
+        type=int,
+        default=200000,
+        help='Maximum number of words per output file'
+    )
+    
+    parser.add_argument(
+        '-o', '--output_dir',
+        type=str,
+        default='.',
+        help='Directory to save the output files'
+    )
+    
+    parser.add_argument(
+        '--skip_patterns',
+        type=str,
+        nargs='+',
+        help='Additional file patterns to skip (e.g., "*.md" "*.txt")'
+    )
+    
+    parser.add_argument(
+        '--skip_dirs',
+        type=str,
+        nargs='+',
+        help='Additional directories to skip'
+    )
+    
+    parser.add_argument(
+        '-v', '--verbose',
+        action='store_true',
+        help='Enable verbose output'
+    )
+    
+    return parser.parse_args()
+
+
+def validate_args(args):
+    """Validate command line arguments"""
+    # Convert relative path to absolute path
+    repo_path = Path(args.repo_path).resolve()
+    
+    # Check if repo path exists and is a directory
+    if not repo_path.exists():
+        raise ValueError(f"Repository path does not exist: {repo_path}")
+    if not repo_path.is_dir():
+        raise ValueError(f"Repository path is not a directory: {repo_path}")
+    
+    # Check if output directory exists, create if it doesn't
+    output_dir = Path(args.output_dir).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Validate max words
+    if args.max_words <= 0:
+        raise ValueError("Maximum words must be greater than 0")
+    
+    # Update args with resolved paths
+    args.repo_path = repo_path
+    args.output_dir = output_dir
+
+
+def main():
+    # Parse and validate arguments
+    args = parse_arguments()
+    try:
+        validate_args(args)
+    except ValueError as e:
+        print(f"Error: {e}")
+        return 1
+       
+    # Process the repository
+    try:
+        processor = RepoContentProcessor(args.repo_path, args.cfg, args.max_words)
+        
+        # Add any additional skip patterns from command line
+        if args.skip_patterns:
+            processor.skip_patterns.update(args.skip_patterns)
+        
+        # Add any additional skip directories from command line
+        if args.skip_dirs:
+            processor.skip_dirs.update(args.skip_dirs)
+            
+        # Change to output directory
+        os.chdir(str(args.output_dir))
+
+        processor.process_repo()
+        return 0
+    except Exception as e:
+        print(f"Error during processing: {e}")
+        return 1
+
+
+if __name__ == "__main__":
+    main()
+****************************************

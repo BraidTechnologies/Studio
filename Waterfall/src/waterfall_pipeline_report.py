@@ -4,14 +4,13 @@
 # Standard Library Imports
 import logging
 from src.workflow import PipelineItem, Theme, WebSearchPipelineSpec
-from src.waterfall_pipeline_report_common import write_chart
 from src.google_office_mailer import send_mail
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 
 def create_mail_report(output_location: str, items: list[PipelineItem], themes: list[Theme], spec: WebSearchPipelineSpec, send_final: bool) -> None:
@@ -26,7 +25,6 @@ def create_mail_report(output_location: str, items: list[PipelineItem], themes: 
         - send_final - set to false to suppress ending the report - used in testing
     '''
 
-    write_chart (output_location, items, themes, spec)
 
     logger.debug('Writing summary')
     size = min(len(themes), spec.clusters_in_summary)

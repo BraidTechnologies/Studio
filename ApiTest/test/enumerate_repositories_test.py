@@ -6,7 +6,7 @@ API endpoint, which returns a list of available repository IDs. It includes sche
 validation and basic HTTP response testing.
 
 Environment Requirements:
-    - SessionKey: Must be set as an environment variable
+    - BRAID_SESSION_KEY: Must be set as an environment variable
 '''
 
 import pytest
@@ -14,9 +14,11 @@ import requests
 import os
 import jsonschema
 
+from CommonPy.src.request_utilities import request_timeout
+
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Construct the full URL to the /enumerateRepositories endpoint
 enumerate_repositories_url = f'{
@@ -61,7 +63,7 @@ def test_enumerate_repositories():
 
     # Prepare a mocked request that matches the IEnumerateModelsRequest schema
     wrapped = {}  # This API doesn't require any specific request properties
-    response = requests.post(enumerate_repositories_url, json=wrapped)
+    response = requests.post(enumerate_repositories_url, json=wrapped, timeout=request_timeout)
     assert response.status_code == 200
     response_json = response.json()
 

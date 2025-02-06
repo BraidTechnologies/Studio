@@ -1,4 +1,58 @@
+/*
+@module Cascade/src/content.ts
 
+## Overview
+This TypeScript module serves as a content script for a Chrome extension that performs web scraping, text summarization, and content classification. It runs in the context of web pages and communicates with both the extension's background script and an external API service.
+
+## Key Features
+- Web scraping of text content from various HTML elements (paragraphs, headers, and divs)
+- Progressive text summarization with visual feedback
+- Content classification into predefined categories
+- Error handling for unhandled promise rejections
+- Rate limiting and text length restrictions
+- Message passing between extension components
+
+## Main Components
+
+### Global Variables
+- `haveStartedScrape`: Boolean flag to prevent concurrent scraping operations
+- External declarations for `artoo`, `chrome`, and `axios` APIs
+
+### Key Functions
+1. `suppressUnhandledPromiseRejection(event)`
+   - Handles unhandled promise rejections
+   - Resets scraping state
+   - Sends error messages to the background script
+
+2. `startScrape(key)`
+   - Main scraping function that orchestrates the entire process
+   - Implements progressive feedback for long-running operations
+   - Manages API calls for summarization and classification
+   - Handles text extraction with fallback strategies
+   - Enforces text length limits (100KB)
+
+### Message Handling
+- Listens for messages from the extension's popup
+- Responds to "Key" type messages to initiate scraping
+- Prevents concurrent scraping operations
+
+## API Integration
+Communicates with external API endpoints:
+- `/api/summarize` - Text summarization
+- `/api/classify` - Content classification into categories (Business, Technology, Politics, Health, Sport)
+
+## Error Handling
+- Comprehensive error handling for API calls
+- Graceful degradation when scraping fails
+- User feedback for all error states
+- Prevention of concurrent operations
+
+## Dependencies
+- Artoo.js for web scraping
+- Axios for HTTP requests
+- Chrome Extension APIs for message passing
+
+*/
 declare var artoo: any;
 declare var chrome: any;
 declare var axios: any;
@@ -166,15 +220,12 @@ function startScrape (key: string) : void {
 // Listen to messages from the popup.js script 
 chrome.runtime.onMessage.addListener(function (message: any) {
 	
-   console.log ("Got message");   
 
    if (message.type === "Key" && !haveStartedScrape) {
-      console.log ("Starting scrape");
       haveStartedScrape = true;
       startScrape (message.text);
    }
 });    
 
-console.log ("Content script loaded");
 
 //startScrape ("49b65194-26e1-4041-ab11-4078229f478a");

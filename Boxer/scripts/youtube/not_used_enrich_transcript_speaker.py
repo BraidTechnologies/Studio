@@ -48,7 +48,7 @@ parser.add_argument("-f", "--folder")
 parser.add_argument("--verbose", action="store_true")
 args = parser.parse_args()
 if args.verbose:
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.WARNING)
 
 TRANSCRIPT_FOLDER = args.folder if args.folder else None
 if not TRANSCRIPT_FOLDER:

@@ -14,9 +14,11 @@ import pytest
 import requests
 import os
 
+from CommonPy.src.request_utilities import request_timeout
+
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['SessionKey']
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
 # Sample data based on the definitions
 classify_request_data = {
@@ -36,7 +38,7 @@ def test_classification_request():
     wrapped = {
         'request' : classify_request_data
     }
-    response = requests.post(classify_url, json=wrapped, timeout=10)
+    response = requests.post(classify_url, json=wrapped, timeout=request_timeout)
     assert response.status_code == 200
     response_json = response.json()
     assert 'classification' in response_json
@@ -53,9 +55,9 @@ def test_invalid_classification_request(invalid_data):
     wrapped = {
         'request' : invalid_data
     }
-    response = requests.post(classify_url, json=wrapped, timeout=10)
+    response = requests.post(classify_url, json=wrapped, timeout=request_timeout)
     assert response.status_code == 400  # Assuming the API returns 400 for bad requests
 
 if __name__ == '__main__':
     pytest.main()
-    
+

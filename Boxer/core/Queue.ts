@@ -1,4 +1,13 @@
 /*! Copyright Braid Technologies 2022 */
+/**
+ * @module Queue
+ * @description Provides a generic queue data structure implementation for the Boxer application.
+ * 
+ * This module includes the Queue class which handles:
+ * - Creating and managing FIFO (First-In-First-Out) queues
+ * - Basic queue operations like enqueue, dequeue, isEmpty, and length
+ * - Efficient memory management through offset-based dequeuing
+ */
 
 
 //==============================//

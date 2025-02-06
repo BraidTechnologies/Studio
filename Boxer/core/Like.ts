@@ -1,5 +1,13 @@
-// Copyright (c) 2024 Braid Technologies Ltd
- 
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Like
+ * @description Provides a class for managing likes in the Boxer application.
+ * 
+ * This module includes the Like class which handles:
+ * - Creating and managing like objects with names and timestamps
+ * - Supporting multiple constructor patterns for initialization
+ * - Copying like objects from JSON or constructed sources
+ */
 
 /**
  * Embeddeding object

@@ -1,4 +1,13 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module Keys
+ * @description Provides classes for managing keys in the Boxer application.
+ * 
+ * This module includes the SessionKey and ConversationKey classes which handle:
+ * - Creating and validating keys
+ * - Converting keys to strings
+ */
+
 import { IKeyGenerator } from './IKeyGenerator';
 import { getDefaultKeyGenerator } from './IKeyGeneratorFactory';
 

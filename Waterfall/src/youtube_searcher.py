@@ -10,13 +10,12 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 from src.workflow import PipelineItem, YouTubePipelineSpec
-from src.boxer_sources import youtube_playlists
 
 # Set up logging to display information about the execution of the script
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 # get the API KEY here: https://developers.google.com/custom-search/v1/overview
 GOOGLE_DEVELOPER_API_KEY = os.environ['GOOGLE_DEVELOPER_API_KEY']
@@ -25,7 +24,7 @@ GOOGLE_API_VERSION = "v3"
 MAX_RESULTS = 100
 
 
-def parseVideoDurationMins(duration: str) -> int:
+def parse_video_duration_mins(duration: str) -> int:
     """Parse the duration of a video in minutes.
 
     Args:
@@ -124,7 +123,7 @@ class YoutubePlaylistSearcher:
                     video_response = video_request.execute()
                     duration = video_response["items"][0]["contentDetails"]["duration"]
 
-                    minutes = parseVideoDurationMins(duration)
+                    minutes = parse_video_duration_mins(duration)
 
                     pipeline_item = PipelineItem()
                     pipeline_item.length_minutes = int(minutes)

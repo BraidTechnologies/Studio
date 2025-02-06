@@ -1,5 +1,18 @@
 "use strict";
-// Copyright (c) 2024 Braid Technologies Ltd
+/**
+ * Custom error classes for the Braid application.
+ *
+ * This module provides a collection of specialized error classes that extend the base Error class.
+ * Each error type is designed to handle specific categories of errors that may occur within the
+ * application, such as invalid parameters, connection issues, or environment-related problems.
+ *
+ * All error classes include:
+ * - Proper prototype chain restoration for TypeScript
+ * - Automatic error logging through logCoreError or logApiError
+ * - Standardized error naming for stack traces
+ *
+ * @module Errors
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssertionFailedError = exports.EnvironmentError = exports.ConnectionError = exports.InvalidStateError = exports.InvalidOperationError = exports.InvalidParameterError = void 0;
 const Logging_1 = require("./Logging");

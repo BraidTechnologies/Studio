@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+# Waterfall Browser
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web application for navigating and viewing hierarchical data chunks with a clean, responsive interface using Fluent UI components.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+Waterfall Browser is a modern web application that allows users to browse and navigate through interconnected data chunks. Each chunk can contain a title, summary, URL, and references to related chunks, creating a waterfall-like navigation experience.
 
-### `npm start`
+## Technical Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **React**: Frontend framework
+- **Fluent UI**: Microsoft's design system for UI components
+- **TypeScript**: For type-safe development
+- **Web Vitals**: Performance monitoring
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Key Components
 
-### `npm test`
+### Core Components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **App**: Main application component handling routing and layout
+- **ChunkRetriever**: Manages the data fetching logic and state
+- **ChunkView**: Displays individual chunk data with navigation options
+- **ChunkViewLoading**: Loading state component
+- **ChunkViewError**: Error state component
 
-### `npm run build`
+### Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Responsive layout with fluid design
+- Parent-child chunk navigation
+- Related chunks cross-referencing
+- Base64 decoding for secure API key handling
+- Performance monitoring with Web Vitals
+- Internationalization support through UIString module
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Project Structure
+src/
+├── App.tsx # Main application component
+├── ChunkRetriever.tsx # Data fetching component
+├── ChunkView.tsx # Chunk display component
+├── ChunkViewError.tsx # Error state component
+├── ChunkViewLoading.tsx # Loading state component
+├── Defusc.tsx # Base64 decoding utility
+├── reportWebVitals.ts # Performance monitoring
+└── UIString.ts # UI text constants
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## URL Parameters
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The application accepts a `chunkId` parameter in the URL to display specific chunks of data.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Example: `http://your-app-url/?chunk=example-chunk-id`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Performance Monitoring
 
-## Learn More
+The application includes Web Vitals monitoring for key metrics:
+- Largest Contentful Paint (LCP)
+- First Input Delay (FID)
+- Cumulative Layout Shift (CLS)
+- First Contentful Paint (FCP)
+- Time to First Byte (TTFB)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Internationalization
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+UI strings are centralized in the `UIString.ts` module for easy maintenance and future internationalization support.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+[Add your license information here]

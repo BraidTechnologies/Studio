@@ -1,11 +1,22 @@
-// Copyright (c) 2024 Braid Technologies Ltd
-import axios from 'axios';
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+
+/**
+ * @module FluidApi
+ * @description Provides an API wrapper for generating Fluid Framework tokens.
+ * This module contains the FluidApi class, which handles the generation of Fluid
+ * Framework tokens using the provided environment and session key.
+ * 
+ * The class supports:
+ * - Generating a Fluid token using a request object containing documentId, userId, and userName.
+ * - Handling errors and retries for token generation.
+ */
+
+import axios, {AxiosInstance, AxiosStatic} from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { Api } from './Api';
 import { IEnvironment } from "./IEnvironment";
 import { IFluidTokenRequest } from './Fluid';
-
 
 export class FluidApi extends Api {
 
@@ -33,7 +44,7 @@ export class FluidApi extends Api {
 
       try {
          // Up to 5 retries - it is a big fail if we cannot get a token for Fluid
-         axiosRetry(axios, {
+         axiosRetry(axios as AxiosStatic | AxiosInstance, {
             retries: 5,
             retryDelay: axiosRetry.exponentialDelay,
             retryCondition: (error) => {
@@ -42,7 +53,7 @@ export class FluidApi extends Api {
          });
 
          response = await axios.post(apiUrl, {
-            data: query
+            request: query
          });
 
          if (response.status === 200) {

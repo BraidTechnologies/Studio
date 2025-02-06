@@ -1,4 +1,18 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module ActivityRecord
+ * @description Defines interfaces and utilities for storing user activity records in Braid.
+ * 
+ * This module provides interfaces for different types of activity records that can be stored:
+ * - Base activity records (IStoredActivity)
+ * - URL-based activities (IStoredUrlActivity) 
+ * - URL like/unlike activities (IStoredLikeUrlActivity)
+ * - Message-based activities (IStoredMessageActivity)
+ * 
+ * Each interface extends IStorable for persistence and includes version information via
+ * className and schemaNumber constants. The module also provides utility functions for
+ * handling dates in UTC format for consistent storage.
+ */
 
 import { IStorable } from '../../CommonTs/src/IStorable';
 

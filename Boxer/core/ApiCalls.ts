@@ -1,21 +1,31 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+/**
+ * @module ApiCalls
+ * @description Provides functions for making API calls to the Braid backend.
+ * 
+ * This module includes functions for making summarization requests to the Summarise API,
+ * as well as other utility functions for making API calls to other services.
+ */
+
 import axios from "axios";
 
 // Local
 import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
-import { EConfigStrings } from "./ConfigStrings";
 import { EConfigNumbers } from "./ConfigStrings";
+import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
 import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/SummariseApi.Types"
+import { EPromptPersona } from "../../CommonTs/src/IPromptPersona";
 
 
 export async function makeSummaryCall (session: SessionKey, text: string) : Promise<string | undefined> {
 
    let summary: string | undefined = undefined;
-   let apiUrl: string = EConfigStrings.kSummariseUrl;
+   let env =  getDefaultEnvironment();
+   let apiUrl = env.summariseApi() + '?session=' + session.toString();
    
-   apiUrl = apiUrl + '?session=' + session.toString();
    let request: ISummariseRequest = {
+      persona: EPromptPersona.kDeveloperAssistant,
       text: text,
       lengthInWords: EConfigNumbers.kSummaryLengthWords
    };

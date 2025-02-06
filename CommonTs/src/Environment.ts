@@ -1,4 +1,11 @@
-// Copyright (c) 2024 Braid Technologies Ltd
+// Copyright (c) 2024, 2025 Braid Technologies Ltd
+
+/**
+ * @module Environment
+ * 
+ * This module provides a base class for interacting with an environment.
+ */
+
 import {EEnvironment, IEnvironment} from './IEnvironment';
 
 /**
@@ -16,9 +23,13 @@ export class DevelopmentEnvironment implements IEnvironment {
       return "http://localhost:7071/api/Summarize"; 
 
    }
+   summariseContextApi() : string {
+      return "http://localhost:7071/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "http://localhost:7071/api/FindTheme";
    }
+
    classifyApi () : string {
       return "http://localhost:7071/api/Classify"; 
    }
@@ -28,8 +39,8 @@ export class DevelopmentEnvironment implements IEnvironment {
    embedApi () : string {
       return "http://localhost:7071/api/Embed"; 
    }
-   suppressSummariseFail(): string {
-      return "http://localhost:7071/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "http://localhost:7071/api/TestForSummariseFail";
    }
    saveActivityApi(): string {
       return "http://localhost:7071/api/SaveActivity"
@@ -53,7 +64,7 @@ export class DevelopmentEnvironment implements IEnvironment {
       return "http://localhost:7071/api/ProcessAuthFromLinkedIn"; 
    }   
    boxerHome(): string {
-      return "http://localhost:1337/aibot.html";
+      return "http://localhost:1337/boxer.html";
    }
    findRelevantEnrichedChunksFromUrl (): string {
       return "http://localhost:7071/api/FindRelevantEnrichedChunksFromUrl";
@@ -122,9 +133,13 @@ export class StagingEnvironment implements IEnvironment {
    summariseApi () : string {
       return "https://braid-api.azurewebsites.net/api/Summarize"; 
    }
+   summariseContextApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
+
    classifyApi () : string {
       return "https://braid-api.azurewebsites.net/api/Classify"; 
    }
@@ -134,8 +149,8 @@ export class StagingEnvironment implements IEnvironment {
    embedApi () : string {
       return "https://braid-api.azurewebsites.net/api/Embed"; 
    }   
-   suppressSummariseFail(): string {
-      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
    }   
    saveActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/SaveActivity";
@@ -159,7 +174,7 @@ export class StagingEnvironment implements IEnvironment {
       return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
    }
    boxerHome(): string {
-      return "https://braidapps.io/aibot.html";
+      return "https://braidapps.io/boxer.html";
    }   
    findRelevantEnrichedChunksFromUrl (): string {
       return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
@@ -229,9 +244,13 @@ export class ProductionEnvironment implements IEnvironment {
       return "https://braid-api.azurewebsites.net/api/Summarize"; 
 
    }
+   summariseContextApi() : string {
+      return "https://braid-api.azurewebsites.net/api/SummarizeContext";
+   }
    findThemeApi(): string {
       return "https://braid-api.azurewebsites.net/api/FindTheme";
    }
+
    classifyApi () : string {
       return "https://braid-api.azurewebsites.net/api/Classify"; 
    }
@@ -241,8 +260,8 @@ export class ProductionEnvironment implements IEnvironment {
    embedApi () : string {
       return "https://braid-api.azurewebsites.net/api/Embed"; 
    }    
-   suppressSummariseFail(): string {
-      return "https://braid-api.azurewebsites.net/api/SuppressSummariseFail";
+   testForSummariseFail(): string {
+      return "https://braid-api.azurewebsites.net/api/TestForSummariseFail";
    }      
    saveActivityApi(): string {
       return "https://braid-api.azurewebsites.net/api/SaveActivity"
@@ -266,7 +285,7 @@ export class ProductionEnvironment implements IEnvironment {
       return "https://braid-api.azurewebsites.net/api/ProcessAuthFromLinkedIn"; 
    }    
    boxerHome(): string {
-      return "https://braidapps.io/aibot.html";
+      return "https://braidapps.io/boxer.html";
    }  
    findRelevantEnrichedChunksFromUrl (): string {
       return "https://braid-api.azurewebsites.net/api/FindRelevantEnrichedChunksFromUrl";
