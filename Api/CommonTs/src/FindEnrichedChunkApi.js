@@ -56,7 +56,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = undefined;
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -86,7 +86,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;
@@ -116,7 +116,7 @@ class FindEnrichedChunkApi extends Api_1.Api {
             let empty = new Array();
             try {
                 response = yield axios_1.default.post(apiUrl, {
-                    data: urlQuery
+                    request: urlQuery
                 });
                 if (response.status === 200) {
                     return response.data;

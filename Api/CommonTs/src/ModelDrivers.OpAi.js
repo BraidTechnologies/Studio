@@ -86,6 +86,7 @@ exports.OpenAIEmbeddingModelDriver = OpenAIEmbeddingModelDriver;
  */
 function calculateEmbedding(text, urlElement) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a;
         // Up to 5 retries if we hit rate limit
         (0, axios_retry_1.default)(axios_1.default, {
             retries: 5,
@@ -102,7 +103,7 @@ function calculateEmbedding(text, urlElement) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'api-key': process.env.AZURE_OPENAI_API_KEY
+                    'api-key': (_a = process.env.AZURE_OPENAI_API_KEY) === null || _a === void 0 ? void 0 : _a.toString()
                 }
             });
             const embedding = response.data.data[0].embedding;
@@ -178,6 +179,7 @@ exports.OpenAIChatModelDriver = OpenAIChatModelDriver;
  */
 function chat(persona, urlElement, prompt, params, useAzure) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
         // Up to 5 retries if we hit rate limit
         (0, axios_retry_1.default)(axios_1.default, {
             retries: 5,
@@ -207,7 +209,7 @@ function chat(persona, urlElement, prompt, params, useAzure) {
         });
         try {
             if (!useAzure) {
-                const apiKey = process.env.OPENAI_API_KEY;
+                const apiKey = (_a = process.env.OPENAI_API_KEY) === null || _a === void 0 ? void 0 : _a.toString();
                 const response = yield axios_1.default.post('https://api.openai.com/v1/chat/completions', {
                     messages: messages,
                     model: 'gpt-4o'
@@ -223,13 +225,15 @@ function chat(persona, urlElement, prompt, params, useAzure) {
                 };
             }
             else {
+                const apiKey = (_b = process.env.AZURE_OPENAI_API_KEY) === null || _b === void 0 ? void 0 : _b.toString();
+                console.log("API Key: " + apiKey);
                 const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/'
                     + urlElement + '/chat/completions?api-version=2024-06-01', {
                     messages: messages
                 }, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'api-key': process.env.AZURE_OPENAI_API_KEY
+                        'api-key': apiKey
                     }
                 });
                 return {

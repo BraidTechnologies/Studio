@@ -52,7 +52,7 @@ export class FindEnrichedChunkApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            data: urlQuery
+            request: urlQuery
          });
 
          if (response.status === 200) {
@@ -83,7 +83,7 @@ export class FindEnrichedChunkApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            data: urlQuery
+            request: urlQuery
          });
 
          if (response.status === 200) {
@@ -114,7 +114,7 @@ export class FindEnrichedChunkApi extends Api {
 
       try {
          response = await axios.post(apiUrl, {
-            data: urlQuery
+            request: urlQuery
          });
 
          if (response.status === 200) {

@@ -19,7 +19,7 @@
            "--debug-brk",
            "--require",
            "ts-node/register",
-           "${workspaceFolder}/test/*driver*.test.ts"
+           "${workspaceFolder}/test/*enriched*.test.ts"
    
          ],
          "internalConsoleOptions": "openOnSessionStart",

@@ -94,7 +94,8 @@ export function lookLikeSameSource(url1: string, url2: string): boolean {
       }
    }
    catch (e) {
-      console.error (e);
+      // TODO This too annoying and masks other errors, needs a proper fix in the data 
+      // console.error (e);
       return false;
    }
 

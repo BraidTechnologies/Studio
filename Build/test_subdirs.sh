@@ -20,8 +20,8 @@ npm run test-warm& > /dev/null 2>&1 &
 TEST_WARM_PID=$!
 cd ..
 
-# Wait for 20 seconds to allow database to warm up
-sleep 30
+# Wait for 300 seconds to allow database to warm up
+sleep 300
 
 # Function to cleanup fluid process on script exit
 cleanup() {
