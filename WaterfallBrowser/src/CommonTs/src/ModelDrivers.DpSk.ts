@@ -9,7 +9,11 @@
  * 
  */
 
+<<<<<<< HEAD
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
+=======
+// Copyright (c) 2024 Braid Technologies Ltd
+>>>>>>> ee11e498699947e471c4c8ff5e65f71bfca7d97e
 
 import Groq from "groq-sdk";
 
