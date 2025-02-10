@@ -1,0 +1,47 @@
+{
+  "definitions": {
+    "IChunkRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "IChunkRequest.text"
+        },
+        "chunkSize": {
+          "type": "number",
+          "title": "IChunkRequest.chunkSize"
+        },
+        "overlapWords": {
+          "type": "number",
+          "title": "IChunkRequest.overlapWords"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "title": "IChunkRequest",
+      "description": "Interface for chunk reqiest API.\n@property {string} text - The text content of the chunk.\n@property {number | undefined} chunkSize - The size of the chunk in tokens, if specified.\n@property {number | undefined} overlapWords - The size of the overlap between chunks, in words (=2 * tokens) if specified."
+    },
+    "IChunkResponse": {
+      "type": "object",
+      "properties": {
+        "chunks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "IChunkResponse.chunks"
+        }
+      },
+      "required": [
+        "chunks"
+      ],
+      "additionalProperties": false,
+      "title": "IChunkResponse",
+      "description": "Return type of chunk reqiest API.\n@property {Array<string>} chunks - Array of text chunks"
+    }
+  },
+  "$id": "ChunkApi.Types.json",
+  "$comment": "Generated from src\\ChunkApi.Types.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+}
