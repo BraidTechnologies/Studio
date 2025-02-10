@@ -9,17 +9,14 @@
  * 
  */
 
-<<<<<<< HEAD
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
-=======
-// Copyright (c) 2024 Braid Technologies Ltd
->>>>>>> ee11e498699947e471c4c8ff5e65f71bfca7d97e
 
 import Groq from "groq-sdk";
 
 let deepSeekModel = "deepseek-r1-distill-llama-70b";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let groq: Groq | null = null;
+
 
 // Internal imports
 import { EModel, EModelProvider, IChatModelDriver,IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams} from './IModelDriver';
@@ -139,10 +136,14 @@ async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt,
 
    try {    
        console.log("DeepSeek!");
+       if (groq == null) {
+          groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+       }
        let groqChatCompletion = await groq.chat.completions.create({
            messages: messages,
            model: deepSeekModel
         });
+
 
         let stripped = stripTextBetweenThink(groqChatCompletion.choices[0]?.message?.content || "");
         stripped = stripLeadingCRLF(stripped);

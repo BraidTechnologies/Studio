@@ -238,13 +238,8 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
    });
 
    try {
-<<<<<<< HEAD
       if (! useAzure) {         
          const apiKey : string | undefined = process.env.OPENAI_API_KEY?.toString();
-=======
-      if (! useAzure) {
-         const apiKey = process.env.OPENAI_API_KEY;
->>>>>>> ee11e498699947e471c4c8ff5e65f71bfca7d97e
 
          const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             messages: messages,
@@ -263,12 +258,8 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
          };
       }
       else {
-<<<<<<< HEAD
          const apiKey : string | undefined = process.env.AZURE_OPENAI_API_KEY?.toString();
-         console.log("API Key: " + apiKey);
 
-=======
->>>>>>> ee11e498699947e471c4c8ff5e65f71bfca7d97e
          const response = await axios.post('https://studiomodels.openai.azure.com/openai/deployments/' 
             + urlElement + '/chat/completions?api-version=2024-06-01', {
             messages: messages
@@ -276,11 +267,7 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
          {
             headers: {
                'Content-Type': 'application/json',
-<<<<<<< HEAD
                'api-key': apiKey
-=======
-               'api-key': process.env.AZURE_OPENAI_API_KEY
->>>>>>> ee11e498699947e471c4c8ff5e65f71bfca7d97e
             }
          });
 
