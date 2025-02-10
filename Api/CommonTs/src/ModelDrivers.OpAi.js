@@ -226,7 +226,6 @@ function chat(persona, urlElement, prompt, params, useAzure) {
             }
             else {
                 const apiKey = (_b = process.env.AZURE_OPENAI_API_KEY) === null || _b === void 0 ? void 0 : _b.toString();
-                console.log("API Key: " + apiKey);
                 const response = yield axios_1.default.post('https://studiomodels.openai.azure.com/openai/deployments/'
                     + urlElement + '/chat/completions?api-version=2024-06-01', {
                     messages: messages

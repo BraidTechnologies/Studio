@@ -26,7 +26,7 @@ exports.DeepSeekR1ChatModelDriver = exports.DeepSeekR1ChatModelInit = exports.De
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
 const groq_sdk_1 = __importDefault(require("groq-sdk"));
 let deepSeekModel = "deepseek-r1-distill-llama-70b";
-const groq = new groq_sdk_1.default({ apiKey: process.env.GROQ_API_KEY });
+let groq = null;
 // Internal imports
 const IModelDriver_1 = require("./IModelDriver");
 const IPromptPersonaFactory_1 = require("./IPromptPersonaFactory");
@@ -128,6 +128,9 @@ function chat(persona, prompt, params) {
         });
         try {
             console.log("DeepSeek!");
+            if (groq == null) {
+                groq = new groq_sdk_1.default({ apiKey: process.env.GROQ_API_KEY });
+            }
             let groqChatCompletion = yield groq.chat.completions.create({
                 messages: messages,
                 model: deepSeekModel
