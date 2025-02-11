@@ -5,18 +5,18 @@ directories=("CommonTs" "CommonPy" "Api" "ApiTest" "Cascade" "Waterfall" "Waterf
 
 # Start npm run local-fluid in Api directory
 cd Api
-npm run local-fluid &> /dev/null &
+npm run local-fluid> /dev/null 2>&1 &
 FLUID_PID=$!
 
 # Start func start in Api directory
-func start& > /dev/null 2>&1 &
+func start> /dev/null 2>&1 &
 FUNC_PID=$!
 
 # Wait for 10 seconds to allow services to start
 sleep 10
 
 # This starts the server to preload the repository from CosmosDB
-npm run test-warm& > /dev/null 2>&1 &
+npm run test-warm> /dev/null 2>&1 &
 TEST_WARM_PID=$!
 cd ..
 
