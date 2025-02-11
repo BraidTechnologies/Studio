@@ -21,10 +21,10 @@ Options:
 Example:
     python src/repo_to_text.py --cfg config.yaml --repo_path . -o test_output
     python src/repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
-    python "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\src\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
-    python "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\src\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
-    python "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\src\repo_to_text.py" --cfg config.yaml --repo_path . -o test_output
-    python "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\src\repo_to_text_old.py" --cfg config.yaml --repo_path . -o test_output
+    python "C:\\BraidTechnologies\\Studio\\Salon\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
+    python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
+    python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text.py" --cfg config.yaml --repo_path . -o test_output
+    python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text_old.py" --cfg config.yaml --repo_path . -o test_output
 """
 
 
@@ -33,11 +33,16 @@ import argparse
 import os
 from pathlib import Path
 import yaml
-
-# NLTK download if needed
+import sys
 import nltk
 nltk.download('punkt', quiet=True)
 nltk.download('punkt_tab', quiet=True)
+
+
+# Add the project root and scripts directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 
 # Import from our local modules
 from DirectoryVisitor import DirectoryVisitorForNotebookLM, DirectoryVisitorForReadme
