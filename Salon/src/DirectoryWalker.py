@@ -17,14 +17,14 @@ from Salon.src.DirectoryVisitor import DirectoryData, DirectoryVisitor
 
 _visitors = []
 
-def add_visitor(visitor: DirectoryVisitor):
+def add_visitor(visitor: DirectoryVisitor) -> None:
     """
     Register a visitor that will be applied to each directory
     encountered in the walk_directory function.
     """
     _visitors.append(visitor)
 
-def clear_visitors():
+def clear_visitors() -> None:
     """
     (Optional) If you need a way to reset the visitor list between runs.
     """
@@ -32,10 +32,10 @@ def clear_visitors():
 
 def walk_directory(
     root_path: Path,
-    skip_dirs=None,
-    skip_patterns=None,
-    source_patterns=None,
-):
+    skip_dirs: list[str] = None,
+    skip_patterns: list[str] = None,
+    source_patterns: list[str] = None,
+) -> None:
     """
     Recursively walk the directory starting at `root_path`.
     For each directory, build a DirectoryData object, then
@@ -86,7 +86,7 @@ def walk_directory(
             if any(fnmatch.fnmatch(filename, sp) for sp in source_patterns):
                 directory_data.source_files.append(file_path)
 
-        # Call each visitor’s visit method
+        # Call each visitor's visit method
         for visitor in _visitors:
             visitor.visit(directory_data)
 
