@@ -152,6 +152,7 @@ function startScrape (key: string) : void {
 
       axios.post(summarizeQuery, {
          request: {
+            persona: 'ArticleSummariser',
             text: allText
          },
          headers: {
