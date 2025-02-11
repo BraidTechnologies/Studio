@@ -99,12 +99,12 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
         for file_path in directory_data.all_files:
             relative_path = file_path.relative_to(directory_data.path.parent)
             # Example check for duplicates if in "common" directories
-            # if "common_dir" in file_path.parts:
-            #     if file_path.name in self.common_files:
-            #         print(f"Skipping duplicate common file: {file_path}")
-            #         continue
-            #     else:
-            #         self.common_files.add(file_path.name)
+            if "common_dir" in file_path.parts:
+                if file_path.name in self.common_files:
+                    print(f"Skipping duplicate common file: {file_path}")
+                    continue
+                else:
+                    self.common_files.add(file_path.name)
 
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
