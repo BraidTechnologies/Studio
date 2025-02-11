@@ -7,6 +7,13 @@ import requests
 import nltk
 from nltk.tokenize import word_tokenize
 from datetime import datetime
+import sys
+
+# Add the project root and scripts directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(parent_dir)  # Go up one more level to find CommonPy
+sys.path.insert(0, root_dir)
 
 from CommonPy.src.request_utilities import request_timeout
 
