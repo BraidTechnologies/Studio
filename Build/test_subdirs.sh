@@ -81,6 +81,11 @@ for dir in "${directories[@]}"; do
             else
                 python -m pytest 
             fi
+            # Exit if pytest run test fails
+            if [ $? -ne 0 ]; then
+                echo "pytest run test failed in directory: $dir. Exiting script."
+                exit 1
+            fi            
         fi
         
         # Go back to the original directory
