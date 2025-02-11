@@ -8,6 +8,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from datetime import datetime
 import sys
+from typing import List, Optional
 
 # Add the project root and scripts directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,17 +31,17 @@ class DirectoryData:
     what files it contains, etc.
     """
     def __init__(self, path: Path):
-        self.path = path
-        self.has_readme = False
-        self.source_files = []
-        self.all_files = []   # Optionally store all files if you need them
-        self.summary_needed = False  # Flag if we should re-summarize
+        self.path: Path = path
+        self.has_readme: bool = False
+        self.source_files: List[Path] = []
+        self.all_files: List[Path] = []   # Optionally store all files if you need them
+        self.summary_needed: bool = False  # Flag if we should re-summarize
 
 class DirectoryVisitor:
     """
     Base class for any visitor that wants to process a directory.
     """
-    def visit(self, directory_data: DirectoryData):
+    def visit(self, directory_data: DirectoryData) -> None:
         raise NotImplementedError("Subclasses must implement 'visit' method")
 
 
@@ -50,19 +51,21 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
     until reaching a max word limit, then writes the output to a file.
     """
 
-    def __init__(self, max_words=200000, output_dir: Path = None):
-        self.max_words = max_words
-        self.output_dir = output_dir or Path('.')
-        self.content = ""
-        self.current_word_count = 0
-        self.file_counter = 1
+    def __init__(self, max_words: int = 200000, output_dir: Optional[Path] = None):
+        self.max_words: int = max_words
+        self.output_dir: Path = output_dir or Path('.')
+        self.content: str = ""
+        self.current_word_count: int = 0
+        self.file_counter: int = 1
         # We can keep track of "common file" dedup if needed
-        self.common_files = set()
+        self.common_files: set = set()
 
     def count_words(self, text: str) -> int:
+        """Count the number of words in a given text."""
         return len(word_tokenize(text))
 
-    def save_current_content(self):
+    def save_current_content(self) -> None:
+        """Save the current content to a file if it is not empty."""
         if not self.content.strip():
             return
         output_file = self.output_dir / f'repo_content_{self.file_counter}.txt'
@@ -73,7 +76,7 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
         self.content = ""
         self.current_word_count = 0
 
-    def add_file_block(self, relative_path: str, file_content: str):
+    def add_file_block(self, relative_path: str, file_content: str) -> None:
         """Adds the text block for a single file, with a 40-char separator."""
         separator = '*' * 40
         block = f"{separator}\n{relative_path}\n{separator}\n{file_content}\n{separator}\n"
@@ -88,7 +91,7 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
         self.content += block
         self.current_word_count += block_word_count
 
-    def visit(self, directory_data: DirectoryData):
+    def visit(self, directory_data: DirectoryData) -> None:
         """
         Called for each directory. We can process all files or `source_files`
         depending on your design. For illustration, we'll process all_files.
@@ -125,11 +128,11 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
     will re-summarize.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # you can store any config or state needed for summarization
         pass
 
-    def summarise_code(self, source: str) -> str:
+    def summarise_code(self, source: str) -> Optional[str]:
         """
         Summarize source code text using an external API endpoint.
         """
@@ -151,7 +154,7 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
                 return data['summary']
         return None
 
-    def visit(self, directory_data: DirectoryData):
+    def visit(self, directory_data: DirectoryData) -> None:
         """
         If any source file is newer than the readme, or there's no readme yet,
         generate a new readme by summarizing all source files.
@@ -176,7 +179,7 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
             return
 
         # Summaries for each source file
-        new_readme = []
+        new_readme: List[str] = []
         for src_file in directory_data.source_files:
             try:
                 with open(src_file, 'r', encoding='utf-8') as f:
