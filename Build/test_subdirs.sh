@@ -5,7 +5,7 @@ directories=("CommonTs" "CommonPy" "Api" "ApiTest" "Cascade" "Waterfall" "Waterf
 
 # Start npm run local-fluid in Api directory
 cd Api
-npm run local-fluid > /dev/null 2>&1 &
+npm run local-fluid &> /dev/null &
 FLUID_PID=$!
 
 # Start func start in Api directory
@@ -20,8 +20,25 @@ npm run test-warm& > /dev/null 2>&1 &
 TEST_WARM_PID=$!
 cd ..
 
-# Wait for 300 seconds to allow database to warm up
-sleep 300
+# Wait for 200 seconds to allow database to warm up
+echo "Waiting for database to warm up..."
+sleep 200
+echo "Database warmed up"
+
+# Determine the OS
+OS_TYPE=$(uname)
+
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    OS_NAME="Unix"
+elif [[ "$OS_TYPE" == "Linux" ]]; then
+    # Additional possibility is Windows Subsystem for Linux (WSL)
+    OS_NAME="Unix"
+else
+    OS_NAME="Windows"
+fi
+
+echo "Testing for $OS_NAME"
+
 
 # Function to cleanup fluid process on script exit
 cleanup() {
@@ -59,7 +76,11 @@ for dir in "${directories[@]}"; do
             fi
         else
             echo "No package.json found, running pytest..."
-            python -m pytest
+            if [ "$OS_NAME" == "Unix" ]; then
+                python3 -m pytest
+            else
+                python -m pytest 
+            fi
         fi
         
         # Go back to the original directory
