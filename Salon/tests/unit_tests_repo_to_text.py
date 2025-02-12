@@ -1,6 +1,12 @@
 import pytest
+import os
+import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+# Add the parent directory of 'Salon' to the system path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from Salon.src.DirectoryWalker import add_visitor, clear_visitors, walk_directory
 from Salon.src.DirectoryVisitor import DirectoryVisitorForNotebookLM, DirectoryVisitorForReadme, DirectoryData
 from Salon.src.repo_to_text import load_yaml, parse_arguments, validate_args, main
