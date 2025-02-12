@@ -8,7 +8,7 @@
    },
    "sideEffects": false,
    "scripts": {
-      "build": "tsc --build && npx esbuild ui/AppEntry.tsx --sourcemap --outfile=dist/boxer.pack.js --bundle",
+      "build": "tsc --build && npx esbuild ui/AppEntry.tsx --sourcemap --outfile=dist/boxer.min.js --bundle --minify",
       "clean": "tsc --build --clean",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
       "test-mini": "mocha --debug-brk --exit --require ts-node/register -g Activity*",
@@ -27,7 +27,7 @@
       "@types/react-dom": "18.2.18",
       "@types/react-router-dom": "^5.3.3",
       "crypto-browserify": "^3.12.1",
-      "esbuild": "^0.24.2",
+      "esbuild": "^0.25.0",
       "expect": "^29.7.0",
       "fluid-framework": "^2.13.0",
       "jsdom": "^23.2.0",
