@@ -3,7 +3,7 @@ repo_to_text.py
 
 This script processes a local GitHub repository by concatenating the contents of its files into text files, 
 with a specified word limit per file.
-When it encounters a source file it creates a summary, and acccumulates summaries for all source files ina given directory. 
+When it encounters a source file it creates a summary, and accumulates summaries for all source files in a given directory. 
 These are written out at the end. 
 
 Usage:
@@ -27,17 +27,16 @@ Example:
     python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text_old.py" --cfg config.yaml --repo_path . -o test_output
 """
 
-
-
 import argparse
 import os
 from pathlib import Path
 import yaml
 import sys
 import nltk
+from typing import Dict, Any, Set
+
 nltk.download('punkt', quiet=True)
 nltk.download('punkt_tab', quiet=True)
-
 
 # Add the project root and scripts directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -48,10 +47,12 @@ sys.path.insert(0, parent_dir)
 from DirectoryVisitor import DirectoryVisitorForNotebookLM, DirectoryVisitorForReadme
 from DirectoryWalker import add_visitor, walk_directory
 
-
-def load_yaml(fname):
+def load_yaml(fname: str) -> Dict[str, Any]:
     """
     Load configuration from the YAML config file.
+
+    :param fname: Path to the YAML configuration file.
+    :return: Dictionary containing the configuration.
     """
     if not fname:
         return {}
@@ -65,10 +66,11 @@ def load_yaml(fname):
         print(f"Error parsing YAML file: {e}")
         return {}
 
-
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """
-    Parse command-line arguments
+    Parse command-line arguments.
+
+    :return: Parsed arguments as a Namespace object.
     """
     parser = argparse.ArgumentParser(
         description='Process a GitHub repository and concatenate file contents with a word limit, plus optional ReadMe generation.',
@@ -125,9 +127,13 @@ def parse_arguments():
 
     return parser.parse_args()
 
+def validate_args(args: argparse.Namespace) -> None:
+    """
+    Validate and normalize arguments.
 
-def validate_args(args):
-    """Validate and normalize arguments."""
+    :param args: Parsed command-line arguments.
+    :raises ValueError: If the repository path is invalid.
+    """
     repo_path = Path(args.repo_path).resolve()
 
     if not repo_path.exists():
@@ -142,8 +148,12 @@ def validate_args(args):
     args.repo_path = repo_path
     args.output_dir = output_dir
 
+def main() -> int:
+    """
+    Main function to execute the script.
 
-def main():
+    :return: Exit status code.
+    """
     args = parse_arguments()
 
     try:
@@ -156,11 +166,11 @@ def main():
     config = load_yaml(args.cfg)
 
     # Combine config-based and CLI-based skip patterns
-    skip_dirs = set(config.get("skip_dirs", []))
+    skip_dirs: Set[str] = set(config.get("skip_dirs", []))
     if args.skip_dirs:
         skip_dirs.update(args.skip_dirs)
 
-    skip_patterns = set(config.get("skip_patterns", []))
+    skip_patterns: Set[str] = set(config.get("skip_patterns", []))
     if args.skip_patterns:
         skip_patterns.update(args.skip_patterns)
 
@@ -190,11 +200,10 @@ def main():
         source_patterns=source_patterns
     )
 
-    # Optionally, after the walk, you might force a final flush of the notebook visitor’s content:
+    # Optionally, after the walk, you might force a final flush of the notebook visitor's content:
     notebook_visitor.save_current_content()
 
     return 0
-
 
 if __name__ == "__main__":
     main()
