@@ -13,7 +13,8 @@ sys.path.insert(0, parent_dir)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from Salon.src.DirectoryVisitor import DirectoryData, DirectoryVisitor
+# from Salon.src.DirectoryVisitor import DirectoryData, DirectoryVisitor
+from DirectoryVisitor import DirectoryData, DirectoryVisitor
 
 _visitors = []
 
