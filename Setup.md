@@ -6,7 +6,7 @@ Git https://git-scm.com/downloads
 
 Node 22.13 https://nodejs.org/en/download/
 
-Python 3.12 https://www.python.org/downloads/
+Python 3.12.6 https://www.python.org/downloads/
 
 Cursor Latest https://www.cursor.com/
 
