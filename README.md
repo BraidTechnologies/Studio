@@ -80,6 +80,174 @@ Braid uses Azure for all processing.
     - Write meaningful commit messages
     - Keep PRs focused and manageable
 
+
+## Branching Strategy
+
+### Branch Types
+
+Based on the Git Flow branching strategy, we have two types of branches:
+
+1. **Long Lived Permanent Branches**
+    - `main`
+    - `develop`
+
+2. **Secondary Intermediate Supporting Branches**
+    - `hotfix`
+    - `release`
+    - `feature`
+
+### Workflow for Adding a New Feature
+
+On a typical day, a developer (let's call them Developer A) wants to work on a new feature. Here are the steps they follow:
+
+1. **Pull the latest `develop` Branch**
+    - Ensure your local `develop` branch is up to date by pulling the latest changes.
+    
+    ```bash
+    git checkout develop
+    git pull origin develop
+    ```
+
+2. **Create a new feature branch**
+    - Create a new branch for your feature. Name the branch descriptively (e.g., `feature/user-login`).
+
+    ```bash
+    git checkout -b feature/user-login
+    ```
+
+3. **Work locally on the feature branch**
+    - Make your changes and commit them to the feature branch.
+    
+    ```bash
+    git add .
+    git commit -m "Add user login feature"
+    ```
+
+4. **Create a Pull Request (PR)**
+    - Once you have a valuable code, push your feature branch to the remote repository and create a PR against the `develop` branch.
+
+    ```bash
+    git push origin feature/user-login
+    ```
+
+5. **Merge the feature branch**
+    - After the PR is approved, an admin will merge the feature branch into the `develop` branch.
+
+### Release Day Workflow
+
+On a release day, the team wants to release a bunch of features to production. Here are the steps they follow:
+
+1. **Create a Release Branch**
+    - Create a release branch from the `develop` branch. Name the branch descriptively (e.g., `release/v1.2`).
+
+    ```bash
+    git checkout develop
+    git pull origin develop
+    git checkout -b release/v1.2
+    ```
+
+2. **Test and Fix Bugs**
+    - Test the `release/v1.2` branch and fix any bugs on this branch. Commit your changes as necessary.
+
+    ```bash
+    git add .
+    git commit -m "Fix bugs in release v1.2"
+    ```
+
+3. **Create a Pull Request (PR) to Main**
+    - Create a PR from the `release/v1.2` branch to the `main` branch.
+
+4. **Create a Pull Request (PR) Back to Develop**
+    - Create a PR from the `release/v1.2` branch back to the `develop` branch to include any release bug fixes.
+
+#### Admin Tasks
+
+5. **Merge Release Branch**
+    - After the PRs are approved, the admin merges the `release/v1.2` branch into both the `main` and `develop` branches.
+
+    ```bash
+    git checkout main
+    git merge release/v1.2
+    git checkout develop
+    git merge release/v1.2
+    ```
+
+6. **Create a Release Tag**
+    - Create a release tag on the `main` branch for the version being released (e.g., `v1.2`).
+
+    ```bash
+    git tag v1.2
+    git push origin v1.2
+    ```
+
+### Problematic Day Workflow
+
+When the team discovers there's an issue in production, here are the steps they follow:
+
+1. **Pull the latest `main` Branch**
+    - Ensure your local `main` branch is up to date by pulling the latest changes.
+    
+    ```bash
+    git checkout main
+    git pull origin main
+    ```
+
+2. **Create a new hotfix branch**
+    - Create a new branch for the hotfix. Name the branch descriptively (e.g., `hotfix/system-down`).
+
+    ```bash
+    git checkout -b hotfix/system-down
+    ```
+
+3. **Work locally on the hotfix branch**
+    - Make your changes and commit them to the hotfix branch.
+    
+    ```bash
+    git add .
+    git commit -m "Fix system down issue"
+    ```
+
+4. **Create a Pull Request (PR) to Main**
+    - Create a PR from the `hotfix/system-down` branch to the `main` branch.
+
+4. **Create a Pull Request (PR) to Develop**
+    - Create a PR from the `hotfix/system-down` branch to the `develop` branch to cover the issue in future releases.
+
+#### Admin Tasks
+
+5. **Merge the Hotfix Branch**
+    - After the PRs are approved, the admin merges the `hotfix/system-down` branch into both the `main` and `develop` branches.
+
+    ```bash
+    git checkout main
+    git merge hotfix/system-down
+    git checkout develop
+    git merge hotfix/system-down
+    ```
+
+6. **Create a New Tag**
+    - Create a new tag for the fix on the `main` branch (e.g., `v1.2.1`).
+
+    ```bash
+    git tag v1.2.1
+    git push origin v1.2.1
+    ```
+
+### Rules of Thumb
+
+1. **Never push directly to `develop` or `main`** 
+    - Always create a pull request (PR) for changes.
+
+2. **`main` should always be deployable and working**
+    - Ensure that `main` is stable and ready for production at all times.
+
+3. **New work should always be created under feature branches**
+    - Develop new features in separate branches for better organization and management.
+
+4. **Create a PR as soon as you get valuable code results**
+    - Don't wait until you're done. Create PRs early to create visibility and start the feedback cycle as soon as possible.
+
+
 ## **Licence**
 GNU AFFERO GENERAL PUBLIC LICENSE.
 
