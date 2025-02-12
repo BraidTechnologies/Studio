@@ -25,6 +25,10 @@ local.settings.json
 node_modules
 dist
 
+# VS Code directories
+.vscode/
+**/.vscode/
+
 # Local python packages
 .python_packages/
 
