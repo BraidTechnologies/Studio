@@ -89,4 +89,3 @@ def walk_directory(
         # Call each visitor's visit method
         for visitor in _visitors:
             visitor.visit(directory_data)
-
