@@ -127,9 +127,7 @@ export function getChatPersona (persona: EPromptPersona, userPrompt: string, par
 
       case EPromptPersona.kCodeSummariser:
          const codeTemplate = CodeSummariserPersona;
-         codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
-         + wordString  +
-         " words or less, to help explain the code it to new developers. Please summarise the following code in "
+         codeTemplate.systemPrompt = "You are an AI asistant that summarises code to help explain the code to new developers. Please summarise the following code in "
          + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
 
          codeTemplate.itemPrompt = userPrompt;
