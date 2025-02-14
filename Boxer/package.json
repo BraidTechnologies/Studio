@@ -9,6 +9,7 @@
    "sideEffects": false,
    "scripts": {
       "build": "tsc --build && npx esbuild ui/AppEntry.tsx --sourcemap --outfile=dist/boxer.min.js --bundle --minify",
+      "build-dev": "tsc --build && npx esbuild ui/AppEntry.tsx --sourcemap --outfile=dist/boxer.pack.js --bundle",
       "clean": "tsc --build --clean",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",
       "test-mini": "mocha --debug-brk --exit --require ts-node/register -g Activity*",
