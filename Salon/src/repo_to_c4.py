@@ -5,6 +5,8 @@ This module:
 - Uses a DirectoryVisitorForC4 (defined in DirectoryVisitor.py) to handle each directory
 - Summarizes code structure and relationships
 - Generates C4 architectural diagrams via an API endpoint
+
+python "C:\\BraidTechnologies\\Studio\\Salon\\src\\repo_to_c4.py" --repo_path "C:\\BraidTechnologies\\Studio\\Salon\\"
 """
 
 import argparse
@@ -65,6 +67,7 @@ def main():
     # Create our specialized C4 visitor
     visitor = DirectoryVisitorForC4()
 
+
     # Register the visitor
     add_visitor(visitor)
 
@@ -75,7 +78,6 @@ def main():
         skip_patterns=[],   # Adjust if you have any default skip patterns
         source_patterns=[]  # Not strictly used here
     )
-
     return 0
 
 if __name__ == "__main__":
