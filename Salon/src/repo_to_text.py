@@ -24,6 +24,7 @@ Example:
     python "C:\\BraidTechnologies\\Studio\\Salon\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
     python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
     python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text.py" --cfg config.yaml --repo_path . -o test_output
+    python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text.py" --cfg "C:\\BraidTechnologies\\Studio\\Salon\\config.yaml" --repo_path "C:\\BraidTechnologies\\Studio\\Salon" -o test_output
     python "C:\\BraidTechnologies\\Studio\Salon\\src\\repo_to_text_old.py" --cfg config.yaml --repo_path . -o test_output
 """
 
