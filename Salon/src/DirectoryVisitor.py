@@ -189,7 +189,6 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
 
 class DirectoryVisitorForC4(DirectoryVisitor):
     """
-    A visitor that replicates the logic from 'RepoToC4.process_repo()'.
     For each directory, we look for a 'readme.md' (case-insensitive), then
     look in its subdirectories for 'readme.salon.md'. If found, we generate
     3 mermaid-based C4 diagrams.
@@ -202,7 +201,6 @@ class DirectoryVisitorForC4(DirectoryVisitor):
         if not SESSION_KEY:
             print("No BRAID_SESSION_KEY found in environment; cannot call summarise endpoint.")
             return None
-
         url = f"{BASE_URL}/Summarize?session={SESSION_KEY}"
         payload = {
             'persona': 'C4Diagrammer',
@@ -299,6 +297,7 @@ class DirectoryVisitorForC4(DirectoryVisitor):
             + readme_text
         )
         summary = self.summarise_code(prompt_context)
+        print(f"Summary: {summary}")
         if summary:
             self.write_file_version(dir_path, 'C4Context.Salon.md', summary)
 
