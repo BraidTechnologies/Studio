@@ -13,11 +13,15 @@ sys.path.append(str(SRC_DIR))
 from DirectoryVisitor import (
     DirectoryVisitorForNotebookLM,
     DirectoryVisitorForReadme,
+    DirectoryVisitorForC4,
     DirectoryData,
-    SUMMARY_FILENAME,
     BASE_URL,
     SESSION_KEY
 )
+
+# Get SUMMARY_FILENAME from DirectoryVisitorForReadme
+SUMMARY_FILENAME = DirectoryVisitorForReadme.SUMMARY_FILENAME
+
 
 @pytest.fixture
 def directory_data(tmp_path):
@@ -93,6 +97,7 @@ def test_notebooklm_visit_valid_file(directory_data, tmp_path):
     assert visitor.current_word_count > 0
     assert "file.py" in visitor.content
 
+
 # -------------------- Tests for DirectoryVisitorForReadme --------------------
 
 def test_init_visitor_readme():
@@ -148,3 +153,104 @@ def test_visit_recreate_readme(tmp_path):
     assert readme_path.exists()
     content = readme_path.read_text()
     assert "Summarized code" in content
+
+def test_visit_skips_short_files(tmp_path):
+    """
+    Verify that if a source file is < 250 chars, summarise_code is NOT called.
+    """
+    visitor = DirectoryVisitorForReadme()
+    short_code = "a" * 249  # < 250 chars
+    src_file = tmp_path / "short.py"
+    src_file.write_text(short_code)
+
+    d_data = DirectoryData(tmp_path)
+    d_data.source_files = [src_file]
+
+    with patch.object(visitor, "summarise_code") as mock_summarize:
+        visitor.visit(d_data)
+        mock_summarize.assert_not_called()
+
+    # Also confirm no readme was created
+    assert not (tmp_path / SUMMARY_FILENAME).exists()
+
+def test_visit_summarizes_long_files(tmp_path):
+    """
+    Verify that if a source file is >= 250 chars, summarise_code is called,
+    and the resulting text is written to the summary file.
+    """
+    visitor = DirectoryVisitorForReadme()
+    long_code = "a" * 300  # >= 250 chars
+    src_file = tmp_path / "long.py"
+    src_file.write_text(long_code)
+
+    d_data = DirectoryData(tmp_path)
+    d_data.source_files = [src_file]
+
+    with patch.object(visitor, "summarise_code") as mock_summarize:
+        mock_summarize.return_value = "Mocked summary"
+        visitor.visit(d_data)
+
+    # readme should now exist
+    readme_path = tmp_path / SUMMARY_FILENAME
+    assert readme_path.exists()
+    content = readme_path.read_text()
+    assert "Mocked summary" in content
+
+
+# -------------------- Tests for DirectoryVisitorForC4 --------------------
+def test_c4_diagrams_created(tmp_path):
+    """
+    Test that DirectoryVisitorForC4 creates the 3 diagrams (C4Context, C4Container, C4Component)
+    when readme.md is present and at least one subdirectory has readme.salon.md.
+    """
+    from DirectoryVisitor import DirectoryVisitorForC4
+
+    # Prepare directory with readme.md
+    readme_path = tmp_path / "readme.md"
+    readme_path.write_text("Basic readme content")
+
+    # Prepare a subdirectory with readme.salon.md
+    sub_dir = tmp_path / "docs"
+    sub_dir.mkdir()
+    salon_path = sub_dir / "readme.salon.md"
+    salon_path.write_text("Random info about Salon")
+
+    # Create DirectoryData
+    d_data = DirectoryData(tmp_path)
+    d_data.all_files = [readme_path, salon_path]
+
+    visitor = DirectoryVisitorForC4()
+
+    with patch.object(visitor, "summarise_code") as mock_summarize:
+        mock_summarize.return_value = "Mocked diagram content"
+        visitor.visit(d_data)
+
+    # We expect up to 3 newly created files in tmp_path:
+    context_file = tmp_path / "C4Context.Salon.md"
+    container_file = tmp_path / "C4Container.Salon.md"
+    component_file = tmp_path / "C4Component.Salon.md"
+
+    assert context_file.exists(), "C4Context.Salon.md should be created"
+    assert container_file.exists(), "C4Container.Salon.md should be created"
+    assert component_file.exists(), "C4Component.Salon.md should be created"
+
+    # Check file contents
+    assert "Mocked diagram content" in context_file.read_text()
+    assert "Mocked diagram content" in container_file.read_text()
+    assert "Mocked diagram content" in component_file.read_text()
+
+
+def test_c4_no_readme_no_diagrams(tmp_path):
+    """
+    If there's no readme.md in the directory, DirectoryVisitorForC4 does nothing.
+    """
+    from DirectoryVisitor import DirectoryVisitorForC4
+    d_data = DirectoryData(tmp_path)
+    # No readme.md at all
+    visitor = DirectoryVisitorForC4()
+    visitor.visit(d_data)
+
+    # Confirm no diagrams created
+    assert not (tmp_path / "C4Context.Salon.md").exists()
+    assert not (tmp_path / "C4Container.Salon.md").exists()
+    assert not (tmp_path / "C4Component.Salon.md").exists()
