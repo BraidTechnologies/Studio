@@ -74,6 +74,7 @@ function startScrape(key) {
         var classifyQuery = 'https://braid-api.azurewebsites.net/api/classify?session=' + key.toString();
         axios.post(summarizeQuery, {
             request: {
+                persona: 'ArticleSummariser',
                 text: allText
             },
             headers: {
