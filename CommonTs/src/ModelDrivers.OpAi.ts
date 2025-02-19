@@ -146,7 +146,7 @@ export class OpenAi4oChatModelInit implements IOpenAiChatModelInit {
 }
 
 export class OpenAi4oMiniChatModelInit implements IOpenAiChatModelInit {
-   deploymentName : string = "GTP4o";
+   deploymentName : string = "GTP4o-mini";
    urlElement: string = "StudioSmall";
    drivenModelType: EModel = EModel.kSmall;
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
