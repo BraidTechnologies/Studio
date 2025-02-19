@@ -1,3 +1,4 @@
+# chat_model_driver.py
 """
 Factory module for creating chat model drivers based on specified model types.
 Supports different model implementations like Braid API and Local Gemini.
@@ -6,9 +7,10 @@ Supports different model implementations like Braid API and Local Gemini.
 from enum import Enum
 import os
 import requests
-from CommonPy.src.request_utilities import request_timeout
-import google.generativeai as genai
+from typing import Optional
 
+import google.generativeai as genai
+from CommonPy.src.request_utilities import request_timeout
 
 class SummariseModelType(Enum):
     """
@@ -17,25 +19,31 @@ class SummariseModelType(Enum):
     BRAID_API = "braid_api"
     LOCAL_GEMINI = "local_gemini"
 
-
 class SalonModelDriver:
     """
     Abstract base class for all summarisation model drivers.
     """
 
-    def __init__(self, model_type: SummariseModelType):
-        self.model_type = model_type
+    def __init__(self, model_type: SummariseModelType) -> None:
+        self.model_type: SummariseModelType = model_type
 
-    def summarise(self, code_to_summarise: str) -> str:
+    def summarise(
+        self,
+        text_to_summarise: str,
+        persona: str = "CodeSummariser",
+        length_in_words: int = 100
+    ) -> Optional[str]:
         """
-        Abstract method to summarise text.
+        Summarise text with a given persona and approximate desired length.
+        Subclasses should implement this.
         """
         raise NotImplementedError("Method 'summarise' is not implemented")
 
     @staticmethod
     def create(model_type: SummariseModelType) -> 'SalonModelDriver':
         """
-        Factory method to create a new SalonModelDriver instance based on the specified model type.
+        Factory method to create a new SalonModelDriver instance
+        based on the specified model type.
         """
         if model_type == SummariseModelType.BRAID_API:
             return BraidApiModelDriver()
@@ -45,69 +53,126 @@ class SalonModelDriver:
             raise ValueError(f"Unknown model type: {model_type}")
 
 
-# Configure the base URL for the API.
+# Configure the base URL for the Braid API
 BASE_URL = 'https://braid-api.azurewebsites.net/api'
-# BASE_URL = 'http://localhost:7071/api'
-SESSION_KEY = os.environ['BRAID_SESSION_KEY']
 
+# Session key from environment (for Braid API)
+SESSION_KEY = os.environ.get('BRAID_SESSION_KEY', '')
 
-def summarise_endpoint_url():
-    """Construct the full URL for the summary endpoint"""
-    return f'{BASE_URL}/Summarize?session=' + SESSION_KEY
-
+def summarise_endpoint_url() -> str:
+    """
+    Construct the full URL for the summary endpoint
+    """
+    return f"{BASE_URL}/Summarize?session={SESSION_KEY}"
 
 class BraidApiModelDriver(SalonModelDriver):
     """
     Concrete implementation of SalonModelDriver for the Braid API.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(SummariseModelType.BRAID_API)
 
-    def summarise(self, code_to_summarise: str) -> str:
+    def summarise(
+        self,
+        text_to_summarise: str,
+        persona: str = "CodeSummariser",
+        length_in_words: int = 100
+    ) -> Optional[str]:
+        """
+        Summarise text using the Braid API with the specified persona
+        (e.g. CodeSummariser, C4Diagrammer).
+        """
+        if not SESSION_KEY:
+            print("No BRAID_SESSION_KEY found in environment; cannot call summarise endpoint.")
+            return None
+
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110',
+            'User-Agent': 'Mozilla/5.0',
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
         payload = {
-            'persona': 'CodeSummariser',
-            'text': code_to_summarise,
-            'lengthInWords': 100
+            'persona': persona,
+            'text': text_to_summarise,
+            'lengthInWords': length_in_words
         }
-        wrapped = {
-            'request': payload
-        }
-        response = requests.post(summarise_endpoint_url(),
-                                 json=wrapped, headers=headers, timeout=request_timeout)
-        if response.status_code == 200:
-            data = response.json()
-            if 'summary' in data:
-                return data['summary']
+        wrapped = {'request': payload}
+
+        try:
+            response = requests.post(
+                summarise_endpoint_url(),
+                json=wrapped,
+                headers=headers,
+                timeout=request_timeout
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                if 'summary' in data:
+                    return data['summary']
+                else:
+                    print("Response JSON did not contain 'summary'.")
+            else:
+                print(f"Braid API returned status code: {response.status_code}")
+
+        except Exception as e:
+            print(f"Error while calling Braid API: {e}")
 
         return None
 
 
 class LocalGeminiModelDriver(SalonModelDriver):
     """
-    Concrete implementation of SalonModelDriver for local Gemini.
+    Concrete implementation of SalonModelDriver for local Gemini (PaLM).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(SummariseModelType.LOCAL_GEMINI)
-        genai.configure(api_key=os.environ['GOOGLE_DEVELOPER_API_KEY'])
+
+        # Attempt to configure generative AI
+        dev_key = os.environ.get('GOOGLE_DEVELOPER_API_KEY', None)
+        if dev_key:
+            genai.configure(api_key=dev_key)
+        else:
+            print("Warning: GOOGLE_DEVELOPER_API_KEY is not set. Local Gemini calls may fail.")
+
+        # Model name (for example, 'gemini-pro')
         self.model = genai.GenerativeModel('gemini-pro')
 
-    def summarise(self, code_to_summarise: str) -> str:
+    def summarise(
+        self,
+        text_to_summarise: str,
+        persona: str = "CodeSummariser",
+        length_in_words: int = 100
+    ) -> Optional[str]:
+        """
+        Summarise text using the local Gemini model.
+        Persona instructions are embedded in the prompt as needed
+        (e.g. 'C4Diagrammer' if generating a diagram).
+        """
+        if persona.lower() == "c4diagrammer":
+            persona_intro = (
+                "You are an AI assistant that generates C4 diagrams (in mermaid syntax) "
+                "from software descriptions."
+            )
+        else:
+            persona_intro = (
+                "You are an AI assistant that summarises code to help explain it to new developers."
+            )
 
-        prompt = f"""You are an AI asistant that summarises code to help explain the code to new developers. 
-        Please summarise the following code in 100 words. Make each distinct point a separate paragraph. 
-        List the important classes or functions in the module.
+        prompt = (
+            f"{persona_intro}\n\n"
+            f"Please summarise or transform the following text. "
+            f"Target length: ~{length_in_words} words.\n\n"
+            f"---\n{text_to_summarise}\n---"
+        )
 
-        ##CODE##
-        {code_to_summarise}"""
+        try:
+            response = self.model.generate_content(prompt)
+            if response and response.text:
+                return response.text
+        except Exception as e:
+            print(f"LocalGeminiModelDriver error: {e}")
 
-        response = self.model.generate_content(prompt)
-        if response.text:
-            return response.text
         return None

@@ -1,59 +1,40 @@
+# repo_to_text.py
 """
-repo_to_text.py
-
-This script processes a local GitHub repository by concatenating the contents of its files into text files, 
-with a specified word limit per file.
-When it encounters a source file it creates a summary, and accumulates summaries for all source files in a given directory. 
-These are written out at the end. 
+Processes a local GitHub repository by:
+1. Concatenating file contents into text files (up to max_words each).
+2. Generating 'ReadMe.Salon.md' with code summaries if needed.
 
 Usage:
-    python repo_to_text.py --cfg <path_to_config_yaml_file> --repo_path <path-to-repo> [options]
+    python repo_to_text.py --cfg <config.yaml> --repo_path <repo> [options]
 
 Options:
-    --cfg             Path to the config file 
+    --cfg             Path to the config file (default: config.yaml)
     --repo_path       Path to the local GitHub repository (absolute or relative).
     -w, --max_words   Maximum number of words per output file (default: 200,000).
     -o, --output_dir  Directory to save the output files (default: current directory).
     --skip_patterns   Additional file patterns to skip (e.g., "*.md" "*.txt").
     --skip_dirs       Additional directories to skip.
+    --model_type      Model type: "braid_api" or "local_gemini" (default: "braid_api").
     -v, --verbose     Enable verbose output.
-
-Example:
-    python src/repo_to_text.py --cfg config.yaml --repo_path . -o test_output
-    python src/repo_to_text.py --cfg config.yaml --repo_path ./my_repo -w 100000 -o ./output --skip_patterns "*.md" "*.txt" --skip_dirs "tests" -v
-    python "C:\\BraidTechnologies\\Repo\\Studio\\Salon\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
-    python "C:\\BraidTechnologies\\Repo\\Studio\Salon\\src\\repo_to_text.py" --cfg "D:\Braid Technologies\Fork_January2025_repo\WorkedExamples\Salon\config.yaml" --repo_path . -o test_output
-    python "C:\\BraidTechnologies\\Repo\\Studio\Salon\\src\\repo_to_text.py" --cfg config.yaml --repo_path . -o test_output
-    python "C:\\BraidTechnologies\\Repo\\Studio\Salon\\src\\repo_to_text.py" --cfg "C:\\BraidTechnologies\\Repo\\Studio\\Salon\\config.yaml" --repo_path "C:\\BraidTechnologies\\Repo\\Studio\\Salon" -o test_output
-    python "C:\\BraidTechnologies\\Repo\\Studio\Salon\\src\\repo_to_text_old.py" --cfg config.yaml --repo_path . -o test_output
 """
 
 import argparse
 import os
-from pathlib import Path
-import yaml
 import sys
+import yaml
 import nltk
+from pathlib import Path
 from typing import Dict, Any, Set
 
+# Local modules
+from Salon.src.directory_walker import add_visitor, walk_directory
+from Salon.src.visitors_factory import get_visitors_for_text
+
 nltk.download('punkt', quiet=True)
-nltk.download('punkt_tab', quiet=True)
-
-# Add the project root and scripts directory to the Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-
-# Import from our local modules
-from DirectoryVisitor import DirectoryVisitorForNotebookLM, DirectoryVisitorForReadme
-from DirectoryWalker import add_visitor, walk_directory
 
 def load_yaml(fname: str) -> Dict[str, Any]:
     """
     Load configuration from the YAML config file.
-
-    :param fname: Path to the YAML configuration file.
-    :return: Dictionary containing the configuration.
     """
     if not fname:
         return {}
@@ -70,11 +51,9 @@ def load_yaml(fname: str) -> Dict[str, Any]:
 def parse_arguments() -> argparse.Namespace:
     """
     Parse command-line arguments.
-
-    :return: Parsed arguments as a Namespace object.
     """
     parser = argparse.ArgumentParser(
-        description='Process a GitHub repository and concatenate file contents with a word limit, plus optional ReadMe generation.',
+        description='Process a GitHub repository and concatenate file contents with optional readme summaries.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
@@ -121,6 +100,13 @@ def parse_arguments() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '--model_type',
+        type=str,
+        default='braid_api',
+        help='Which summarisation model to use: "braid_api" or "local_gemini"'
+    )
+
+    parser.add_argument(
         '-v', '--verbose',
         action='store_true',
         help='Enable verbose output'
@@ -131,18 +117,13 @@ def parse_arguments() -> argparse.Namespace:
 def validate_args(args: argparse.Namespace) -> None:
     """
     Validate and normalize arguments.
-
-    :param args: Parsed command-line arguments.
-    :raises ValueError: If the repository path is invalid.
     """
     repo_path = Path(args.repo_path).resolve()
-
     if not repo_path.exists():
         raise ValueError(f"Repository path does not exist: {repo_path}")
     if not repo_path.is_dir():
         raise ValueError(f"Repository path is not a directory: {repo_path}")
 
-    # Create output dir if needed
     output_dir = Path(args.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -151,9 +132,7 @@ def validate_args(args: argparse.Namespace) -> None:
 
 def main() -> int:
     """
-    Main function to execute the script.
-
-    :return: Exit status code.
+    Main entry point for the script.
     """
     args = parse_arguments()
 
@@ -163,10 +142,9 @@ def main() -> int:
         print(f"Error: {e}")
         return 1
 
-    # Load config from YAML
+    # Load config
     config = load_yaml(args.cfg)
 
-    # Combine config-based and CLI-based skip patterns
     skip_dirs: Set[str] = set(config.get("skip_dirs", []))
     if args.skip_dirs:
         skip_dirs.update(args.skip_dirs)
@@ -178,33 +156,29 @@ def main() -> int:
     # Also read "source_patterns" from config
     source_patterns = config.get("source_patterns", [])
 
-    # Create visitors
-    notebook_visitor = DirectoryVisitorForNotebookLM(
-        max_words=args.max_words,
-        output_dir=args.output_dir
-    )
+    # Use factory to get the visitors we want
+    visitors = get_visitors_for_text(args.model_type, args.max_words, args.output_dir)
+    for v in visitors:
+        add_visitor(v)
 
-    readme_visitor = DirectoryVisitorForReadme()
-
-    # Register visitors
-    add_visitor(notebook_visitor)
-    add_visitor(readme_visitor)
-
-    # Change directory to output directory for writing content
+    # Optionally cd into the output directory if desired
     os.chdir(args.output_dir)
 
-    # Walk the directory
     walk_directory(
         root_path=args.repo_path,
-        skip_dirs=skip_dirs,
-        skip_patterns=skip_patterns,
+        skip_dirs=list(skip_dirs),
+        skip_patterns=list(skip_patterns),
         source_patterns=source_patterns
     )
 
-    # Optionally, after the walk, you might force a final flush of the notebook visitor's content:
-    notebook_visitor.save_current_content()
+    # The notebook visitor might need a final flush. Let's call it if found:
+    # If you want to ensure it flushes, you can do so:
+    for v in visitors:
+        # We'll check if it's the NotebookLM visitor
+        if hasattr(v, 'save_current_content'):
+            v.save_current_content()
 
     return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
