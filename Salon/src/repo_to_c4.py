@@ -17,8 +17,8 @@ import os
 
 
 # Local modules
-from Salon.src.directory_walker import add_visitor, walk_directory
-from Salon.src.visitors_factory import get_visitors_for_c4
+from directory_walker import add_visitor, walk_directory
+from visitor_factory import get_visitors_for_c4
 
 def parse_arguments():
     """Parse command line arguments."""

@@ -7,9 +7,9 @@ for various workflows, without hardcoding them in main scripts.
 from pathlib import Path
 from typing import List
 
-from Salon.src.directory_visitor_notebook_lm import DirectoryVisitorForNotebookLM
-from Salon.src.directory_visitor_readme import DirectoryVisitorForReadme
-from Salon.src.directory_visitor_c4 import DirectoryVisitorForC4
+from directory_visitor_notebook_lm import DirectoryVisitorForNotebookLM
+from directory_visitor_readme import DirectoryVisitorForReadme
+from directory_visitor_c4 import DirectoryVisitorForC4
 
 def get_visitors_for_text(model_type: str, max_words: int, output_dir: Path) -> List:
     """
