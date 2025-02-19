@@ -1,9 +1,20 @@
-'''
-Base class for model drivers.
-'''
+"""
+Base module for model drivers and related types.
+
+This module provides the core abstractions and types used by model drivers throughout the system.
+It defines:
+- ModelProvider: Enum of supported AI model providers (e.g. OpenAI)
+- Model: Enum of supported model types and capabilities
+- MessageRole: Enum of possible roles in chat conversations
+- Message: Class representing a chat message with role and content
+
+The types defined here are used by concrete model driver implementations to provide
+a consistent interface across different providers and model types.
+"""
 
 from functools import total_ordering
 from comparable_enum import EnumComparable
+
 
 @total_ordering
 class ModelProvider(EnumComparable):
@@ -27,7 +38,6 @@ class Model(EnumComparable):
     LARGE = "Large"
     SMALL = "Small"
     REASONING = "Reasoning"
- 
 
 
 @total_ordering
@@ -41,7 +51,7 @@ class MessageRole(EnumComparable):
     ASSISTANT = "assistant"
     USER = "user"
     SYSTEM = "system"
-  
+
 
 class Message:
     '''
@@ -54,16 +64,19 @@ class Message:
         self.role = role
         self.content = content
 
+
 class ChatPrompt:
     '''
     Represents a chat prompt for a chat conversation.
 
     This class defines a prompt object that contains a system prompt, message history, and user prompt.
     '''
+
     def __init__(self):
         self.system_prompt: str = ""
         self.message_history: list[Message] = []
         self.user_prompt: str = ""
+
 
 class ChatModelDriver:
     '''
@@ -71,15 +84,16 @@ class ChatModelDriver:
 
     This class provides a base for chat model drivers that can be used to generate responses from specific AI models.
     '''
+
     def __init__(self, driven_model_provider: ModelProvider, driven_model_type: Model):
         self.provider = driven_model_provider
         self.model = driven_model_type
 
     def generate_response(self, prompt: ChatPrompt) -> str:
-        raise NotImplementedError("generate_response() must be implemented by subclasses")
+        raise NotImplementedError(
+            "generate_response() must be implemented by subclasses")
 
 
-        
 class EmbeddingModelDriver:
     '''
     Base class for drivers that provide text embedding capabilities.
@@ -97,8 +111,38 @@ class EmbeddingModelDriver:
 
         Args:
             text: The input text to be embedded
-            
+
         Returns:
             A list of floats representing the text embedding vector
         '''
         raise NotImplementedError("embed() must be implemented by subclasses")
+
+
+class TextChunker:
+    '''
+    Represents an interface for text chunking aspects of a model provider
+    '''
+
+    def __init__(self, driven_model_provider: ModelProvider, driven_model_type: Model):
+        self.provider = driven_model_provider
+        self.model = driven_model_type
+
+    def fits_in_default_chunk(self, text: str) -> bool:
+        raise NotImplementedError(
+            "fits_in_default_chunk() must be implemented by subclasses")
+
+    def fits_in_maximum_chunk(self, text: str) -> bool:
+        raise NotImplementedError(
+            "fits_in_maximum_chunk() must be implemented by subclasses")
+
+    def fits_in_embedding_chunk(self, text: str) -> bool:
+        raise NotImplementedError(
+            "fits_in_embedding_chunk() must be implemented by subclasses")
+
+    def chunk_text(self, text: str, chunk_size: int | None = None, overlap_words: int | None = None) -> list[str]:
+        raise NotImplementedError(
+            "chunk_text() must be implemented by subclasses")
+
+    def estimate_tokens(self, text: str) -> int:
+        raise NotImplementedError(
+            "estimate_tokens() must be implemented by subclasses")

@@ -299,14 +299,14 @@ export interface IOpenAiTextChunkerInit {
 export class OpenAiGpt4oMiniTextChunkerInit implements IOpenAiTextChunkerInit {
 
    drivenModelProvider: EModelProvider = EModelProvider.kOpenAI;
-   drivenModelType: EModel = EModel.kLarge;
+   drivenModelType: EModel = EModel.kSmall;
    defaultChunkSize = 8192;
    maximumChunkSize = 65536;
    embeddingChunkSize = 8191;
    defaultChunkSizeWithBuffer = (8192 - 256)
    embeddingChunkSizeWithBuffer = (8191 - 256)
    maximumChunkSizeWithBuffer = (65536 - 256) 
-   implementsModel: EModel = EModel.kLarge;   
+   implementsModel: EModel = EModel.kSmall;   
 }
 export class OpenAiGpt4oTextChunkerInit implements IOpenAiTextChunkerInit {
 

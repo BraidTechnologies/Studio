@@ -15,6 +15,7 @@ Example:
     MyEnum.ONE >= "ONE"  # True
 '''
 
+
 import enum
 import numbers
 
@@ -77,7 +78,7 @@ class EnumComparable(enum.Enum):
 
     def __eq__(self, other):
         if self.__class__ is other.__class__:
-            return self == other
+            return self is other
         try:
             return self.value == other.value
         except AttributeError:

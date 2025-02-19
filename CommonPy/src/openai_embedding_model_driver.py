@@ -4,7 +4,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
-from enum import Enum
 from model_driver_base import EmbeddingModelDriver, ModelProvider, Model
 
 class OpenAiEmbeddingModelInit:
