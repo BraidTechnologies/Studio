@@ -9,7 +9,8 @@ The module exposes two main functions:
 """
 
 from openai_chat_model_driver import OpenAIChatModelDriver, OpenAi4oChatModelInit, OpenAiO1ChatModelInit, OpenAi4oMiniChatModelInit
-from model_driver_base import ChatModelDriver, Model, ModelProvider
+from openai_embedding_model_driver import OpenAIEmbeddingModelDriver, OpenAiEmbed3EmbeddingModelInit, OpenAiEmbed3SmallEmbeddingModelInit
+from model_driver_base import ChatModelDriver, EmbeddingModelDriver, Model, ModelProvider
 
 def get_default_chat_model_driver():
     """
@@ -40,3 +41,31 @@ def get_chat_model_driver(model: Model, provider: ModelProvider) -> ChatModelDri
         return OpenAIChatModelDriver(OpenAi4oMiniChatModelInit())
     else:  # Model.LARGE or default
         return OpenAIChatModelDriver(OpenAi4oChatModelInit())
+
+def get_default_embedding_model_driver():
+    """
+    Returns the default embedding model driver which is an instance of Embed-3.
+    
+    Returns:   
+        EmbeddingModelDriver: The default embedding model driver
+    """
+    return OpenAIEmbeddingModelDriver(OpenAiEmbed3EmbeddingModelInit())
+
+def get_embedding_model_driver(model: Model, provider: ModelProvider) -> EmbeddingModelDriver:
+    """
+    Returns an instance of EmbeddingModelDriver based on the provided Model type and ModelProvider
+    
+    Args:
+        model: The Model type to determine the model
+        provider: The ModelProvider type to determine the provider   
+        
+    Returns:
+        EmbeddingModelDriver: An instance of EmbeddingModelDriver corresponding to the specified Model type and Provider
+    """
+    if provider != ModelProvider.OPEN_AI:
+        raise ValueError("Only OpenAI provider is currently supported")
+
+    if model == Model.SMALL:
+        return OpenAIEmbeddingModelDriver(OpenAiEmbed3SmallEmbeddingModelInit())
+    else:  # Model.LARGE or default
+        return OpenAIEmbeddingModelDriver(OpenAiEmbed3EmbeddingModelInit())

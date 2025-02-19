@@ -71,12 +71,34 @@ class ChatModelDriver:
 
     This class provides a base for chat model drivers that can be used to generate responses from specific AI models.
     '''
-    def __init__(self, provider: ModelProvider, model: Model):
-        self.provider = provider
-        self.model = model
+    def __init__(self, driven_model_provider: ModelProvider, driven_model_type: Model):
+        self.provider = driven_model_provider
+        self.model = driven_model_type
 
     def generate_response(self, prompt: ChatPrompt) -> str:
         raise NotImplementedError("generate_response() must be implemented by subclasses")
 
 
         
+class EmbeddingModelDriver:
+    '''
+    Base class for drivers that provide text embedding capabilities.
+    Text embeddings are vector representations of text that capture semantic meaning,
+    allowing for operations like semantic search and similarity comparisons.
+    '''
+
+    def __init__(self, driven_model_provider: ModelProvider, driven_model_type: Model):
+        self.model = driven_model_type
+        self.provider = driven_model_provider
+
+    def embed(self, text: str) -> list[float]:
+        '''
+        Converts text into a vector embedding representation.
+
+        Args:
+            text: The input text to be embedded
+            
+        Returns:
+            A list of floats representing the text embedding vector
+        '''
+        raise NotImplementedError("embed() must be implemented by subclasses")

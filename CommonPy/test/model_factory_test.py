@@ -7,7 +7,7 @@ import sys
 import logging
 
 from src.model_driver_base import Model, ModelProvider
-from src.model_driver_factories import get_default_chat_model_driver, get_chat_model_driver
+from src.model_driver_factories import get_default_chat_model_driver, get_chat_model_driver, get_default_embedding_model_driver, get_embedding_model_driver
 
 test_root = os.path.dirname(__file__)
 parent = os.path.abspath(os.path.join(test_root, '..'))
@@ -29,6 +29,19 @@ def test_default_chat_model():
 def test_chat_model_driver():
     ''' Test that the chat model driver is OpenAI '''
     model = get_chat_model_driver(Model.LARGE, ModelProvider.OPEN_AI)
+    assert model.provider == ModelProvider.OPEN_AI
+    assert model.model == Model.LARGE
+
+def test_default_embedding_model():
+    ''' Test that the default embedding model is OpenAI '''
+    model = get_default_embedding_model_driver()
+    assert model.provider == ModelProvider.OPEN_AI
+    assert model.model == Model.LARGE
+
+
+def test_embedding_model_driver():
+    ''' Test that the embedding model driver is OpenAI '''
+    model = get_embedding_model_driver(Model.LARGE, ModelProvider.OPEN_AI)
     assert model.provider == ModelProvider.OPEN_AI
     assert model.model == Model.LARGE
 
