@@ -25,6 +25,9 @@ class DirectoryVisitor:
     Base class for any visitor that wants to process a directory.
     Subclasses should implement 'visit'.
     """
+    def __init__(self, priority: int = 0) -> None:
+        self.priority = priority
+
     def visit(self, directory_data: DirectoryData) -> None:
         """
         Process the given directory data. Must be implemented by subclasses.

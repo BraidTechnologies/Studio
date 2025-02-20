@@ -9,7 +9,7 @@ import fnmatch
 from pathlib import Path
 from typing import List
 
-from Salon.src.directory_visitor_base import DirectoryData, DirectoryVisitor
+from directory_visitor_base import DirectoryData, DirectoryVisitor
 
 _visitors: List[DirectoryVisitor] = []
 

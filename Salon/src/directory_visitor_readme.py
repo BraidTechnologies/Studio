@@ -5,14 +5,21 @@ and if so, creates or updates it using a chosen summarization model.
 """
 
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+# Add the project root and scripts directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(parent_dir)
+sys.path.insert(0, root_dir)
+
 from CommonPy.src.request_utilities import request_timeout
 
-from Salon.src.directory_visitor_base import DirectoryVisitor, DirectoryData
-from Salon.src.chat_model_drivers import SummariseModelType, SalonModelDriver
+from directory_visitor_base import DirectoryVisitor, DirectoryData
+from chat_model_drivers import SummariseModelType, SalonModelDriver
 
 class DirectoryVisitorForReadme(DirectoryVisitor):
     """
@@ -21,10 +28,11 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
     """
     SUMMARY_FILENAME = 'ReadMe.Salon.md'
 
-    def __init__(self, model_type: str = "braid_api") -> None:
+    def __init__(self, model_type: str = "braid_api", priority: int = 1) -> None:
         """
         :param model_type: Summarisation model type: 'braid_api' or 'local_gemini'.
         """
+        super().__init__(priority=priority)
         if model_type.lower() == "local_gemini":
             self.model_type_enum = SummariseModelType.LOCAL_GEMINI
         else:

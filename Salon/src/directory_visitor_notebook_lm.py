@@ -10,7 +10,7 @@ from typing import Optional, Set
 import nltk
 from nltk.tokenize import word_tokenize
 
-from .Salon.src.directory_visitor_base import DirectoryVisitor, DirectoryData
+from directory_visitor_base import DirectoryVisitor, DirectoryData
 
 nltk.download('punkt', quiet=True)
 
@@ -20,7 +20,8 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
     then saves them in a text file.
     """
 
-    def __init__(self, max_words: int = 200000, output_dir: Optional[Path] = None) -> None:
+    def __init__(self, max_words: int = 200000, output_dir: Optional[Path] = None, priority: int = 3) -> None:
+        super().__init__(priority=priority)
         self.max_words: int = max_words
         self.output_dir: Path = output_dir or Path('.')
         self.content: str = ""
