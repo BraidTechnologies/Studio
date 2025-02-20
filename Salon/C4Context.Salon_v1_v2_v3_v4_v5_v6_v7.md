@@ -15,5 +15,3 @@
     user --> repo_to_text: Uses for codebase analysis
     user --> repo_to_c4: Uses for diagram generation
 ```
-
-This diagram represents the Salon system with three key components and how a User interacts with them.
