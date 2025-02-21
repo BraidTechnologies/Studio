@@ -7,8 +7,13 @@ Tests the creation of different model drivers and error handling for unknown typ
 from enum import Enum
 import pytest
 import google.generativeai as genai
+import sys
+from pathlib import Path
 
-from src.ChatModelDrivers import (
+# Add the src directory to the Python path
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+
+from ChatModelDrivers import (
     SummariseModelType,
     SalonModelDriver,
     BraidApiModelDriver,

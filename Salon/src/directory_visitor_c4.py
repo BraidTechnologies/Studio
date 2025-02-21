@@ -23,10 +23,12 @@ class DirectoryVisitorForC4(DirectoryVisitor):
     - C4Component.Salon.md
     """
 
-    def __init__(self, model_type: str = "braid_api") -> None:
+    def __init__(self, model_type: str = "braid_api", priority: int = 2) -> None:
         """
         :param model_type: Summarisation model type: 'braid_api' or 'local_gemini'.
+        :param priority: Processing priority (lower number = higher priority)
         """
+        super().__init__(priority=priority)
         if model_type.lower() == "local_gemini":
             self.model_type_enum = SummariseModelType.LOCAL_GEMINI
         else:

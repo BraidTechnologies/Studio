@@ -1,6 +1,6 @@
 # directory_walker.py
 """
-Walks a directory tree and applies registered DirectoryVisitor instances
+Walks a directory tree and applies registered directory_visitor instances
 to each directory encountered.
 """
 
@@ -9,7 +9,7 @@ import fnmatch
 from pathlib import Path
 from typing import List
 
-from Salon.src.directory_visitor_base import DirectoryData, DirectoryVisitor
+from .directory_visitor_base import DirectoryData, DirectoryVisitor
 
 _visitors: List[DirectoryVisitor] = []
 

@@ -8,6 +8,7 @@ from enum import Enum
 import os
 import requests
 from typing import Optional
+import time
 
 import google.generativeai as genai
 from CommonPy.src.request_utilities import request_timeout
@@ -99,25 +100,45 @@ class BraidApiModelDriver(SalonModelDriver):
         }
         wrapped = {'request': payload}
 
-        try:
-            response = requests.post(
-                summarise_endpoint_url(),
-                json=wrapped,
-                headers=headers,
-                timeout=request_timeout
-            )
+        max_retries = 3
+        retry_delay_seconds = 2  # Simple retry delay
 
-            if response.status_code == 200:
-                data = response.json()
-                if 'summary' in data:
-                    return data['summary']
+        for attempt in range(1, max_retries + 1):
+            try:
+                response = requests.post(
+                    summarise_endpoint_url(),
+                    json=wrapped,
+                    headers=headers,
+                    timeout=request_timeout
+                )
+
+                if response.status_code == 200:
+                    data = response.json()
+                    if 'summary' in data:
+                        return data['summary']
+                    else:
+                        print("Response JSON did not contain 'summary'.")
                 else:
-                    print("Response JSON did not contain 'summary'.")
-            else:
-                print(f"Braid API returned status code: {response.status_code}")
+                    print(f"Braid API returned status code: {response.status_code}")
 
-        except Exception as e:
-            print(f"Error while calling Braid API: {e}")
+                # If we didn't explicitly return by now, let's break or retry.
+                # In case of a 4xx or unexpected status code, you might decide not to retry.
+                # But here, we do a generic retry if status != 200:
+                if attempt < max_retries:
+                    print(f"Attempt {attempt} failed. Retrying in {retry_delay_seconds}s...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print("Max retries reached. Returning None.")
+                    return None
+
+            except Exception as e:
+                if attempt < max_retries:
+                    print(f"Error while calling Braid API on attempt {attempt}: {e}")
+                    print(f"Retrying in {retry_delay_seconds}s...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print(f"Error after {max_retries} attempts. Returning None. Last error: {e}")
+                    return None
 
         return None
 
@@ -168,11 +189,32 @@ class LocalGeminiModelDriver(SalonModelDriver):
             f"---\n{text_to_summarise}\n---"
         )
 
-        try:
-            response = self.model.generate_content(prompt)
-            if response and response.text:
-                return response.text
-        except Exception as e:
-            print(f"LocalGeminiModelDriver error: {e}")
+        max_retries = 3
+        retry_delay_seconds = 2
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                response = self.model.generate_content(prompt)
+                if response and response.text:
+                    return response.text
+
+                # If there's no response or empty text, treat it as a failure to trigger a retry
+                if attempt < max_retries:
+                    print(f"LocalGeminiModelDriver: Attempt {attempt} returned no content. "
+                          f"Retrying in {retry_delay_seconds}s...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print("Max retries reached for LocalGeminiModelDriver. Returning None.")
+                    return None
+
+            except Exception as e:
+                if attempt < max_retries:
+                    print(f"LocalGeminiModelDriver error on attempt {attempt}: {e}")
+                    print(f"Retrying in {retry_delay_seconds}s...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print(f"Error after {max_retries} attempts in LocalGeminiModelDriver. "
+                          f"Last error: {e}")
+                    return None
 
         return None

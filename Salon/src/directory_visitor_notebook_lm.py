@@ -10,7 +10,7 @@ from typing import Optional, Set
 import nltk
 from nltk.tokenize import word_tokenize
 
-from .Salon.src.directory_visitor_base import DirectoryVisitor, DirectoryData
+from directory_visitor_base import DirectoryVisitor, DirectoryData
 
 nltk.download('punkt', quiet=True)
 
@@ -20,7 +20,8 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
     then saves them in a text file.
     """
 
-    def __init__(self, max_words: int = 200000, output_dir: Optional[Path] = None) -> None:
+    def __init__(self, max_words: int = 200000, output_dir: Optional[Path] = None, priority: int = 3) -> None:
+        super().__init__(priority=priority)
         self.max_words: int = max_words
         self.output_dir: Path = output_dir or Path('.')
         self.content: str = ""
@@ -78,19 +79,27 @@ class DirectoryVisitorForNotebookLM(DirectoryVisitor):
         then writes them out.
         """
         for file_path in directory_data.all_files:
-            relative_path = file_path.relative_to(directory_data.path.parent)
+            try:
+                # Use the directory's path as the base for relative paths
+                relative_path = file_path.relative_to(directory_data.path)
 
-            # Example check for duplicates if it's in "common_dir"
-            if "common_dir" in file_path.parts:
-                if file_path.name in self.common_files:
-                    print(f"Skipping duplicate common file: {file_path}")
-                    continue
-                else:
+                # Check for duplicates if it's in "common_dir"
+                if any(part == "common_dir" for part in file_path.parts):
+                    if file_path.name in self.common_files:
+                        print(f"Skipping duplicate common file: {file_path}")
+                        continue
                     self.common_files.add(file_path.name)
 
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read().rstrip()
-                self.add_file_block(str(relative_path), content)
-            except (UnicodeDecodeError, IOError) as e:
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read().rstrip()
+                    self.add_file_block(str(relative_path), content)
+                except (UnicodeDecodeError, IOError) as e:
+                    print(f"Skipping {file_path}: {e}")
+            except ValueError as e:
+                # Handle case where relative_to fails
                 print(f"Skipping {file_path}: {e}")
+
+        # Make sure to save any remaining content
+        if self.content.strip():
+            self.save_current_content()
