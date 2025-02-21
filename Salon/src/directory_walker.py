@@ -36,6 +36,9 @@ def walk_directory(
     For each directory, build a DirectoryData object, then
     call each registered visitor with that object.
     """
+    if not root_path.exists():
+        raise FileNotFoundError(f"Directory not found: {root_path}")
+
     if skip_dirs is None:
         skip_dirs = []
     if skip_patterns is None:
@@ -47,12 +50,16 @@ def walk_directory(
 
     for dirpath, dirnames, filenames in os.walk(root_path):
         dir_path = Path(dirpath)
-
+        
         # Skip if directory is in skip_dirs or is .git
         parts = dir_path.parts
         if any(sd in parts for sd in skip_dirs) or ".git" in parts:
-            dirnames[:] = []
+            dirnames[:] = []  # Clear dirnames to prevent further recursion
             continue
+
+        # Skip 'skip_me' directory if present
+        if "skip_me" in dirnames:
+            dirnames.remove("skip_me")
 
         # Build directory data
         directory_data = DirectoryData(path=dir_path)
@@ -63,15 +70,19 @@ def walk_directory(
 
         # Gather all files while respecting skip_patterns
         for filename in filenames:
+            # if filename == "ReadMe.Salon.md":
+            #     continue  # Don't include readme in file counts
+                
             file_path = dir_path / filename
 
+            # Skip files matching skip patterns
             if any(fnmatch.fnmatch(filename, pattern) for pattern in skip_patterns):
                 continue
 
             directory_data.all_files.append(file_path)
 
             # If it matches a source pattern, add to source_files
-            if any(fnmatch.fnmatch(filename, sp) for sp in source_patterns):
+            if source_patterns and any(fnmatch.fnmatch(filename, sp) for sp in source_patterns):
                 directory_data.source_files.append(file_path)
 
         # Call each visitor's visit method
