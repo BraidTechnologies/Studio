@@ -36,3 +36,4 @@ GOOGLE_DEVELOPER_API_KEY=
 OPENAI_API_KEY=
 GROQ_API_KEY=
 PYTHONPATH=[Path to Braid Studio repo root]
+BRAID_BASE_URL = 'https://braid-api.azurewebsites.net/api' OR 'http://localhost:7071/api'

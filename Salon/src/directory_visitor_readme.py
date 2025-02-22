@@ -7,11 +7,11 @@ and if so, creates or updates it using a chosen summarization model.
 import os
 from datetime import datetime
 from typing import Optional
-
+from .models.base import AIModel
 from CommonPy.src.request_utilities import request_timeout
 
 from .directory_visitor_base import DirectoryVisitor, DirectoryData
-from .chat_model_drivers import SummariseModelType, SalonModelDriver
+from .models.model_factory import create_model
 
 class DirectoryVisitorForReadme(DirectoryVisitor):
     """
@@ -25,18 +25,16 @@ class DirectoryVisitorForReadme(DirectoryVisitor):
         :param model_type: Summarisation model type: 'braid_api' or 'local_gemini'.
         """
         super().__init__(priority=priority)
-        if model_type.lower() == "local_gemini":
-            self.model_type_enum = SummariseModelType.LOCAL_GEMINI
-        else:
-            self.model_type_enum = SummariseModelType.BRAID_API
-
-        self.driver: SalonModelDriver = SalonModelDriver.create(self.model_type_enum)
+        print(f"Creating model: {model_type}")
+        self.driver: AIModel = create_model(model_type.lower())
 
     def summarise_code(self, code: str) -> Optional[str]:
         """
         Summarize source code text using the configured model driver.
         """
-        return self.driver.summarise(code, persona="CodeSummariser", length_in_words=100)
+        return self.driver.generate_content(code, persona="CodeSummariser", 
+                                      persona_intro="You are an AI assistant that summarizes code to help explain it to new developers.",
+                                      length_in_words=100)
 
     def visit(self, directory_data: DirectoryData) -> None:
         """

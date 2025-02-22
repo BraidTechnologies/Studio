@@ -12,7 +12,8 @@ from typing import Optional
 from CommonPy.src.request_utilities import request_timeout
 
 from .directory_visitor_base import DirectoryVisitor, DirectoryData
-from .chat_model_drivers import SummariseModelType, SalonModelDriver
+from .models.model_factory import create_model
+from .models.base import AIModel
 
 class DirectoryVisitorForC4(DirectoryVisitor):
     """
@@ -29,21 +30,17 @@ class DirectoryVisitorForC4(DirectoryVisitor):
         :param priority: Processing priority (lower number = higher priority)
         """
         super().__init__(priority=priority)
-        if model_type.lower() == "local_gemini":
-            self.model_type_enum = SummariseModelType.LOCAL_GEMINI
-        else:
-            self.model_type_enum = SummariseModelType.BRAID_API
-
-        self.driver = SalonModelDriver.create(self.model_type_enum)
+        self.driver: AIModel = create_model(model_type.lower())
 
     def summarise_code(self, text: str) -> Optional[str]:
         """
         Summarizes the given text using a 'C4Diagrammer' persona prompt
         or equivalent logic for local_gemini.
         """
-        return self.driver.summarise(
+        return self.driver.generate_content(
             text,
             persona="C4Diagrammer",
+            persona_intro="You are an AI assistant that generates C4 diagrams (in mermaid syntax) from software descriptions.",
             length_in_words=1000
         )
 
