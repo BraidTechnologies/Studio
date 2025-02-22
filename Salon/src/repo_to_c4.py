@@ -19,46 +19,15 @@ import os
 # Local modules
 from .directory_walker import add_visitor, walk_directory
 from .visitor_factory import get_visitors_for_c4
+from .core.config_manager import ConfigManager #Import config manager
 
-def parse_arguments():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description='Process a GitHub repository and generate 3 C4 diagrams',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-
-    parser.add_argument(
-        '--repo_path',
-        type=str,
-        required=True,
-        help='Path to the local GitHub repository (absolute or relative)'
-    )
-
-    parser.add_argument(
-        '--model_type',
-        type=str,
-        default='braid_api',
-        help='Which summarisation model to use: "braid_api" or "local_gemini"'
-    )
-
-    return parser.parse_args()
-
-def validate_args(args):
-    """Validate command line arguments."""
-    repo_path = Path(args.repo_path).resolve()
-    if not repo_path.exists():
-        raise ValueError(f"Repository path does not exist: {repo_path}")
-    if not repo_path.is_dir():
-        raise ValueError(f"Repository path is not a directory: {repo_path}")
-
-    args.repo_path = repo_path
 
 def main():
     """Entry point to generate C4 diagrams from a local repo."""
-    args = parse_arguments()
-    print("--------------------------------main repo to c4")
+    config_manager = ConfigManager('Process a GitHub repository and concatenate file contents with optional readme summaries')
     try:
-        validate_args(args)
+        config_manager.load_config()
+        args = config_manager.get_args()
     except ValueError as e:
         print(f"Error: {e}")
         return 1
@@ -75,7 +44,6 @@ def main():
         skip_patterns=[],
         source_patterns=[]
     )
-    print("--------------------after walk_directory")
     return 0
 
 if __name__ == "__main__":
