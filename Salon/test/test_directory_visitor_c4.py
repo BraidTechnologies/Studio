@@ -1,17 +1,11 @@
 import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open, call
-import sys
 import os
 
-# Add both src and CommonPy directories to the Python path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / 'Salon' / 'src'))
-sys.path.insert(0, str(project_root))  # For CommonPy module
-
-from directory_visitor_c4 import DirectoryVisitorForC4
-from directory_visitor_base import DirectoryData
-from chat_model_drivers import SummariseModelType, SalonModelDriver
+from Salon.src.directory_visitor_c4 import DirectoryVisitorForC4
+from Salon.src.directory_visitor_base import DirectoryData
+from Salon.src.chat_model_drivers import SummariseModelType, SalonModelDriver
 
 # Register custom pytest markers
 def pytest_configure(config):

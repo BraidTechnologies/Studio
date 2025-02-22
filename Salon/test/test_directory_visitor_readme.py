@@ -1,19 +1,9 @@
-import os
 import pytest
-from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open, MagicMock
-from typing import List
-import sys
-
-# Add both src and CommonPy directories to the Python path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / 'Salon' / 'src'))
-sys.path.insert(0, str(project_root))
-
-from directory_visitor_readme import DirectoryVisitorForReadme
-from directory_visitor_base import DirectoryData
-from chat_model_drivers import SummariseModelType, SalonModelDriver
+from Salon.src.directory_visitor_readme import DirectoryVisitorForReadme
+from Salon.src.directory_visitor_base import DirectoryData
+from Salon.src.chat_model_drivers import SummariseModelType, SalonModelDriver
 
 @pytest.fixture
 def mock_directory_data():

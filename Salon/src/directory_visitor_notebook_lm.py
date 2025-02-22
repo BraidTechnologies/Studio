@@ -10,7 +10,7 @@ from typing import Optional, Set
 import nltk
 from nltk.tokenize import word_tokenize
 
-from directory_visitor_base import DirectoryVisitor, DirectoryData
+from .directory_visitor_base import DirectoryVisitor, DirectoryData
 
 nltk.download('punkt', quiet=True)
 

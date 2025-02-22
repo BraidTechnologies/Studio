@@ -1,16 +1,9 @@
 import pytest
-import os
-import sys
 from pathlib import Path
 from unittest.mock import Mock, patch
 from typing import List
 
-# Add both src and CommonPy directories to the Python path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / 'Salon' / 'src'))
-sys.path.insert(0, str(project_root))  # For CommonPy module
-
-from directory_walker import (
+from Salon.src.directory_walker import (
     add_visitor,
     clear_visitors,
     walk_directory,
