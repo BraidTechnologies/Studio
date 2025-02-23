@@ -1,13 +1,7 @@
 from enum import Enum
 from .gemini import GeminiModel
 from .open_ai import OpenAiModel
-
-class ModelType(Enum):
-    """
-    Enum representing different types of summarization models.
-    """
-    BRAID_API = "braid_api"
-    LOCAL_GEMINI = "local_gemini"
+from ..types.model_type import ModelType
     
 # Factory function to create the appropriate model based on model_type
 def create_model(model_type: str):
@@ -17,7 +11,7 @@ def create_model(model_type: str):
     model_type_enum = ModelType(model_type)
     if model_type_enum == ModelType.BRAID_API:
         return OpenAiModel()
-    elif model_type == ModelType.LOCAL_GEMINI.name:
+    elif model_type_enum == ModelType.LOCAL_GEMINI:
         return GeminiModel()
     else:
         raise ValueError(f"Unknown model type: {model_type}")

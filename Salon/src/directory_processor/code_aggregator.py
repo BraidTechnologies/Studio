@@ -10,11 +10,12 @@ from typing import Optional, Set
 import nltk
 from nltk.tokenize import word_tokenize
 
-from .directory_visitor_base import DirectoryVisitor, DirectoryData
+from .base import DirectoryProcessor
+from ..types.directory_data import DirectoryData
 
 nltk.download('punkt', quiet=True)
 
-class DirectoryVisitorForNotebookLM(DirectoryVisitor):
+class CodeAggregator(DirectoryProcessor):
     """
     Concatenates file contents until a max word limit is reached, 
     then saves them in a text file.

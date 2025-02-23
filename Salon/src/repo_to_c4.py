@@ -17,10 +17,10 @@ import os
 
 
 # Local modules
-from .directory_walker import add_visitor, walk_directory
-from .visitor_factory import get_visitors_for_c4
+from .directory_processor.directory_walker import walk_directory
 from .core.config_manager import ConfigManager #Import config manager
-
+from .types.directory_data import DirectoryData
+from .directory_processor.factory import getProcessorsRepoToC4
 
 def main():
     """Entry point to generate C4 diagrams from a local repo."""
@@ -32,18 +32,20 @@ def main():
         print(f"Error: {e}")
         return 1
 
-    # Create the specialized C4 visitor(s) using the factory
-    visitors = get_visitors_for_c4(args.model_type)
-    for v in visitors:
-        add_visitor(v)
-
     # Walk the directory
-    walk_directory(
+    directory_data: DirectoryData = walk_directory(
         root_path=args.repo_path,
         skip_dirs=[],
         skip_patterns=[],
         source_patterns=[]
     )
+
+    processors = getProcessorsRepoToC4(args.model_type)
+    for directory in directory_data:
+        for p in processors:
+            p.visit(directory)
+
+   
     return 0
 
 if __name__ == "__main__":

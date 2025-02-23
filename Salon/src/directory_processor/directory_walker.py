@@ -9,32 +9,18 @@ import fnmatch
 from pathlib import Path
 from typing import List
 
-from .directory_visitor_base import DirectoryData, DirectoryVisitor
-
-_visitors: List[DirectoryVisitor] = []
-
-def add_visitor(visitor: DirectoryVisitor) -> None:
-    """
-    Register a visitor that will be applied to each directory.
-    """
-    _visitors.append(visitor)
-
-def clear_visitors() -> None:
-    """
-    If you need a way to reset the visitor list between runs, use this.
-    """
-    _visitors.clear()
+from .base import DirectoryProcessor
+from ..types.directory_data import DirectoryData
 
 def walk_directory(
     root_path: Path,
     skip_dirs: List[str] = None,
     skip_patterns: List[str] = None,
     source_patterns: List[str] = None,
-) -> None:
+) -> DirectoryData:
     """
     Recursively walk the directory starting at `root_path`.
     For each directory, build a DirectoryData object, then
-    call each registered visitor with that object.
     """
     if skip_dirs is None:
         skip_dirs = []
@@ -45,6 +31,7 @@ def walk_directory(
 
     root_path = root_path.resolve()
 
+    directory_data: List[DirectoryData] = []
     for dirpath, dirnames, filenames in os.walk(root_path):
         dir_path = Path(dirpath)
 
@@ -55,11 +42,11 @@ def walk_directory(
             continue
 
         # Build directory data
-        directory_data = DirectoryData(path=dir_path)
+        sub_directory_data = DirectoryData(path=dir_path)
 
         # Check if it has a ReadMe.Salon.md
         readme_path = dir_path / "ReadMe.Salon.md"
-        directory_data.has_readme = readme_path.is_file()
+        sub_directory_data.has_readme = readme_path.is_file()
 
         # Gather all files while respecting skip_patterns
         for filename in filenames:
@@ -68,12 +55,13 @@ def walk_directory(
             if any(fnmatch.fnmatch(filename, pattern) for pattern in skip_patterns):
                 continue
 
-            directory_data.all_files.append(file_path)
+            sub_directory_data.all_files.append(file_path)
 
             # If it matches a source pattern, add to source_files
             if any(fnmatch.fnmatch(filename, sp) for sp in source_patterns):
-                directory_data.source_files.append(file_path)
+                sub_directory_data.source_files.append(file_path)
 
-        # Call each visitor's visit method
-        for visitor in _visitors:
-            visitor.visit(directory_data)
+        directory_data.append(sub_directory_data)
+
+    return directory_data
+

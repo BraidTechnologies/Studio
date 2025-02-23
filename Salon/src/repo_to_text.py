@@ -26,12 +26,18 @@ from pathlib import Path
 from typing import Dict, Any, Set
 
 # Local modules
-from .directory_walker import add_visitor, walk_directory
-from .visitor_factory import get_visitors_for_text
+from .directory_processor.directory_walker import walk_directory
+from .directory_processor.factory import getProcessorsRepoToText
 from .core.config_manager import ConfigManager  # Import ConfigManager
+from .types.directory_data import DirectoryData
 
 nltk.download('punkt', quiet=True)
 
+def getSpecialArgs() -> argparse.Namespace:
+    """
+    Get the arguments from the command line.
+    """
+    return argparse.ArgumentParser().parse_args()
 
 def main() -> int:
     """
@@ -42,43 +48,35 @@ def main() -> int:
         config_manager.load_config()
         args = config_manager.get_args()
         config = config_manager.get_config()
+
+        skip_dirs: Set[str] = set(config.get("skip_dirs", []))
+        if args.skip_dirs:
+            skip_dirs.update(args.skip_dirs)
+        
+        skip_patterns: Set[str] = set(config.get("skip_patterns", []))
+        if args.skip_patterns:
+            skip_patterns.update(args.skip_patterns)
+
+        source_patterns = config.get("source_patterns", [])
+
     except ValueError as e:
         print(f"Error: {e}")
         return 1
 
-    # Load config
-    skip_dirs: Set[str] = set(config.get("skip_dirs", []))
-    if args.skip_dirs:
-        skip_dirs.update(args.skip_dirs)
-
-    skip_patterns: Set[str] = set(config.get("skip_patterns", []))
-    if args.skip_patterns:
-        skip_patterns.update(args.skip_patterns)
-
-    # Also read "source_patterns" from config
-    source_patterns = config.get("source_patterns", [])
-
-    # Use factory to get the visitors we want
-    visitors = get_visitors_for_text(args.model_type, args.max_words, args.output_dir)
-    for v in visitors:
-        add_visitor(v)
-
     # Optionally cd into the output directory if desired
     os.chdir(args.output_dir)
 
-    walk_directory(
+    directory_data: DirectoryData = walk_directory(
         root_path=args.repo_path,
         skip_dirs=list(skip_dirs),
         skip_patterns=list(skip_patterns),
         source_patterns=source_patterns
     )
 
-    # The notebook visitor might need a final flush. Let's call it if found:
-    # If you want to ensure it flushes, you can do so:
-    for v in visitors:
-        # We'll check if it's the NotebookLM visitor
-        if hasattr(v, 'save_current_content'):
-            v.save_current_content()
+    processors = getProcessorsRepoToText(args.model_type, args.max_words, args.output_dir)
+    for directory in directory_data:
+        for p in processors:
+            p.visit(directory)
 
     return 0
 
