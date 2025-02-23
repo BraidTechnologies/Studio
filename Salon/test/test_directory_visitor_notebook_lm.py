@@ -1,19 +1,9 @@
-import os
 import pytest
 import tempfile
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, patch
-import sys
-import os
-
-# Add both src and CommonPy directories to the Python path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / 'Salon' / 'src'))
-sys.path.insert(0, str(project_root))
-
-from directory_visitor_notebook_lm import DirectoryVisitorForNotebookLM
-from directory_visitor_base import DirectoryData
+from Salon.src.directory_visitor_notebook_lm import DirectoryVisitorForNotebookLM
+from Salon.src.directory_visitor_base import DirectoryData
 
 @pytest.fixture
 def temp_dir():

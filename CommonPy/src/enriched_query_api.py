@@ -100,13 +100,13 @@ class EnrichedQueryApi:
 
             return_obj.chunks = []
             for chunk in response_json['chunks']:
-               chunk_obj = safe_dict_to_object(chunk['chunk'])
-               safe_chunk_obj = safe_cast(chunk_obj, IEnrichedChunkSummary)
-               relevance = chunk['relevance']
-               relevant_chunk = IRelevantEnrichedChunk()
-               relevant_chunk.chunk = safe_chunk_obj
-               relevant_chunk.relevance = relevance
-               return_obj.chunks.append(relevant_chunk)
+                chunk_obj = safe_dict_to_object(chunk['chunk'])
+                safe_chunk_obj = safe_cast(chunk_obj, IEnrichedChunkSummary)
+                relevance = chunk['relevance']
+                relevant_chunk = IRelevantEnrichedChunk()
+                relevant_chunk.chunk = safe_chunk_obj
+                relevant_chunk.relevance = relevance
+                return_obj.chunks.append(relevant_chunk)
             return return_obj
         else:
             raise RuntimeError('Error returned from API:' + response.text)

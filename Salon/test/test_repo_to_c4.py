@@ -1,16 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
-import sys
 import argparse
 from tempfile import TemporaryDirectory
-import os
 import pytest
 
-# Add the src directory to the Python path
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+from Salon.src.repo_to_c4 import parse_arguments, validate_args, main
 
-from repo_to_c4 import parse_arguments, validate_args, main
 
 class TestRepoToC4(unittest.TestCase):
     def setUp(self):
@@ -86,9 +82,9 @@ class TestRepoToC4(unittest.TestCase):
         test_args = ['--repo_path', str(repo_path)]
         
         with patch('sys.argv', ['script.py'] + test_args), \
-             patch('repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
-             patch('repo_to_c4.add_visitor') as mock_add_visitor, \
-             patch('repo_to_c4.walk_directory') as mock_walk_directory:
+             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
+             patch('Salon.src.repo_to_c4.add_visitor') as mock_add_visitor, \
+             patch('Salon.src.repo_to_c4.walk_directory') as mock_walk_directory:
             
             # Setup mock visitors
             mock_visitor = MagicMock()
@@ -116,7 +112,7 @@ class TestRepoToC4(unittest.TestCase):
         test_args = ['--repo_path', str(repo_path), '--model_type', 'invalid_model']
         
         with patch('sys.argv', ['script.py'] + test_args), \
-             patch('repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
+             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
              patch('sys.stdout'), \
              patch('sys.stderr'):  # Capture output to keep tests clean
             
@@ -133,9 +129,9 @@ class TestRepoToC4(unittest.TestCase):
         test_args = ['--repo_path', str(repo_path)]
         
         with patch('sys.argv', ['script.py'] + test_args), \
-             patch('repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
-             patch('repo_to_c4.add_visitor') as mock_add_visitor, \
-             patch('repo_to_c4.walk_directory') as mock_walk_directory:
+             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
+             patch('Salon.src.repo_to_c4.add_visitor') as mock_add_visitor, \
+             patch('Salon.src.repo_to_c4.walk_directory') as mock_walk_directory:
             
             # Create multiple mock visitors
             mock_visitors = [MagicMock() for _ in range(3)]

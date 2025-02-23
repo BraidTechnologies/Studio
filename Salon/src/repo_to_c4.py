@@ -17,8 +17,8 @@ import os
 
 
 # Local modules
-from directory_walker import add_visitor, walk_directory
-from visitor_factory import get_visitors_for_c4
+from .directory_walker import add_visitor, walk_directory
+from .visitor_factory import get_visitors_for_c4
 
 def parse_arguments():
     """Parse command line arguments."""
@@ -56,6 +56,7 @@ def validate_args(args):
 def main():
     """Entry point to generate C4 diagrams from a local repo."""
     args = parse_arguments()
+    print("--------------------------------main repo to c4")
     try:
         validate_args(args)
     except ValueError as e:
@@ -74,6 +75,7 @@ def main():
         skip_patterns=[],
         source_patterns=[]
     )
+    print("--------------------after walk_directory")
     return 0
 
 if __name__ == "__main__":

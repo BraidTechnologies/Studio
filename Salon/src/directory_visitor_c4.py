@@ -11,8 +11,8 @@ from typing import Optional
 
 from CommonPy.src.request_utilities import request_timeout
 
-from Salon.src.directory_visitor_base import DirectoryVisitor, DirectoryData
-from Salon.src.chat_model_drivers import SummariseModelType, SalonModelDriver
+from .directory_visitor_base import DirectoryVisitor, DirectoryData
+from .chat_model_drivers import SummariseModelType, SalonModelDriver
 
 class DirectoryVisitorForC4(DirectoryVisitor):
     """

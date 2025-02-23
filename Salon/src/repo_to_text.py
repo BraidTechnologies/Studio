@@ -27,8 +27,8 @@ from pathlib import Path
 from typing import Dict, Any, Set
 
 # Local modules
-from directory_walker import add_visitor, walk_directory
-from visitor_factory import get_visitors_for_text
+from .directory_walker import add_visitor, walk_directory
+from .visitor_factory import get_visitors_for_text
 
 nltk.download('punkt', quiet=True)
 
