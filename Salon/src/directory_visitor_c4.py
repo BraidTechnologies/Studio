@@ -6,6 +6,7 @@ Visitor that looks for 'readme.md' (case-insensitive) and subdirectories'
 """
 
 import os
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -22,6 +23,8 @@ class DirectoryVisitorForC4(DirectoryVisitor):
     - C4Container.Salon.md
     - C4Component.Salon.md
     """
+
+    version_pattern = re.compile(r'(.*)_v(\d+)$')  # capture (stem) and (version number)
 
     def __init__(self, model_type: str = "braid_api", priority: int = 2) -> None:
         """
@@ -46,29 +49,54 @@ class DirectoryVisitorForC4(DirectoryVisitor):
             persona="C4Diagrammer",
             length_in_words=1000
         )
+    
+    def parse_version(self, stem: str):
+        """
+        If `stem` ends with `_vN`, returns (base_stem, version_number).
+        Otherwise returns (stem, None).
+        """
+        match = self.version_pattern.match(stem)
+        if match:
+            base_stem = match.group(1)
+            existing_version = int(match.group(2))
+            return base_stem, existing_version
+        else:
+            return stem, None
 
     def write_file_version(self, directory: Path, file_name: str, content: str) -> None:
         """
         Write a new file in `directory` with the given `file_name`. If the file already
-        exists, increment a version number in the filename (e.g. myFile_v1.md).
+        exists, increment the version number properly in the filename (e.g. 'myFile_v1.md',
+        'myFile_v2.md', etc.). If the incoming file_name already has a version suffix,
+        we start from that version instead.
         """
-        output_file = directory / file_name
+        # Construct initial path
+        p = directory / file_name
+        parent = p.parent
+        stem = p.stem
+        suffix = p.suffix
+
+        # Detect if there's an existing `_vN` suffix in the file name
+        base_stem, existing_version = self.parse_version(stem)
+
+        # If there's already a version, start from it; else start from 0
+        # so that we first try the actual file_name with no added version
+        version = existing_version if existing_version is not None else 0
+        candidate = p
+
+        # While the candidate file already exists, increment
+        while candidate.exists():
+            version += 1
+            candidate = parent / f"{base_stem}_v{version}{suffix}"
+
+        # Write out to the new candidate file
         try:
-            written = False
-            version = 1
-            while output_file.exists() and not written:
-                parent = output_file.parent
-                stem = output_file.stem
-                suffix = output_file.suffix
-                output_file = parent / f"{stem}_v{version}{suffix}"
-                version += 1
-
-            with open(output_file, 'w', encoding='utf-8') as f:
+            with open(candidate, 'w', encoding='utf-8') as f:
                 f.write(content)
-            print(f"Wrote diagram to {output_file}")
-
+            print(f"Wrote diagram to {candidate}")
         except IOError as e:
-            print(f"Error writing to {output_file}: {e}")
+            print(f"Error writing to {candidate}: {e}")
+
 
     def visit(self, directory_data: DirectoryData) -> None:
         """
@@ -120,7 +148,7 @@ class DirectoryVisitorForC4(DirectoryVisitor):
         prompt_context = (
             "Please generate a C4Context diagram in mermaid format from the following "
             "description of a software system. Include the User. Only generate mermaid content. "
-            "Group components with container boundaries if possible, but pay attention to syntax - "
+            "Group components with system boundaries if possible, but pay attention to syntax - "
             "a small diagram that is syntactically correct is better than a large diagram with errors.\n\n"
             + readme_text
         )
