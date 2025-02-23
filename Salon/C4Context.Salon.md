@@ -1,29 +1,71 @@
 ```mermaid
-C4Context
-title System Context diagram for Salon
+flowchart TB
+    %% System boundaries
+    subgraph Salon
+        subgraph API_Tools
+            A1(api_to_test_code)
+            A2(repo_to_text)
+        end
+        
+        subgraph C4_Tools
+            C1(repo_to_c4)
+        end
 
-Person(developer, "Software Developer", "Developer working with APIs and codebases")
+        subgraph Supporting_Utilities
+            SU1(directory_visitor_base)
+            SU2(directory_visitor_c4)
+            SU3(directory_visitor_notebook_lm)
+            SU4(directory_visitor_readme)
+            SU5(directory_walker)
+            SU6(visitor_factory)
+        end
 
-System_Boundary(salon, "Salon") {
-    System(salon, "Salon", "Automated software development tools using LLMs")
-    Container(api_to_test, "api_to_test_code", "Python tool that generates test code from API specifications")
-    Container(repo_to_text, "repo_to_text", "Python utility for processing and analyzing codebases")    
-}
+        subgraph Test_Suites
+            TS1(test_repo_text)
+            TS2(test_visitor)
+            TS3(test_walker)
+        end
 
-System_Boundary(External, "External Components") {  
-    System_Ext(openai, "OpenAI API", "LLM service for code generation and analysis")
-    System_Ext(git, "Git Repository", "Source code repository")
-}
+        subgraph Other_Components
+            OC1(api_to_test_code.py)
+            OC2(chat_model_drivers.py)
+            OC3(directory_visitor_readme.py)
+            OC4(directory_visitor_notebook_lm.py)
+            OC5(directory_visitor_c4.py)
+            OC6(repo_to_text.py)
+            OC7(repo_to_c4.py)
+            OC8(count_tokens.py)
+            OC9(visitor_factory.py)
+            OC10(directory_walker.py)
+        end
+    end
 
-Rel(developer, salon, "Uses")
-Rel(salon, openai, "Generates tests and analyzes code using")
-Rel(salon, git, "Reads from")
-
-
-
-Rel(salon, api_to_test, "Contains")
-Rel(salon, repo_to_text, "Contains")
-Rel(api_to_test, openai, "Generates tests using")
-Rel(repo_to_text, git, "Processes code from")
-Rel(repo_to_text, openai, "Summarises code using")
+    %% Links
+    User -- uses --> A1
+    User -- uses --> A2
+    User -- uses --> C1
+    A1 -- utilizes --> OC1
+    A2 -- utilizes --> OC6
+    C1 -- utilizes --> OC7
+    SU6 -- creates --> SU1
+    SU6 -- creates --> SU2
+    SU6 -- creates --> SU3
+    SU6 -- creates --> SU4
+    SU6 -- creates --> SU5
+    C1 -- interacts with --> SU5
+    A2 -- interacts with --> SU5
+    SU5 -- calls --> SU1
+    SU5 -- calls --> SU2
+    SU5 -- calls --> SU3
+    SU5 -- calls --> SU4
+    TS1 -- tests --> A2
+    TS1 -- tests --> SU5
+    TS1 -- tests --> SU6
+    TS2 -- tests --> SU1
+    TS2 -- tests --> SU2
+    TS2 -- tests --> SU3
+    TS2 -- tests --> SU4
+    TS2 -- tests --> SU6
+    TS3 -- tests --> SU5
+    TS3 -- tests --> SU1
 ```
