@@ -62,8 +62,10 @@ class OpenAiModel(AIModel):
         # Configure retry strategy
         retry_strategy = Retry(
             total=5,
-            backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504]  # Include both rate limit and server errors
+            backoff_factor=2,  
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["POST"],  # Explicitly allow POST retries
+            respect_retry_after_header=True  # Honor server's retry-after header
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         session = requests.Session()
