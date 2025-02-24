@@ -1,32 +1,75 @@
 **chunk_repository_test.py**
 
-This script contains tests for the DB API interfacing with chunk repository concepts.
+This script contains tests for the DB API provided by Braid Technologies Ltd.
 
-A set of classes is imported from `src.chunk_repository_api`, including `ChunkRepository`, `IStoredChunk`, `IStoredEmbedding`, and `IStoredTextRendering`.
+Key classes/functions: `ChunkRepository`, `IStoredChunk`, `IStoredEmbedding`, `IStoredTextRendering`.
 
-Logging is configured to display warning and error messages.
+It sets up logging to WARN level and prepares a current UTC timestamp. Mock objects for embedding, summary, title, and a master chunk are created and populated with test data. 
 
-It establishes instances of `IStoredEmbedding`, `IStoredTextRendering` for summary and title, and `IStoredChunk` with various attributes initialized.
+`test_basic` checks if a `ChunkRepository` object can be instantiated without exceptions.
 
-Five test functions are defined: `test_basic` checks the basic instantiation of `ChunkRepository`; `test_does_not_exist` checks path non-existence; `test_save` verifies saving a chunk; `test_save_exists` checks saving and subsequent existence; `test_save_find` ensures a saved chunk can be fetched and matches the saved content.
+`test_does_not_exist` checks that a non-existent file returns false when its existence is checked.
+
+`test_save` saves a chunk and asserts the save function returns true.
+
+`test_save_exists` saves a chunk, then checks and asserts its existence.
+
+`test_save_find` saves a chunk, then checks it can be loaded, and asserts data integrity between saved and loaded chunks.
+
+**model_factory_test.py**
+
+This module contains tests for the model factory functions within `model_driver_factories` from the `src` directory. The key functions tested include `get_default_chat_model_driver`, `get_chat_model_driver`, `get_default_embedding_model_driver`, `get_embedding_model_driver`, `get_default_text_chunker`, and `get_text_chunker`.
+
+The purpose of each test function is to assert that the various model drivers and chunkers return instances of OpenAI's LARGE models and providers, ensuring that the model factory setup is correctly providing OpenAI models by default.
+
+Logging is configured to display warnings and errors during script execution to assist in debugging and monitoring test runs.
+
+**openai_chat_test.py**
+
+This script tests the functionalities of an OpenAI chat model driver.
+
+It imports necessary modules from the standard Python library and sets up the environment by modifying the system path to include the parent and source directories.
+
+Logging configuration is set to display warning and error messages, with emphasis on error level logs.
+
+`test_chat_model_basic_response`, `test_chat_model_mutated_input_same_response`, and `test_chat_model_mutated_input_different_response` functions are defined to check that the chat model responds appropriately to different user prompts.
+
+They verify if the chat model generates expected responses by asserting certain greetings in the returned output.
+
+Key classes and functions:
+1. `ChatPrompt` (class)
+2. `get_default_chat_model_driver` (function)
+3. `test_chat_model_basic_response` (function)
+4. `test_chat_model_mutated_input_same_response` (function)
+5. `test_chat_model_mutated_input_different_response` (function)
+
+**openai_chunk_test.py**
+
+This code contains unit tests for an OpenAI character driver, which focuses on text chunking functionality.
+
+The `test_chunk_small_text`, `test_chunk_large_text`, `test_chunk_small_text_single_chunk`, `test_chunk_large_text_multiple_chunks`, and `test_chunk_large_text_with_overlaps` functions are the key tests. They verify that small texts fit into default chunks, large texts do not fit into default chunks, small texts produce a single chunk, large texts produce multiple chunks, and overlapped chunking produces more chunks than base chunking, respectively.
+
+The `get_text_chunker` function from the `src.model_driver_factories` module is utilized to create a chunker object based on specific model parameters.
+
+Logging is configured to help trace the execution of the tests.
+
+**openai_embedding_test.py**
+
+This code tests an Open AI character driver for embedding models. It sets up logging to capture runtime information capped at the ERROR level. 
+
+Functions include `test_chat_model_basic_response()` which checks if the embedding model returns a non-empty vector for the input 'Airplane'. Another, `test_chat_model_mutated_input_same_response()`, verifies if the model generates similar vectors for semantically similar words like 'Aeroplane' and 'Airplane' using a cosine similarity check. The final function, `test_chat_model_mutated_input_different_response()`, tests if the model generates significantly different vectors for dissimilar words like 'Aeroplane' and 'Banana'.
+
+Classes/Functions: `test_chat_model_basic_response`, `test_chat_model_mutated_input_same_response`, `test_chat_model_mutated_input_different_response`.
 
 **page_repository_test.py**
 
-This script implements tests for a database API.
+This module tests the functionality of a PageRepository class and associated functions from the `src.page_repository_api`. Key functions tested are `test_basic`, `test_does_not_exist`, `test_save`, and `test_save_load`.
 
-Imports include standard libraries such as `os`, `sys`, `logging`, `uuid`, and specific functions and classes from `src.page_repository_api`.
+- The `test_basic` function ensures that a PageRepository instance can be created without issues.
+- The `test_does_not_exist` function checks that loading a non-existent page returns false.
+- The `test_save` function verifies that a page can be saved successfully.
+- The `test_save_load` function validates that a page can be saved and then loaded correctly.
 
-The script dynamically adjusts the system path to ensure the required modules can be imported and sets up logging configurations to output warnings and errors.
+Logging is configured to capture warnings or errors during execution. The `make_page_from_file` function is used to create a test page object.
 
-A `page` object is created using the `make_page_from_file` function with some test parameters.
-
-The `test_basic` function verifies the successful creation of a `PageRepository` instance.
-
-The `test_does_not_exist` function asserts that loading a non-existent page returns `False`.
-
-The `test_save` function tests if a page can be saved successfully.
-
-The `test_save_load` function further tests if a saved page can be reloaded successfully, ensuring both save and load functionalities work together.
-
-Important classes and functions include `PageRepository`, `make_page_from_file`, `test_basic`, `test_does_not_exist`, `test_save`, and `test_save_load`.
-
+Generated by Salon from Braid Technologies, 24/02/2025
