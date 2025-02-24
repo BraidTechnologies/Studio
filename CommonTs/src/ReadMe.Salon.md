@@ -1,493 +1,506 @@
 **ActivityRepositoryApi.ts**
 
-The `ActivityRepositoryApi` module provides a wrapper for managing activity records using CRUD operations. It extends the `Api` class and implements the `IStorableRepositoryApiWrapper` interface.
+The `ActivityRepositoryApi` module provides an API wrapper for managing activity records in a repository. It extends the `Api` class and implements the `IStorableRepositoryApiWrapper` interface to provide CRUD operations (Create, Read, Update, Delete) for activity records.
 
-The main functions include:
-- `load(recordId: string)`: Loads an activity record by its ID.
-- `find(functionalSearchKey: string)`: Finds an activity by a search key.
-- `save(record: IStorable)`: Saves a new or updated activity record.
-- `remove(recordId: string)`: Removes an activity record by its ID.
-- `recent(querySpec: IStorableMultiQuerySpec)`: Retrieves recent activity records based on query specifications.
+The module handles loading individual activity records, finding activities by search key, saving new or updated activities, removing activities, and retrieving recent activities based on query specifications. All operations require authentication via a session key and communicate with environment-specific API endpoints.
 
-Authentication via session key is required for all operations, which communicate with environment-specific API endpoints.
+Key functions include `load`, `find`, `save`, `remove`, and `recent`, and the primary class is `ActivityRepositoryApi`.
 
 **Api.ts**
 
-This module defines a base class named `Api` that facilitates interaction with various APIs.
+This module is designed for interacting with an API and includes common properties and methods applicable to all API classes.
 
-The `Api` class requires an environment interface (`IEnvironment`) and a session key for authentication. These are passed as parameters to its constructor and stored as private properties `_environment` and `_sessionKey`.
+The module imports the `axios` library for making HTTP requests and an `IEnvironment` interface. 
 
-The class provides public getter methods, `environment` and `sessionKey`, to access these properties.
+The `Api` class is the main class in this module and is used as a base class for more specific API interactions. It holds two crucial properties: `_environment` of type `IEnvironment` representing the environment the API interacts with, and `_sessionKey` which is the session key used for authentication. 
 
-The module imports the `axios` library for making HTTP requests, though there are no methods implemented in this base class utilizing `axios`.
-
-The `Api` class is designed to be a superclass, meaning more specific API classes will extend it to implement their own unique functionality.
+The `Api` class constructor initializes these properties, and there are getter methods for accessing the environment and session key.
 
 **Asserts.ts**
 
-This module named `Asserts` provides type-safe assertion utilities to ensure runtime checks with type narrowing in TypeScript.
+This module, coined "Asserts," provides type-safe assertion utilities aimed at verifying runtime conditions in TypeScript code. These utilities help ensure certain states or values in the code, and when a condition fails, they throw an `AssertionFailedError`.
 
-### Key Functions:
+Important functions in this module include:
+- `throwIfUndefined`: Checks if a value is `undefined` and throws an error if it is.
+- `throwIfNull`: Checks if a value is `null` and throws an error if it is.
+- `throwIfFalse`: Verifies if a boolean value is `true` and throws an error if it is `false`.
 
-- **throwIfUndefined**: Throws an `AssertionFailedError` if the input `x` is `undefined`, ensuring `x` is of type `T`.
-- **throwIfNull**: Throws an `AssertionFailedError` if the input `x` is `null`, ensuring `x` is of type `T`.
-- **throwIfFalse**: Throws an `AssertionFailedError` if the input `x` is `false`, ensuring `x` is `true`.
-
-### Important Classes:
-
-- **AssertionFailedError**: Imported from `./Errors`, this class is used to throw errors when assertions fail.
+These functions provide TypeScript type narrowing, enhancing runtime safety.
 
 **ChunkApi.Types.ts**
 
-The module `ChunkApi.Types` provides type definitions for a Chunk API that handles text chunking operations.
+The `ChunkApi.Types` module provides type definitions for the Chunk API, which is used for text chunking operations. It includes interfaces for defining the structure of chunk request and response objects used in text segmentation tasks.
 
-The `IChunkRequest` interface defines the structure for API requests, including properties for `text` (mandatory string), `chunkSize` (optional number, size of each chunk in tokens), and `overlapWords` (optional number, size of overlap between chunks in words).
+The `IChunkRequest` interface describes the format for a chunk request, which contains properties such as `text` (the text content to be chunked), `chunkSize` (the number of tokens in each chunk, optionally specified), and `overlapWords` (the number of words that overlap between consecutive chunks, also optional).
 
-The `IChunkResponse` interface defines the structure for API responses, containing a `chunks` property, which is an array of strings representing the segmented text chunks.
-
-These interfaces ensure consistent formatting of request and response data for text segmentation operations.
+The `IChunkResponse` interface outlines the format for the chunk response, which includes a `chunks` property, an array containing the resulting text chunks.
 
 **ChunkRepositoryApi.ts**
 
-The `ChunkRepositoryApi` module is an API wrapper for managing text chunking, extending the base `Api` class and implementing the `IStorableRepostoryApiWrapper` interface. This module allows CRUD operations (Create, Read, Update, Delete) for text chunks.
+This module, `ChunkRepositoryApi`, facilitates text chunking management through a set of CRUD (Create, Read, Update, Delete) operations. It extends a base `Api` class and implements the `IStorableRepostoryApiWrapper` interface to manage these operations securely.
 
-Key classes and methods:
-- `ChunkRepostoryApi`: Main class for the API with methods for operations.
-- `constructor(environment_, sessionKey_)`: Initializes the API with environment settings and an authentication session key.
-- `load(recordId)`: Loads a record by ID from the repository.
-- `find(functionalSearchKey)`: Finds a record using a search key.
-- `save(record)`: Saves a new or updated record.
-- `remove(recordId)`: Removes a record by ID.
-- `recent(querySpec)`: Retrieves recent records based on query specifications.
+The main functionalities provided include:
+- `load`: Loads an individual text chunk by its record ID.
+- `find`: Finds a text chunk by a search key.
+- `save`: Saves new or updated text chunks to the repository.
+- `remove`: Removes a text chunk by record ID.
+- `recent`: Retrieves recent text chunks based on specific query criteria.
 
-All operations communicate with environment-specific API endpoints and require authentication through the session key.
+Key classes and functions used include `Api`, `IEnvironment`, `IStorable`, `IStorableMultiQuerySpec`, `StorableRepostoryApi`, and `IStorableRepostoryApiWrapper`. Every transaction requires proper authentication via a session key, communicating with environment-specific API endpoints.
 
 **ChunkRepositoryApi.Types.ts**
 
-This module defines core data types and interfaces for the ChunkRepository API. These definitions are used for handling chunks, embeddings, and text renderings throughout the chunk storage system.
+This module, `ChunkRepositoryApi.Types`, defines the core data types and interfaces used in the ChunkRepository API. 
 
-The `IStoredEmbedding` interface stores vector embeddings associated with a model ID.
+Key components include:
+- **`IStoredEmbedding`**: Interface for storing vector embeddings along with their associated model ID.
+- **`IStoredTextRendering`**: Interface defining the structure for storing text renditions along with their model ID.
+- **`IStoredChunk`**: The main interface that represents a chunk of data, combining text, embeddings, and other metadata such as parent chunk ID, original text, URL to an external resource, and related chunks.
 
-The `IStoredTextRendering` interface defines the structure for storing generated text along with its related model ID.
-
-The `IStoredChunk` interface represents data chunks, including metadata, embeddings, summaries, and relationships with other chunks. It includes fields for parent chunk ID, original text, URL to external resources, stored embeddings, summaries, titles, and IDs of related chunks.
-
-The `storedChunkClassName` constant is defined as "Chunk".
+It includes essential interfaces for managing text fragments and their associated metadata and embeddings within the chunk storage system.
 
 **ClassifyApi.Types.ts**
 
-The code provides type definitions for a Classification API used in a text classification system.
+This code module (`ClassifyApi.Types`) provides type definitions for making and handling requests and responses within a text classification system, ensuring type safety during API calls.
 
-The `IClassifyRequest` interface defines the structure of a classification request, which includes `text` (a string) and an array of possible `classifications`.
-
-The `IClassifyResponse` interface defines the structure of a classification response, which contains a single `classification` string.
-
-These interfaces ensure type safety when making API calls and handling responses.
+**Important classes or functions:**
+1. **IClassifyRequest**: An interface representing a classification request, containing a `text` field (string) and `classifications` field (array of strings).
+2. **IClassifyResponse**: An interface representing a classification response, with a single field `classification`, which is a string.
 
 **Compress.ts**
 
-The module "Compress" provides functions to compress and decompress strings using the deflate algorithm. It is compatible with both Node.js and browser environments.
+The `Compress` module provides functions for compressing and decompressing strings using the deflate algorithm. It is compatible with both Node.js and browser environments.
 
-Key functions include `compressString` and `decompressString`.
+The `compressString` function takes an input string, converts it to a Uint8Array, compresses it using the `pako.deflate` method, and returns the compressed data encoded in Base64 format.
 
-`compressString` converts the input string to a `Uint8Array`, compresses it using pako's `deflate` method and then base64 encodes the compressed data. Base64 encoding differs slightly for Node.js and browsers.
+The `decompressString` function takes a Base64 encoded compressed string, decodes it, decompresses it using the `pako.inflate` method, and converts the resulting data back into the original string. It includes error handling to manage invalid input scenarios.
 
-`decompressString` reverses this process. It base64 decodes the input and then inflates the resulting `Uint8Array` using pako’s `inflate` method, finally converting it back to a string. It throws an error if decompression fails.
+Important functions in the module are `compressString` and `decompressString`.
 
 **EmbedApi.Types.ts**
 
-This module, `EmbedApi.Types`, defines the data structures for the Embed API which is responsible for handling text embedding operations. 
+This module, "EmbedApi.Types", provides type definitions for the Embed API, which handles text embedding operations such as converting text into numerical representations.
 
-The `IEmbedRequest` interface describes the structure of an embedding request object containing `persona` of type `EPromptPersona` and `text` which is a string.
+The `IEmbedRequest` interface defines the structure of a request object for the embedding service, including properties like `persona` and `text`. The `persona` property is of type `EPromptPersona`, imported from "./IPromptPersona".
 
-The `IEmbedResponse` interface outlines the structure of an embedding response object including `embedding`, which is an array of numbers representing the embedding vector.
+The `IEmbedResponse` interface outlines the structure of the response object received from the embedding service, which includes an `embedding` property, an array of numbers representing the text embedding.
 
-These interfaces define the contract between clients and the embedding service ensuring consistent data exchange formats.
-
-The `EPromptPersona` type is imported from `./IPromptPersona` and is used within the `IEmbedRequest` interface.
+Key classes/interfaces: `IEmbedRequest`, `IEmbedResponse`.
 
 **EnrichedChunk.ts**
 
-This module defines the core data structures and interfaces for the Chunk API, which deals with enriched chunks of content that can be stored, queried, and retrieved based on semantic similarity. It caters to both client-side summaries and server-side storage formats.
+This module defines core data structures and interfaces for the Chunk API, which involves storing, querying, and retrieving content chunks based on semantic similarity. 
 
-Important components include the `EChunkRepository` enum which lists available chunk storage repositories, while `IEnrichedChunk` and `IEnrichedChunkSummary` interfaces define the structures for both server-side and client-side chunks. The `IChunkQuerySpec` and its extensions (`IChunkQueryRelevantToUrlSpec`, `IChunkQueryRelevantToSummarySpec`) specify the parameters for querying these chunks.
+**Important Classes/Functions:**
+1. **EChunkRepository:** An enumeration listing chunk storage repositories (e.g., Boxer, Waterfall).
+2. **IEnrichedChunk:** Interface representing a complete chunk with embeddings.
+3. **IEnrichedChunkSummary:** Interface for a simpler chunk representation.
+4. **IChunkQuerySpec:** Interface outlining the base query parameters for retrieving chunks.
 
-The default similarity threshold for presenting chunks to users is set at 0.5.
+Additionally, the default similarity threshold for relevant chunk presentation is set at 0.5.
 
-**EnrichedQuery.ts**
+**EnrichedQuery.Api.Types.py**
 
-The `EnrichedQuery` module defines core interfaces and enums for managing enriched conversations with AI assistants.
+This module defines data structures and imports required for a system dealing with type-checked dictionaries and possibly asynchronous tasks.
 
-The `IEnrichedQuery` interface structures an enriched query object, including repository identification, similarity threshold, maximum result count, conversation history, the posed question, and word count target.
+Different imports are handled based on the Python version. If Python 3.9 or above is used, the code imports modern type hinting modules from `typing` and `collections.abc`; otherwise, it uses older alternatives.
 
-The `IEnrichedResponse` interface structures an enriched response object, including an answer string and an array of relevant enriched chunk objects (`IRelevantEnrichedChunk`).
+The code attempts to import `TypedDict`, `singledispatch`, and other classes from the `ts2python` module. If unsuccessful, it falls back on direct imports and provides installation instructions.
 
-The `IGenerateQuestionQuery` interface defines the structure for a question generation query, including a summary text and a word target for the resulting question.
+The classes define various type-checked dictionaries for enriched chunk summaries, queries, and responses using `TypedDict`. Notable classes include `IEnrichedChunkSummary`, `IEnrichedQueryRequest`, and `IEnrichedResponse`.
 
-The `IQuestionGenerationResponse` interface structures the response for question generation, consisting only of a generated question string. 
+**EnrichedQuery.Api.Types.ts**
 
-Key Interfaces: `IEnrichedQuery`, `IEnrichedResponse`, `IGenerateQuestionQuery`, `IQuestionGenerationResponse`.
+The `EnrichedQuery` module defines core interfaces and enums for handling enriched conversations with AI assistants. The main classes and interfaces define data structures and types for AI interactions, maintaining type safety throughout the application.
+
+**Classes and Interfaces**:
+- **IEnrichedChunkSummary**: Represents an enriched chunk with `url`, `text`, and `summary`.
+- **IEnrichedChunk**: Extends `IEnrichedChunkSummary` to include `id` and `embedding`.
+- **IRelevantEnrichedChunk**: Represents a chunk with its relevance score.
+- **IChunkQuerySpec**: Specifies parameters for chunk queries.
+- **IChunkQueryRelevantToUrlSpec**: Extends `IChunkQuerySpec` to include a `url`.
+- **IChunkQueryRelevantToSummarySpec**: Extends `IChunkQuerySpec` to include a `summary`.
+- **IEnrichedQueryRequest**: Defines an enriched query with details on the repository, conversation history, and question.
+- **IEnrichedResponse**: Contains an answer and relevant chunks for the query.
+- **IGenerateQuestionRequest**: For generating questions based on a summary.
+- **IQuestionGenerationResponse**: Defines the generated question response.
 
 **EnumerateModelsApi.Types.ts**
 
-This module defines TypeScript interfaces for the EnumerateModels and EnumerateRepositories APIs, which are used in AI model enumeration and repository listing operations.
+This module defines interfaces for requests and responses used in model enumeration and repository listing operations. 
 
-The `IEnumerateModelsRequest` interface represents the structure of the request for listing available AI models.
+For the EnumerateModels API: `IEnumerateModelsRequest` represents the request object and `IEnumerateModelsResponse` represents the response object, which includes model IDs for default, large, and small model types along with their embedding IDs.
 
-The `IEnumerateModelsResponse` interface defines the structure of the response, including ID fields for different sizes and embeddings of models.
+For the EnumerateRepositories API: `IEnumerateRepositoriesRequest` represents the request object and `IEnumerateRepositoriesResponse` represents the response object, which includes a list of repository IDs (`EChunkRepository`).
 
-The `IEnumerateRepositoriesRequest` interface represents the structure of the request for listing available chunk repositories.
-
-The `IEnumerateRepositoriesResponse` interface defines the structure of the response, which includes an array of chunk repository IDs (`EChunkRepository`).
+The key interfaces are `IEnumerateModelsRequest`, `IEnumerateModelsResponse`, `IEnumerateRepositoriesRequest`, and `IEnumerateRepositoriesResponse`.
 
 **Environment.ts**
 
-This code provides a base for different environment configurations (Development, Staging, Production) by defining various API endpoints specific to each environment.
+The module `Environment` provides base classes for interacting with various environments.
 
-The `DevelopmentEnvironment` class represents the development settings. It defines several methods, such as `checkSessionApi()`, `summariseApi()`, `findThemeApi()`, and others, returning local endpoints (e.g., `http://localhost:7071/api/CheckSession`).
+It imports `EEnvironment` and `IEnvironment` from `./IEnvironment`.
 
-The `StagingEnvironment` class represents the staging environment settings. It similarly defines the same set of methods as the development class but points to staging URLs (e.g., `https://braid-api.azurewebsites.net/api/CheckSession`).
+The `DevelopmentEnvironment` class implements `IEnvironment` and defines multiple methods corresponding to API endpoints for local development, such as `checkSessionApi`, `summariseApi`, `classifyApi`, etc., which return development server URLs.
 
-The `ProductionEnvironment` class represents the production environment settings. It contains the same methods as the other classes but uses production URLs (e.g., `https://braid-api.azurewebsites.net/api/CheckSession`). 
+The `StagingEnvironment` class also implements `IEnvironment` and defines methods for retrieving staging API endpoints, returning URLs for a staging server environment.
 
-Important classes: `DevelopmentEnvironment`, `StagingEnvironment`, `ProductionEnvironment`. Important functions: `checkSessionApi()`, `summariseApi()`, `findThemeApi()`, `classifyApi()`, `chunkApi()`, `embedApi()`, `testForSummariseFail()`, `saveActivityApi()`, `removeActivityApi()`, `getActivityApi()`, `findActivityApi()`, `getActivitiesApi()`, `loginWithLinkedInApi()`, `authFromLinkedInApi()`, `boxerHome()`, `findRelevantEnrichedChunksFromUrl()`, and `generateFluidTokenApi()`.
+The `ProductionEnvironment` class implements `IEnvironment` and similarly provides methods for production API endpoints, returning URLs for a live production server.
+
+Key classes are `DevelopmentEnvironment`, `StagingEnvironment`, and `ProductionEnvironment`. Key functions are `checkSessionApi`, `summariseApi`, `summariseContextApi`, and other API endpoint functions.
 
 **Errors.ts**
 
-This module defines custom error classes that extend the native JavaScript `Error` class, tailored for the Braid application. Each custom error class such as `InvalidParameterError`, `InvalidOperationError`, `InvalidStateError`, `ConnectionError`, `EnvironmentError`, and `AssertionFailedError` includes features like restoring the prototype chain for TypeScript support, standard error naming for improved stack trace readability, and automatic logging.
+This module, `Errors`, defines custom error classes for the Braid application to handle different error scenarios.
 
-Logging functions `logApiError` and `logCoreError` are used within the constructors to log error messages, enhancing error traceability.
+1. **InvalidParameterError**: Raised when a parameter is invalid. It restores the prototype chain and logs the error using `logCoreError`.
+2. **InvalidOperationError**: Raised for invalid operations, utilizing `logCoreError` for logging.
+3. **InvalidStateError**: Raised for invalid states, with logging facilitated by `logCoreError`.
+4. **ConnectionError**: Deals with connection-related errors and logs errors using `logApiError`.
+5. **EnvironmentError**: Raised for environment-related issues, with error logging via `logCoreError`.
+6. **AssertionFailedError**: Indicates an assertion failure and logs via `logCoreError`.
 
-Classes:
-- InvalidParameterError
-- InvalidOperationError
-- InvalidStateError
-- ConnectionError
-- EnvironmentError
-- AssertionFailedError
+Prototype chain restoration ensures that stack traces display correctly in TypeScript.
 
 **FindEnrichedChunkApi.ts**
 
-The `FindEnrichedChunkApi` module provides an API for locating and retrieving enriched data chunks. 
+The `FindEnrichedChunkApi` class provides an API for finding and retrieving enriched chunks based on URLs and summaries. It extends the `Api` class.
 
-It includes the `FindEnrichedChunkApi` class, which extends from the `Api` class. The class is initialized with environment and session key parameters for authentication.
+The constructor initializes the instance with the given environment and session key for authentication.
 
-Key methods include `findChunkFromUrl`, which fetches an enriched chunk summary for a given URL query, `findRelevantChunksFromUrl`, which retrieves a list of relevant enriched chunks based on URL, and `findRelevantChunksFromSummary`, which finds relevant chunks based on a summary query.
+The `findChunkFromUrl` method asynchronously fetches an enriched chunk summary based on a provided URL query.
 
-The methods make asynchronous POST requests using the `axios` library to the defined API endpoints, handling errors and logging them as necessary.
+The `findRelevantChunksFromUrl` method searches for relevant enriched chunks based on a given URL query, returning an array of relevant chunks.
+
+The `findRelevantChunksFromSummary` method retrieves relevant enriched chunks based on a given summary query, also returning an array of results.
+
+These methods handle API calls and manage responses or errors using `axios`.
 
 **FindThemeApi.Types.ts**
 
-This module, `FindThemeApi.Types`, contains type definitions for the FindTheme API. The API is designed to analyze text content and identify its primary theme.
-
-The interface `IFindThemeRequest` defines the structure of request objects, detailing that they should include a `text` property (the text to be analyzed) and a `length` property (the length of the text).
-
-The interface `IFindThemeResponse` describes the structure of response objects. These responses contain a `theme` property, indicating the primary theme derived from the supplied text. 
-
-These interfaces ensure that requests and responses adhere to expected formats for efficient communication with the FindTheme API.
-
-**Fluid.ts**
-
-The code defines core interfaces for the Fluid Framework token authentication module.
-
-**Key interfaces:**
-1. **IFluidUser:** Represents a Fluid user with properties indicating if the user is operating locally (local), the userId, and userName.
-2. **IFluidTokenRequest:** Combines the user information from IFluidUser with a documentId that specifies the ID of the shared document.
-3. **IFluidTokenResponse:** Returns a token in response to a Fluid token request.
-
-These interfaces facilitate the authentication process between client applications and the Fluid service, accommodating both development and production environments.
-
-**FluidApi.ts**
-
-The provided code defines a TypeScript module named `FluidApi`, which is used to generate Fluid Framework tokens.
-
-The **`FluidApi`** class extends a base class `Api` and includes error handling and retry logic using `axios` and `axios-retry`. The class is initialized with an environment configuration and a session key.
-
-The `generateToken` method takes a query parameter containing `documentId`, `userId`, and `userName`. It attempts to post this data to an API endpoint, retrying up to 5 times in case of network errors or HTTP 429 status responses. If successful, it returns the generated token; otherwise, it logs an error and returns undefined.
-
-Important classes and functions:
-- **FluidApi**
-- **generateToken**
-
-**FluidTokenProvider.ts**
-
-The module **FluidTokenProvider** is designed for managing token generation and connection configuration for Azure Fluid Relay services.
-
-- The **FluidTokenProvider** class handles the token generation for both orderer and storage connections. It interacts with the **FluidApi** class to generate tokens based on user credentials and environment settings.
-  
-- The **FluidConnectionConfig** class configures connection details such as the token provider, endpoint, tenant ID, and connection type. It can operate in both local and remote environments by adjusting its settings accordingly.
-  
-- The **FluidClientProps** class sets up client properties using the connection configuration specified in **FluidConnectionConfig**.
-
-This module manages authentication through session keys and user contexts, and adjusts configurations based on the environment settings.
-
-**IEnvironment.ts**
-
-The `IEnvironment` module defines an interface for managing different deployment environments (Local, Staging, Production) in the Braid application. It outlines the environment-specific configurations and API endpoints required throughout the application. 
-
-The key elements include:
-- Enum `EEnvironment` lists the types of environments.
-- Constant `BRAID_ENVIRONMENT_KEY` holds the environment key.
-- Interface `IEnvironment` details properties and methods for handling environment settings.
-
-The `IEnvironment` interface includes methods for various operations:
-- Authentication and session management (`checkSessionApi`, `loginWithLinkedInApi`, `authFromLinkedInApi`).
-- Content operations such as summarization, classification, and embedding (`summariseApi`, `classifyApi`, `embedApi`).
-- Activity tracking (`saveActivityApi`, `removeActivityApi`, `getActivityApi`, `findActivityApi`, `getActivitiesApi`).
-- Chunk and page operations (`chunkApi`, `saveChunkApi`, `removeChunkApi`, `getChunkApi`, `findChunkApi`, `getChunksApi`, `savePageApi`, `getPageApi`).
-- Integration with other services like LinkedIn and Fluid (`generateFluidTokenApi`, `fluidApi`, `fluidTenantId`, `studioForTeamsBoxer`).
-
-Overall, the module ensures appropriate environment configurations and streamline API interactions for the Braid application across various deployment setups.
-
-**IEnvironmentFactory.ts**
-
-This module, **IEnvironmentFactory**, is designed to create environment instances for different deployment contexts: Development, Staging, and Production.
-
-The `getDefaultEnvironment` function determines and returns the default environment instance by checking the execution context and the `BRAID_ENVIRONMENT` process variable, returning a `DevelopmentEnvironment` for local settings or a `ProductionEnvironment` otherwise.
-
-The `getDefaultFluidEnvironment` and `getDefaultLoginEnvironment` functions decide the environment similarly but prioritize the browser's localhost to set `DevelopmentEnvironment`.
-
-The `getEnvironment` function creates and returns specific environment instances based on the provided `EEnvironment` type.
-
-Important classes/functions:
-- `getDefaultEnvironment`
-- `getDefaultFluidEnvironment`
-- `getDefaultLoginEnvironment`
-- `getEnvironment`
-- `DevelopmentEnvironment`
-- `StagingEnvironment`
-- `ProductionEnvironment`
-
-**IModel.ts**
-
-The code defines core elements for AI model management.
-
-It contains an enumeration `EModel` with two possible values, "Small" and "Large", representing model sizes.
-
-An interface `IModel` is defined to standardize AI model deployments. The interface includes properties for deployment names, chunk sizes, and several text processing methods. These methods check if a given text fits within specific chunk sizes and provide a way to chunk text and estimate the number of tokens in the text.
-
-The module facilitates the organization and handling of model variants and their text processing capabilities in AI model management systems.
-
-**IModelDriver.ts**
-
-The `IModelDriver` module defines core interfaces and enums for facilitating model-driven conversations between users and AI models. 
-
-It introduces `EModelConversationRole`, an enum for differentiating roles such as system, assistant, and user.
-
-`IModelConversationElement` is an interface representing individual messages with properties for role and content.
-
-`IModelConversationPrompt` is an interface for structuring complete conversation contexts, including conversation history and the current prompt.
-
-`IEmbeddingModelDriver` defines methods for text embedding, including `getDrivenModelType()` and `embed()`.
-
-`IChatModelDriver` includes methods for chat model interactions, such as `generateResponse()` which generates a model response based on a given prompt and persona. 
-
-Key classes/interfaces/functions: `EModelConversationRole`, `IModelConversationElement`, `IModelConversationPrompt`, `IEmbeddingModelDriver`, `IChatModelDriver`, and `generateResponse()`.
-
-**IModelFactory.ts**
-
-This module, `IModelFactory`, is responsible for creating AI model instances. It provides functions for default model creation and specific model creation based on the requested `EModel` type. This abstraction ensures consistent instantiation and hides implementation details.
-
-Key functions in the module include:
-- `getDefaultModel()`: Returns the default model instance, `GPT4`.
-- `getModel(model: EModel)`: Returns an AI model instance based on the provided `EModel` type.
-- `getDefaultEmbeddingModelDriver()`: Returns the default embedding model driver, `OpenAIEmbeddingModelDriver`.
-- `getEmbeddingModelDriver(model: EModel)`: Returns an embedding model driver based on the `EModel` type.
-- `getDefaultChatModelDriver()`: Returns the default chat model driver, `OpenAIChatModelDriver`.
-- `getChatModelDriver(model: EModel)`: Returns a chat model driver based on the `EModel` type.
-
-**IPromptPersona.ts**
-
-**Module Description**  
-The `IPromptPersona` module defines interfaces and enums for managing different AI prompt personas tailored for specific summarization tasks.
-
-**Key Classes and Functions**  
-- **EPromptPersona**: An enumeration listing different persona types, including `ArticleSummariser`, `CodeSummariser`, `SurveySummariser`, among others. Each value represents a specific AI prompt persona designed for specialized summarization tasks.
-- **IPromptPersona**: An interface that outlines the structure of a prompt persona. It includes:
-  - `name`: A string representing the persona's name.
-  - `systemPrompt`: A string defining the system-level prompt configuration.
-  - `itemPrompt`: A string specifying the item-level prompt configuration.
-
-**IPromptPersonaFactory.ts**
-
-The `IPromptPersonaFactory` module creates specialized AI prompt personas for different content summarization tasks.
-
-Predefined persona templates include those for summarizing articles, code, and surveys. Each persona is defined with a `systemPrompt` and an `itemPrompt`.
-
-The `getChatPersona` function generates customized prompt personas based on the specified persona type, userPrompt, and additional parameters. The word count target can be adjusted through the function's parameters.
-
-Notable functions and classes: 
-- `getChatPersona`: Generates the appropriate prompt persona based on input parameters.
-- Persona templates: `DefaultPersona`, `DeveloperAssistantPersona`, `ArticleSummariserPersona`, `CodeSummariserPersona`, `SurveySummariserPersona`, `TestForSummariseFailPersona`, `ClassifierPersona`, `ThemeFinderPersona`, `DeveloperQuestionGeneratorPersona`, `DeveloperImaginedAnswerGeneratorPersona`.
-
-**IStorable.ts**
-
-This module, `IStorable`, establishes core interfaces and types for persistent storage within an application. It aims to provide consistent storage patterns while allowing flexibility for application-specific extensions.
+This module defines the types and interfaces for the FindTheme API. It is primarily used for analyzing text content and identifying its primary theme.
 
 **Important Classes/Functions:**
 
-1. **EStorableApplicationIds**: An enumeration representing application identifiers such as "Boxer" and "Waterfall".
+- **IFindThemeRequest:** An interface representing the request object for the FindTheme API. It includes properties for the text to be analyzed (`text` of type string) and its length (`length` of type number).
 
-2. **IStorable**: An interface outlining the structure of objects that can be stored, including properties like `id`, `applicationId`, `contextId`, `userId`, `created`, `amended`, `className`, and `schemaVersion`.
+- **IFindThemeResponse:** An interface for the response object from the FindTheme API. It includes a property `theme` of type string, which represents the identified primary theme of the given text.
 
-3. **IStorableMultiQuerySpec**: Defines the structure for querying multiple records, including properties `limit` and `className`.
+**Fluid.ts**
 
-4. **IStorableQuerySpec**: Defines the structure for querying a single record by `id` or `functionalSearchKey`.
+The code defines interfaces for user authentication, token requests, and token responses used in the Fluid Framework for token-based authentication.
 
-5. **IStorableOperationResult**: An interface defining the result of storage operations, indicating success with the `ok` property.
+**IFluidUser** interface: Represents a Fluid user with properties `local`, `userId`, and `userName`.
+
+**IFluidTokenRequest** interface: Extends `IFluidUser` and adds a property `documentId` which indicates the ID of the shared document.
+
+**IFluidTokenResponse** interface: Represents the response that includes the property `token` for token authentication.
+
+These interfaces support both local development and production environments for client applications interacting with the Fluid service.
+
+**FluidApi.ts**
+
+The provided code defines the `FluidApi` class, part of the `FluidApi` module, which is an API wrapper for generating Fluid Framework tokens.
+
+The `FluidApi` class extends the `Api` class. The primary function of the `FluidApi` class is to generate tokens for the Fluid Framework by using the session key and environment settings passed during initialization.
+
+The method `generateToken` handles asynchronous token generation. It accepts a request object containing `documentId`, `userId`, and `userName`. It uses Axios for HTTP requests and Axios-Retry for retry logic, with up to 5 retries in case of failures due to network issues or rate limiting.
+
+Key classes and functions:
+- `FluidApi`
+- `generateToken`
+
+**FluidTokenProvider.ts**
+
+This module, `FluidTokenProvider`, is designed to manage tokens and connection configurations for Azure Fluid Relay services.
+
+**FluidTokenProvider** class:
+- Handles token generation by connecting to an Azure Function endpoint.
+- Requires an environment setting, session key, and user information for initialization.
+- Provides methods `fetchOrdererToken` and `fetchStorageToken` for retrieving tokens, utilizing a private `getToken` method to generate the token by contacting the Fluid API.
+
+**FluidConnectionConfig** class:
+- Implements AzureRemoteConnectionConfig for configuring connection properties.
+- Initializes with a session key, token request details, and a flag to force a production environment.
+- Sets up the connection type (local or remote), and endpoint based on the environment.
+
+**FluidClientProps** class:
+- Implements AzureClientProps for setting up client properties.
+- Initializes with a session key, token request, and flag to determine the environment.
+- Leverages `FluidConnectionConfig` to manage the connection setup.
+
+This module supports both local and remote environments and uses session keys and user context for authentication.
+
+**IEnvironment.ts**
+
+The `IEnvironment` module defines an interface and various types for configuring different deployment environments (Local, Staging, Production) within the Braid application.
+
+The key components include:
+- `BRAID_ENVIRONMENT_KEY`: A constant string key for the environment.
+- `EEnvironment`: An enum representing the different environment types (Local, Staging, Production).
+
+The `IEnvironment` interface includes:
+- Basic methods like `hostProtocolAndName()` and `name`.
+- Methods for authentication and session management such as `checkSessionApi()`.
+- Content operations methods like `summariseApi()`, `chunkApi()`, `classifyApi()`, and `embedApi()`.
+- Activity management methods (`saveActivityApi()`, `getActivityApi()`, etc.).
+- Integration endpoints for LinkedIn, Fluid, and Teams.
+- Methods for handling chunks and pages (`saveChunkApi()`, `getPageApi()`, etc.).
+
+**IEnvironmentFactory.ts**
+
+This module, named **IEnvironmentFactory**, is designed to create environment instances such as Development, Staging, and Production to define application behavior across different deployment contexts.
+
+Important functions include:
+- **getDefaultEnvironment**: Automatically returns a default environment instance based on the execution context. Specifically, it returns DevelopmentEnvironment when in a Node.js context (if specified) or browser context if localhost is detected, and ProductionEnvironment otherwise.
+- **getDefaultFluidEnvironment** and **getDefaultLoginEnvironment**: Variant functions for specific configuration scenarios, defaulting to the environment detected through `getDefaultEnvironment`, with added browser localhost check.
+- **getEnvironment**: Takes an explicit environment type (EEnvironment) as input and returns the corresponding environment instance.
+
+**IModelDriver.ts**
+
+### **Summary:**
+
+**Key Classes and Functions:**
+1. **EModel**: Enum defining the sizes of models, such as Small, Large, Reasoning.
+2. **EModelProvider**: Enum listing model providers, e.g., OpenAI, DeepSeek.
+3. **EModelConversationRole**: Enum specifying conversation roles (System, Assistant, User).
+4. **IModelConversationElement**: Interface for conversation elements, including role and content.
+5. **IModelConversationPrompt**: Interface for conversation prompts containing history and the current prompt.
+6. **IEmbeddingModelDriver**: Interface for text embedding drivers with method to embed text as vector.
+7. **IChatModelDriverParams**: Interface for optional parameters for chat model drivers.
+8. **IChatModelDriver**: Interface for chat model drivers, including a method to generate conversation responses based on persona and prompt.
+9. **ITextChunker**: Interface for text chunking capabilities, defining chunk sizes and operations to handle text chunking.
+
+**Important Points:**
+- The module specifies core types for AI-driven conversations, covering roles, message structures, and prompts.
+- It includes interfaces to support embedding and chat functionalities, handling conversation contexts and responses.
+- Text chunking interfaces ensure text is appropriately chunked for processing by AI models.
+
+**IModelFactory.ts**
+
+The `IModelFactory` module facilitates the creation of AI model instances by providing factory functions. 
+
+Key functions include `getDefaultTextChunker`, which returns a default text chunker model (GPT-4o), and `getTextChunker`, which provides a specific text chunker model based on the `EModel` and `EModelProvider` types. 
+
+`getDefaultEmbeddingModelDriver` returns a default embedding model driver (OpenAiEmbed3), while `getEmbeddingModelDriver` fetches a specific embedding model driver. 
+
+`getDefaultChatModelDriver` provides a default chat model driver (GPT-4o), and `getChatModelDriver` determines the appropriate chat model driver based on the supplied model and provider types. 
+
+Important classes are `IEmbeddingModelDriver`, `IChatModelDriver`, and `ITextChunker`.
+
+**IPromptPersona.ts**
+
+The module `IPromptPersona` defines core types for configuring AI prompt personas. 
+
+The `EPromptPersona` enum lists different types of personas such as `ArticleSummariser`, `CodeSummariser`, `SurveySummariser`, among others, specialized for various summarization tasks.
+
+The `IPromptPersona` interface specifies the structure of a prompt persona, which includes properties like `name`, `systemPrompt`, and `itemPrompt` for both system-level and item-level prompting.
+
+These configurations allow for specialized behavior in different summarization contexts, making the AI adaptable for diverse tasks.
+
+**IPromptPersonaFactory.ts**
+
+The `IPromptPersonaFactory` module generates specialized AI prompt personas for various content summarization tasks, such as articles, code, and surveys. Each persona is defined with a system prompt and an item prompt tailored for specific summarization needs.
+
+Key classes and functions:
+- **`IPromptPersona`**: Represents the structure for prompt personas, including fields like `name`, `systemPrompt`, and `itemPrompt`.
+- **`EPromptPersona`**: Enumerates predefined persona types.
+- **`getChatPersona` function**: Generates and returns configured prompt personas based on the specified persona type, user prompt, and additional parameters (`params`). Various personas include `CodeSummariserPersona`, `SurveySummariserPersona`, `DeveloperAssistantPersona`, and more.
+
+**IStorable.ts**
+
+The module `IStorable` defines key interfaces and types for persistent storage relevant to object persistence across applications.
+
+The `EStorableApplicationIds` enum is for identifying different applications, with values `kBoxer` and `kWaterfall`.
+
+The `IStorable` interface represents objects that can be stored, with fields such as `id`, `applicationId`, `contextId`, `userId`, `functionalSearchKey`, `created`, `amended`, `className`, and `schemaVersion`.
+
+`IStorableMultiQuerySpec` defines the structure for querying multiple records, including `limit` and `className`.
+
+`IStorableQuerySpec` defines querying a single record using `id` or `functionalSearchKey`.
+
+`IStorableOperationResult` represents the result of an operation, indicating success with `ok` boolean.
 
 **Logging.ts**
 
-This module provides logging functionality to handle different parts of an application, including core system errors, database errors, and API errors and information.
+The provided code is a logging module for an application developed by Braid Technologies Ltd. 
 
-Major functions include:
-- `logCoreError(description: string, details: any): void` for logging core system errors.
-- `logDbError(description: string, details: any): void` for logging database errors.
-- `logApiError(description: string, details: any): void` for logging API errors.
-- `logApiInfo(description: string, details: any): void` for logging API-related information.
+This module facilitates consistent logging practices for different error domains, such as Core System errors, Database errors, and API errors, as well as API information. 
 
-Each logging function accepts a description and details parameter to format and output consistent log messages for easier debugging and maintenance across the application.
+The key functions include:
+- `logCoreError`: Logs core system errors.
+- `logDbError`: Logs database-related errors.
+- `logApiError`: Logs API-related errors.
+- `logApiInfo`: Logs informational messages related to the API.
+
+Each function receives a description and details, formats them, and logs them appropriately to the console. This ensures easier debugging and better maintenance of the application.
 
 **LoginApi.ts**
 
-The `LoginApi` module provides functionality for handling login operations using the LinkedIn API.
+**Module:** LoginApi
 
-The main class, `LoginApi`, extends the `Api` class and requires environment settings (`IEnvironment`) and a session key for instantiation.
+**Important Classes and Functions:**
+- `LoginApi`
+- `constructor`
+- `login`
 
-The constructor initializes a `LoginApi` instance with the given environment and session key.
+**Summary:**
 
-The asynchronous `login` method constructs a URL using the provided session key, makes a POST request to the LinkedIn API, and handles the response. If successful, it returns a "Redirecting..." status; otherwise, it logs the error and returns an empty string.
+This module, `LoginApi`, handles login operations using the LinkedIn API. It exports the `LoginApi` class which extends from a class `Api`. 
 
-Important classes or functions:
-- `LoginApi` class
-- `login` method
+The `LoginApi` class constructor initializes instances with environment settings and a session key.
+
+The `login` method is an asynchronous function that connects to the LinkedIn API using the session key. It attempts a POST request and logs any encountered errors. Based on the response status, it either returns a redirect status or an error message. This module utilizes the `axios` package for HTTP requests.
 
 **LooseObject.ts**
 
-This module defines a TypeScript interface called `LooseObject`.
+This code defines a TypeScript interface named `LooseObject` under the module `LooseObject`.
 
-The `LooseObject` interface allows for any key-value pairs, where keys are strings and values can be of any type. 
+The `LooseObject` interface allows for dynamic key-value pairs where the keys are strings and the values can be of any type.
 
-This is useful for creating flexible data structures without predefined schemas, making it a versatile choice when working with dynamic data.
+This type alias is useful for situations where a flexible data structure is needed without the constraints of a fixed schema.
 
-The main component of this module is the `LooseObject` interface.
+The module is attributed to Braid Technologies Ltd, with copyrights spanning 2024 and 2025.
 
-**Model.OAI.ts**
+**ModelDrivers.DpSk.ts**
 
-The provided module, `Model`, is designed to manage AI models and their deployment settings, focusing on the GPT4 implementation of the IModel interface.
+The module `ModelDrivers.DpSk` provides DeepSeek-specific implementations for embedding model drivers and calculating text embeddings using DeepSeek services.
 
-The `GPT4` class encapsulates various properties such as deployment names and chunk sizes, both with and without buffers. It has methods to check if a text fits into default, maximum, or embedding chunk sizes, determining if the number of tokens in a text is within specific limits.
+The main component is the `DeepSeekR1TextChunker`, which implements the `ITextChunker` interface for DeepSeek. `DeepSeekR1TextChunkerInit` and `DeepSeekR1ChatModelInit` classes define configurations for chunking and chat models, respectively.
 
-The `chunkText` method splits input text into smaller chunks based on optional overlap parameters, facilitating manageable text pieces for processing.
+The `DeepSeekR1ChatModelDriver` class implements the `IChatModelDriver` interface to provide methods for model initialization and response generation.
 
-The `estimateTokens` method estimates the number of tokens in the provided text using a tokenizer.
+Utility functions include `stripTextBetweenThink` to remove text within `<think>` tags and `stripLeadingCRLF` to remove leading carriage return or line feed characters. The `chat` function generates a chat response using DeepSeek services.
 
-**ModelDrivers.OAI.ts**
+**ModelDrivers.OpAi.ts**
 
-This module, `IModelDrivers.OAI`, provides implementations specific to OpenAI for embedding model drivers, with functionality for calculating text embeddings using Azure OpenAI services.
+The `ModelDrivers.OpAi` module provides OpenAI-specific implementations for embedding model drivers, particularly for calculating text embeddings using Azure OpenAI services.
 
-Key components include:
-- **OpenAIEmbeddingModelDriver**: This class implements the `IEmbeddingModelDriver` interface and the `embed` method, which computes text embeddings using the `calculateEmbedding` function.
-- **calculateEmbedding**: This is an asynchronous utility function that uses Azure OpenAI services to compute embeddings for given text, with up to 5 retries for handling rate limits.
+The `OpenAIEmbeddingModelDriver` class, implementing the `IEmbeddingModelDriver` interface, is used to compute text embeddings. It initializes with configuration parameters and utilizes the `calculateEmbedding` function to fetch embeddings via the Azure OpenAI API.
 
-Additionally, the module provides the `OpenAIChatModelDriver` class implementing the `IChatModelDriver` interface to facilitate OpenAI chat model interactions via the `chat` function. This function generates chat responses for specified personas by communicating with Azure OpenAI and includes retry logic for robustness.
+The `calculateEmbedding` function performs asynchronous embedding calculations, handling retries on rate-limited API calls and returning the embedding as an array of numbers.
+
+Another key class is `OpenAIChatModelDriver`, which implements the `IChatModelDriver` interface to generate responses to conversational prompts by querying the Azure OpenAI service using the `chat` function. The function prepares messages, handles retries, and fetches responses.
+
+Additionally, `OpenAITextChunker` implements the `ITextChunker` interface, providing text chunking capabilities based on context window sizes with overlaps and buffer considerations, leveraging the `GPT4Tokenizer`. The class includes methods for chunking text, estimating token counts, and checking if the text fits within specified chunk sizes.
 
 **PageRepositoryApi.ts**
 
-The `PageRepositoryApi` module provides an API for managing the storage and retrieval of pages within an application. It contains the class `PageRepositoryApi`.
+The `PageRepositoryApi` module facilitates the management of page storage and retrieval. It contains a primary class, `PageRepositoryApi`, which handles page-specific storage operations like saving pages to persistent storage and compressing page content for efficient storage.
 
-The `PageRepositoryApi` class extends from the `Api` class and implements the `IStorablePageRepositoryApiWrapper` interface, ensuring consistent storage patterns and handling specific requirements such as content compression.
+The `PageRepositoryApi` class extends the `Api` class and implements `IStorablePageRepositoryApiWrapper`. It interacts with a `StorableRepositoryApi` instance to ensure consistent storage patterns while addressing unique page-related requirements.
 
-Key methods include `save`, which saves a page record to a persistent storage system using the `StorableRepostoryApi` class, and `compressString`/`decompressString`, which handle compression and decompression of page content using a deflate algorithm. The constructor initializes the instance with the provided environment and session key for authentication.
+Key methods include `save`, which handles the saving of page records asynchronously, `compressString`, which compresses content using the deflate algorithm, and `decompressString`, which reverses the compression. 
 
 Important classes and functions:
-- `Api`
 - `PageRepositoryApi`
-- `IStorablePageRepositoryApiWrapper`
-- `StorableRepostoryApi`
+- `save`
 - `compressString`
 - `decompressString`
 
+
+
 **PageRepositoryApi.Types.ts**
 
-This module `PageRepositoryApi.Types` defines data types and interfaces for the PageRepository API. It includes the structure for stored pages and their HTML content, as well as request and response types for page storage operations. These interfaces ensure type-safe operations in the PageRepositoryApi module.
+This module, `PageRepositoryApi.Types`, defines data types and interfaces used by the PageRepository API to support type-safe page storage and retrieval operations. 
 
-**Important Interfaces:**
-1. `IStoredPage`: Represents a stored web page, including its HTML content.
-2. `IStoredPageRequest`: Specifies the structure for page storage request operations.
-3. `IStoredPageResponse`: Defines the structure for the response obtained after a page storage operation.
+The `IStoredPage` interface represents a web page chunk, extending from `IStorable` and adding an `html` field for HTML content. 
 
-These types support the API's functionality by providing clear, consistent data structures.
+`IStoredPageRequest`, extending `IStorableQuerySpec`, specifies the structure for input request types.
 
-**QueryModelApi.ts**
+`IStoredPageResponse`, extending `IStoredPage`, defines the structure for output response types. 
 
-The module `QueryModelApi` provides an API for querying models with enrichment and generating questions. 
+These definitions enable consistent data handling across the PageRepository API and assist in code generation for test scenarios.
 
-The `QueryModelApi` class extends the `Api` class. It requires an environment and a session key for authentication during initialization. 
+Important interfaces:
+- `IStoredPage`
+- `IStoredPageRequest`
+- `IStoredPageResponse`
 
-The method `queryModelWithEnrichment` allows you to send an enriched query to the model and returns a promise that resolves to the enriched response data. It handles HTTP POST requests and returns undefined in case of errors.
+**QueryEnrichedModelApi.ts**
 
-The method `generateQuestion` sends a query containing persona prompt, question generation prompt, and summary to the model to generate questions. It also handles HTTP POST requests and returns a promise that resolves to the generated question response or undefined for errors.
+The module `QueryModelApi` is an API for querying models with enrichment and generating questions.
+
+The main class is `QueryModelApi`, which extends the `Api` class. It interacts with a specified environment to perform these tasks and requires an environment and a session key for initialization.
+
+The `queryModelWithEnrichment` method takes enriched query data and returns a response from the server or undefined if an error occurs. It makes an asynchronous HTTP POST request to the server and handles responses based on status codes.
+
+The `generateQuestion` method generates a question based on provided query data, using a similar asynchronous HTTP POST request and handling mechanisms as the previous method.
 
 **SessionApi.ts**
 
-**SessionApi Class:**
-The `SessionApi` class extends the base `Api` class to manage user sessions and authentication. It implements methods for validating session keys and handling session authentication states. 
+The module `SessionApi` manages user sessions and authentication. It imports `axios` for HTTP requests, and depends on two other modules: `Api` and `IEnvironment`.
 
-**Constructor:**
-The constructor initializes an instance of `SessionApi` with environment settings and a session key required for authentication.
+The `SessionApi` class extends the `Api` class to ensure consistent authentication patterns while addressing session-specific needs. 
 
-**checkSessionKey Method:**
-The `checkSessionKey` method is an asynchronous function that verifies the validity of a session key by sending a POST request to a session API endpoint. It returns a promise that resolves to a string indicating the session key's validity. 
+The constructor initializes a new `SessionApi` instance with environment settings and a session key.
 
-**Modules and Imports:**
-The code imports `axios` for HTTP requests, and imports `Api` and `IEnvironment` for class dependencies.
+Key methods:
+1. `checkSessionKey`: Asynchronously verifies the validity of a session key by sending a POST request to an API endpoint. It returns a promise that resolves to a boolean indicating the session key's validity, or logs an error otherwise.
 
 **StorableRepositoryApi.ts**
 
-The module `StorableRepositoryApi` provides a framework for handling repository operations for objects implementing the `IStorable` interface.
+This module, `StorableRepositoryApi`, provides base classes and interfaces for repositories handling storable objects implementing the `IStorable` interface.
 
-`IStorablePageRepostoryApiWrapper` is an interface that provides a `save` method for saving storable records. 
+The `IStorablePageRepositoryApiWrapper` and `IStorableRepositoryApiWrapper` interfaces define methods for saving, removing, loading, and querying storable records from a repository.
 
-`IStorableRepostoryApiWrapper` extends `IStorablePageRepostoryApiWrapper` with additional methods like `remove`, `load`, `find`, and `recent` to manage storable records.
+The `StorableRepositoryApi` class implements methods to save, remove, load, find, and retrieve recent storable records via async calls using Axios. It ensures consistent storage patterns and facilitates interaction with storage APIs.
 
-`StorableRepostoryApi` class offers methods (`save`, `remove`, `load`, `find`, and `recent`) to interact with a repository via HTTP requests using Axios. These methods handle saving, removing, loading, and fetching recent records by making API calls.
+Important classes and interfaces are `IStorable`, `IStorableQuerySpec`, `IStorablesQuerySpec`, `IStorablePageRepositoryApiWrapper`, `IStorableRepositoryApiWrapper`, and `StorableRepositoryApi`.
 
 **StudioApi.Types.ts**
 
-This module, `StudioApi.Types`, defines the data types and interfaces used by the Studio API, ensuring type-safe interactions with its endpoints.
+The code module `StudioApi.Types` defines TypeScript types and interfaces primarily for the Studio API. 
 
-The `IStudioBoxerRequest` interface defines the structure for requests made to the Studio Boxer, requiring a `question` string.
+The interface `IStudioBoxerRequest` specifies a structure for a request object, which includes a single property `question` of type `string`.
 
-The `IStudioBoxerResponseEnrichment` interface outlines the structure for the enrichment data in responses, including an `id`, `summary`, and optional `title`, `url`, and `iconUrl`.
+The interface `IStudioBoxerResponseEnrichment` outlines a structure for a response object that includes multiple properties such as `id`, `summary`, and optionally `title`, `url`, and `iconUrl`.
+
+These interfaces ensure type-safe interactions when making requests and receiving responses from the Studio API.
+
+**SummariseApi.ts**
+
+The `SummariseApi` module provides functionality for text summarization through the Summarise API using configurable personas and context-aware summarization.
+
+Key components include:
+- The `SummariseApi` class, which inherits from the base `Api` class.
+- Two main methods: `summarise` and `summariseContext`, which handle text summarization based on persona and context respectively.
+
+The class communicates with a backend service for summarizing text, using `axios` for making HTTP requests. Key external types and interfaces include `IEnvironment`, `ISummariseRequest`, `ISummariseResponse`, `ISummariseContextRequest`, and `EPromptPersona`. 
+
+Error handling is done through try-catch blocks with error messages logged to the console.
 
 **SummariseApi.Types.ts**
 
-This module, named `SummariseApi.Types`, defines the data types and interfaces used within the Summarise API, ensuring type-safe text summarisation operations.
+The module `SummariseApi.Types` provides type definitions and interfaces for the Summarise API.
 
-The `ISummariseRequest` interface outlines the structure for summarisation requests, which includes properties such as `persona` (an enum of type `EPromptPersona`), `text` (the text to be summarized), and an optional `lengthInWords` parameter to specify the desired length of the summary.
+It includes the `ISummariseRequest` interface, which specifies the structure for summarisation requests, consisting of a persona, text, and an optional length in words.
 
-The `ISummariseResponse` interface defines the structure for summarisation responses, containing a single property `summary` that holds the summarized text.
+The `ISummariseContextRequest` interface extends this by including additional context and chunk properties along with persona, context, and an optional word length.
 
-These definitions support the core functionality of the SummariseApi module.
+The `ISummariseResponse` interface defines the structure for summarisation responses, containing a summary string.
+
+These types ensure type-safe operations within the Summarise API. Important classes or functions include `ISummariseRequest`, `ISummariseContextRequest`, and `ISummariseResponse`.
 
 **TestForSummariseFailApi.Types.ts**
 
-This module belongs to the `TestForSummariseFailApi` and handles the data types and interfaces required for summary validation.
+This module, `TestForSummariseFailApi.Types`, defines the data types and interfaces used by the `TestForSummariseFail` API for validating text summaries.
 
-The interface `ITestForSummariseFailRequest` defines the structure of a summarise request, including mandatory `text` and an optional `lengthInWords`.
+The `ITestForSummariseFailRequest` interface outlines the structure of a request object, including the text to be summarized and an optional word length parameter.
 
-The `ETestForSummariseFail` is an enumeration that lists possible validation results: `kSummaryFailed` and `kSummarySucceeded`.
+The `ETestForSummariseFail` enum includes possible results of the summary validation, such as `kSummaryFailed` and `kSummarySucceeded`.
 
-The `ITestForSummariseFailResponse` interface defines the structure of a summarise response, which includes the validation result of type `ETestForSummariseFail`.
+The `ITestForSummariseFailResponse` interface defines the structure of a response object, which contains the validation status using the `ETestForSummariseFail` enum.
 
-These types ensure type-safe validation of summaries within the `TestForSummariseFailApi` module.
+Important classes/functions: `ITestForSummariseFailRequest`, `ETestForSummariseFail`, `ITestForSummariseFailResponse`.
 
 **ThemeApi.ts**
 
-The given code is part of the `ThemeApi` module developed by Braid Technologies Ltd. It provides type definitions and interfaces for detecting and analyzing themes in textual content.
+**Important Functions/Classes:**
+- `ThemeApi` module
+- `IFindThemeRequest` interface
 
-The `IFindThemeRequest` interface specifies the structure of a request for theme detection. It includes two properties: `text`, which is the content to be analyzed, and `length`, which likely represents the length of the text or a relevant parameter for the theme-finding algorithm.
+**Summary:**
+The code is part of the `ThemeApi` module, which provides interfaces and types for theme detection and analysis in content. The module defines the structure for theme detection requests and responses. The `IFindThemeRequest` interface is specified in the code to structure the criteria for identifying themes in text. This interface includes properties such as `text` (a string containing the content to analyze) and `length` (an integer representing the length of the content).
 
-These type definitions ensure that the theme-related operations are type-safe, making the code more robust and easier to maintain.
-
+Generated by Salon from Braid Technologies, 23/02/2025
