@@ -8,6 +8,8 @@ import requests
 from typing import Optional
 import time
 from CommonPy.src.request_utilities import request_timeout
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -57,6 +59,16 @@ class OpenAiModel(AIModel):
             retry_delay_seconds: int = 2
     ) -> Optional[str]:
         
+        # Configure retry strategy
+        retry_strategy = Retry(
+            total=5,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504]  # Include both rate limit and server errors
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session = requests.Session()
+        session.mount("https://", adapter)
+
         headers = {
             'User-Agent': 'Mozilla/5.0',
             'Content-Type': 'application/json',
@@ -75,44 +87,28 @@ class OpenAiModel(AIModel):
         }
         wrapped = {'request': payload}
 
+        try:
+            response = session.post(
+                summarise_endpoint_url(),
+                json=wrapped,
+                headers=headers,
+                timeout=request_timeout
+            )
 
-
-        for attempt in range(1, max_retries + 1):
-            try:
-                response = requests.post(
-                    summarise_endpoint_url(),
-                    json=wrapped,
-                    headers=headers,
-                    timeout=request_timeout
-                )
-
-                if response.status_code == 200:
-                    data = response.json()
-                    if 'summary' in data:
-                        return data['summary']
-                    else:
-                        print("Response JSON did not contain 'summary'.")
+            if response.status_code == 200:
+                data = response.json()
+                if 'summary' in data:
+                    return data['summary']
                 else:
-                    print(f"Braid API returned status code: {response.status_code}")
-
-                # If we didn't explicitly return by now, let's break or retry.
-                # In case of a 4xx or unexpected status code, you might decide not to retry.
-                # But here, we do a generic retry if status != 200:
-                if attempt < max_retries:
-                    print(f"Attempt {attempt} failed. Retrying in {retry_delay_seconds}s...")
-                    time.sleep(retry_delay_seconds)
-                else:
-                    print("Max retries reached. Returning None.")
+                    logger.error("Response JSON did not contain 'summary'.")
                     return None
-            except Exception as e:
-                if attempt < max_retries:
-                    print(f"Error while calling Braid API on attempt {attempt}: {e}")
-                    print(f"Retrying in {retry_delay_seconds}s...")
-                    time.sleep(retry_delay_seconds)
-                else:
-                    print(f"Error after {max_retries} attempts. Returning None. Last error: {e}")
-                    return None
-        return None
+            else:
+                logger.error(f"Braid API returned status code: {response.status_code}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error during API call: {e}")
+            return None
     
     def generate_code(self, prompt: str, instructions: str) -> str:
         """
