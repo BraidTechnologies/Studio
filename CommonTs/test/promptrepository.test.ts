@@ -17,8 +17,10 @@ import { describe, it, before } from 'mocha';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { IStoredPrompt, PromptFileRepository, replacePromptPlaceholders } from '../src/IPromptRepository';
+import { IStoredPrompt, PromptFileRepository, PromptInMemoryRepository, replacePromptPlaceholders } from '../src/IPromptRepository';
 import { throwIfUndefined } from '../src/Asserts';
+import { getChatPersona } from '../src/IPromptPersonaFactory';
+import { EPromptPersona } from '../src/IPromptPersona';
 
 describe('PromptRepository', function() {
     let tempDir: string;
@@ -58,23 +60,73 @@ describe('PromptRepository', function() {
         expect(prompt?.userPrompt).toEqual("Hello {name}");
     });
 
-    it('should lcorrectly replace parameters in a prompt', async function() {
-      // Initialize repository with test file
-      const repo = new PromptFileRepository(samplePromptsFile);
+    it('should correctly replace parameters in a prompt', async function() {
+        // Initialize repository with test file
+        const repo = new PromptFileRepository(samplePromptsFile);
 
-      // Test loading a specific prompt
-      const prompt : IStoredPrompt | undefined = await repo.getPrompt("test-prompt-1");
+        // Test loading a specific prompt
+        const prompt : IStoredPrompt | undefined = await repo.getPrompt("test-prompt-1");
 
-      // Verify the prompt data
-      expect(prompt).toBeDefined();
-      expect(prompt?.id).toEqual("test-prompt-1");
-      expect(prompt?.version).toEqual("1.0");
-      expect(prompt?.personaName).toEqual("TestBot");
-      expect(prompt?.systemPrompt).toEqual("You are a test bot");
-      expect(prompt?.userPrompt).toEqual("Hello {name}");
+        // Verify the prompt data
+        expect(prompt).toBeDefined();
+        expect(prompt?.id).toEqual("test-prompt-1");
+        expect(prompt?.version).toEqual("1.0");
+        expect(prompt?.personaName).toEqual("TestBot");
+        expect(prompt?.systemPrompt).toEqual("You are a test bot");
+        expect(prompt?.userPrompt).toEqual("Hello {name}");
 
-      throwIfUndefined(prompt);
-      let result = replacePromptPlaceholders(prompt?.userPrompt, {name: "Jon"});
-      expect(result).toEqual("Hello Jon");
-  });
+        throwIfUndefined(prompt);
+        let result = replacePromptPlaceholders(prompt?.userPrompt, {name: "Jon"});
+        expect(result).toEqual("Hello Jon");
+    });
+
+    it('should correctly load target prompts with replacement parameters', async function() {
+        const fileName = "trial_prompts.json";
+        const filePath = path.join(__dirname, fileName);
+        // Initialize repository with test file
+        const repo = new PromptFileRepository(filePath);
+
+        const promptId1 = "3983ba1b-895d-46fe-a47e-e4230b06c0d6";
+        const promptId2 = "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d";
+        const promptId3 = "716c667d-9074-4d9a-8335-3194212eba90";
+
+        // Test loading a specific prompt
+        const prompt : IStoredPrompt | undefined = await repo.getPrompt(promptId1);
+        expect(prompt).toBeDefined();
+        throwIfUndefined(prompt);
+        let result = replacePromptPlaceholders(prompt.systemPrompt, {wordCount: "50"});
+        expect(result).toContain("50");
+
+        // Test loading a specific prompt
+        const prompt2 : IStoredPrompt | undefined = await repo.getPrompt(promptId2);
+        expect(prompt2).toBeDefined();
+        throwIfUndefined(prompt2);
+        let result2 = replacePromptPlaceholders(prompt2.systemPrompt, {wordCount: "50"});
+        expect(result2).toContain("50");
+
+        // Test loading a specific prompt
+        const prompt3 : IStoredPrompt | undefined = await repo.getPrompt(promptId3);
+        expect(prompt3).toBeDefined();
+        throwIfUndefined(prompt3);
+        let result3 = replacePromptPlaceholders(prompt3.systemPrompt, {wordCount: "50"});
+        expect(result3).toContain("50");
+    });
+
+    it('should correctly load default prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kDefault, "Hello", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Hello");
+    });
+
+    it('should correctly load article summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kArticleSummariser, "Hello", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Hello");
+    });    
+
+    it('should correctly load developer assistant prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kDeveloperAssistant, "Hello", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Hello");
+    });     
 });

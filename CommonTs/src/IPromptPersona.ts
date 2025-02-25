@@ -33,7 +33,7 @@ export interface IPromptPersona {
 
    name : string;
    systemPrompt: string;
-   itemPrompt: string;
+   userPrompt: string;
 }
 
 

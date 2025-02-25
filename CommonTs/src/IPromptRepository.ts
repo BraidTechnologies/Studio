@@ -49,7 +49,7 @@ export interface IPromptRepository {
      * @param id The unique identifier of the prompt
      * @returns The stored prompt if found
      */
-    getPrompt(id: string): Promise<IStoredPrompt | undefined>;
+    getPrompt(id: string): IStoredPrompt | undefined;
 }
 
 export class PromptFileRepository implements IPromptRepository {
@@ -59,7 +59,19 @@ export class PromptFileRepository implements IPromptRepository {
         this.prompts = JSON.parse(fs.readFileSync(promptFilePath, 'utf8'));
     }
 
-    getPrompt(id: string): Promise<IStoredPrompt | undefined> {
-        return Promise.resolve(this.prompts.find(p => p.id === id));
+    getPrompt(id: string): IStoredPrompt | undefined {
+        return this.prompts.find(p => p.id === id);
     }
+}
+
+export class PromptInMemoryRepository implements IPromptRepository {
+   private prompts: IStoredPrompt[] = [];
+
+   constructor(prompts: IStoredPrompt[]) {
+       this.prompts = prompts;
+   }
+
+   getPrompt(id: string): IStoredPrompt | undefined {
+       return this.prompts.find(p => p.id === id);
+   }
 }
