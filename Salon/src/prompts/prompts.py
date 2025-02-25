@@ -10,14 +10,14 @@ C4_CONTEXT_PROMPT = (
 C4_CONTAINER_PROMPT = (
     "Please generate a C4Container diagram in mermaid format from the following "
     "description of a software system. Only generate mermaid content. Group components with "
-    "container boundaries if possible, but pay attention to syntax - "
+    "system boundaries if possible, but pay attention to syntax - "
     "a small diagram that is syntactically correct is better than a large diagram with errors.\n\n"
 )
 
 C4_COMPONENT_PROMPT = (
     "Please generate a C4Component diagram in mermaid format from the following "
     "description of a software system. Only generate mermaid content. Group components with "
-    "container boundaries if possible, but pay attention to syntax - "
+    "system boundaries if possible, but pay attention to syntax - "
     "a small diagram that is syntactically correct is better than a large diagram with errors.\n\n"
 )
 
