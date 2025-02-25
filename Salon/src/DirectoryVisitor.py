@@ -20,7 +20,7 @@ from CommonPy.src.request_utilities import request_timeout
 
 nltk.download('punkt', quiet=True)
 
-BASE_URL = 'http://localhost:7071/api'
+BASE_URL = 'https://braid-api.azurewebsites.net/api' 
 SESSION_KEY = os.environ.get('BRAID_SESSION_KEY', '')   # Fall back to empty if not set
 
 class DirectoryData:

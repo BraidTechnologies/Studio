@@ -7,9 +7,9 @@
  * specific summarization task.
  * 
  * The module exports:
- * - Predefined persona templates for Article, Code, and Survey summarization
- * - getSummariser function to generate configured prompt personas with
- *   customized word count targets
+ * - Predefined persona templates for summarization etc
+ * - getChatPersona function to generate configured prompt personas with
+ *   optional customized parameters
  */
 
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
