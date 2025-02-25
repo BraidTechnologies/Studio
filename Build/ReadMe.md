@@ -93,8 +93,8 @@ All scripts should be run from the project root directory. Examples:
 
 ## Prerequisites
 
-- Node.js and npm for TypeScript projects
-- Python 3.x and pip for Python projects
+- Node.js 22.13 and npm for TypeScript projects
+- Python 3.12.6 and pip for Python projects
 - Bash shell environment
 
 ## Notes
