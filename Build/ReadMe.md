@@ -1,62 +1,104 @@
 # Build Scripts
 
-This directory contains various shell scripts for building, testing, and maintaining the project's codebase.
+This directory contains various shell scripts for building, testing, and maintaining the project's codebase. These scripts are designed to work with both TypeScript (npm) and Python (pip) projects.
 
 ## Available Scripts
 
-### Building
-- `build_subdirs.sh`: Executes `npm run build` in all TypeScript project directories that contain a package.json file.
+### Installation and Updates
+- `install_subdirs.sh`: Installs dependencies for all projects
+  - For TypeScript projects: Runs `npm install`
+  - For Python projects: Runs `pip install -r requirements.txt`
+  - Processes all project directories
+
+- `update_subdirs_npm.sh`: Updates npm dependencies
+  - Runs `npm update --save` in directories with package.json
+  - Provides reminder for updating Python packages
+
+- `update_subdirs_pip.sh`: Updates Python dependencies
+  - Updates pip packages in directories with requirements.txt
+
+### Building and Testing
+- `build_subdirs.sh`: Builds TypeScript projects
+  - Executes `npm run build` in directories with package.json
   - Processes: CommonTs, Api, Cascade, WaterfallBrowser, Boxer, Teams
 
-### Testing
-- `test_subdirs.sh`: Runs tests across all project directories
-  - For TypeScript projects: Executes `npm run test`
-  - For Python projects: Runs `pytest`
-  - Processes: CommonTs, CommonPy, Api, ApiTest, Cascade, Waterfall, WaterfallBrowser, Boxer, Teams
+- `test_subdirs.sh`: Runs test suites
+  - TypeScript projects: Executes `npm run test`
+  - Python projects: Runs `pytest`
+  - Processes all project directories
 
-### Maintenance
-- `clean_subdirs.sh`: Runs cleanup tasks in all directories containing package.json
-  - Executes `npm run clean` in each directory
-  
-- `prune_subdirs.sh`: Removes unused dependencies
-  - Executes `npm prune` in directories with package.json
+### Code Quality and Maintenance
+- `check_c4_subdirs.sh`: Validates C4 model documentation
+  - Ensures architectural documentation follows C4 model standards
+  - Checks for required documentation elements
 
-### Analysis
-- `count_loc.sh`: Counts lines of code (excluding whitespace)
-  - Counts both source and test files
-  - Separates counts for Python (.py) and TypeScript (.ts, .tsx)
-  - Usage: `./count_loc.sh <base_directory>`
-
-- `check_module_comments_subdirs.sh`: Validates module documentation
+- `check_module_comments_subdirs.sh`: Validates code documentation
   - TypeScript: Checks for `@module` comments
-  - Python: Uses pylint to check for module docstrings
+  - Python: Uses pylint to verify module docstrings
   - Reports files missing proper documentation
 
+- `clean_subdirs.sh`: Performs cleanup tasks
+  - Executes `npm run clean` in directories with package.json
+  - Removes build artifacts and temporary files
+
+- `prune_subdirs.sh`: Optimizes dependencies
+  - Runs `npm prune` to remove unused packages
+  - Helps maintain lean dependency trees
+
+### Analysis
+- `count_loc.sh`: Analyzes codebase size
+  - Counts lines of code (excluding whitespace)
+  - Separates counts by language (Python, TypeScript)
+  - Distinguishes between source and test files
+  - Usage: `./count_loc.sh <base_directory>`
+
 ## Project Structure
+
 The scripts handle the following project directories:
 
 ### TypeScript Projects
-- CommonTs
-- Api
-- Cascade
-- WaterfallBrowser
-- Boxer
-- Teams
+- CommonTs: Common TypeScript utilities and shared code
+- Api: API implementation
+- Cascade: Cascade component
+- WaterfallBrowser: Browser-specific Waterfall implementation
+- Boxer: Boxer component
+- Teams: Teams integration
 
 ### Python Projects
-- CommonPy
-- ApiTest
-- Waterfall
-- BoxerEval
+- CommonPy: Common Python utilities
+- ApiTest: API testing framework
+- Waterfall: Core Waterfall implementation
+- BoxerEval: Boxer evaluation tools
 
 ## Usage
 
-All scripts should be run from the project root directory. For example:
+All scripts should be run from the project root directory. Examples:
 
-bash
+```bash
+# Install dependencies
+./Build/install_subdirs.sh
+
+# Build TypeScript projects
 ./Build/build_subdirs.sh
+
+# Run tests
 ./Build/test_subdirs.sh
+
+# Analyze code
 ./Build/count_loc.sh .
 
-bash
-chmod +x Build/.sh
+# Check documentation
+./Build/check_module_comments_subdirs.sh
+```
+
+## Prerequisites
+
+- Node.js and npm for TypeScript projects
+- Python 3.x and pip for Python projects
+- Bash shell environment
+
+## Notes
+
+- Always run scripts from the project root directory
+- Some scripts may require administrator privileges (especially for Python package updates)
+- Make scripts executable using: `chmod +x Build/*.sh`
