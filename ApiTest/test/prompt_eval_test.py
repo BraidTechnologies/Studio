@@ -42,7 +42,7 @@ def test_article_summariser():
 
     assert response.status_code == 200
     assert 'summary' in result
-    assert result['summary'].find('Lakers defeated Warriors') != - \
-        1 or result['summary'].find('Lakers beat Warriers') != -1
+    assert result['summary'].find('Lakers defeated Warriors') != -1 or result['summary'].find('Lakers beat Warriors') != -1, \
+        f"Expected 'Lakers defeated/beat Warriors' but got: {result['summary']}"
     
  
