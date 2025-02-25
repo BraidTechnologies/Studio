@@ -39,6 +39,8 @@ from CommonPy.src.cosine_similarity import cosine_similarity
 from CommonPy.src.embed_api import EmbeddingApi
 from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
+from .enriched_query_util import valid_request_payload
+
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
 SESSION_KEY = os.environ['BRAID_SESSION_KEY']
@@ -125,21 +127,6 @@ sampleqas = [
           "Optimize latency by using edge deployments or regional hosting for geographically "
           "distributed applications."
      }]
-
-
-def valid_request_payload():
-    '''
-    Return a valid request payload. This function is used by both fixtures and test functions.
-    '''
-    shell = IEnrichedQueryRequest()
-    shell.repositoryId = "Boxer"
-    shell.similarityThreshold = 0.4
-    shell.maxCount = 1
-    shell.history = []
-    shell.question = "What is an LLM?"
-    shell.wordTarget = 50
-    return shell
-
 
 def invalid_request_payload():
     '''

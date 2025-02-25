@@ -1,5 +1,5 @@
 """
-Test the summarise filter
+Evals for the summarise APP
 @link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-006-System-ignores-html.feature.md
 """
 
