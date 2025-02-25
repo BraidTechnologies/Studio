@@ -1,8 +1,9 @@
 ```mermaid
 graph LR
 subgraph Salon
+    api_to_test_code
+    repo_to_text
     repo_to_c4.py
-    repo_to_text.py
-    api_to_test_code.py
 end
+User
 ```
