@@ -30,19 +30,12 @@ from .directory_processor.directory_walker import walk_directory
 from .directory_processor.factory import getProcessorsRepoToText
 from .core.config_manager import ConfigManager  # Import ConfigManager
 from .types.directory_data import DirectoryData
+from .directory_processor.base import process_directory
 
 nltk.download('punkt', quiet=True)
 
-def getSpecialArgs() -> argparse.Namespace:
-    """
-    Get the arguments from the command line.
-    """
-    return argparse.ArgumentParser().parse_args()
 
 def main() -> int:
-    """
-    Main entry point for the script.
-    """
     config_manager = ConfigManager('Process a local GitHub repository')
     try:
         config_manager.load_config()
@@ -74,9 +67,7 @@ def main() -> int:
     )
 
     processors = getProcessorsRepoToText(args.model_type, args.max_words, args.output_dir)
-    for directory in directory_data:
-        for p in processors:
-            p.visit(directory)
+    process_directory(directory_data, processors)
 
     return 0
 

@@ -19,8 +19,8 @@ def walk_directory(
     source_patterns: List[str] = None,
 ) -> DirectoryData:
     """
-    Recursively walk the directory starting at `root_path`.
-    For each directory, build a DirectoryData object, then
+    Recursively walk the directory starting at `root_path` using Path.iterdir().
+    Returns a single root DirectoryData with all subdirectories nested correctly.
     """
     if skip_dirs is None:
         skip_dirs = []
@@ -28,40 +28,31 @@ def walk_directory(
         skip_patterns = []
     if source_patterns is None:
         source_patterns = []
+    
+    # Create DirectoryData for the root
+    root_directory_data = DirectoryData(path=root_path)
 
-    root_path = root_path.resolve()
-
-    directory_data: List[DirectoryData] = []
-    for dirpath, dirnames, filenames in os.walk(root_path):
-        dir_path = Path(dirpath)
-
-        # Skip if directory is in skip_dirs or is .git
-        parts = dir_path.parts
-        if any(sd in parts for sd in skip_dirs) or ".git" in parts:
-            dirnames[:] = []
-            continue
-
-        # Build directory data
-        sub_directory_data = DirectoryData(path=dir_path)
-
-        # Check if it has a ReadMe.Salon.md
-        readme_path = dir_path / "ReadMe.Salon.md"
-        sub_directory_data.has_readme = readme_path.is_file()
-
-        # Gather all files while respecting skip_patterns
-        for filename in filenames:
-            file_path = dir_path / filename
-
-            if any(fnmatch.fnmatch(filename, pattern) for pattern in skip_patterns):
+    for entry in root_path.iterdir():
+        if entry.is_dir():
+            # Skip ignored directories
+            if entry.name in skip_dirs:
                 continue
 
-            sub_directory_data.all_files.append(file_path)
+            # Recursively process subdirectory and add to tree
+            sub_directory_data = walk_directory(entry, skip_dirs, skip_patterns, source_patterns)
+            root_directory_data.sub_directories.append(sub_directory_data)
 
-            # If it matches a source pattern, add to source_files
-            if any(fnmatch.fnmatch(filename, sp) for sp in source_patterns):
-                sub_directory_data.source_files.append(file_path)
+        elif entry.is_file():
+            # Skip files matching skip_patterns
+            if any(entry.match(pattern) for pattern in skip_patterns):
+                continue
 
-        directory_data.append(sub_directory_data)
+            root_directory_data.all_files.append(entry)
 
-    return directory_data
+            # If file matches a source pattern, add to source_files
+            if any(entry.match(pattern) for pattern in source_patterns):
+                root_directory_data.source_files.append(entry)
 
+    # Check if the directory contains ReadMe.Salon.md
+    root_directory_data.has_readme = (root_path / "ReadMe.Salon.md").is_file()
+    return root_directory_data

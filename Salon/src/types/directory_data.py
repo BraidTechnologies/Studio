@@ -18,3 +18,4 @@ class DirectoryData:
         self.source_files: List[Path] = []
         self.all_files: List[Path] = []  # All files in the directory
         self.summary_needed: bool = False   # Whether this directory needs a summary
+        self.sub_directories: List[DirectoryData] = []

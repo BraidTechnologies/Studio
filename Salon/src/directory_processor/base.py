@@ -19,3 +19,28 @@ class DirectoryProcessor:
         Process the given directory data. Must be implemented by subclasses.
         """
         raise NotImplementedError("Subclasses must implement 'visit' method")
+    
+
+"""
+Processes a single DirectoryData object and its subdirectories,
+visiting each directory using the provided processors.
+each processor returns a Path to a file that is added to the directory.source_files list
+"""
+def process_directory(directory, processors) -> Path:
+    """
+    Processes a single DirectoryData object and its subdirectories,
+    visiting each directory using the provided processors.
+    """
+    # Recursively walk down subdirectories
+    for sub_directory in directory.sub_directories:
+        child_source_file:Path = process_directory(sub_directory, processors)
+        if child_source_file:
+            directory.source_files.append(child_source_file)
+    
+    # Process the directory
+    for p in processors:
+        output_visit = p.visit(directory)
+        if output_visit:
+            return output_visit
+    return None
+

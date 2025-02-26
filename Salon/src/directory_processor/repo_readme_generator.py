@@ -6,6 +6,7 @@ and if so, creates or updates it using a chosen summarization model.
 
 import os
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 from ..models.base import AIModel
 from CommonPy.src.request_utilities import request_timeout
@@ -37,7 +38,7 @@ class ReadmeGenerator(DirectoryProcessor):
                                             persona_intro= CODE_SUMMARIZER_PERSONA_INTRO,
                                             length_in_words=100)
 
-    def visit(self, directory_data: DirectoryData) -> None:
+    def visit(self, directory_data: DirectoryData) -> Path:
         """
         Decide whether 'ReadMe.Salon.md' should be created or updated
         based on timestamps of the source files.
@@ -65,7 +66,10 @@ class ReadmeGenerator(DirectoryProcessor):
             if code and len(code) > 250:  # Summarize only if file is somewhat large
                 summary = self.summarise_code(code)
                 if summary:
-                    new_readme.append(f"**{src_file.name}**\n\n{summary}\n")
+                    if src_file.name ==  self.SUMMARY_FILENAME:
+                        new_readme.append(f"**Directory {src_file.parent.name}**\n\n{summary}\n")
+                    else:
+                        new_readme.append(f"**{src_file.name}**\n\n{summary}\n")
 
         if new_readme:
             salon_comment = (
@@ -74,4 +78,6 @@ class ReadmeGenerator(DirectoryProcessor):
             )
             content = "\n".join(new_readme) + salon_comment
             self.file_handler.write_file_version(directory_data.path, self.SUMMARY_FILENAME, content) # Use FileHandler to write files
-            print(f"Created/Updated {readme_path}")
+            print(f"Created/Updated {readme_path}")   
+            return readme_path
+        return None

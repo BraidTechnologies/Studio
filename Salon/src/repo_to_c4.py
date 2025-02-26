@@ -21,6 +21,7 @@ from .directory_processor.directory_walker import walk_directory
 from .core.config_manager import ConfigManager #Import config manager
 from .types.directory_data import DirectoryData
 from .directory_processor.factory import getProcessorsRepoToC4
+from .directory_processor.base import process_directory
 
 def main():
     """Entry point to generate C4 diagrams from a local repo."""
@@ -41,9 +42,7 @@ def main():
     )
 
     processors = getProcessorsRepoToC4(args.model_type)
-    for directory in directory_data:
-        for p in processors:
-            p.visit(directory)
+    process_directory(directory_data, processors)
 
    
     return 0

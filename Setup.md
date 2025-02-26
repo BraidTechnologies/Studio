@@ -17,8 +17,6 @@ Azure Functions Core Tools https://learn.microsoft.com/en-us/azure/azure-functio
 To test the Teams plug-in:
 Azure Teams Toolkit https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/install-teams-toolkit?tabs=vscode
 
-To run the entire multi-directory build system on Windows; 
-https://www.cygwin.com/
 
 To run the entire multi-directory build system on Mac:
 https://dev.to/bphogan/use-modern-bash-shell-on-macos-22a6 
@@ -36,4 +34,4 @@ GOOGLE_DEVELOPER_API_KEY=
 OPENAI_API_KEY=
 GROQ_API_KEY=
 PYTHONPATH=[Path to Braid Studio repo root]
-BRAID_BASE_URL = 'https://braid-api.azurewebsites.net/api' OR 'http://localhost:7071/api'
+BASE_URL = 'https://braid-api.azurewebsites.net/api' OR 'http://localhost:7071/api'
