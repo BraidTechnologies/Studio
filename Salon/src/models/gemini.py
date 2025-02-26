@@ -6,7 +6,7 @@ Module for handling Gemini model interactions with abstracted content generation
 
 import os
 import time
-from typing import Optional
+from typing import Optional, Callable
 from google import genai
 from .base import AIModel
 
