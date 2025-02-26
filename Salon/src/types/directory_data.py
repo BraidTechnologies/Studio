@@ -1,8 +1,7 @@
-# directory_visitor_base.py
+# directory_data.py
 """
 Contains both:
 - DirectoryData: Holds metadata about a directory
-- DirectoryVisitor: Abstract base class for directory-processing visitors
 """
 
 from pathlib import Path
@@ -19,14 +18,4 @@ class DirectoryData:
         self.source_files: List[Path] = []
         self.all_files: List[Path] = []  # All files in the directory
         self.summary_needed: bool = False   # Whether this directory needs a summary
-
-class DirectoryVisitor:
-    """
-    Base class for any visitor that wants to process a directory.
-    Subclasses should implement 'visit'.
-    """
-    def visit(self, directory_data: DirectoryData) -> None:
-        """
-        Process the given directory data. Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement 'visit' method")
+        self.sub_directories: List[DirectoryData] = []
