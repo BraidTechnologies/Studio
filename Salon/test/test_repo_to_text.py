@@ -2,24 +2,13 @@ import pytest
 import argparse
 from unittest.mock import patch, mock_open, MagicMock
 from pathlib import Path
-import os
-import sys
 import yaml
 
-
-
-# Ensure the `src` directory is included in the Python path for module imports
-TESTS_DIR = Path(__file__).resolve().parent
-SRC_DIR = TESTS_DIR.parent / "src"
-sys.path.append(str(SRC_DIR))
-
-
-
-from repo_to_text import parse_arguments, load_yaml, validate_args, main
+from Salon.src.repo_to_text import parse_arguments, load_yaml, validate_args, main
 
 def test_parse_arguments_defaults():
     """Test default argument parsing."""
-    with patch('sys.argv', ['repo_to_text.py']):
+    with patch('sys.argv', ['Salon.src.repo_to_text.py']):
         args = parse_arguments()
         # Check that default values are set correctly
         assert args.cfg == "config.yaml"
@@ -31,7 +20,7 @@ def test_parse_arguments_defaults():
 
 def test_parse_arguments_custom():
     """Test custom argument parsing."""
-    with patch('sys.argv', ['repo_to_text.py', '--cfg', 'custom.yaml', '--repo_path', '/path/to/repo', '-w', '100000', '-o', '/output', '--model_type', 'local_gemini', '-v']):
+    with patch('sys.argv', ['Salon.src.repo_to_text.py', '--cfg', 'custom.yaml', '--repo_path', '/path/to/repo', '-w', '100000', '-o', '/output', '--model_type', 'local_gemini', '-v']):
         args = parse_arguments()
         # Check that custom values are parsed correctly
         assert args.cfg == "custom.yaml"
@@ -97,7 +86,7 @@ def test_validate_args_valid_paths():
 
 def test_main_invalid_args(monkeypatch):
     """Test the main function with invalid arguments."""
-    monkeypatch.setattr('sys.argv', ['repo_to_text.py', '--repo_path', 'invalid_path'])
+    monkeypatch.setattr('sys.argv', ['Salon.src.repo_to_text.py', '--repo_path', 'invalid_path'])
     with patch('builtins.print') as mock_print:
         assert main() == 1
         # Check that the error message is printed
@@ -105,7 +94,7 @@ def test_main_invalid_args(monkeypatch):
 
 def test_main_valid_args(monkeypatch):
     """Test the main function with valid arguments."""
-    monkeypatch.setattr('sys.argv', ['repo_to_text.py', '--repo_path', '.', '--cfg', 'config.yaml'])
+    monkeypatch.setattr('sys.argv', ['Salon.src.repo_to_text.py', '--repo_path', '.', '--cfg', 'config.yaml'])
     with patch('Salon.src.repo_to_text.validate_args'), \
          patch('Salon.src.repo_to_text.load_yaml', return_value={}), \
          patch('Salon.src.repo_to_text.walk_directory'), \
@@ -119,7 +108,7 @@ def test_main_with_config(monkeypatch):
         'skip_patterns': ['*.md'],
         'source_patterns': ['*.py']
     }
-    monkeypatch.setattr('sys.argv', ['repo_to_text.py', '--repo_path', '.', '--cfg', 'config.yaml'])
+    monkeypatch.setattr('sys.argv', ['Salon.src.repo_to_text.py', '--repo_path', '.', '--cfg', 'config.yaml'])
     with patch('Salon.src.repo_to_text.validate_args'), \
          patch('Salon.src.repo_to_text.load_yaml', return_value=config), \
          patch('Salon.src.repo_to_text.walk_directory'), \

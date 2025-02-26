@@ -17,63 +17,34 @@ import os
 
 
 # Local modules
-from directory_walker import add_visitor, walk_directory
-from visitor_factory import get_visitors_for_c4
-
-def parse_arguments():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description='Process a GitHub repository and generate 3 C4 diagrams',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-
-    parser.add_argument(
-        '--repo_path',
-        type=str,
-        required=True,
-        help='Path to the local GitHub repository (absolute or relative)'
-    )
-
-    parser.add_argument(
-        '--model_type',
-        type=str,
-        default='braid_api',
-        help='Which summarisation model to use: "braid_api" or "local_gemini"'
-    )
-
-    return parser.parse_args()
-
-def validate_args(args):
-    """Validate command line arguments."""
-    repo_path = Path(args.repo_path).resolve()
-    if not repo_path.exists():
-        raise ValueError(f"Repository path does not exist: {repo_path}")
-    if not repo_path.is_dir():
-        raise ValueError(f"Repository path is not a directory: {repo_path}")
-
-    args.repo_path = repo_path
+from .directory_processor.directory_walker import walk_directory
+from .core.config_manager import ConfigManager #Import config manager
+from .types.directory_data import DirectoryData
+from .directory_processor.factory import getProcessorsRepoToC4
+from .directory_processor.base import process_directory
 
 def main():
     """Entry point to generate C4 diagrams from a local repo."""
-    args = parse_arguments()
+    config_manager = ConfigManager('Process a GitHub repository and concatenate file contents with optional readme summaries')
     try:
-        validate_args(args)
+        config_manager.load_config()
+        args = config_manager.get_args()
     except ValueError as e:
         print(f"Error: {e}")
         return 1
 
-    # Create the specialized C4 visitor(s) using the factory
-    visitors = get_visitors_for_c4(args.model_type)
-    for v in visitors:
-        add_visitor(v)
-
     # Walk the directory
-    walk_directory(
+    directory_data: DirectoryData = walk_directory(
         root_path=args.repo_path,
         skip_dirs=[],
         skip_patterns=[],
         source_patterns=[]
     )
+
+    processors = getProcessorsRepoToC4(args.model_type)
+    process_directory(directory_data, processors)
+
+   
     return 0
 
 if __name__ == "__main__":

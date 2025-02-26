@@ -8,7 +8,7 @@ from enum import Enum
 import pytest
 import google.generativeai as genai
 
-from src.ChatModelDrivers import (
+from Salon.src.chat_model_drivers import (
     SummariseModelType,
     SalonModelDriver,
     BraidApiModelDriver,
