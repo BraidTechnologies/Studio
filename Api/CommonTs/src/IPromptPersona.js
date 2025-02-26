@@ -23,7 +23,7 @@ var EPromptPersona;
     EPromptPersona["kC4Diagrammer"] = "C4Diagrammer";
     EPromptPersona["kSurveySummariser"] = "SurveySummariser";
     EPromptPersona["kTestForSummariseFail"] = "TestForSummariseFail";
-    EPromptPersona["kClassifier"] = "Classifier";
+    EPromptPersona["kArticleClassifier"] = "ArticleClassifier";
     EPromptPersona["kThemeFinder"] = "ThemeFinder";
     EPromptPersona["kDeveloperAssistant"] = "DeveloperAssistant";
     EPromptPersona["kDeveloperImaginedAnswerGenerator"] = "DeveloperImaginedAnswerGenerator";

@@ -102,6 +102,7 @@ export interface IEmbeddingModelDriver {
 export interface IChatModelDriverParams {
    wordTarget?: number | undefined;
    promptParam1?: string | undefined;
+   classifications?: string | undefined;
 }
 
 /**

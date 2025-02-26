@@ -6,6 +6,7 @@
       "build": "tsc -b",
       "watch": "tsc -b -w",
       "clean": "rimraf dist",
+      "make_prompt_ids": "ts-node scripts/MakePromptIds.ts",
       "make_api_def_json": "npx typeconv -f ts -t jsc src/*.Types.ts",
       "make_api_def_yaml": "npx typeconv -f ts -t oapi src/*.Types.ts",
       "test": "mocha --debug-brk --exit --require ts-node/register test/*.test.ts",

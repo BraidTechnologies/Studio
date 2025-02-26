@@ -57,7 +57,7 @@ async function singleShotClassify(text: string, classifications: Array<string>):
       prompt: text
    }
 
-   let response = await modelDriver.generateResponse (EPromptPersona.kClassifier, prompt, {promptParam1: classifications.join(",")});
+   let response = await modelDriver.generateResponse (EPromptPersona.kArticleClassifier, prompt, { classifications: classifications.join(",")});
 
    const decoded = decodeClassification(response.content, classifications);
 

@@ -22,7 +22,7 @@ export enum EPromptPersona {
    kC4Diagrammer = "C4Diagrammer",
    kSurveySummariser = "SurveySummariser",
    kTestForSummariseFail = "TestForSummariseFail",
-   kClassifier = "Classifier",
+   kArticleClassifier = "ArticleClassifier",
    kThemeFinder = "ThemeFinder",
    kDeveloperAssistant = "DeveloperAssistant", 
    kDeveloperImaginedAnswerGenerator = "DeveloperImaginedAnswerGenerator",

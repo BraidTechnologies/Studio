@@ -18,15 +18,37 @@
 import { IChatModelDriverParams } from "./IModelDriver";
 import { EPromptPersona, IPromptPersona } from "./IPromptPersona";
 import { PromptInMemoryRepository, IStoredPrompt } from "./IPromptRepository";
+import { throwIfUndefined } from "./Asserts";
 import Prompts from "./Prompts.json";
+import { 
+    defaultPromptId, 
+    developerAssistantPromptId, 
+    articleSummariserPromptId, 
+    developerQuestionGeneratorPromptId, 
+    articleClassifierPromptId,
+    themeFinderPromptId,
+    testForSummmariseFailurePromptId
+} from "./GeneratedPromptNames";
 
 const promptRepository = new PromptInMemoryRepository(Prompts);
 const defaultWordCount = 50;
+const questionWordCount = 10;
+const themeFinderWordCount = 1;
 
 function postProcessPrompt(prompt: IStoredPrompt | undefined, defaultWordCount: number, userInput: string): IPromptPersona {
 
    if (typeof prompt !== "undefined") {   
       let systemPrompt = prompt.systemPrompt.replace("{wordCount}", defaultWordCount.toString());
+      let userPrompt = prompt.userPrompt.replace("{userInput}", userInput);
+      return {userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName};
+   }
+   throw new Error("Prompt not found");
+}
+
+function postProcessClassifierPrompt(prompt: IStoredPrompt | undefined, classifications: string, userInput: string): IPromptPersona {
+
+   if (typeof prompt !== "undefined") {   
+      let systemPrompt = prompt.systemPrompt.replace("{classifications}", classifications);
       let userPrompt = prompt.userPrompt.replace("{userInput}", userInput);
       return {userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName};
    }
@@ -68,27 +90,6 @@ const TestForSummariseFailPersona: IPromptPersona = {
    userPrompt: ""
 };
 
-const ClassifierPersona: IPromptPersona = {
-
-   name: EPromptPersona.kClassifier,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const ThemeFinderPersona: IPromptPersona = {
-
-   name: EPromptPersona.kThemeFinder,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const DeveloperQuestionGeneratorPersona: IPromptPersona = {
-
-   name: EPromptPersona.kDeveloperQuestionGenerator,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
 const DeveloperImaginedAnswerGeneratorPersona: IPromptPersona = {
 
    name: EPromptPersona.kDeveloperImaginedAnswerGenerator,
@@ -96,7 +97,7 @@ const DeveloperImaginedAnswerGeneratorPersona: IPromptPersona = {
    userPrompt: ""
 };
 
-export function getChatPersona(persona: EPromptPersona, userPrompt: string, params: IChatModelDriverParams): IPromptPersona {
+export function getChatPersona(persona: EPromptPersona, userPrompt: string, params?: IChatModelDriverParams): IPromptPersona {
 
    let wordString = "50";
    if (params && params.wordTarget) {
@@ -137,37 +138,6 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
          c4Template.userPrompt = userPrompt;
          return c4Template;
 
-      case EPromptPersona.kTestForSummariseFail:
-         const testForSummariseFailTemplate = TestForSummariseFailPersona;
-         testForSummariseFailTemplate.systemPrompt = "You are an AI assistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. The summariser may apologise for this, or may say there is not enough relevant information to summarise, or may state the text contains only web page navigation, all of which are failed summaries.";
-         testForSummariseFailTemplate.userPrompt = " Please review the following summary and reply 'No' if the summariser has not been able to create a good summary of a body of text, otherwise reply 'Yes'." +
-            + userPrompt;
-         return testForSummariseFailTemplate;
-
-      case EPromptPersona.kClassifier:
-         const classifierTemplate = ClassifierPersona;
-         classifierTemplate.systemPrompt = "You are an assistant that can classify text into one of the following subjects: "
-            + promptParam1 + "."
-         classifierTemplate.userPrompt = "Try to classify the subject of the following text. The classification is a single word from the list "
-            + promptParam1
-            + ". If you cannot classify it well, answer 'Unknown'." + userPrompt;
-         return classifierTemplate;
-
-      case EPromptPersona.kThemeFinder:
-         const themeFinderTemplate = ThemeFinderPersona;
-         themeFinderTemplate.systemPrompt = "You are an AI assistant that finds a common theme from a number of paragraphs of text in "
-            + wordString + " words or less."
-         themeFinderTemplate.userPrompt = "Please find the most common theme in the following text in "
-            + wordString + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. "
-            + "## The Text ##\n\n" + userPrompt;
-         return themeFinderTemplate;
-
-      case EPromptPersona.kDeveloperQuestionGenerator:
-         const developerQuestionGeneratorTemplate = DeveloperQuestionGeneratorPersona;
-         developerQuestionGeneratorTemplate.systemPrompt = "You are an AI assistant that generates a question after a developer has read an article about AI. The question is a single sentence of no more than 10 words. The question is one that the developer might ask as a follow up to reading the article. The question must be about generative AI or LLMs.";
-         developerQuestionGeneratorTemplate.userPrompt = userPrompt;
-         return developerQuestionGeneratorTemplate;
-
       case EPromptPersona.kDeveloperImaginedAnswerGenerator:
          const developerImaginedAnswerGeneratorTemplate = DeveloperImaginedAnswerGeneratorPersona;
          developerImaginedAnswerGeneratorTemplate.systemPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You will be provided with a question about building applications that use generative AI technology. Write a "
@@ -183,16 +153,35 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
          articleContextTemplate.userPrompt = userPrompt;
          return ArticleContextSummariserPersona;
 
+      case EPromptPersona.kDeveloperQuestionGenerator:
+         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
+         return postProcessPrompt(prompt, questionWordCount, userPrompt);
+
       case EPromptPersona.kDeveloperAssistant:
-         prompt = promptRepository.getPrompt("4761bf88-9329-4bd0-95ca-dc3bc70b6d4d");
+         prompt = promptRepository.getPrompt(developerAssistantPromptId);
          return postProcessPrompt(prompt, defaultWordCount, userPrompt);
 
       case EPromptPersona.kArticleSummariser:
-         prompt = promptRepository.getPrompt("716c667d-9074-4d9a-8335-3194212eba90");
-         return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+         throwIfUndefined(params?.wordTarget);             
+         prompt = promptRepository.getPrompt(articleSummariserPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kArticleClassifier:
+         throwIfUndefined(params?.classifications);
+         prompt = promptRepository.getPrompt(articleClassifierPromptId);
+         return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);       
+
+      case EPromptPersona.kThemeFinder:
+         throwIfUndefined(params?.wordTarget);         
+         prompt = promptRepository.getPrompt(themeFinderPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kTestForSummariseFail:
+         prompt = promptRepository.getPrompt(testForSummmariseFailurePromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);                 
 
       default:
-         prompt = promptRepository.getPrompt("3983ba1b-895d-46fe-a47e-e4230b06c0d6");
+         prompt = promptRepository.getPrompt(defaultPromptId);
          return postProcessPrompt(prompt, defaultWordCount, userPrompt);
    }
 }

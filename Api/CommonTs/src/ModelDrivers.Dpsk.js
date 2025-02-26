@@ -110,7 +110,7 @@ function chat(persona, prompt, params) {
         var _a, _b;
         const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, prompt.prompt, params);
         const systemPrompt = summariser.systemPrompt;
-        const userPrompt = summariser.itemPrompt;
+        const userPrompt = summariser.userPrompt;
         let messages = [];
         messages.push({
             role: IModelDriver_1.EModelConversationRole.kSystem,

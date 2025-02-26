@@ -129,4 +129,27 @@ describe('PromptRepository', function() {
       expect(persona.systemPrompt).toContain("50");
       expect(persona.userPrompt).toContain("Hello");
     });     
+
+    it('should correctly load developer question generator prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kDeveloperQuestionGenerator, "Hello", {wordTarget: 10});   
+      expect(persona.systemPrompt).toContain("10");
+      expect(persona.userPrompt).toContain("Hello");
+    });      
+
+    it('should correctly load article classifier prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kArticleClassifier, "Hello", {classifications: "AI, LLMs, Generative AI"});   
+      expect(persona.systemPrompt).toContain("AI, LLMs, Generative AI");
+      expect(persona.userPrompt).toContain("Hello");
+    });      
+
+    it('should correctly load theme finder prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kThemeFinder, "Breatstroke, Front Crawl, Freestyle", {wordTarget: 1});   
+      expect(persona.systemPrompt).toContain("1");
+      expect(persona.userPrompt).toContain("Breatstroke, Front Crawl, Freestyle");
+    });      
+
+    it('should correctly load test for summarise failure prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kTestForSummariseFail, "I apologise for this");   
+      expect(persona.userPrompt).toContain("I apologise for this");
+    });      
 });
