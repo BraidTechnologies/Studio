@@ -7,8 +7,7 @@ Module for handling Gemini model interactions with abstracted content generation
 import os
 import time
 from typing import Optional, Callable
-
-import google.generativeai as genai
+from google import genai
 from .base import AIModel
 
 class GeminiModel(AIModel):
@@ -20,11 +19,11 @@ class GeminiModel(AIModel):
         # Attempt to configure generative AI
         dev_key = os.environ.get('GOOGLE_DEVELOPER_API_KEY', None)
         if dev_key:
-            genai.configure(api_key=dev_key)
+            self.client = genai.Client(api_key=dev_key)
         else:
             print("Warning: GOOGLE_DEVELOPER_API_KEY is not set. Local Gemini calls may fail.")
-        # Model name (for example, 'gemini-pro')
-        self.model = genai.GenerativeModel('gemini-pro')
+        
+        self.model_name = 'gemini-1.5-pro'
 
     def generate_content(
             self,
@@ -36,9 +35,8 @@ class GeminiModel(AIModel):
             retry_delay_seconds: int = 2
     ) -> Optional[str]:
         """
-        Generate content using the local Gemini model with a caller-defined persona and prompt.
+        Generate content using the Gemini model with a caller-defined persona and prompt.
         """
-
         prompt = (
             f"{persona_intro}\n\n"
             f"Target length: ~{length_in_words} words.\n\n"
@@ -47,7 +45,10 @@ class GeminiModel(AIModel):
 
         for attempt in range(1, max_retries + 1):
             try:
-                response = self.model.generate_content(prompt)
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt
+                )
                 if response and response.text:
                     return response.text
 
