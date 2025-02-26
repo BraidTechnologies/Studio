@@ -40,6 +40,7 @@ google-auth==2.37.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
 google-generativeai==0.8.3
+google-genai==0.1.0
 google-pasta==0.2.0
 googleAPI==0.1.0
 googleapis-common-protos==1.66.0
