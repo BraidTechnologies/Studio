@@ -1,5 +1,4 @@
-# openai.py 
-
+# braid_api_model.py
 import os
 import logging
 from openai import OpenAI
@@ -28,7 +27,7 @@ def summarise_endpoint_url() -> str:
     """
     return f"{BASE_URL}/Summarize?session={SESSION_KEY}"
 
-class OpenAiModel(AIModel):
+class BraidApiModel(AIModel):
     """
     Class for interacting with the OpenAI model.
     """
@@ -42,11 +41,11 @@ class OpenAiModel(AIModel):
         self.client = OpenAI(api_key=api_key)
        
         if not SESSION_KEY:
-            print("No BRAID_SESSION_KEY found in environment; cannot OpenAiModel.")
+            print("No BRAID_SESSION_KEY found in environment; cannot BraidApiModel.")
             return None
        
         if not BASE_URL:
-            print("No BRAID_BASE_URL found in environment; cannot call OpenAiModel.")
+            print("No BRAID_BASE_URL found in environment; cannot call BraidApiModel.")
             return None
     
     def generate_content(

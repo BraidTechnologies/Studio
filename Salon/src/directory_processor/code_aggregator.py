@@ -1,4 +1,4 @@
-# directory_visitor_notebook_lm.py
+# code_aggregator.py
 """
 Visitor that concatenates file contents into large text blocks until 
 reaching a max word limit, then writes the output to a file.

@@ -1,4 +1,4 @@
-# visitors_factory.py
+# factory.py
 """
 Factory methods to create sets of DirectoryProcessor objects
 for various workflows, without hardcoding them in main scripts.

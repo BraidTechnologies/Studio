@@ -1,4 +1,4 @@
-# directory_visitor_readme.py
+# repo_readme_generator.py
 """
 Visitor that checks if a directory needs a 'ReadMe.Salon.md' summary,
 and if so, creates or updates it using a chosen summarization model.

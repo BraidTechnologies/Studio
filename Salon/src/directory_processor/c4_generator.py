@@ -1,4 +1,4 @@
-# directory_visitor_c4.py
+# c4_generator.py
 """
 Visitor that looks for 'readme.md' (case-insensitive) and subdirectories' 
 'readme.salon.md'. If found, it generates three mermaid-based C4 diagrams 
