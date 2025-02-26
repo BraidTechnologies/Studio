@@ -48,7 +48,7 @@
       "userPrompt": "Please find the common theme in the following text in {wordCount} words. Only provide words about the theme itself. Translate to English if necessary. The Text: n\n{userInput}"
     },
     {
-      "id": "",
+      "id": "cbfc5d7b-9404-451e-aec5-585a717d56a6",
       "name": "test-for-summmarise-failure",
       "version": "1.0",
       "personaName": "TestForSummariseFail",
