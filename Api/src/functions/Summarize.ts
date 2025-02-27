@@ -110,17 +110,18 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
    return overallSummary;
 }
 
-/**
- * Asynchronously summarizes the given text using an AI assistant. 
- * This is intended for Context aware chunking, so there is no recursive summarisation.
- * Chunks must fit within the avilable context window
- * 
- * @param persona - The persona to use for the summarisation
- * @param text The text to be summarized.
- * @param words The number of words to use for the summary.
- * @returns A Promise that resolves to the summarized text.
- */
-export async function summarizeContextForSingleChunk(persona: EPromptPersona, text: string, words: number): Promise<string> {
+   /**
+    * Asynchronously summarizes the given text using an AI assistant. 
+    * This is intended for Context aware chunking, so there is no recursive summarisation.
+    * Chunks must fit within the avilable context window
+    * 
+    * @param persona - The persona to use for the summarisation
+    * @param context The context of the overall document.
+    * @param chunk The chunk of text to be summarized.
+    * @param words The number of words to use for the summary.
+    * @returns A Promise that resolves to the summarized text.
+    */
+export async function summarizeContextForSingleChunk(persona: EPromptPersona, context: string, chunk: string, words: number): Promise<string> {
 
    let modelDriver = getDefaultChatModelDriver();
 
@@ -131,10 +132,10 @@ export async function summarizeContextForSingleChunk(persona: EPromptPersona, te
 
    let prompt : IModelConversationPrompt = {
       history: [],
-      prompt: text
+      prompt: ""
    }
 
-   let response = await modelDriver.generateResponse (persona, prompt, {wordTarget: words});
+   let response = await modelDriver.generateResponse (persona, prompt, {wordTarget: words, chunk: chunk, document: context});
 
    return response.content;
 }

@@ -18,7 +18,7 @@ import path from 'path';
 import defaultPrompts from "../src/Default.Prompts.json";
 import boxerPrompts from "../src/Boxer.Prompts.json";
 import waterfallPrompts from "../src/Waterfall.Prompts.json";
-
+import salonPrompts from "../src/Salon.Prompts.json";
 /**
  * Generates TypeScript prompt ID declarations
  */
@@ -89,4 +89,8 @@ generatePythonIds(boxerPrompts, path.join(__dirname, '../../CommonPy/src/generat
 
 generateTypeScriptIds(waterfallPrompts, path.join(__dirname, '../src/GeneratedWaterfallPromptNames.ts'));
 generatePythonIds(waterfallPrompts, path.join(__dirname, '../../CommonPy/src/generated_waterfall_prompt_names.py'));
+
+generateTypeScriptIds(salonPrompts, path.join(__dirname, '../src/GeneratedSalonPromptNames.ts'));
+generatePythonIds(salonPrompts, path.join(__dirname, '../../CommonPy/src/generated_salon_prompt_names.py'));
+
 

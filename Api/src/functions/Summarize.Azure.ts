@@ -97,9 +97,9 @@ export async function summarize(request: HttpRequest, context: InvocationContext
 export async function summarizeContext (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
    let contextText: string | undefined = undefined;
+   let chunkText: string | undefined = undefined;
    let words: number = 50;
    let overallSummary: string | undefined = undefined;
-   let minimumTextLength: number = 64;
 
    if (isSessionValid(request, context)) {
 
@@ -111,19 +111,17 @@ export async function summarizeContext (request: HttpRequest, context: Invocatio
 
          const summariseSpec = (jsonRequest as any).request as ISummariseContextRequest;
 
-         let fullPrompt = `<document>\n${summariseSpec.context}\n</document>\nHere is the chunk we want to situate within the whole document:\n<chunk>\n${summariseSpec.chunk}\n</chunk>\n` +
-                          'Please give a short succinct context to situate this chunk within the overall document for the purppose of improving sarch retrieval of the chunk.' +
-                          'Answer only with the succinct contxt and nothing else.';
-
+         let fullPrompt = summariseSpec.context + summariseSpec.chunk;
          let buffer = " ".repeat(256);
-
-         const persona = summariseSpec.persona;         
          contextText = summariseSpec.context;
-         words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;
+         chunkText = summariseSpec.chunk;
+         words = summariseSpec.lengthInWords ? Math.floor(Number(summariseSpec.lengthInWords)) : 50;         
 
-         if (contextText && chunker.fitsInMaximumChunk(fullPrompt + buffer)) {
+         if (chunker.fitsInMaximumChunk(fullPrompt + buffer)) {
 
-            overallSummary = await summarizeContextForSingleChunk(persona, fullPrompt, words);
+            const persona = summariseSpec.persona;         
+
+            overallSummary = await summarizeContextForSingleChunk(persona, contextText, chunkText, words);
             
             const summariseResponse: ISummariseResponse = {
                summary: overallSummary
