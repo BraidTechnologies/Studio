@@ -8,72 +8,69 @@
  * specific summarization task.
  *
  * The module exports:
- * - Predefined persona templates for Article, Code, and Survey summarization
- * - getSummariser function to generate configured prompt personas with
- *   customized word count targets
+ * - Predefined persona templates for summarization etc
+ * - getChatPersona function to generate configured prompt personas with
+ *   optional customized parameters
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getChatPersona = getChatPersona;
 const IPromptPersona_1 = require("./IPromptPersona");
-const DefaultPersona = {
-    name: IPromptPersona_1.EPromptPersona.kDefault,
-    systemPrompt: "",
-    itemPrompt: ""
-};
-const DeveloperAssistantPersona = {
-    name: IPromptPersona_1.EPromptPersona.kDeveloperAssistant,
-    systemPrompt: "",
-    itemPrompt: ""
-};
-const ArticleSummariserPersona = {
-    name: IPromptPersona_1.EPromptPersona.kArticleSummariser,
-    systemPrompt: "",
-    itemPrompt: ""
-};
+const IPromptRepository_1 = require("./IPromptRepository");
+const Asserts_1 = require("./Asserts");
+const Prompts_json_1 = __importDefault(require("./Prompts.json"));
+const GeneratedPromptNames_1 = require("./GeneratedPromptNames");
+const promptRepository = new IPromptRepository_1.PromptInMemoryRepository(Prompts_json_1.default);
+const defaultWordCount = 50;
+const questionWordCount = 10;
+const themeFinderWordCount = 1;
+function postProcessPrompt(prompt, defaultWordCount, userInput) {
+    if (typeof prompt !== "undefined") {
+        let systemPrompt = prompt.systemPrompt.replace("{wordCount}", defaultWordCount.toString());
+        let userPrompt = prompt.userPrompt.replace("{userInput}", userInput);
+        return { userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName };
+    }
+    throw new Error("Prompt not found");
+}
+function postProcessClassifierPrompt(prompt, classifications, userInput) {
+    if (typeof prompt !== "undefined") {
+        let systemPrompt = prompt.systemPrompt.replace("{classifications}", classifications);
+        let userPrompt = prompt.userPrompt.replace("{userInput}", userInput);
+        return { userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName };
+    }
+    throw new Error("Prompt not found");
+}
 const ArticleContextSummariserPersona = {
     name: IPromptPersona_1.EPromptPersona.kArticleContextSummariser,
     systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 const CodeSummariserPersona = {
     name: IPromptPersona_1.EPromptPersona.kCodeSummariser,
     systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 const C4DiagrammerPersona = {
     name: IPromptPersona_1.EPromptPersona.kC4Diagrammer,
     systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 const SurveySummariserPersona = {
     name: IPromptPersona_1.EPromptPersona.kSurveySummariser,
     systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 const TestForSummariseFailPersona = {
     name: IPromptPersona_1.EPromptPersona.kTestForSummariseFail,
     systemPrompt: "",
-    itemPrompt: ""
-};
-const ClassifierPersona = {
-    name: IPromptPersona_1.EPromptPersona.kClassifier,
-    systemPrompt: "",
-    itemPrompt: ""
-};
-const ThemeFinderPersona = {
-    name: IPromptPersona_1.EPromptPersona.kThemeFinder,
-    systemPrompt: "",
-    itemPrompt: ""
-};
-const DeveloperQuestionGeneratorPersona = {
-    name: IPromptPersona_1.EPromptPersona.kDeveloperQuestionGenerator,
-    systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 const DeveloperImaginedAnswerGeneratorPersona = {
     name: IPromptPersona_1.EPromptPersona.kDeveloperImaginedAnswerGenerator,
     systemPrompt: "",
-    itemPrompt: ""
+    userPrompt: ""
 };
 function getChatPersona(persona, userPrompt, params) {
     let wordString = "50";
@@ -84,87 +81,65 @@ function getChatPersona(persona, userPrompt, params) {
     if (params && params.promptParam1) {
         promptParam1 = params.promptParam1;
     }
+    let prompt = undefined;
     switch (persona) {
         case IPromptPersona_1.EPromptPersona.kSurveySummariser:
             const surveyTemplate = SurveySummariserPersona;
-            surveyTemplate.systemPrompt = "You are an AI asistant that summarises survey responses in "
+            surveyTemplate.systemPrompt = "You are an AI assistant that summarises survey responses in "
                 + wordString +
-                " words or less, to explain it to the management team that issues the survey. Please summarise the following survey result in "
-                + wordString + " words. Make each distinct point a separate paragraph.";
-            surveyTemplate.itemPrompt = userPrompt;
+                " words or less, to explain it to the management team that issues the survey.";
+            surveyTemplate.userPrompt = "Please summarise the following survey result in "
+                + wordString + " words. Make each distinct point a separate paragraph.\n\n## The Survey##\n\n" + userPrompt;
             return surveyTemplate;
         case IPromptPersona_1.EPromptPersona.kCodeSummariser:
             const codeTemplate = CodeSummariserPersona;
-            codeTemplate.systemPrompt = "You are an AI asistant that summarises code in "
-                + wordString +
-                " words or less, to help explain the code it to new developers. Please summarise the following code in "
+            codeTemplate.systemPrompt = "You are an AI assistant that summarises code to help explain the code to new developers. Please summarise the following code in "
                 + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
-            codeTemplate.itemPrompt = userPrompt;
+            codeTemplate.userPrompt = userPrompt;
             return codeTemplate;
         case IPromptPersona_1.EPromptPersona.kC4Diagrammer:
             const c4Template = C4DiagrammerPersona;
-            c4Template.systemPrompt = "You are an AI asistant that generates a diagram in mermaid format from a description of a software system "
+            c4Template.systemPrompt = "You are an AI assistant that generates a diagram in mermaid format from a description of a software system "
                 + "to help explain the system to new developers.";
-            c4Template.itemPrompt = userPrompt;
+            c4Template.userPrompt = userPrompt;
             return c4Template;
-        case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
-            const testForSummariseFailTemplate = TestForSummariseFailPersona;
-            testForSummariseFailTemplate.systemPrompt = "You are an AI asistant that reviews the work of a summariser. The summariser occasionally cannot find the main body of the text to summarise. The summariser may apologise for this, or may say there is not enough relevant information to summarise, or may state the text contains only web page navigation, all of which are failed summaries."
-                + " Please review the following summary and reply 'No' if the summariser has not been able to create a good summary of a body of text, otherwise reply 'Yes'.";
-            testForSummariseFailTemplate.itemPrompt = userPrompt;
-            return testForSummariseFailTemplate;
-        case IPromptPersona_1.EPromptPersona.kClassifier:
-            const classifierTemplate = ClassifierPersona;
-            classifierTemplate.systemPrompt = "You are an asistant that can classify text into one of the following subjects: "
-                + promptParam1 + "."
-                + "Try to classify the subject of the following text. The classification is a single word from the list "
-                + promptParam1
-                + ". If you cannot classify it well, answer 'Unknown'.";
-            classifierTemplate.itemPrompt = userPrompt;
-            return classifierTemplate;
-        case IPromptPersona_1.EPromptPersona.kThemeFinder:
-            const themeFinderTemplate = ThemeFinderPersona;
-            themeFinderTemplate.systemPrompt = "You are an AI asistant that finds a common theme from a number of paragraphs of text in "
-                + wordString + " words or less. Please find the most common theme in the following text in "
-                + wordString + " words. Do not start your reply with the phrase 'The most common theme in the text is'. Translate to English if necessary. ";
-            themeFinderTemplate.itemPrompt = userPrompt;
-            return themeFinderTemplate;
-        case IPromptPersona_1.EPromptPersona.kDeveloperQuestionGenerator:
-            const developerQuestionGeneratorTemplate = DeveloperQuestionGeneratorPersona;
-            developerQuestionGeneratorTemplate.systemPrompt = "You are an AI asistant that generates a question after a developer has read an article about AI. The question is a single sentence of no more than 10 words. The question is one that the developer might ask as a follow up to reading the article. The question must be about generative AI or LLMs.";
-            developerQuestionGeneratorTemplate.itemPrompt = userPrompt;
-            return developerQuestionGeneratorTemplate;
-        case IPromptPersona_1.EPromptPersona.kDeveloperAssistant:
-            const developerAssistantTemplate = DeveloperAssistantPersona;
-            developerAssistantTemplate.systemPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You limit replies to "
-                + wordString + " words or less. If you don't know the answer, say 'I don't know'. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.";
-            developerAssistantTemplate.itemPrompt = userPrompt;
-            return developerAssistantTemplate;
         case IPromptPersona_1.EPromptPersona.kDeveloperImaginedAnswerGenerator:
             const developerImaginedAnswerGeneratorTemplate = DeveloperImaginedAnswerGeneratorPersona;
             developerImaginedAnswerGeneratorTemplate.systemPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You will be provided with a question about building applications that use generative AI technology. Write a "
                 + wordString + " word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n";
-            developerImaginedAnswerGeneratorTemplate.itemPrompt = userPrompt;
+            developerImaginedAnswerGeneratorTemplate.userPrompt = userPrompt;
             return developerImaginedAnswerGeneratorTemplate;
-        case IPromptPersona_1.EPromptPersona.kArticleSummariser:
-            const articleTemplate = ArticleSummariserPersona;
-            articleTemplate.systemPrompt = "You are an AI asistant that summarises text in "
-                + wordString +
-                " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text.  Translate to English if necessary. Make each distinct point a separate paragraph.";
-            articleTemplate.itemPrompt = userPrompt;
-            return ArticleSummariserPersona;
         case IPromptPersona_1.EPromptPersona.kArticleContextSummariser:
             const articleContextTemplate = ArticleContextSummariserPersona;
-            articleContextTemplate.systemPrompt = "You are an AI asistant that summarises text in "
+            articleContextTemplate.systemPrompt = "You are an AI assistant that summarises text in "
                 + wordString +
                 " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
-            articleContextTemplate.itemPrompt = userPrompt;
+            articleContextTemplate.userPrompt = userPrompt;
             return ArticleContextSummariserPersona;
+        case IPromptPersona_1.EPromptPersona.kDeveloperQuestionGenerator:
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.developerQuestionGeneratorPromptId);
+            return postProcessPrompt(prompt, questionWordCount, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kDeveloperAssistant:
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.developerAssistantPromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleSummariser:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.articleSummariserPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleClassifier:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.classifications);
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.articleClassifierPromptId);
+            return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kThemeFinder:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.themeFinderPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.testForSummmariseFailurePromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
         default:
-            const defaultTemplate = DefaultPersona;
-            defaultTemplate.systemPrompt = "You are an AI asistant that provides assistance to developers building AI with Python. You provide concise answers of 50 words or less.";
-            defaultTemplate.itemPrompt = userPrompt;
-            return DefaultPersona;
+            prompt = promptRepository.getPrompt(GeneratedPromptNames_1.defaultPromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
     }
 }
 //# sourceMappingURL=IPromptPersonaFactory.js.map

@@ -216,7 +216,7 @@ async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelC
    const summariser = getChatPersona(persona, prompt.prompt, params);
 
    const systemPrompt = summariser.systemPrompt;
-   const userPrompt = summariser.itemPrompt;
+   const userPrompt = summariser.userPrompt;
 
    let messages: Array<OpenAIChatElement> = [];
 

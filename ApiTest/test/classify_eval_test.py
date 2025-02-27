@@ -59,7 +59,7 @@ def test_similar_basketball_classification():
 def test_different_sport_classification():
     '''Test different sport text should yield different classification'''
     request_data = {'request': {
-        'text': 'Practicing free serves on the court',
+        'text': 'Practicing backhands and forehands on the court',
         'classifications': ['basketball', 'soccer', 'tennis']
     }}
 

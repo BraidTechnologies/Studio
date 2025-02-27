@@ -126,7 +126,7 @@ class OpenAi4oChatModelInit {
 exports.OpenAi4oChatModelInit = OpenAi4oChatModelInit;
 class OpenAi4oMiniChatModelInit {
     constructor() {
-        this.deploymentName = "GTP4o";
+        this.deploymentName = "GTP4o-mini";
         this.urlElement = "StudioSmall";
         this.drivenModelType = IModelDriver_1.EModel.kSmall;
         this.drivenModelProvider = IModelDriver_1.EModelProvider.kOpenAI;
@@ -191,7 +191,7 @@ function chat(persona, urlElement, prompt, params, useAzure) {
         });
         const summariser = (0, IPromptPersonaFactory_1.getChatPersona)(persona, prompt.prompt, params);
         const systemPrompt = summariser.systemPrompt;
-        const userPrompt = summariser.itemPrompt;
+        const userPrompt = summariser.userPrompt;
         let messages = [];
         messages.push({
             role: 'system',
@@ -250,14 +250,14 @@ function chat(persona, urlElement, prompt, params, useAzure) {
 class OpenAiGpt4oMiniTextChunkerInit {
     constructor() {
         this.drivenModelProvider = IModelDriver_1.EModelProvider.kOpenAI;
-        this.drivenModelType = IModelDriver_1.EModel.kLarge;
+        this.drivenModelType = IModelDriver_1.EModel.kSmall;
         this.defaultChunkSize = 8192;
         this.maximumChunkSize = 65536;
         this.embeddingChunkSize = 8191;
         this.defaultChunkSizeWithBuffer = (8192 - 256);
         this.embeddingChunkSizeWithBuffer = (8191 - 256);
         this.maximumChunkSizeWithBuffer = (65536 - 256);
-        this.implementsModel = IModelDriver_1.EModel.kLarge;
+        this.implementsModel = IModelDriver_1.EModel.kSmall;
     }
 }
 exports.OpenAiGpt4oMiniTextChunkerInit = OpenAiGpt4oMiniTextChunkerInit;

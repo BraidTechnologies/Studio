@@ -26,7 +26,7 @@ describe("Chat Driver", function () {
 
       let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       expect(response.content.length > 0).toEqual(true);   
 
    }).timeout(10000);
@@ -38,7 +38,7 @@ describe("Chat Driver", function () {
       let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
          history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       expect(response.content.includes("10:30")).toEqual(true);   
 
    }).timeout(10000);   
@@ -50,7 +50,7 @@ describe("Chat Driver", function () {
       let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
          history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       expect(response.content.includes("10:30")).toEqual(true);   
       expect(driver.drivenModelType).toEqual(EModel.kSmall);
 
@@ -62,7 +62,7 @@ describe("Chat Driver", function () {
 
       let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       expect(response.content.length > 0).toEqual(true);   
 
    }).timeout(10000);   
@@ -75,7 +75,7 @@ describe("Chat Driver", function () {
       let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
          history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       console.log (response.content);
       expect(response.content.toLowerCase().includes("10:30")).toEqual(true);   
 
@@ -87,7 +87,7 @@ describe("Chat Driver", function () {
 
       let prompt : IModelConversationPrompt = {prompt: "Hi, how are you?", history: []};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       expect(response.content.length > 0).toEqual(true);   
 
    }).timeout(10000);   
@@ -100,7 +100,7 @@ describe("Chat Driver", function () {
       let prompt : IModelConversationPrompt = {prompt: "What time did I say it was?", 
          history: [ {role: EModelConversationRole.kUser, content: "It is 10:30"} ]};
 
-      let response = await driver.generateResponse (EPromptPersona.kArticleSummariser, prompt, {wordTarget: 100});
+      let response = await driver.generateResponse (EPromptPersona.kDefault, prompt, {wordTarget: 100});
       console.log (response.content);
       expect(response.content.toLowerCase().includes("10:30")).toEqual(true);   
 
