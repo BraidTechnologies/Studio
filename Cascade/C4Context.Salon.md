@@ -1,26 +1,29 @@
 ```mermaid
 C4Context
-title Cascade Chrome Extension - System Context
+title Cascade Chrome Extension
 
-Person(user, "User", "Chrome browser user")
+Person(user, "User", "Interacts with the extension for web scraping, summarization, and classification")
 
-System_Boundary(cascade, "Cascade Chrome Extension") {
-    Container(popup, "Popup Interface", "popup.js", "Handles user authentication and displays results")
-    Container(content, "Content Script", "content.ts", "Performs web scraping and content processing")
+System(extension, "Cascade Extension", "Chrome extension for web scraping, text summarization, and content classification")
+
+System_Ext(braid_api, "Braid API", "Session validation service", "braid-api.azurewebsites.net")
+System_Ext(summarization_api, "Summarization API", "External text summarization service")
+System_Ext(classification_api, "Classification API", "External content classification service")
+
+Rel(user, extension, "Interacts with", "UI interaction")
+Rel(extension, braid_api, "Validates session with", "HTTPS")
+Rel(extension, summarization_api, "Summarizes text with", "HTTPS")
+Rel(extension, classification_api, "Classifies content with", "HTTPS")
+
+System_Boundary(extension_boundary, "Cascade Extension") {
+  Container(content_script, "Content Script", "Handles web scraping, text extraction, and communication with external APIs", "TypeScript, artoo.js, axios")
+  Container(popup_interface, "Popup Interface", "Manages user authentication, displays results, and communicates with Braid API", "JavaScript")
+
+  Rel(user, popup_interface, "Interacts with", "UI interaction")
+  Rel(popup_interface, content_script, "Sends messages to", "Chrome Extension Messaging")
+  Rel(content_script, braid_api, "Validates Session", "HTTPS")
+  Rel(content_script, summarization_api, "Sends text to", "HTTPS")
+  Rel(content_script, classification_api, "Sends content to", "HTTPS")
+
 }
-
-System_Boundary(apis, "APIs") {
-System_Ext(braidApi, "Braid API", "Session validation and authentication")
-System_Ext(summarizeApi, "Summarization API", "Text summarization service")
-System_Ext(classifyApi, "Classification API", "Content classification service")
-System_Ext(targetWeb, "Target Website", "Website being scraped")
-}
-
-Rel(user, popup, "Enters session key and initiates operations")
-Rel(popup, braidApi, "Validates session key", "HTTPS")
-Rel(popup, content, "Sends commands", "Chrome messaging")
-Rel(content, targetWeb, "Scrapes content", "DOM manipulation")
-Rel(content, summarizeApi, "Requests text summarization", "HTTPS")
-Rel(content, classifyApi, "Requests content classification", "HTTPS")
-Rel(content, popup, "Returns results", "Chrome messaging")
 ```

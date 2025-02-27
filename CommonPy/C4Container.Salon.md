@@ -1,0 +1,16 @@
+```mermaid
+C4Context
+  System_Boundary(c1, "Python Library") {
+    Container(chunk_repo, "Chunk Repository", "Python Library", "Manages CRUD operations for chunks via the Braid API")
+    Container(page_repo, "Page Repository", "Python Library", "Handles storage and retrieval of pages")
+    Rel(chunk_repo, page_repo, "Uses", "")
+
+    ContainerDb(braid_db, "Braid API", "Cosmos DB", "Stores chunks and pages")
+    Rel(chunk_repo, braid_db, "Reads/Writes", "API Calls")
+    Rel(page_repo, braid_db, "Reads/Writes", "API Calls")
+  }
+
+  Person_Ext(user, "User", "Interacts with the library")
+  Rel(user, chunk_repo, "Uses", "")
+  Rel(user, page_repo, "Uses", "")
+```
