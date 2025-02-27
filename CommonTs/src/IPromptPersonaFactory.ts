@@ -21,13 +21,17 @@ import { PromptInMemoryRepository, IStoredPrompt } from "./IPromptRepository";
 import { throwIfUndefined } from "./Asserts";
 import Prompts from "./Prompts.json";
 import { 
+    // Boxer prompts
     defaultPromptId, 
     developerAssistantPromptId, 
     articleSummariserPromptId, 
     developerQuestionGeneratorPromptId, 
+    developerImaginedAnswerGeneratorPromptId,  
+    
+    // Waterfall prompts
     articleClassifierPromptId,
     themeFinderPromptId,
-    testForSummmariseFailurePromptId
+    testForSummmariseFailurePromptId,
 } from "./GeneratedPromptNames";
 
 const promptRepository = new PromptInMemoryRepository(Prompts);
@@ -83,19 +87,6 @@ const SurveySummariserPersona: IPromptPersona = {
    userPrompt: ""
 };
 
-const TestForSummariseFailPersona: IPromptPersona = {
-
-   name: EPromptPersona.kTestForSummariseFail,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const DeveloperImaginedAnswerGeneratorPersona: IPromptPersona = {
-
-   name: EPromptPersona.kDeveloperImaginedAnswerGenerator,
-   systemPrompt: "",
-   userPrompt: ""
-};
 
 export function getChatPersona(persona: EPromptPersona, userPrompt: string, params?: IChatModelDriverParams): IPromptPersona {
 
@@ -111,56 +102,21 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
    let prompt: IStoredPrompt | undefined = undefined;
 
    switch (persona) {
-
-      case EPromptPersona.kSurveySummariser:
-         const surveyTemplate = SurveySummariserPersona;
-         surveyTemplate.systemPrompt = "You are an AI assistant that summarises survey responses in "
-            + wordString +
-            " words or less, to explain it to the management team that issues the survey.";
-
-         surveyTemplate.userPrompt = "Please summarise the following survey result in "
-            + wordString + " words. Make each distinct point a separate paragraph.\n\n## The Survey##\n\n" + userPrompt;
-         return surveyTemplate;
-
-      case EPromptPersona.kCodeSummariser:
-         const codeTemplate = CodeSummariserPersona;
-         codeTemplate.systemPrompt = "You are an AI assistant that summarises code to help explain the code to new developers. Please summarise the following code in "
-            + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
-
-         codeTemplate.userPrompt = userPrompt;
-         return codeTemplate;
-
-      case EPromptPersona.kC4Diagrammer:
-         const c4Template = C4DiagrammerPersona;
-         c4Template.systemPrompt = "You are an AI assistant that generates a diagram in mermaid format from a description of a software system "
-            + "to help explain the system to new developers.";
-
-         c4Template.userPrompt = userPrompt;
-         return c4Template;
-
-      case EPromptPersona.kDeveloperImaginedAnswerGenerator:
-         const developerImaginedAnswerGeneratorTemplate = DeveloperImaginedAnswerGeneratorPersona;
-         developerImaginedAnswerGeneratorTemplate.systemPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You will be provided with a question about building applications that use generative AI technology. Write a "
-            + wordString + " word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n";
-         developerImaginedAnswerGeneratorTemplate.userPrompt = userPrompt;
-         return developerImaginedAnswerGeneratorTemplate;
-
-      case EPromptPersona.kArticleContextSummariser:
-         const articleContextTemplate = ArticleContextSummariserPersona;
-         articleContextTemplate.systemPrompt = "You are an AI assistant that summarises text in "
-            + wordString +
-            " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
-         articleContextTemplate.userPrompt = userPrompt;
-         return ArticleContextSummariserPersona;
-
-      case EPromptPersona.kDeveloperQuestionGenerator:
-         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
-         return postProcessPrompt(prompt, questionWordCount, userPrompt);
-
+      
+      // Boxer Prompts   
       case EPromptPersona.kDeveloperAssistant:
          prompt = promptRepository.getPrompt(developerAssistantPromptId);
          return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+       
+      case EPromptPersona.kDeveloperQuestionGenerator:
+         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
+         return postProcessPrompt(prompt, questionWordCount, userPrompt);
+         
+      case EPromptPersona.kDeveloperImaginedAnswerGenerator:
+         prompt = promptRepository.getPrompt(developerImaginedAnswerGeneratorPromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);         
 
+      // Waterfall Prompts
       case EPromptPersona.kArticleSummariser:
          throwIfUndefined(params?.wordTarget);             
          prompt = promptRepository.getPrompt(articleSummariserPromptId);
@@ -178,8 +134,41 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
 
       case EPromptPersona.kTestForSummariseFail:
          prompt = promptRepository.getPrompt(testForSummmariseFailurePromptId);
-         return postProcessPrompt(prompt, defaultWordCount, userPrompt);                 
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);  
 
+      // Salon Prompts
+      case EPromptPersona.kSurveySummariser:
+         const surveyTemplate = SurveySummariserPersona;
+         surveyTemplate.systemPrompt = "You are an AI assistant that summarises survey responses in "
+            + wordString +
+            " words or less, to explain it to the management team that issues the survey.";
+   
+         surveyTemplate.userPrompt = "Please summarise the following survey result in "
+   
+      case EPromptPersona.kCodeSummariser:
+         const codeTemplate = CodeSummariserPersona;
+         codeTemplate.systemPrompt = "You are an AI assistant that summarises code to help explain the code to new developers. Please summarise the following code in "
+            + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
+   
+         codeTemplate.userPrompt = userPrompt;
+         return codeTemplate;
+   
+      case EPromptPersona.kC4Diagrammer:
+         const c4Template = C4DiagrammerPersona;
+         c4Template.systemPrompt = "You are an AI assistant that generates a diagram in mermaid format from a description of a software system "
+            + "to help explain the system to new developers.";
+   
+         c4Template.userPrompt = userPrompt;
+         return c4Template;
+   
+      case EPromptPersona.kArticleContextSummariser:
+         const articleContextTemplate = ArticleContextSummariserPersona;
+         articleContextTemplate.systemPrompt = "You are an AI assistant that summarises text in "
+            + wordString +
+
+            " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
+         articleContextTemplate.userPrompt = userPrompt;
+         return articleContextTemplate;         
       default:
          prompt = promptRepository.getPrompt(defaultPromptId);
          return postProcessPrompt(prompt, defaultWordCount, userPrompt);

@@ -116,13 +116,7 @@ describe('PromptRepository', function() {
       const persona = getChatPersona(EPromptPersona.kDefault, "Hello", {wordTarget: 50});   
       expect(persona.systemPrompt).toContain("50");
       expect(persona.userPrompt).toContain("Hello");
-    });
-
-    it('should correctly load article summariser prompt', async function() {
-      const persona = getChatPersona(EPromptPersona.kArticleSummariser, "Hello", {wordTarget: 50});   
-      expect(persona.systemPrompt).toContain("50");
-      expect(persona.userPrompt).toContain("Hello");
-    });    
+    }); 
 
     it('should correctly load developer assistant prompt', async function() {
       const persona = getChatPersona(EPromptPersona.kDeveloperAssistant, "Hello", {wordTarget: 50});   
@@ -135,6 +129,17 @@ describe('PromptRepository', function() {
       expect(persona.systemPrompt).toContain("10");
       expect(persona.userPrompt).toContain("Hello");
     });      
+
+    it('should correctly load load developer imagined answer generator prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kDeveloperImaginedAnswerGenerator, "How do LLMs work?");   
+      expect(persona.userPrompt).toContain("How do LLMs work?");
+    });    
+
+    it('should correctly load article summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kArticleSummariser, "Hello", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Hello");
+    });  
 
     it('should correctly load article classifier prompt', async function() {
       const persona = getChatPersona(EPromptPersona.kArticleClassifier, "Hello", {classifications: "AI, LLMs, Generative AI"});   
@@ -151,5 +156,7 @@ describe('PromptRepository', function() {
     it('should correctly load test for summarise failure prompt', async function() {
       const persona = getChatPersona(EPromptPersona.kTestForSummariseFail, "I apologise for this");   
       expect(persona.userPrompt).toContain("I apologise for this");
-    });      
+    });     
+    
+    
 });
