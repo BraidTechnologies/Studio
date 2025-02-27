@@ -1,4 +1,4 @@
-/**
+/**                     
  * @module Compress
  * 
  * This module provides functions for compressing and decompressing strings using the deflate algorithm.

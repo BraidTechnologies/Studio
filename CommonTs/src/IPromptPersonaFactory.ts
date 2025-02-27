@@ -19,25 +19,34 @@ import { IChatModelDriverParams } from "./IModelDriver";
 import { EPromptPersona, IPromptPersona } from "./IPromptPersona";
 import { PromptInMemoryRepository, IStoredPrompt } from "./IPromptRepository";
 import { throwIfUndefined } from "./Asserts";
-import Prompts from "./Prompts.json";
-import { 
-    // Boxer prompts
-    defaultPromptId, 
-    developerAssistantPromptId, 
-    articleSummariserPromptId, 
-    developerQuestionGeneratorPromptId, 
-    developerImaginedAnswerGeneratorPromptId,  
-    
-    // Waterfall prompts
-    articleClassifierPromptId,
-    themeFinderPromptId,
-    testForSummmariseFailurePromptId,
-} from "./GeneratedPromptNames";
 
-const promptRepository = new PromptInMemoryRepository(Prompts);
+import DefaultPrompts from "./Default.Prompts.json";
+import BoxerPrompts from "./Boxer.Prompts.json"; 
+import WaterfallPrompts from "./Waterfall.Prompts.json";
+
+import { 
+    defaultPromptId
+} from "./GeneratedDefaultPromptNames";
+
+import { 
+   developerAssistantPromptId, 
+   developerQuestionGeneratorPromptId, 
+   developerImaginedAnswerGeneratorPromptId,  
+} from "./GeneratedBoxerPromptNames";
+
+import { 
+   articleClassifierPromptId,
+   articleSummariserPromptId,
+   themeFinderPromptId,
+   testForSummmariseFailurePromptId,
+} from "./GeneratedWaterfallPromptNames";
+
+
+const allPrompts = [...DefaultPrompts, ...BoxerPrompts, ...WaterfallPrompts];
+const promptRepository = new PromptInMemoryRepository(allPrompts);
+
 const defaultWordCount = 50;
 const questionWordCount = 10;
-const themeFinderWordCount = 1;
 
 function postProcessPrompt(prompt: IStoredPrompt | undefined, defaultWordCount: number, userInput: string): IPromptPersona {
 
