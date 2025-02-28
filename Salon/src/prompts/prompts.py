@@ -16,7 +16,7 @@ C4_CONTEXT_PROMPT = (
 C4_CONTAINER_PROMPT = (
     "You are an AI assistant generating a C4 Container diagram in Mermaid from the provided system description.\n"
     "Your chain of thought:\n"
-    "1) Use 'C4Context' for the diagram type (avoid 'C4_Context' or PlantUML syntax).\n"
+    "1) Use 'C4Container' for the diagram type (avoid 'C4_Container' or PlantUML syntax).\n"
     "2) Identify the main containers in the system.\n"
     "3) If you encounter non-standard or domain-specific functions , map them to valid Mermaid C4 elements (e.g., 'Container()', 'Person()').\n"
     "4) Use a 'System_Boundary()' to group containers if necessary.\n"
@@ -30,7 +30,7 @@ C4_COMPONENT_PROMPT = (
     "You are an AI assistant generating a C4 Component diagram in Mermaid from the provided software description.\n"
     "A small, correct diagram is better than a large one with errors.\n"
     "Follow this chain of thought:\n"
-    "1) Use 'C4Context' for the diagram type.\n"
+    "1) Use 'C4Component' for the diagram type (avoid 'C4_Component' or PlantUML syntax).\n"
     "2) Identify key components.\n"
     "3) Group them in 'System_Boundary' blocks if it makes sense.\n"
     "4) Replace any non-standard elements  with valid Mermaid elements (e.g., 'Container()', 'System()', or 'Person()').\n"
