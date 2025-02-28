@@ -18,8 +18,19 @@ class GeminiModel(AIModel):
     def __init__(self) -> None:
         # Attempt to configure generative AI
         dev_key = os.environ.get('GOOGLE_DEVELOPER_API_KEY', None)
+        proxy = os.environ.get('HTTPS_PROXY', None)  # Get proxy from environment variable
+        
         if dev_key:
-            self.client = genai.Client(api_key=dev_key)
+            # Configure client with proxy if available
+            client_options = {}
+            if proxy:
+                client_options['transport'] = 'rest'  # Use REST transport for proxy support
+                client_options['proxy'] = proxy
+            
+            self.client = genai.Client(
+                api_key=dev_key,
+                **client_options
+            )
         else:
             print("Warning: GOOGLE_DEVELOPER_API_KEY is not set. Local Gemini calls may fail.")
         
