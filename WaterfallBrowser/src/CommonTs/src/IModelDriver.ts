@@ -103,6 +103,9 @@ export interface IChatModelDriverParams {
    wordTarget?: number | undefined;
    promptParam1?: string | undefined;
    classifications?: string | undefined;
+   c4DiagramType?: string | undefined;
+   chunk?: string | undefined;
+   document?: string | undefined;
 }
 
 /**

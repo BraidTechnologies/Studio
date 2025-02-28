@@ -162,6 +162,27 @@ function getChatPersona(persona, userPrompt, params) {
             (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.document);
             prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleContextSummariserPromptId);
             return postProcessArticleContextPrompt(prompt, wordTarget, params === null || params === void 0 ? void 0 : params.chunk, params === null || params === void 0 ? void 0 : params.document);
+        case IPromptPersona_1.EPromptPersona.kDeveloperQuestionGenerator:
+            prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames_1.developerQuestionGeneratorPromptId);
+            return postProcessPrompt(prompt, wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kDeveloperAssistant:
+            prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames_1.developerAssistantPromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleSummariser:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleSummariserPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleClassifier:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.classifications);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleClassifierPromptId);
+            return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kThemeFinder:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.themeFinderPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.testForSummmariseFailurePromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
         default:
             prompt = promptRepository.getPrompt(GeneratedDefaultPromptNames_1.defaultPromptId);
             return postProcessPrompt(prompt, wordTarget, userPrompt);

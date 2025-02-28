@@ -205,7 +205,7 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
 
       case EPromptPersona.kDeveloperQuestionGenerator:
          prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
-         return postProcessPrompt(prompt, questionWordCount, userPrompt);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
 
       case EPromptPersona.kDeveloperAssistant:
          prompt = promptRepository.getPrompt(developerAssistantPromptId);
