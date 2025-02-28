@@ -22,6 +22,7 @@ exports.getChatPersona = getChatPersona;
 const IPromptPersona_1 = require("./IPromptPersona");
 const IPromptRepository_1 = require("./IPromptRepository");
 const Asserts_1 = require("./Asserts");
+
 const Default_Prompts_json_1 = __importDefault(require("./Default.Prompts.json"));
 const Boxer_Prompts_json_1 = __importDefault(require("./Boxer.Prompts.json"));
 const Waterfall_Prompts_json_1 = __importDefault(require("./Waterfall.Prompts.json"));
@@ -49,6 +50,7 @@ function postProcessPrompt(prompt, wordCount, userInput) {
     }
     throw new Error("Prompt not found");
 }
+
 /**
  * Post-processes a classifier prompt by replacing classification and input placeholders
  * @param prompt The stored prompt template to process
@@ -57,6 +59,7 @@ function postProcessPrompt(prompt, wordCount, userInput) {
  * @returns A processed prompt persona with placeholders replaced
  * @throws Error if the prompt is not found
  */
+
 function postProcessClassifierPrompt(prompt, classifications, userInput) {
     if (typeof prompt !== "undefined") {
         let systemPrompt = prompt.systemPrompt.replace("{classifications}", classifications);
@@ -65,6 +68,7 @@ function postProcessClassifierPrompt(prompt, classifications, userInput) {
     }
     throw new Error("Prompt not found");
 }
+
 /**
  * Post-processes a C4 diagrammer prompt by replacing the user input and C4 diagram type placeholders
  * @param prompt The stored prompt template to process

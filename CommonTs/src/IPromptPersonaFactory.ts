@@ -203,6 +203,33 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
          prompt = promptRepository.getPrompt(articleContextSummariserPromptId);
          return postProcessArticleContextPrompt(prompt, wordTarget, params?.chunk, params?.document);   
 
+      case EPromptPersona.kDeveloperQuestionGenerator:
+         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
+         return postProcessPrompt(prompt, questionWordCount, userPrompt);
+
+      case EPromptPersona.kDeveloperAssistant:
+         prompt = promptRepository.getPrompt(developerAssistantPromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+
+      case EPromptPersona.kArticleSummariser:
+         throwIfUndefined(params?.wordTarget);             
+         prompt = promptRepository.getPrompt(articleSummariserPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kArticleClassifier:
+         throwIfUndefined(params?.classifications);
+         prompt = promptRepository.getPrompt(articleClassifierPromptId);
+         return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);       
+
+      case EPromptPersona.kThemeFinder:
+         throwIfUndefined(params?.wordTarget);         
+         prompt = promptRepository.getPrompt(themeFinderPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kTestForSummariseFail:
+         prompt = promptRepository.getPrompt(testForSummmariseFailurePromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);                 
+
       default:
          prompt = promptRepository.getPrompt(defaultPromptId);
          return postProcessPrompt(prompt, wordTarget, userPrompt);

@@ -39,6 +39,7 @@ from CommonPy.src.cosine_similarity import cosine_similarity
 from CommonPy.src.embed_api import EmbeddingApi
 from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
+
 from .enriched_query_util import valid_request_payload, SAMPLE_HOW_LLMS_WORK_RESPONSE
 
 # Configure the base URL for the API.

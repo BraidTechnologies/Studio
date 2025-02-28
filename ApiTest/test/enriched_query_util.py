@@ -16,6 +16,7 @@ SAMPLE_HOW_LLMS_WORK_RESPONSE = (
     "on patterns learned during training. This process repeats to generate "
     "coherent and contextually relevant text."
 )
+
 def valid_request_payload():
     '''
     Return a valid request payload. This function is used by both fixtures and test functions.

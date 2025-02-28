@@ -12,6 +12,7 @@
 
 // Copyright Braid Technologies Ltd, 2025
 
+
 import fs from 'fs';
 import path from 'path';
 
@@ -23,6 +24,7 @@ import salonPrompts from "../src/Salon.Prompts.json";
  * Generates TypeScript prompt ID declarations
  */
 function generateTypeScriptIds(prompts: any[], outputPath: string) {
+
     let declarations: string[] = [];
 
     declarations.push('/**');
@@ -76,11 +78,13 @@ function generatePythonIds(prompts: any[], outputPath: string) {
     const output = declarations.join('\n');
 
     // Write declarations to file
+
     fs.writeFileSync(outputPath, output);
     console.log(`Generated prompt ids for Python in ${outputPath}`);
 }
 
 // Main execution
+
 generateTypeScriptIds(defaultPrompts, path.join(__dirname, '../src/GeneratedDefaultPromptNames.ts'));
 generatePythonIds(defaultPrompts, path.join(__dirname, '../../CommonPy/src/generated_default_prompt_names.py'));
 
@@ -92,5 +96,6 @@ generatePythonIds(waterfallPrompts, path.join(__dirname, '../../CommonPy/src/gen
 
 generateTypeScriptIds(salonPrompts, path.join(__dirname, '../src/GeneratedSalonPromptNames.ts'));
 generatePythonIds(salonPrompts, path.join(__dirname, '../../CommonPy/src/generated_salon_prompt_names.py'));
+
 
 
