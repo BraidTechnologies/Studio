@@ -1,0 +1,13 @@
+{
+  "id": "follow_up_003",
+  "name": "Different Topic Follow-up Question Test",
+  "type": "system",
+  "description": "Generate follow-up suggestions from a significantly varied summary on a different topic",
+  "prompt_id": "72213d46-9e6d-4604-a6bd-32d8e2f594f3",
+  "start_time": "2025-02-28T15:34:21.271443",
+  "status": "passed",
+  "end_time": "2025-02-28T15:34:23.820636",
+  "details": {
+    "result": "None"
+  }
+}

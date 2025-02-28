@@ -1,0 +1,13 @@
+{
+  "id": "enriched_005",
+  "name": "Enriched Query YouTube Test",
+  "type": "system",
+  "description": "Test the enriched query API with a simple function where we specifically want a youtube URL",
+  "prompt_id": "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d",
+  "start_time": "2025-02-28T15:07:10.690548",
+  "status": "failed",
+  "end_time": "2025-02-28T15:07:12.737555",
+  "details": {
+    "error": "Error returned from API:"
+  }
+}

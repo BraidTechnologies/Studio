@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="6.959" timestamp="2025-02-27T20:13:23.357589+00:00" hostname="Braid-Daniel"><testcase classname="test.classify_eval" name="test_basic_basketball_classification" time="2.044"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x000001EAA23890A0&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SIMPLE, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @simple_test(
+        test_id="classify_001",
+        name="Basic Basketball Classification",
+        description="Test basic basketball-related text classification",
+        prompt_id="af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9"  # article-classifier prompt
+    )
+    def test_basic_basketball_classification():
+        request_data = {'request': {
+            'text': 'Shooting hoops at the basketball court',
+            'classifications': ['basketball', 'soccer', 'tennis']
+        }}
+    
+        response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+ApiEval\test\classify_eval.py:44: AssertionError</failure></testcase><testcase classname="test.classify_eval" name="test_similar_basketball_classification" time="2.062"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x000001EAA2809B80&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.MUTATION, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @mutation_test(
+        test_id="classify_002",
+        name="Similar Basketball Classification",
+        description="Test similar basketball text with different wording should yield same classification",
+        prompt_id="af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9"  # article-classifier prompt
+    )
+    def test_similar_basketball_classification():
+        request_data = {'request': {
+            'text': 'Shooting hoops at the gym',
+            'classifications': ['basketball', 'soccer', 'tennis']
+        }}
+    
+        response = requests.post(
+            API_ENDPOINT, json=request_data, timeout=request_timeout)
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+ApiEval\test\classify_eval.py:64: AssertionError</failure></testcase><testcase classname="test.classify_eval" name="test_different_sport_classification" time="2.030"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x000001EAA4FBD910&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @system_test(
+        test_id="classify_003",
+        name="Different Sport Classification",
+        description="Test different sport text should yield different classification",
+        prompt_id="af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9"  # article-classifier prompt
+    )
+    def test_different_sport_classification():
+        request_data = {'request': {
+            'text': 'Practicing free serves on the court',
+            'classifications': ['basketball', 'soccer', 'tennis']
+        }}
+    
+        response = requests.post(
+            API_ENDPOINT, json=request_data, timeout=request_timeout)
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+ApiEval\test\classify_eval.py:84: AssertionError</failure></testcase></testsuite></testsuites>

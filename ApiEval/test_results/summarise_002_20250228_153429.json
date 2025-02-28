@@ -1,0 +1,13 @@
+{
+  "id": "summarise_002",
+  "name": "Same Game Different Wording Test",
+  "type": "mutation",
+  "description": "Test that different wording of the same event produces similar summary",
+  "prompt_id": "716c667d-9074-4d9a-8335-3194212eba90",
+  "start_time": "2025-02-28T15:34:26.687330",
+  "status": "passed",
+  "end_time": "2025-02-28T15:34:29.138135",
+  "details": {
+    "result": "None"
+  }
+}

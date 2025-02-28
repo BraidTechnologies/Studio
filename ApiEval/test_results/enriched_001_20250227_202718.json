@@ -1,0 +1,13 @@
+{
+  "id": "enriched_001",
+  "name": "Simple Enriched Query Test",
+  "type": "simple",
+  "description": "Test the enriched query API with a simple function",
+  "prompt_id": "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d",
+  "start_time": "2025-02-27T20:27:07.814173",
+  "status": "passed",
+  "end_time": "2025-02-27T20:27:18.848070",
+  "details": {
+    "result": "None"
+  }
+}

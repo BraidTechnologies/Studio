@@ -1,0 +1,13 @@
+{
+  "id": "summarise_filter_002",
+  "name": "Different HTML Summary Test",
+  "type": "mutation",
+  "description": "Test that different wording of the same event in HTML produces similar summary",
+  "prompt_id": "716c667d-9074-4d9a-8335-3194212eba90",
+  "start_time": "2025-02-28T15:34:34.570853",
+  "status": "passed",
+  "end_time": "2025-02-28T15:34:36.979814",
+  "details": {
+    "result": "None"
+  }
+}

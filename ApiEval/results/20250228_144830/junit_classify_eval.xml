@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="1.058" timestamp="2025-02-28T14:48:31.269747+00:00" hostname="Braid-Daniel"><testcase classname="" name="test.classify_eval" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\Studio\ApiEval\test\classify_eval.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\DanielBlankson\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+ApiEval\test\classify_eval.py:23: in &lt;module&gt;
+    from CommonTs.src.GeneratedPromptNames import articleClassifierPromptId
+E   ModuleNotFoundError: No module named 'CommonTs.src.GeneratedPromptNames'</error></testcase></testsuite></testsuites>
