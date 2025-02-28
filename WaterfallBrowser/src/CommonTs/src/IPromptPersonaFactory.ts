@@ -69,6 +69,7 @@ function postProcessPrompt(prompt: IStoredPrompt | undefined, wordCount: number,
    if (typeof prompt !== "undefined") {   
       let systemPrompt = prompt.systemPrompt.replace("{wordCount}", wordCount.toString());
       let userPrompt = prompt.userPrompt.replace("{userInput}", userInput).replace("{wordCount}", wordCount.toString());
+
       return {userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName};
    }
    throw new Error("Prompt not found");
@@ -82,6 +83,7 @@ function postProcessPrompt(prompt: IStoredPrompt | undefined, wordCount: number,
  * @returns A processed prompt persona with placeholders replaced
  * @throws Error if the prompt is not found
  */
+
 function postProcessClassifierPrompt(prompt: IStoredPrompt | undefined, classifications: string, userInput: string): IPromptPersona {
 
    if (typeof prompt !== "undefined") {   
@@ -149,6 +151,7 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
    }
 
    let prompt: IStoredPrompt | undefined = undefined;
+
    switch (persona) {
       
       // Boxer Prompts   
@@ -206,6 +209,33 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
       case EPromptPersona.kDeveloperQuestionGenerator:
          prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
          return postProcessPrompt(prompt, wordTarget, userPrompt);
+
+      case EPromptPersona.kDeveloperAssistant:
+         prompt = promptRepository.getPrompt(developerAssistantPromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+
+      case EPromptPersona.kArticleSummariser:
+         throwIfUndefined(params?.wordTarget);             
+         prompt = promptRepository.getPrompt(articleSummariserPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kArticleClassifier:
+         throwIfUndefined(params?.classifications);
+         prompt = promptRepository.getPrompt(articleClassifierPromptId);
+         return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);       
+
+      case EPromptPersona.kThemeFinder:
+         throwIfUndefined(params?.wordTarget);         
+         prompt = promptRepository.getPrompt(themeFinderPromptId);
+         return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+
+      case EPromptPersona.kTestForSummariseFail:
+         prompt = promptRepository.getPrompt(testForSummmariseFailurePromptId);
+         return postProcessPrompt(prompt, defaultWordCount, userPrompt);                 
+       
+      case EPromptPersona.kDeveloperQuestionGenerator:
+         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
+         return postProcessPrompt(prompt, questionWordCount, userPrompt);
 
       case EPromptPersona.kDeveloperAssistant:
          prompt = promptRepository.getPrompt(developerAssistantPromptId);
