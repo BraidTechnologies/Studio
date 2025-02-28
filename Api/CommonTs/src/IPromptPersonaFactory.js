@@ -22,7 +22,6 @@ exports.getChatPersona = getChatPersona;
 const IPromptPersona_1 = require("./IPromptPersona");
 const IPromptRepository_1 = require("./IPromptRepository");
 const Asserts_1 = require("./Asserts");
-
 const Default_Prompts_json_1 = __importDefault(require("./Default.Prompts.json"));
 const Boxer_Prompts_json_1 = __importDefault(require("./Boxer.Prompts.json"));
 const Waterfall_Prompts_json_1 = __importDefault(require("./Waterfall.Prompts.json"));
@@ -50,7 +49,6 @@ function postProcessPrompt(prompt, wordCount, userInput) {
     }
     throw new Error("Prompt not found");
 }
-
 /**
  * Post-processes a classifier prompt by replacing classification and input placeholders
  * @param prompt The stored prompt template to process
@@ -59,7 +57,6 @@ function postProcessPrompt(prompt, wordCount, userInput) {
  * @returns A processed prompt persona with placeholders replaced
  * @throws Error if the prompt is not found
  */
-
 function postProcessClassifierPrompt(prompt, classifications, userInput) {
     if (typeof prompt !== "undefined") {
         let systemPrompt = prompt.systemPrompt.replace("{classifications}", classifications);
@@ -68,7 +65,6 @@ function postProcessClassifierPrompt(prompt, classifications, userInput) {
     }
     throw new Error("Prompt not found");
 }
-
 /**
  * Post-processes a C4 diagrammer prompt by replacing the user input and C4 diagram type placeholders
  * @param prompt The stored prompt template to process
@@ -162,6 +158,27 @@ function getChatPersona(persona, userPrompt, params) {
             (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.document);
             prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleContextSummariserPromptId);
             return postProcessArticleContextPrompt(prompt, wordTarget, params === null || params === void 0 ? void 0 : params.chunk, params === null || params === void 0 ? void 0 : params.document);
+        case IPromptPersona_1.EPromptPersona.kDeveloperQuestionGenerator:
+            prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames_1.developerQuestionGeneratorPromptId);
+            return postProcessPrompt(prompt, wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kDeveloperAssistant:
+            prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames_1.developerAssistantPromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleSummariser:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleSummariserPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kArticleClassifier:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.classifications);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.articleClassifierPromptId);
+            return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kThemeFinder:
+            (0, Asserts_1.throwIfUndefined)(params === null || params === void 0 ? void 0 : params.wordTarget);
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.themeFinderPromptId);
+            return postProcessPrompt(prompt, params.wordTarget, userPrompt);
+        case IPromptPersona_1.EPromptPersona.kTestForSummariseFail:
+            prompt = promptRepository.getPrompt(GeneratedWaterfallPromptNames_1.testForSummmariseFailurePromptId);
+            return postProcessPrompt(prompt, defaultWordCount, userPrompt);
         default:
             prompt = promptRepository.getPrompt(GeneratedDefaultPromptNames_1.defaultPromptId);
             return postProcessPrompt(prompt, wordTarget, userPrompt);

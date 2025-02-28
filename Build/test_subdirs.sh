@@ -79,7 +79,7 @@ for dir in "${directories[@]}"; do
             if [ "$OS_NAME" == "Unix" ]; then
                 python3 -m pytest
             else
-                python -m pytest 
+                pytest 
             fi
             # Exit if pytest run test fails
             if [ $? -ne 0 ]; then
