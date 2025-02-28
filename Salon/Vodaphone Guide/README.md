@@ -77,17 +77,17 @@ This guide helps you generate C4 architecture diagrams for your repositories usi
 
 2. **Generate Text Summaries**
    ```bash
-   python ../salon/src/repo_to_text.py \
-     --cfg ../salon/vodafone_config.yaml \
-     --repo_path . \
-     --output_dir ../output \
+   python -m Salon.src.repo_to_text \
+     --cfg "C:\\Repo\\Studio\\Salon\\vodafone_config.yaml" \
+     --repo_path "C:\\Repo\\Studio\\" \
+     --output_dir "C:\\Repo\\Studio\\output\\" \
      --model_type local_gemini
    ```
 
 3. **Generate C4 Diagrams**
    ```bash
-   python ../salon/src/repo_to_c4.py \
-     --repo_path . \
+   python -m Salon.src.repo_to_c4 \
+     --repo_path "C:\\Repo\\Studio\\" \
      --model_type local_gemini
    ```
 
