@@ -38,7 +38,7 @@ This guide helps you generate C4 architecture diagrams for your repositories usi
    # Get proxy from environment variable
    proxy = os.environ.get('HTTPS_PROXY', None)  # Use HTTPS_PROXY for secure connections
    ```
-   ```
+  
 
 3. **Create Configuration File**
    
