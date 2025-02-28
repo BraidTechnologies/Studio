@@ -12,14 +12,19 @@
 
 // Copyright Braid Technologies Ltd, 2025
 
-import Prompts from "../src/Prompts.json";
+
 import fs from 'fs';
 import path from 'path';
 
+import defaultPrompts from "../src/Default.Prompts.json";
+import boxerPrompts from "../src/Boxer.Prompts.json";
+import waterfallPrompts from "../src/Waterfall.Prompts.json";
+import salonPrompts from "../src/Salon.Prompts.json";
 /**
  * Generates TypeScript prompt ID declarations
  */
-function generateTypeScriptIds() {
+function generateTypeScriptIds(prompts: any[], outputPath: string) {
+
     let declarations: string[] = [];
 
     declarations.push('/**');
@@ -27,11 +32,14 @@ function generateTypeScriptIds() {
     declarations.push(' * This file is auto-generated - do not edit directly.');
     declarations.push(' */\n\n');
             
-    for (const prompt of Prompts) {
+    for (const prompt of prompts) {
         // Convert name to camelCase
         const camelCaseName = prompt.name
-            .toLowerCase()
-            .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase());
+            .split(/[^a-zA-Z0-9]+/)
+            .map((word: string, index: number) => 
+                index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join('');
         
         // Create TypeScript declaration
         declarations.push(`export const ${camelCaseName}PromptId: string = "${prompt.id}";`);
@@ -41,7 +49,6 @@ function generateTypeScriptIds() {
     const output = declarations.join('\n');
     
     // Write declarations to file
-    const outputPath = path.join(__dirname, '../src/GeneratedPromptNames.ts');
     fs.writeFileSync(outputPath, output);
     console.log(`Generated prompt ids for TypeScript in ${outputPath}`);
 }
@@ -49,7 +56,7 @@ function generateTypeScriptIds() {
 /**
  * Generates Python prompt ID declarations
  */
-function generatePythonIds() {
+function generatePythonIds(prompts: any[], outputPath: string) {
     let declarations: string[] = [];
 
     declarations.push('"""');
@@ -57,7 +64,7 @@ function generatePythonIds() {
     declarations.push('This file is auto-generated - do not edit directly.');
     declarations.push('"""\n\n');
 
-    for (const prompt of Prompts) {
+    for (const prompt of prompts) {
         // Convert name to snake_case
         const snakeCaseName = prompt.name
             .toLowerCase()
@@ -71,11 +78,24 @@ function generatePythonIds() {
     const output = declarations.join('\n');
 
     // Write declarations to file
-    const outputPath = path.join(__dirname, '../../CommonPy/src/generated_prompt_names.py');
+
     fs.writeFileSync(outputPath, output);
     console.log(`Generated prompt ids for Python in ${outputPath}`);
 }
 
 // Main execution
-generateTypeScriptIds();
-generatePythonIds();
+
+generateTypeScriptIds(defaultPrompts, path.join(__dirname, '../src/GeneratedDefaultPromptNames.ts'));
+generatePythonIds(defaultPrompts, path.join(__dirname, '../../CommonPy/src/generated_default_prompt_names.py'));
+
+generateTypeScriptIds(boxerPrompts, path.join(__dirname, '../src/GeneratedBoxerPromptNames.ts'));
+generatePythonIds(boxerPrompts, path.join(__dirname, '../../CommonPy/src/generated_boxer_prompt_names.py'));
+
+generateTypeScriptIds(waterfallPrompts, path.join(__dirname, '../src/GeneratedWaterfallPromptNames.ts'));
+generatePythonIds(waterfallPrompts, path.join(__dirname, '../../CommonPy/src/generated_waterfall_prompt_names.py'));
+
+generateTypeScriptIds(salonPrompts, path.join(__dirname, '../src/GeneratedSalonPromptNames.ts'));
+generatePythonIds(salonPrompts, path.join(__dirname, '../../CommonPy/src/generated_salon_prompt_names.py'));
+
+
+

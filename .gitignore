@@ -32,6 +32,9 @@ dist
 # Local python packages
 .python_packages/
 
+#VS Code and Plug-ins
+.qodo
+
 # Python Environments
 .env
 .venv
@@ -62,6 +65,4 @@ Waterfall/test/vodafone_output
 Waterfall/test/vf_survey_01_output
 Waterfall/test/credential.json
 .vscode/launch.json
-/Api
-/Api
 /Api

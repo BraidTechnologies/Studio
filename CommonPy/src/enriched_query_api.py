@@ -76,7 +76,8 @@ class EnrichedQueryApi:
             raise RuntimeError('Error returned from API:' + response.text)
 
         return None
-    
+   
+        
     def enriched_query (self, enriched_query_request: IEnrichedQueryRequest) -> IEnrichedResponse:
 
         logger.debug('Generating enriched query for: %s', enriched_query_request.question)

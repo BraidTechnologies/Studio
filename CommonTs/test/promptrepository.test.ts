@@ -116,13 +116,7 @@ describe('PromptRepository', function() {
       const persona = getChatPersona(EPromptPersona.kDefault, "Hello", {wordTarget: 50});   
       expect(persona.systemPrompt).toContain("50");
       expect(persona.userPrompt).toContain("Hello");
-    });
-
-    it('should correctly load article summariser prompt', async function() {
-      const persona = getChatPersona(EPromptPersona.kArticleSummariser, "Hello", {wordTarget: 50});   
-      expect(persona.systemPrompt).toContain("50");
-      expect(persona.userPrompt).toContain("Hello");
-    });    
+    }); 
 
     it('should correctly load developer assistant prompt', async function() {
       const persona = getChatPersona(EPromptPersona.kDeveloperAssistant, "Hello", {wordTarget: 50});   
@@ -135,6 +129,17 @@ describe('PromptRepository', function() {
       expect(persona.systemPrompt).toContain("10");
       expect(persona.userPrompt).toContain("Hello");
     });      
+
+    it('should correctly load load developer imagined answer generator prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kDeveloperImaginedAnswerGenerator, "How do LLMs work?");   
+      expect(persona.userPrompt).toContain("How do LLMs work?");
+    });    
+
+    it('should correctly load article summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kArticleSummariser, "Hello", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Hello");
+    });  
 
     it('should correctly load article classifier prompt', async function() {
       const persona = getChatPersona(EPromptPersona.kArticleClassifier, "Hello", {classifications: "AI, LLMs, Generative AI"});   
@@ -149,7 +154,33 @@ describe('PromptRepository', function() {
     });      
 
     it('should correctly load test for summarise failure prompt', async function() {
-      const persona = getChatPersona(EPromptPersona.kTestForSummariseFail, "I apologise for this");   
-      expect(persona.userPrompt).toContain("I apologise for this");
-    });      
+         const persona = getChatPersona(EPromptPersona.kTestForSummariseFail, "I apologise for this");   
+         expect(persona.userPrompt).toContain("I apologise for this");
+    });     
+
+    it('should correctly load survey summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kSurveySummariser, "Everything is great", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("Everything is great");
+    });     
+
+    it('should correctly load code summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kCodeSummariser, "{// A great module}", {wordTarget: 50});   
+      expect(persona.systemPrompt).toContain("50");
+      expect(persona.userPrompt).toContain("{// A great module}");
+    });     
+
+    it('should correctly load c4 diagrammer prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kC4Diagrammer, "A single module that is great", {c4DiagramType: "Context", wordTarget: 50});   
+      expect(persona.userPrompt).toContain("Context");
+      expect(persona.userPrompt).toContain("A single module that is great");      
+    });        
+    
+    it('should correctly load article context summariser prompt', async function() {
+      const persona = getChatPersona(EPromptPersona.kArticleContextSummariser, "A single module that is great", {chunk: "a chunk", document: "A document that contains a chunk", wordTarget: 50});   
+      expect(persona.userPrompt).toContain("a chunk");
+      expect(persona.userPrompt).toContain("A document that contains a chunk");
+      expect(persona.systemPrompt).toContain("50");
+    });     
+    
 });

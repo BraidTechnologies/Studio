@@ -39,7 +39,8 @@ from CommonPy.src.cosine_similarity import cosine_similarity
 from CommonPy.src.embed_api import EmbeddingApi
 from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
-from .enriched_query_util import valid_request_payload
+
+from .enriched_query_util import valid_request_payload, SAMPLE_HOW_LLMS_WORK_RESPONSE
 
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -62,14 +63,6 @@ def embed_text(text_to_embed: str) -> list[float]:
     # Check if embedding is a list
     return embed_response.embedding
 
-
-SAMPLE_RESPONSE = (
-    "LLMs use deep learning to generate human-like text. They are trained on vast "
-    "amounts of text data. When given a prompt, they predict the next word based "
-    "on patterns learned during training. This process repeats to generate "
-    "coherent and contextually relevant text."
-)
-
 SAMPLE_YOUTUBE_RESPONSE = (
    "Welcome to CS25s introductory lecture on Transformers, a course created and taught at Stanford "
    "in Fall 2021. This course focuses on deep learning models known as transformers, which have "
@@ -78,7 +71,7 @@ SAMPLE_YOUTUBE_RESPONSE = (
    "self-attention mechanisms, encoder-decoder structure, and their advantages and drawbacks."
 )
 
-sampleqas = [
+SAMPLE_QUESTIONS_AND_ANSWERS = [
     {'q': "How do I integrate an LLM into my Python application?",
      'a': "Use APIs like OpenAI's `openai` Python library or Hugging Face's `transformers`. "
           "Install the library, authenticate, and call the model using provided methods. "
@@ -234,7 +227,7 @@ def test_enriched_simple_function():
     Test the enriched query API with a simple function.
     '''
     try:
-        embedded_target_response = embed_text(SAMPLE_RESPONSE)
+        embedded_target_response = embed_text(SAMPLE_HOW_LLMS_WORK_RESPONSE)
         valid_request = copy.deepcopy(valid_request_payload())
         valid_request.question = "How does an LLM work?"
         test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
@@ -247,7 +240,7 @@ def test_enriched_simple_function_variant():
     Test the enriched query API with a simple function variant.
     '''
     try:
-        embedded_target_response = embed_text(SAMPLE_RESPONSE)        
+        embedded_target_response = embed_text(SAMPLE_HOW_LLMS_WORK_RESPONSE)        
         valid_request = copy.deepcopy(valid_request_payload())
         valid_request.question = "How do LLMs work?"
         test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
@@ -272,7 +265,7 @@ def test_enriched_simple_function_list():
     Test the enriched query API with a list of primed questions and answers.
     '''
 
-    for qa in sampleqas:
+    for qa in SAMPLE_QUESTIONS_AND_ANSWERS:
         try:
             valid_request = copy.deepcopy(valid_request_payload())
             valid_request.question = qa['q']
@@ -332,7 +325,7 @@ def test_evaluate_coverage():
 
              #If we pull back the same chaunk as last time, try a new question
              if last_chunk_url == enriched_response.chunks[0].chunk.url:
-                 valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']
+                 valid_request.question = SAMPLE_QUESTIONS_AND_ANSWERS[random.randint(0, len(SAMPLE_QUESTIONS_AND_ANSWERS)-1)]['q']
              else:
                  last_chunk_url = enriched_response.chunks[0].chunk.url
 
@@ -343,7 +336,7 @@ def test_evaluate_coverage():
                  valid_request.question = new_question.question
           else:
              print(f'No relevant document found for question: {valid_request.question}')
-             valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']             
+             valid_request.question = SAMPLE_QUESTIONS_AND_ANSWERS[random.randint(0, len(SAMPLE_QUESTIONS_AND_ANSWERS)-1)]['q']             
 
        except requests.exceptions.RequestException as e:
           pytest.fail(f"API request failed: {e}")

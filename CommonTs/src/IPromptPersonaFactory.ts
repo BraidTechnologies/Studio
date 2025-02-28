@@ -1,15 +1,17 @@
 /**
  * @module IPromptPersonaFactory
  * 
- * This module provides functionality to generate specialized AI prompt personas
- * for different types of content summarization (articles, code, surveys).
- * Each persona includes a system prompt and an item prompt tailored to the
- * specific summarization task.
+ * This module provides a factory for creating specialized AI prompt personas used in different
+ * conversational contexts. It loads prompt templates from multiple sources (Default, Boxer,
+ * Waterfall, Salon) and provides functionality to:
  * 
- * The module exports:
- * - Predefined persona templates for summarization etc
- * - getChatPersona function to generate configured prompt personas with
- *   optional customized parameters
+ * - Create personas for article summarization and classification
+ * - Generate code documentation and C4 diagrams
+ * - Assist with developer questions and answers
+ * - Process survey responses and find themes
+ * 
+ * Each persona is configured with system and user prompts that can be customized with
+ * parameters like word count limits and specific classifications.
  */
 
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
@@ -19,32 +21,67 @@ import { IChatModelDriverParams } from "./IModelDriver";
 import { EPromptPersona, IPromptPersona } from "./IPromptPersona";
 import { PromptInMemoryRepository, IStoredPrompt } from "./IPromptRepository";
 import { throwIfUndefined } from "./Asserts";
-import Prompts from "./Prompts.json";
+
+import DefaultPrompts from "./Default.Prompts.json";
+import BoxerPrompts from "./Boxer.Prompts.json"; 
+import WaterfallPrompts from "./Waterfall.Prompts.json";
+import SalonPrompts from "./Salon.Prompts.json";
 import { 
-    defaultPromptId, 
-    developerAssistantPromptId, 
-    articleSummariserPromptId, 
-    developerQuestionGeneratorPromptId, 
-    articleClassifierPromptId,
-    themeFinderPromptId,
-    testForSummmariseFailurePromptId
-} from "./GeneratedPromptNames";
+    defaultPromptId
+} from "./GeneratedDefaultPromptNames";
 
-const promptRepository = new PromptInMemoryRepository(Prompts);
+import { 
+   developerAssistantPromptId, 
+   developerQuestionGeneratorPromptId, 
+   developerImaginedAnswerGeneratorPromptId,  
+} from "./GeneratedBoxerPromptNames";
+
+import { 
+   articleClassifierPromptId,
+   articleSummariserPromptId,
+   themeFinderPromptId,
+   testForSummmariseFailurePromptId,
+   surveySummariserPromptId,
+   articleContextSummariserPromptId
+} from "./GeneratedWaterfallPromptNames";
+
+import {
+   codeSummariserPromptId,
+   c4DiagrammerPromptId
+} from "./GeneratedSalonPromptNames";
+
+const allPrompts = [...DefaultPrompts, ...BoxerPrompts, ...WaterfallPrompts, ...SalonPrompts];
+const promptRepository = new PromptInMemoryRepository(allPrompts);
+
 const defaultWordCount = 50;
-const questionWordCount = 10;
-const themeFinderWordCount = 1;
 
-function postProcessPrompt(prompt: IStoredPrompt | undefined, defaultWordCount: number, userInput: string): IPromptPersona {
+/**
+ * Post-processes a stored prompt by replacing placeholders with actual values
+ * @param prompt The stored prompt template to process
+ * @param wordCount The default word count to use in the prompt
+ * @param userInput The user input to insert into the prompt
+ * @returns A processed prompt persona with placeholders replaced
+ * @throws Error if the prompt is not found
+ */
+
+function postProcessPrompt(prompt: IStoredPrompt | undefined, wordCount: number, userInput: string): IPromptPersona {
 
    if (typeof prompt !== "undefined") {   
-      let systemPrompt = prompt.systemPrompt.replace("{wordCount}", defaultWordCount.toString());
-      let userPrompt = prompt.userPrompt.replace("{userInput}", userInput);
+      let systemPrompt = prompt.systemPrompt.replace("{wordCount}", wordCount.toString());
+      let userPrompt = prompt.userPrompt.replace("{userInput}", userInput).replace("{wordCount}", wordCount.toString());
       return {userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName};
    }
    throw new Error("Prompt not found");
 }
 
+/**
+ * Post-processes a classifier prompt by replacing classification and input placeholders
+ * @param prompt The stored prompt template to process
+ * @param classifications The classification categories to use
+ * @param userInput The user input to classify
+ * @returns A processed prompt persona with placeholders replaced
+ * @throws Error if the prompt is not found
+ */
 function postProcessClassifierPrompt(prompt: IStoredPrompt | undefined, classifications: string, userInput: string): IPromptPersona {
 
    if (typeof prompt !== "undefined") {   
@@ -55,103 +92,116 @@ function postProcessClassifierPrompt(prompt: IStoredPrompt | undefined, classifi
    throw new Error("Prompt not found");
 }
 
-const ArticleContextSummariserPersona: IPromptPersona = {
+/**
+ * Post-processes a C4 diagrammer prompt by replacing the user input and C4 diagram type placeholders
+ * @param prompt The stored prompt template to process
+ * @param c4DiagramType The type of C4 diagram to generate
+ * @param userInput The user input to insert into the prompt
+ * @returns A processed prompt persona with placeholders replaced
+ */
+function postProcessC4DiagrammerPrompt(prompt: IStoredPrompt | undefined, c4DiagramType: string, userInput: string): IPromptPersona {
 
-   name: EPromptPersona.kArticleContextSummariser,
-   systemPrompt: "",
-   userPrompt: ""
+   if (typeof prompt !== "undefined") {   
+      let userPrompt = prompt.userPrompt.replace("{userInput}", userInput).replace("{C4DiagramType}", c4DiagramType);
+      return {userPrompt: userPrompt, systemPrompt: prompt.systemPrompt, name: prompt.personaName};
+   }
+   throw new Error("Prompt not found");
 }
 
-const CodeSummariserPersona: IPromptPersona = {
+function postProcessArticleContextPrompt(prompt: IStoredPrompt | undefined, wordCount: number, chunk: string, document: string): IPromptPersona {
 
-   name: EPromptPersona.kCodeSummariser,
-   systemPrompt: "",
-   userPrompt: ""
-};
+   if (typeof prompt !== "undefined") {   
+      let systemPrompt = prompt.systemPrompt.replace("{wordCount}", wordCount.toString());
+      let userPrompt = prompt.userPrompt.replace("{chunk}", chunk).replace("{document}", document).replace("{wordCount}", wordCount.toString());
+      return {userPrompt: userPrompt, systemPrompt: systemPrompt, name: prompt.personaName};
+   }  
+   throw new Error("Prompt not found");
+}
 
-const C4DiagrammerPersona: IPromptPersona = {
-
-   name: EPromptPersona.kC4Diagrammer,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const SurveySummariserPersona: IPromptPersona = {
-
-   name: EPromptPersona.kSurveySummariser,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const TestForSummariseFailPersona: IPromptPersona = {
-
-   name: EPromptPersona.kTestForSummariseFail,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
-const DeveloperImaginedAnswerGeneratorPersona: IPromptPersona = {
-
-   name: EPromptPersona.kDeveloperImaginedAnswerGenerator,
-   systemPrompt: "",
-   userPrompt: ""
-};
-
+/**
+ * Creates a chat persona with a specific prompt persona and user input
+ * @param persona The prompt persona to use
+ * @param userPrompt The user input to insert into the prompt
+ * @param params Optional parameters for the prompt   
+ * @returns A processed prompt persona with placeholders replaced
+ */
 export function getChatPersona(persona: EPromptPersona, userPrompt: string, params?: IChatModelDriverParams): IPromptPersona {
 
-   let wordString = "50";
+   let wordTarget = defaultWordCount;
    if (params && params.wordTarget) {
-      wordString = params.wordTarget.toString();
+      wordTarget = params.wordTarget;
    }
    let promptParam1 = "";
    if (params && params.promptParam1) {
       promptParam1 = params.promptParam1;
    }
+   let c4DiagramType = "";
+   if (params && params.c4DiagramType) {
+      c4DiagramType = params.c4DiagramType;
+   }
+   let chunk = "";
+   if (params && params.chunk) {
+      chunk = params.chunk;
+   }
+   let document = "";
+   if (params && params.document) {
+      document = params.document;
+   }
 
    let prompt: IStoredPrompt | undefined = undefined;
-
    switch (persona) {
+      
+      // Boxer Prompts   
+      case EPromptPersona.kDeveloperAssistant:
+         prompt = promptRepository.getPrompt(developerAssistantPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
+       
+      case EPromptPersona.kDeveloperQuestionGenerator:
+         prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
+         
+      case EPromptPersona.kDeveloperImaginedAnswerGenerator:
+         prompt = promptRepository.getPrompt(developerImaginedAnswerGeneratorPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);         
+
+      // Waterfall Prompts
+      case EPromptPersona.kArticleSummariser:
+         throwIfUndefined(params?.wordTarget);             
+         prompt = promptRepository.getPrompt(articleSummariserPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
+
+      case EPromptPersona.kArticleClassifier:
+         throwIfUndefined(params?.classifications);
+         prompt = promptRepository.getPrompt(articleClassifierPromptId);
+         return postProcessClassifierPrompt(prompt, params.classifications, userPrompt);       
+
+      case EPromptPersona.kThemeFinder:
+         throwIfUndefined(params?.wordTarget);         
+         prompt = promptRepository.getPrompt(themeFinderPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
+
+      case EPromptPersona.kTestForSummariseFail:
+         prompt = promptRepository.getPrompt(testForSummmariseFailurePromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);  
 
       case EPromptPersona.kSurveySummariser:
-         const surveyTemplate = SurveySummariserPersona;
-         surveyTemplate.systemPrompt = "You are an AI assistant that summarises survey responses in "
-            + wordString +
-            " words or less, to explain it to the management team that issues the survey.";
+         prompt = promptRepository.getPrompt(surveySummariserPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt); 
 
-         surveyTemplate.userPrompt = "Please summarise the following survey result in "
-            + wordString + " words. Make each distinct point a separate paragraph.\n\n## The Survey##\n\n" + userPrompt;
-         return surveyTemplate;
-
+      // Salon Prompts         
       case EPromptPersona.kCodeSummariser:
-         const codeTemplate = CodeSummariserPersona;
-         codeTemplate.systemPrompt = "You are an AI assistant that summarises code to help explain the code to new developers. Please summarise the following code in "
-            + wordString + " words. Make each distinct point a separate paragraph. List the important classes or functions in the module";
-
-         codeTemplate.userPrompt = userPrompt;
-         return codeTemplate;
-
+         prompt = promptRepository.getPrompt(codeSummariserPromptId);
+         return postProcessPrompt(prompt, wordTarget, userPrompt); 
+   
       case EPromptPersona.kC4Diagrammer:
-         const c4Template = C4DiagrammerPersona;
-         c4Template.systemPrompt = "You are an AI assistant that generates a diagram in mermaid format from a description of a software system "
-            + "to help explain the system to new developers.";
-
-         c4Template.userPrompt = userPrompt;
-         return c4Template;
-
-      case EPromptPersona.kDeveloperImaginedAnswerGenerator:
-         const developerImaginedAnswerGeneratorTemplate = DeveloperImaginedAnswerGeneratorPersona;
-         developerImaginedAnswerGeneratorTemplate.systemPrompt = "You are an AI assistant helping an application developer understand generative AI. You explain complex concepts in simple language, using Python examples if it helps. You will be provided with a question about building applications that use generative AI technology. Write a "
-            + wordString + " word summary of an article that would be a great answer to the question. Enrich the summary with additional topics that the question asker might want to understand. Write the summary in the present tense, as though the article exists. If the question is not related to building AI applications, Python, or Large Language Models (LLMs), say 'That doesn't seem to be about AI'.\n";
-         developerImaginedAnswerGeneratorTemplate.userPrompt = userPrompt;
-         return developerImaginedAnswerGeneratorTemplate;
-
+         prompt = promptRepository.getPrompt(c4DiagrammerPromptId);
+         return postProcessC4DiagrammerPrompt(prompt, c4DiagramType, userPrompt);
+   
       case EPromptPersona.kArticleContextSummariser:
-         const articleContextTemplate = ArticleContextSummariserPersona;
-         articleContextTemplate.systemPrompt = "You are an AI assistant that summarises text in "
-            + wordString +
-            " words or less. You ignore text that look like to be web page navigation, javascript, or other items that are not the main body of the text. Translate to English if necessary. Make each distinct point a separate paragraph.";
-         articleContextTemplate.userPrompt = userPrompt;
-         return ArticleContextSummariserPersona;
+         throwIfUndefined(params?.chunk);
+         throwIfUndefined(params?.document);
+         prompt = promptRepository.getPrompt(articleContextSummariserPromptId);
+         return postProcessArticleContextPrompt(prompt, wordTarget, params?.chunk, params?.document);   
 
       case EPromptPersona.kDeveloperQuestionGenerator:
          prompt = promptRepository.getPrompt(developerQuestionGeneratorPromptId);
@@ -182,7 +232,7 @@ export function getChatPersona(persona: EPromptPersona, userPrompt: string, para
 
       default:
          prompt = promptRepository.getPrompt(defaultPromptId);
-         return postProcessPrompt(prompt, defaultWordCount, userPrompt);
+         return postProcessPrompt(prompt, wordTarget, userPrompt);
    }
 }
 
