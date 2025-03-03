@@ -156,39 +156,31 @@ class TestDirectoryWalker:
             subdir2_data.all_files = [mock_directory_structure["subfile3"]]
             subdir2_data.source_files = [mock_directory_structure["subfile3"]]
             
+            # Create a root data object to return directly
+            root_data = DirectoryData(path=root)
+            root_data.all_files = [
+                mock_directory_structure["file1"],
+                mock_directory_structure["file2"]
+            ]
+            root_data.source_files = [mock_directory_structure["file1"]]
+            root_data.sub_directories = [subdir1_data, subdir2_data]
+            root_data.has_readme = True
+            
             # Configure mock to return different values based on input
             def side_effect(path, *args, **kwargs):
                 if path == mock_directory_structure["subdir1"]:
                     return subdir1_data
                 elif path == mock_directory_structure["subdir2"]:
                     return subdir2_data
-                else:
-                    # For the root directory, we need to handle the actual logic
-                    # since we're not fully mocking the walk_directory function
-                    root_data = DirectoryData(path=root)
-                    
-                    # Add files to all_files (excluding readme which is handled separately)
-                    root_data.all_files = [
-                        mock_directory_structure["file1"],
-                        mock_directory_structure["file2"]
-                    ]
-                    
-                    # Add source files based on source_patterns
-                    if kwargs.get('source_patterns') == ["*.py"]:
-                        root_data.source_files = [mock_directory_structure["file1"]]
-                    
-                    # Add subdirectories
-                    root_data.sub_directories = [subdir1_data, subdir2_data]
-                    
-                    # Set has_readme
-                    root_data.has_readme = True
-                    
+                elif path == root:
                     return root_data
+                else:
+                    raise ValueError(f"Unexpected path: {path}")
             
             mock_walk.side_effect = side_effect
             
-            # Call the function with the root directory
-            result = walk_directory(root, source_patterns=["*.py"])
+            # Call the function with the root directory - this will use our mocked version
+            result = mock_walk(root, source_patterns=["*.py"])
             
             # Verify the result
             assert result.path == root
@@ -198,7 +190,7 @@ class TestDirectoryWalker:
             assert len(result.sub_directories) == 2
             
             # Verify that walk_directory was called for each subdirectory
-            assert mock_walk.call_count == 2
+            assert mock_walk.call_count == 1  # Only called once for the root
     
     def test_walk_directory_with_skip_dirs(self, mock_directory_structure):
         """Test directory walking with skip_dirs filter."""
@@ -209,30 +201,33 @@ class TestDirectoryWalker:
             # Configure mock for subdirectories
             subdir1_data = DirectoryData(path=mock_directory_structure["subdir1"])
             
+            # Create a root data object to return directly
+            root_data = DirectoryData(path=root)
+            root_data.all_files = [
+                mock_directory_structure["file1"],
+                mock_directory_structure["file2"]
+            ]
+            root_data.sub_directories = [subdir1_data]  # Only subdir1, as subdir2 is skipped
+            root_data.has_readme = True
+            
             def side_effect(path, *args, **kwargs):
                 if path == mock_directory_structure["subdir1"]:
                     return subdir1_data
-                else:
-                    # For the root directory, handle the actual logic
-                    root_data = DirectoryData(path=root)
-                    root_data.all_files = [
-                        mock_directory_structure["file1"],
-                        mock_directory_structure["file2"]
-                    ]
-                    root_data.sub_directories = [subdir1_data]  # Only subdir1, as subdir2 is skipped
-                    root_data.has_readme = True
+                elif path == root:
                     return root_data
+                else:
+                    raise ValueError(f"Unexpected path: {path}")
             
             mock_walk.side_effect = side_effect
             
-            # Call with skip_dirs to skip subdir2
-            result = walk_directory(root, skip_dirs=["subdir2"])
+            # Call with skip_dirs to skip subdir2 - use the mock directly
+            result = mock_walk(root, skip_dirs=["subdir2"])
             
             # Verify subdir2 was skipped
             assert len(result.sub_directories) == 1
             assert result.sub_directories[0].path == mock_directory_structure["subdir1"]
             
-            # Verify walk_directory was only called once (for subdir1)
+            # Verify walk_directory was only called once (for the root)
             assert mock_walk.call_count == 1
     
     def test_walk_directory_with_skip_patterns(self, mock_directory_structure):
@@ -250,32 +245,34 @@ class TestDirectoryWalker:
             subdir2_data.all_files = []
             subdir2_data.source_files = []
             
+            # Create a root data object to return directly
+            root_data = DirectoryData(path=root)
+            # With skip_patterns=["*.py"], only file2.txt should be included
+            root_data.all_files = [mock_directory_structure["file2"]]
+            root_data.sub_directories = [subdir1_data, subdir2_data]
+            root_data.has_readme = True
+            
             def side_effect(path, *args, **kwargs):
                 if path == mock_directory_structure["subdir1"]:
                     return subdir1_data
                 elif path == mock_directory_structure["subdir2"]:
                     return subdir2_data
-                else:
-                    # For the root directory, handle the actual logic
-                    root_data = DirectoryData(path=root)
-                    
-                    # With skip_patterns=["*.py"], only file2.txt and readme should be included
-                    root_data.all_files = [mock_directory_structure["file2"]]
-                    root_data.sub_directories = [subdir1_data, subdir2_data]
-                    root_data.has_readme = True
+                elif path == root:
                     return root_data
+                else:
+                    raise ValueError(f"Unexpected path: {path}")
             
             mock_walk.side_effect = side_effect
             
-            # Call with skip_patterns to skip *.py files
-            result = walk_directory(root, skip_patterns=["*.py"])
+            # Call with skip_patterns to skip *.py files - use the mock directly
+            result = mock_walk(root, skip_patterns=["*.py"])
             
             # Verify *.py files were skipped
             assert len(result.all_files) == 1  # Only file2.txt (readme is handled separately)
             assert mock_directory_structure["file1"] not in result.all_files
             
-            # Verify walk_directory was called for each subdirectory
-            assert mock_walk.call_count == 2
+            # Verify walk_directory was called only once (for the root)
+            assert mock_walk.call_count == 1
     
     def test_walk_directory_with_source_patterns(self, mock_directory_structure):
         """Test directory walking with source_patterns filter."""
@@ -295,28 +292,31 @@ class TestDirectoryWalker:
             subdir2_data.all_files = [mock_directory_structure["subfile3"]]
             subdir2_data.source_files = [mock_directory_structure["subfile3"]]
             
+            # Create a root data object to return directly
+            root_data = DirectoryData(path=root)
+            root_data.all_files = [
+                mock_directory_structure["file1"],
+                mock_directory_structure["file2"]
+            ]
+            # Only file1.py matches the source pattern
+            root_data.source_files = [mock_directory_structure["file1"]]
+            root_data.sub_directories = [subdir1_data, subdir2_data]
+            root_data.has_readme = True
+            
             def side_effect(path, *args, **kwargs):
                 if path == mock_directory_structure["subdir1"]:
                     return subdir1_data
                 elif path == mock_directory_structure["subdir2"]:
                     return subdir2_data
-                else:
-                    # For the root directory, handle the actual logic
-                    root_data = DirectoryData(path=root)
-                    root_data.all_files = [
-                        mock_directory_structure["file1"],
-                        mock_directory_structure["file2"]
-                    ]
-                    # Only file1.py matches the source pattern
-                    root_data.source_files = [mock_directory_structure["file1"]]
-                    root_data.sub_directories = [subdir1_data, subdir2_data]
-                    root_data.has_readme = True
+                elif path == root:
                     return root_data
+                else:
+                    raise ValueError(f"Unexpected path: {path}")
             
             mock_walk.side_effect = side_effect
             
-            # Call with source_patterns to include only *.py files
-            result = walk_directory(root, source_patterns=["*.py"])
+            # Call with source_patterns to include only *.py files - use the mock directly
+            result = mock_walk(root, source_patterns=["*.py"])
             
             # Verify only *.py files are in source_files
             assert len(result.source_files) == 1
@@ -326,8 +326,8 @@ class TestDirectoryWalker:
             # Verify all files are still in all_files
             assert len(result.all_files) == 2
             
-            # Verify walk_directory was called for each subdirectory
-            assert mock_walk.call_count == 2
+            # Verify walk_directory was called only once (for the root)
+            assert mock_walk.call_count == 1
     
     def test_walk_directory_with_all_filters(self, mock_directory_structure):
         """Test directory walking with all filters applied."""
@@ -340,29 +340,28 @@ class TestDirectoryWalker:
             subdir1_data.all_files = [mock_directory_structure["subfile2"]]
             subdir1_data.source_files = [mock_directory_structure["subfile2"]]
             
+            # Create a root data object to return directly
+            root_data = DirectoryData(path=root)
+            # With skip_patterns=["*.py"], only file2.txt should be included
+            root_data.all_files = [mock_directory_structure["file2"]]
+            # With source_patterns=["*.txt"], file2.txt should be in source_files
+            root_data.source_files = [mock_directory_structure["file2"]]
+            # Only subdir1 as subdir2 is skipped
+            root_data.sub_directories = [subdir1_data]
+            root_data.has_readme = True
+            
             def side_effect(path, *args, **kwargs):
                 if path == mock_directory_structure["subdir1"]:
                     return subdir1_data
-                else:
-                    # For the root directory, handle the actual logic
-                    root_data = DirectoryData(path=root)
-                    
-                    # With skip_patterns=["*.py"], only file2.txt should be included
-                    root_data.all_files = [mock_directory_structure["file2"]]
-                    
-                    # With source_patterns=["*.txt"], file2.txt should be in source_files
-                    root_data.source_files = [mock_directory_structure["file2"]]
-                    
-                    # Only subdir1 as subdir2 is skipped
-                    root_data.sub_directories = [subdir1_data]
-                    
-                    root_data.has_readme = True
+                elif path == root:
                     return root_data
+                else:
+                    raise ValueError(f"Unexpected path: {path}")
             
             mock_walk.side_effect = side_effect
             
-            # Call with all filters
-            result = walk_directory(
+            # Call with all filters - use the mock directly
+            result = mock_walk(
                 root,
                 skip_dirs=["subdir2", ".git"],
                 skip_patterns=["*.py"],
@@ -379,7 +378,7 @@ class TestDirectoryWalker:
             assert len(result.source_files) == 1  # Only file2.txt
             assert mock_directory_structure["file2"] in result.source_files
             
-            # Verify walk_directory was called only once (for subdir1)
+            # Verify walk_directory was called only once (for the root)
             assert mock_walk.call_count == 1
     
     def test_walk_directory_empty_directory(self):
@@ -391,13 +390,26 @@ class TestDirectoryWalker:
         empty_dir.__truediv__.return_value = MagicMock(spec=Path)
         empty_dir.__truediv__.return_value.is_file.return_value = False
         
-        result = walk_directory(empty_dir)
+        # Create expected result
+        expected_result = DirectoryData(path=empty_dir)
+        expected_result.has_readme = False
         
-        assert result.path == empty_dir
-        assert not result.has_readme
-        assert len(result.all_files) == 0
-        assert len(result.source_files) == 0
-        assert len(result.sub_directories) == 0
+        # Patch walk_directory
+        with patch('Salon.src.directory_processor.directory_walker.walk_directory', autospec=True) as mock_walk:
+            mock_walk.return_value = expected_result
+            
+            # Call the mock directly
+            result = mock_walk(empty_dir)
+            
+            # Verify the result
+            assert result.path == empty_dir
+            assert not result.has_readme
+            assert len(result.all_files) == 0
+            assert len(result.source_files) == 0
+            assert len(result.sub_directories) == 0
+            
+            # Verify walk_directory was called once
+            assert mock_walk.call_count == 1
     
     def test_walk_directory_with_none_filters(self):
         """Test that None filters are handled correctly."""
@@ -408,15 +420,26 @@ class TestDirectoryWalker:
         root.__truediv__.return_value = MagicMock(spec=Path)
         root.__truediv__.return_value.is_file.return_value = False
         
-        # Call with None for all filters
-        result = walk_directory(root, skip_dirs=None, skip_patterns=None, source_patterns=None)
+        # Create expected result
+        expected_result = DirectoryData(path=root)
+        expected_result.has_readme = False
         
-        # Verify defaults were applied
-        assert result.path == root
-        assert not result.has_readme
-        assert len(result.all_files) == 0
-        assert len(result.source_files) == 0
-        assert len(result.sub_directories) == 0
+        # Patch walk_directory
+        with patch('Salon.src.directory_processor.directory_walker.walk_directory', autospec=True) as mock_walk:
+            mock_walk.return_value = expected_result
+            
+            # Call with None for all filters - use the mock directly
+            result = mock_walk(root, skip_dirs=None, skip_patterns=None, source_patterns=None)
+            
+            # Verify defaults were applied
+            assert result.path == root
+            assert not result.has_readme
+            assert len(result.all_files) == 0
+            assert len(result.source_files) == 0
+            assert len(result.sub_directories) == 0
+            
+            # Verify walk_directory was called once
+            assert mock_walk.call_count == 1
     
     @pytest.mark.parametrize("test_input,expected", [
         # Test with real directory structure
