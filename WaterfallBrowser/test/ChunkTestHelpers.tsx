@@ -1,5 +1,5 @@
 
-import { IStoredChunk } from '../../CommonTs/src/Types/ChunkRepositoryApi.Types';
+import { IStoredChunk } from 'commonts/src/Types/ChunkRepositoryApi.Types';
 
 
 
