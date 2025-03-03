@@ -1,70 +1,53 @@
 ```mermaid
 C4Component
-title Waterfall System Component Diagram
+title Waterfall Component Diagram
 
-Container_Boundary(waterfallPipeline, "Waterfall Pipeline") {
-    Component(webSearcher, "WebSearcher", "Python", "Searches for content using Google Custom Search API")
-    Component(htmlDownloader, "HtmlFileDownloader", "Python", "Downloads and processes HTML content")
-    Component(pipelineOrchestrator, "WaterfallDataPipeline", "Python", "Orchestrates the search and analysis workflow")
-    Component(reportGenerator, "ReportGenerator", "Python", "Creates analysis reports and visualizations")
+System_Boundary(c1, "Waterfall") {
+    Component(boxer_pipeline, "Boxer Pipeline", "Python", "Builds knowledge base from web and YouTube content", "boxer_pipeline.py")
+    Component(waterfall_pipeline, "Waterfall Pipeline", "Python", "Retrieves, summarizes, and analyzes documents from Google Search API", "waterfall_pipeline.py")
+    Component(chunker, "Chunker", "Python", "Segments text into smaller parts", "chunker.py")
+    Component(cluster_analyser, "Cluster Analyser", "Python", "Performs KMeans clustering on embeddings", "cluster_analyser.py")
+    Component(db_repository, "DB Repository", "Python", "Interacts with BraidApis Chunk table", "db_repository.py")
+    Component(embedder, "Embedder", "Python", "Creates text embeddings", "embedder.py")
+    Component(embedding_finder, "Embedding Finder", "Python", "Finds nearest embedding using cosine similarity", "embedding_finder.py")
+    Component(embedding_repository, "Embedding Repository", "Python", "Manages embeddings in the file system", "embedder_repository_facade.py")
+    Component(file_repository, "File Repository", "Python", "Handles file system operations", "file_repository.py")
+    Component(html_file_downloader, "HTML File Downloader", "Python", "Downloads and processes HTML content", "html_file_downloader.py")
+    Component(html_link_crawler, "HTML Link Crawler", "Python", "Crawls web pages for links", "html_link_crawler.py")
+    Component(summariser, "Summariser", "Python", "Creates text summaries", "summariser.py")
+    Component(summarise_fail_suppressor, "Summarise Fail Suppressor", "Python", "Suppresses invalid summaries", "summarise_fail_suppressor.py")
+    Component(summary_repository, "Summary Repository", "Python", "Manages summaries in the file system", "summary_repository_facade.py")
+    Component(text_repository, "Text Repository", "Python", "Manages text in the file system", "text_repository_facade.py")
+    Component(theme_finder, "Theme Finder", "Python", "Identifies themes via external API", "theme_finder.py")
+    Component(web_searcher, "Web Searcher", "Python", "Uses Google Custom Search Engine API", "web_searcher.py")
+    Component(youtube_playlist_searcher, "YouTube Playlist Searcher", "Python", "Gathers YouTube playlist information", "youtube_searcher.py")
+    Component(youtube_transcript_chunker, "YouTube Transcript Chunker", "Python", "Divides transcripts into chunks", "youtube_transcript_chunker.py")
+    Component(youtube_transcript_downloader, "YouTube Transcript Downloader", "Python", "Downloads YouTube transcripts", "youtube_transcript_downloader.py")
+    Component(waterfall_report, "Waterfall Report Generator", "Python", "Generates and sends reports", "waterfall_pipeline_report.py")
+    Component(waterfall_save_chunks, "Waterfall Save Chunks", "Python", "Saves chunks to database", "waterfall_pipeline_save_chunks.py")
+
 }
 
-Container_Boundary(boxerPipeline, "Boxer Pipeline") {
-    Component(htmlCrawler, "HtmlLinkCrawler", "Python", "Crawls web pages for links")
-    Component(youtubeSearcher, "YoutubePlaylistSearcher", "Python", "Searches YouTube playlists")
-    Component(transcriptDownloader, "YouTubeTranscriptDownloader", "Python", "Downloads video transcripts")
-    Component(transcriptChunker, "YouTubeTranscriptChunker", "Python", "Chunks video transcripts")
-}
+System_Ext(google_search_api, "Google Search API", "Provides search results")
+System_Ext(youtube_api, "YouTube API", "Provides video and playlist data")
+System_Ext(external_theme_api, "External Theme API", "Provides theme identification")
+System_Ext(braid_apis_db, "BraidApis Database", "Stores chunk data")
+System_Ext(email_server, "Email Server", "Sends email notifications")
+System_Ext(boxer_interface, "Boxer Interface", "Provides semantic search functionality")
 
-Container_Boundary(processingComponents, "Processing Components") {
-    Component(chunkerComponent, "Chunker", "Python", "Segments text into manageable chunks")
-    Component(embedderComponent, "Embedder", "Python", "Generates text embeddings")
-    Component(summarizerComponent, "Summariser", "Python", "Creates text summaries")
-    Component(failSuppressor, "SummariseFailSuppressor", "Python", "Filters invalid summaries")
-    Component(clusterComponent, "ClusterAnalyser", "Python", "Performs KMeans clustering")
-    Component(themeComponent, "ThemeFinder", "Python", "Identifies themes in clusters")
-}
 
-Container_Boundary(storage, "Storage Components") {
-    Component(fileRepoComponent, "FileRepository", "Python", "Manages file system operations")
-    Component(dbRepoComponent, "DbRepository", "Python", "Manages database operations")
-    Component(embeddingRepo, "EmbeddingRepositoryFacade", "Python", "Manages embedding storage")
-    Component(summaryRepo, "SummaryRepositoryFacade", "Python", "Manages summary storage")
-    Component(textRepo, "TextRepositoryFacade", "Python", "Manages text storage")
-}
 
-Rel(pipelineOrchestrator, webSearcher, "Initiates searches")
-Rel(pipelineOrchestrator, htmlDownloader, "Downloads content")
-Rel(pipelineOrchestrator, reportGenerator, "Generates reports")
+Rel(waterfall_pipeline, google_search_api, "Uses", "JSON/HTTP")
+Rel(boxer_pipeline, youtube_api, "Uses", "JSON/HTTP")
+Rel(youtube_playlist_searcher, youtube_api, "Uses", "JSON/HTTP")
+Rel(youtube_transcript_downloader, youtube_api, "Uses", "JSON/HTTP")
+Rel(theme_finder, external_theme_api, "Uses", "JSON/HTTP")
+Rel(db_repository, braid_apis_db, "Reads/Writes", "Database connection")
+Rel(waterfall_save_chunks, braid_apis_db, "Writes", "Database connection")
+Rel(waterfall_report, email_server, "Sends email", "SMTP")
+Rel(boxer_pipeline, boxer_interface, "Provides data to", "JSON")
 
-Rel(youtubeSearcher, transcriptDownloader, "Provides video IDs")
-Rel(transcriptDownloader, transcriptChunker, "Provides transcripts")
-Rel(htmlCrawler, htmlDownloader, "Provides URLs")
 
-Rel(pipelineOrchestrator, chunkerComponent, "Processes content")
-Rel(chunkerComponent, embedderComponent, "Sends for embedding")
-Rel(chunkerComponent, summarizerComponent, "Sends for summarization")
-Rel(summarizerComponent, failSuppressor, "Validates summaries")
-Rel(embedderComponent, clusterComponent, "Provides embeddings")
-Rel(clusterComponent, themeComponent, "Analyzes clusters")
-
-Rel(embedderComponent, embeddingRepo, "Stores embeddings")
-Rel(summarizerComponent, summaryRepo, "Stores summaries")
-Rel(htmlDownloader, textRepo, "Stores content")
-Rel(fileRepoComponent, dbRepoComponent, "Persists data")
-
-Container_Boundary(external_systems, "External Systems") {
-System_Ext(googleApi, "Google Search API")
-System_Ext(youtubeApi, "YouTube API")
-System_Ext(aiApi, "AI Services API")
-System_Ext(filesystem, "File System")
-System_Ext(database, "BraidApis Database")
-}  
-
-Rel(webSearcher, googleApi, "Searches")
-Rel(youtubeSearcher, youtubeApi, "Fetches playlists")
-Rel(embedderComponent, aiApi, "Requests embeddings")
-Rel(summarizerComponent, aiApi, "Requests summaries")
-Rel(fileRepoComponent, filesystem, "Reads/Writes files")
-Rel(dbRepoComponent, database, "Stores chunks")
 ```
+
+%% Generated by Salon from Braid Technologies, 28/02/2025
