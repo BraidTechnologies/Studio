@@ -1,53 +1,58 @@
 ```mermaid
 C4Component
-title Common TypeScript Components
-
 System_Boundary(common, "Common TypeScript Components") {
 
-  Component(api, "API Classes", "", "")
-  Component(models, "Data Models & Types", "", "")
-  Component(utils, "Utilities", "", "")
-  Component(env, "Environment Management", "", "")
-  Component(makepromptids, "MakePromptIds", "Generates TypeScript and Python prompt ID constants", "")
-  Component(activityrepositoryapi, "ActivityRepositoryApi", "Manages activity records", "")
-  Component(chunkrepositoryapi, "ChunkRepositoryApi", "Handles text chunk operations", "")
-  Component(findenrichedchunkapi, "FindEnrichedChunkApi", "Finds and manages enriched text chunks", "")
-  Component(querymodelapi, "QueryModelApi", "Interfaces with AI models for queries", "")
-  Component(sessionapi, "SessionApi", "Manages user sessions", "")
-  Component(storablerepositoryapi, "StorableRepositoryApi", "Base repository operations", "")
-  Component(asserts, "Asserts", "Validation utilities", "")
-  Component(compress, "Compress", "String compression/decompression", "")
-  Component(logging, "Logging", "Standardized logging", "")
-  Component(errors, "Errors", "Custom error types", "")
-  Component(developmentenvironment, "DevelopmentEnvironment", "Development environment configuration", "")
-  Component(stagingenvironment, "StagingEnvironment", "Staging environment configuration", "")
-  Component(productionenvironment, "ProductionEnvironment", "Production environment configuration", "")
+  Component(api, "API Classes", "TypeScript", "Handles API interactions and data management")
+  Component(models, "Data Models & Types", "TypeScript", "Defines data structures and interfaces")
+  Component(utils, "Utilities", "TypeScript", "Provides utility functions for validation, compression, and logging")
+  Component(env, "Environment Management", "TypeScript", "Manages environment configurations")
+  Component(makepromptids, "MakePromptIds", "TypeScript", "Generates TypeScript and Python prompt ID constants")
 
-  Rel(makepromptids, models, "Uses", "")
-  Rel(activityrepositoryapi, api, "Extends", "")
-  Rel(activityrepositoryapi, models, "Uses", "")
-  Rel(chunkrepositoryapi, api, "Extends", "")
-  Rel(chunkrepositoryapi, models, "Uses", "")
-  Rel(findenrichedchunkapi, api, "Extends", "")
-  Rel(findenrichedchunkapi, models, "Uses", "")
-  Rel(querymodelapi, api, "Extends", "")
-  Rel(querymodelapi, models, "Uses", "")
-  Rel(sessionapi, api, "Extends", "")
-  Rel(storablerepositoryapi, api, "Uses", "")
-  Rel(storablerepositoryapi, models, "Uses", "")
+  Rel(api, models, "uses", "")
+  Rel(api, utils, "uses", "")
+  Rel(api, env, "uses", "")
+  Rel(makepromptids, models, "uses", "")
 
-  Rel(api, models, "Uses", "")
-  Rel(api, utils, "Uses", "")
-  Rel(api, env, "Uses", "")
+  System_Boundary(api_classes, "API Classes") {
+    Component(api_base, "Api", "TypeScript", "Base class for API interactions")
+    Component(activity_repo_api, "ActivityRepositoryApi", "TypeScript", "Manages activity records")
+    Component(chunk_repo_api, "ChunkRepositoryApi", "TypeScript", "Handles text chunk operations")
+    Component(find_enriched_chunk_api, "FindEnrichedChunkApi", "TypeScript", "Finds and manages enriched text chunks")
+    Component(query_model_api, "QueryModelApi", "TypeScript", "Interfaces with AI models")
+    Component(session_api, "SessionApi", "TypeScript", "Manages user sessions")
+    Component(storable_repo_api, "StorableRepositoryApi", "TypeScript", "Base repository operations")
+
+    Rel(activity_repo_api, api_base, "extends", "")
+    Rel(chunk_repo_api, api_base, "extends", "")
+    Rel(find_enriched_chunk_api, api_base, "extends", "")
+    Rel(query_model_api, api_base, "extends", "")
+    Rel(session_api, api_base, "extends", "")
+
+
+  }
+  System_Boundary(data_models, "Data Models & Types") {
+    Component(istorable, "IStorable", "TypeScript", "Interface for storable objects")
+    Component(imodel, "IModel", "TypeScript", "Interface for AI models")
+    Component(enrichedchunk, "EnrichedChunk", "TypeScript", "Enhanced chunk data structure")
+    Component(ienvironment, "IEnvironment", "TypeScript", "Environment configuration interface")
+  }
+
+  System_Boundary(utilities, "Utilities") {
+    Component(asserts, "Asserts", "TypeScript", "Validation utilities")
+    Component(compress, "Compress", "TypeScript", "String compression utilities")
+    Component(logging, "Logging", "TypeScript", "Logging functions")
+    Component(errors, "Errors", "TypeScript", "Custom error types")
+  }
+
+  System_Boundary(environment, "Environment Management") {
+    Component(dev_env, "DevelopmentEnvironment", "TypeScript", "Development environment settings")
+    Component(staging_env, "StagingEnvironment", "TypeScript", "Staging environment settings")
+    Component(prod_env, "ProductionEnvironment", "TypeScript", "Production environment settings")
+  }
+
+
 
 }
-
-System_Ext(frontend, "Frontend", "Browser, Mocha tests")
-System_Ext(backend, "Backend", "API")
-
-Rel(frontend, common, "Uses", "")
-Rel(backend, common, "Uses", "")
-
 ```
 
 %% Generated by Salon from Braid Technologies, 28/02/2025
