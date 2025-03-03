@@ -1,148 +1,46 @@
-import unittest
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-import argparse
-from tempfile import TemporaryDirectory
 import pytest
+import sys
+from unittest import mock
+from Salon.src.repo_to_c4 import main
+from Salon.src.core.config_manager import ConfigManager
+from Salon.src.types.directory_data import DirectoryData
+from Salon.src.directory_processor.directory_walker import walk_directory
+from Salon.src.directory_processor.factory import getProcessorsRepoToC4
+from Salon.src.directory_processor.base import process_directory
 
-from Salon.src.repo_to_c4 import parse_arguments, validate_args, main
+
+@mock.patch("repo_to_c4.ConfigManager.load_config")
+@mock.patch("repo_to_c4.ConfigManager.get_args")
+@mock.patch("repo_to_c4.walk_directory")
+@mock.patch("repo_to_c4.getProcessorsRepoToC4")
+@mock.patch("repo_to_c4.process_directory")
+def test_main_success(mock_process_directory, mock_get_processors, mock_walk_directory, mock_get_args, mock_load_config):
+    """Test main() when all functions execute successfully."""
+    mock_get_args.return_value = mock.Mock(repo_path="test_repo", model_type="braid_api")
+    mock_walk_directory.return_value = DirectoryData(files=[], directories=[])
+
+    with mock.patch("sys.exit") as mock_exit:
+        main()
+        mock_exit.assert_called_with(0)
+        mock_walk_directory.assert_called_with(root_path="test_repo", skip_dirs=[], skip_patterns=[], source_patterns=[])
+        mock_get_processors.assert_called_with("braid_api")
+        mock_process_directory.assert_called()
 
 
-class TestRepoToC4(unittest.TestCase):
-    def setUp(self):
-        """Set up test fixtures before each test method."""
-        self.temp_dir = TemporaryDirectory()
-        self.temp_path = Path(self.temp_dir.name)
+@mock.patch("repo_to_c4.ConfigManager.load_config", side_effect=ValueError("Invalid config"))
+def test_main_config_error(mock_load_config):
+    """Test main() when there is a ValueError during config loading."""
+    with mock.patch("sys.exit") as mock_exit:
+        main()
+        mock_exit.assert_called_with(1)
 
-    def tearDown(self):
-        """Clean up test fixtures after each test method."""
-        self.temp_dir.cleanup()
 
-    def create_temp_repo(self):
-        """Helper method to create a temporary repository structure."""
-        # Create a simple repository structure for testing
-        (self.temp_path / "src").mkdir()
-        (self.temp_path / "docs").mkdir()
-        (self.temp_path / "src" / "main.py").touch()
-        return self.temp_path
+@mock.patch("sys.argv", ["repo_to_c4.py", "--repo_path", "test_repo", "--model_type", "local_gemini"])
+def test_argument_parsing():
+    """Test if ConfigManager correctly handles command-line arguments."""
+    config_manager = ConfigManager("Test description")
+    config_manager.load_config()
+    args = config_manager.get_args()
 
-    def test_parse_arguments_with_required_args(self):
-        """Test argument parsing with required arguments."""
-        test_args = ['--repo_path', '/path/to/repo']
-        with patch('sys.argv', ['script.py'] + test_args):
-            args = parse_arguments()
-            self.assertEqual(str(args.repo_path), '/path/to/repo')
-            self.assertEqual(args.model_type, 'braid_api')  # Default value
-
-    def test_parse_arguments_with_all_args(self):
-        """Test argument parsing with all arguments specified."""
-        test_args = ['--repo_path', '/path/to/repo', '--model_type', 'local_gemini']
-        with patch('sys.argv', ['script.py'] + test_args):
-            args = parse_arguments()
-            self.assertEqual(str(args.repo_path), '/path/to/repo')
-            self.assertEqual(args.model_type, 'local_gemini')
-
-    def test_parse_arguments_missing_required(self):
-        """Test argument parsing fails when required arguments are missing."""
-        test_args = []
-        with patch('sys.argv', ['script.py'] + test_args):
-            with self.assertRaises(SystemExit):
-                parse_arguments()
-
-    def test_validate_args_valid_directory(self):
-        """Test argument validation with valid directory."""
-        repo_path = self.create_temp_repo()
-        args = argparse.Namespace(repo_path=str(repo_path), model_type='braid_api')
-        validate_args(args)
-        # Normalize both paths before comparison
-        self.assertEqual(args.repo_path.resolve(), repo_path.resolve())
-
-    def test_validate_args_nonexistent_path(self):
-        """Test argument validation with non-existent path."""
-        args = argparse.Namespace(
-            repo_path='/nonexistent/path',
-            model_type='braid_api'
-        )
-        with self.assertRaises(ValueError) as context:
-            validate_args(args)
-        self.assertIn('does not exist', str(context.exception))
-
-    def test_validate_args_file_instead_of_directory(self):
-        """Test argument validation when path points to a file instead of directory."""
-        test_file = self.temp_path / "test.txt"
-        test_file.touch()
-        args = argparse.Namespace(repo_path=str(test_file), model_type='braid_api')
-        with self.assertRaises(ValueError) as context:
-            validate_args(args)
-        self.assertIn('not a directory', str(context.exception))
-
-    def test_main_successful_execution(self):
-        """Test successful execution of the main function."""
-        repo_path = self.create_temp_repo()
-        test_args = ['--repo_path', str(repo_path)]
-        
-        with patch('sys.argv', ['script.py'] + test_args), \
-             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
-             patch('Salon.src.repo_to_c4.add_visitor') as mock_add_visitor, \
-             patch('Salon.src.repo_to_c4.walk_directory') as mock_walk_directory:
-            
-            # Setup mock visitors
-            mock_visitor = MagicMock()
-            mock_get_visitors.return_value = [mock_visitor]
-            
-            # Run main function
-            result = main()
-            
-            # Verify the execution
-            self.assertEqual(result, 0)
-            mock_get_visitors.assert_called_once_with('braid_api')
-            mock_add_visitor.assert_called_once_with(mock_visitor)
-            mock_walk_directory.assert_called_once()
-
-    def test_main_with_invalid_path(self):
-        """Test main function with invalid repository path."""
-        test_args = ['--repo_path', '/nonexistent/path']
-        with patch('sys.argv', ['script.py'] + test_args):
-            result = main()
-            self.assertEqual(result, 1)
-
-    def test_main_with_invalid_model_type(self):
-        """Test main function with invalid model type."""
-        repo_path = self.create_temp_repo()
-        test_args = ['--repo_path', str(repo_path), '--model_type', 'invalid_model']
-        
-        with patch('sys.argv', ['script.py'] + test_args), \
-             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
-             patch('sys.stdout'), \
-             patch('sys.stderr'):  # Capture output to keep tests clean
-            
-            # Setup mock to raise an exception for invalid model
-            mock_get_visitors.side_effect = ValueError("Invalid model type")
-            
-            # Run main and verify it raises a ValueError
-            with pytest.raises(ValueError, match="Invalid model type"):
-                main()
-
-    def test_integration_with_visitors(self):
-        """Integration test for visitor pattern implementation."""
-        repo_path = self.create_temp_repo()
-        test_args = ['--repo_path', str(repo_path)]
-        
-        with patch('sys.argv', ['script.py'] + test_args), \
-             patch('Salon.src.repo_to_c4.get_visitors_for_c4') as mock_get_visitors, \
-             patch('Salon.src.repo_to_c4.add_visitor') as mock_add_visitor, \
-             patch('Salon.src.repo_to_c4.walk_directory') as mock_walk_directory:
-            
-            # Create multiple mock visitors
-            mock_visitors = [MagicMock() for _ in range(3)]
-            mock_get_visitors.return_value = mock_visitors
-            
-            result = main()
-            
-            # Verify all visitors were added and directory was walked
-            self.assertEqual(result, 0)
-            self.assertEqual(mock_add_visitor.call_count, len(mock_visitors))
-            mock_walk_directory.assert_called_once()
-
-if __name__ == '__main__':
-    unittest.main()
+    assert args.repo_path == "test_repo"
+    assert args.model_type == "local_gemini"
