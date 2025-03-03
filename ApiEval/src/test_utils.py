@@ -13,7 +13,7 @@ class TestType(Enum):
 class TestLogger:
     coverage_tracker = None  # Class variable for coverage tracking
     
-    def __init__(self, output_dir: str = "ApiEval/test_results"):
+    def __init__(self, output_dir: str = "ApiEval/eval_results"):
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
         self.current_test_info: Dict = {}
