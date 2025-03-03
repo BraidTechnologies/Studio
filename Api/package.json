@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/src/functions/*.js",
   "scripts": {
-    "build": "npm run compile && npm run pull_js && npm run pull_js_map && npm run pull_json",
+    "build": "npm run compile",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf dist",

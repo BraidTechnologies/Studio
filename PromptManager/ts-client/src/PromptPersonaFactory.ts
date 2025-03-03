@@ -25,7 +25,7 @@ import { EPromptPersona, IPromptPersona , IStoredPrompt,
     GeneratedSalonPromptNames
    } from "../entry";
 
-import { promptsExport as allPrompts} from "../entry";
+import { allPromptsArray as allPrompts} from "../entry";
 import { PromptInMemoryRepository} from "./IPromptRepository";
 import { throwIfUndefined } from "commonts/src/Asserts";
 

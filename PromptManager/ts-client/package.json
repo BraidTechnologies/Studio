@@ -2,7 +2,9 @@
   "name": "promptmanager",
   "version": "1.0.0",
   "description": "Managing System Wide Prompts and Evals ",
-  "main": "entry.ts",
+  "main": "dist/node/bundle.js",
+  "browser": "dist/browser/bundle.js",
+  "types": "dist/bundle.d.ts",
   "directories": {
     "test": "test"
   },
@@ -10,7 +12,8 @@
   "license": "ISC",
   "scripts": {
     "start": "ts-node entry.ts",
-    "build": "tsc && npm run copy-prompts && npm run copy-interfaces",
+    "build:bundle": "esbuild ./entry.ts --bundle --platform=node --outfile=dist/bundle.js",
+    "build": "tsc && npm run copy-prompts && npm run copy-interfaces && npm run build:bundle",
     "copy-prompts": "copyfiles -u 2 \"../prompts/**/*\" \"dist/prompts\"",
     "copy-interfaces": "copyfiles -u 2 \"../interfaces/**/*\" \"dist/interfaces\"",
     "make_prompt_ids": "ts-node src/helpers/MakePromptIds.ts",
@@ -25,6 +28,7 @@
     "@types/node": "^22.13.8",
     "@types/pako": "^2.0.3",
     "copyfiles": "^2.4.1",
+    "esbuild": "^0.24.2",
     "expect": "^29.7.0",
     "mocha": "^11.0.1",
     "rimraf": "^6.0.1",
