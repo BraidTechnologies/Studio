@@ -13,9 +13,9 @@ import axios from "axios";
 import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
 import { EConfigNumbers } from "./ConfigStrings";
-import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
-import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/Types/SummariseApi.Types"
-import { EPromptPersona } from "../../CommonTs/src/IPromptPersona";
+import { getDefaultEnvironment } from "commonts/src/Interfaces/IEnvironmentFactory";
+import { ISummariseRequest, ISummariseResponse} from "commonts/src/Types/SummariseApi.Types"
+import { EPromptPersona } from "promptmanager/entry";
 
 
 export async function makeSummaryCall (session: SessionKey, text: string) : Promise<string | undefined> {

@@ -26,11 +26,11 @@ import { throwIfUndefined } from './Asserts';
 import { AssertionFailedError } from "./Errors";
 import { getDefaultKeyGenerator } from "./IKeyGeneratorFactory";
 
-import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EChunkRepository} from '../../CommonTs/src/EnrichedChunk';
-import { IEnrichedQueryRequest, IEnrichedResponse, IRelevantEnrichedChunk, IGenerateQuestionRequest, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
-import { EModelConversationRole, IModelConversationElement } from "../../CommonTs/src/IModelDriver";
-import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
+import { getDefaultEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EChunkRepository} from 'commonts/src/EnrichedChunk';
+import { IEnrichedQueryRequest, IEnrichedResponse, IRelevantEnrichedChunk, IGenerateQuestionRequest, IQuestionGenerationResponse } from 'commonts/src/Types/EnrichedQuery.Api.Types';
+import { EModelConversationRole, IModelConversationElement } from "commonts/src/Interfaces/IModelDriver";
+import { QueryModelApi } from 'commonts/src/QueryEnrichedModelApi';
 
 // We allow for the equivalent of 10 minutes of chat. 10 mins * 60 words = 600 words = 2400 tokens. 
 const kMaxTokens : number= 4096;

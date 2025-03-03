@@ -6,10 +6,10 @@ import { describe, it } from 'mocha';
 
 import { KStubEnvironmentVariables } from '../core/ConfigStrings';
 
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
-import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { FindEnrichedChunkApi } from 'commonts/src/FindEnrichedChunkApi';
+import { EChunkRepository } from 'commonts/src/EnrichedChunk';
 
 
 describe("ChunkRepository", function () {
