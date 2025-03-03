@@ -48,7 +48,7 @@ if [ -d "$PROJECT_ROOT/venv" ]; then
 fi
 
 # Run the evaluation script
-python "$PROJECT_ROOT/ApiEval/evals/run_evals.py" "$@"
+python "$PROJECT_ROOT/ApiEval/run_evals/run_evals.py" "$@"
 
 # Generate a simple report of the results
 echo "Evaluation completed. Check the results directory for detailed reports."

@@ -1,0 +1,13 @@
+{
+  "id": "summarise_filter_001",
+  "name": "Basic HTML Summary Test",
+  "type": "simple",
+  "description": "Test basic summarization with a simple sports event description in HTML",
+  "prompt_id": "716c667d-9074-4d9a-8335-3194212eba90",
+  "start_time": "2025-03-03T11:34:07.186776",
+  "status": "passed",
+  "end_time": "2025-03-03T11:34:09.551686",
+  "details": {
+    "result": "None"
+  }
+}

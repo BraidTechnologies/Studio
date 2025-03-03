@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="1" tests="9" time="243.200" timestamp="2025-03-03T11:29:41.174635+00:00" hostname="Braid-Daniel"><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_query_invalid_payload" time="3.901" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_query_success" time="0.001"><skipped type="pytest.skip" message="Helper function, not a test">C:\Code\Studio\ApiEval\test\enriched_query_api_eval_test.py:195: Helper function, not a test</skipped></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function" time="10.988" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_variant" time="12.094" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_negative" time="2.725" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_list" time="56.267"><failure message="AssertionError: Chunk is not similar to the expected response:To ensure data privacy, anonymize and remove any sensitive information from your data before using it with an LLM. Additionally, use encryption for data storage and transfer, and choose an LLM provider that complies with privacy regulations like GDPR.&#10;assert 0.29901093156454317 &gt; 0.3&#10; +  where 0.29901093156454317 = cosine_similarity([-0.015491182, -0.022547936, -0.015269224, -0.021093724, -0.005656118, 0.0073935185, ...], [-0.050887417, 0.012924939, -0.020439101, -0.021918725, 0.04952384, 0.00036741243, ...])">@system_test(
+        test_id="enriched_004",
+        name="Enriched Query Sample List Test",
+        description="Test the enriched query API with a list of primed questions and answers",
+        prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+    )
+    def test_enriched_simple_function_list():
+        '''
+        Test the enriched query API with a list of primed questions and answers.
+        '''
+    
+        for qa in sampleqas:
+            try:
+                valid_request = copy.deepcopy(valid_request_payload())
+                valid_request.question = qa['q']
+                embedded_answer = embed_text(qa['a'])
+&gt;               test_enriched_query_success(valid_request, 1, embedded_answer, 0.3)
+
+ApiEval\test\enriched_query_api_eval_test.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = &lt;CommonPy.src.enriched_query_api_types.IEnrichedQueryRequest object at 0x0000015AC144E270&gt;, expected_chunks = 1
+expected_embedding = [-0.050887417, 0.012924939, -0.020439101, -0.021918725, 0.04952384, 0.00036741243, ...], threshold = 0.3, is_youtube = False
+dont_care = True
+
+    @pytest.mark.skip(reason='Helper function, not a test')
+    def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                    expected_chunks: int,
+                                    expected_embedding: list[float],
+                                    threshold: float,
+                                    is_youtube: bool = False,
+                                    dont_care = True):
+        '''
+        Test the enriched query API with a successful response.
+        Makes a request to the API and checks the response, including checking cosine similarity against a target response,
+        then enumerating relevant chunks and also testing their cosine similarity
+        '''
+        has_youtube = False
+        has_non_youtube = False
+    
+        try:
+           enriched_query_api = EnrichedQueryApi()
+           enriched_response = enriched_query_api.enriched_query(payload)
+        except requests.exceptions.RequestException as e:
+            pytest.fail(f"API request failed: {e}")
+    
+    
+        assert enriched_response.answer is not None, "Response JSON does not contain 'answer'"
+        assert enriched_response.chunks is not None, "Response JSON does not contain 'chunks'"
+    
+        assert isinstance(enriched_response.answer,
+                          str), "'answer' should be a string"
+        assert isinstance(enriched_response.chunks,
+                          list), "'chunks' should be a list"
+        assert len(enriched_response.chunks) == expected_chunks, f"Expected {
+            expected_chunks} chunks, got {len(enriched_response.chunks)}"
+    
+        if expected_chunks &gt; 0 and expected_embedding is not None:
+            embedded_answer = embed_text(enriched_response.answer)
+            assert cosine_similarity(
+                embedded_answer, expected_embedding) &gt; threshold, "Answer is not similar to the expected response:" + enriched_response.answer
+    
+            for chunk in enriched_response.chunks:
+                # pylint: disable=no-member
+                embedded_chunk = embed_text(chunk.chunk.summary)
+                if chunk.chunk.url.lower().find("youtube") != -1:
+                    has_youtube = True
+                else:
+                    has_non_youtube = True
+&gt;               assert cosine_similarity(
+                    embedded_chunk, expected_embedding) &gt; threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+E               AssertionError: Chunk is not similar to the expected response:To ensure data privacy, anonymize and remove any sensitive information from your data before using it with an LLM. Additionally, use encryption for data storage and transfer, and choose an LLM provider that complies with privacy regulations like GDPR.
+E               assert 0.29901093156454317 &gt; 0.3
+E                +  where 0.29901093156454317 = cosine_similarity([-0.015491182, -0.022547936, -0.015269224, -0.021093724, -0.005656118, 0.0073935185, ...], [-0.050887417, 0.012924939, -0.020439101, -0.021918725, 0.04952384, 0.00036741243, ...])
+
+ApiEval\test\enriched_query_api_eval_test.py:239: AssertionError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_from_youtube" time="18.214" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_from_html" time="17.140" /><testcase classname="test.enriched_query_api_eval_test" name="test_evaluate_coverage" time="121.812" /></testsuite></testsuites>
