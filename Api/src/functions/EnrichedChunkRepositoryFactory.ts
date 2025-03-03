@@ -11,8 +11,8 @@
 // Internal imports
 import { IEnrichedChunkRepository} from "./IEnrichedChunkRepository";
 import { EnrichedChunkRepositoryDb } from "./EnrichedChunkRepositoryDb";
-import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
-import { InvalidParameterError } from "../../../CommonTs/src/Errors";
+import { EChunkRepository } from "commonts/src/EnrichedChunk";
+import { InvalidParameterError } from "commonts/src/Errors";
 
 let waterfallRepository: EnrichedChunkRepositoryDb | undefined = undefined;
 

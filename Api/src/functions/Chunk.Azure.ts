@@ -17,8 +17,8 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
-import { IChunkRequest, IChunkResponse } from "../../../CommonTs/src/ChunkApi.Types"
+import { getDefaultTextChunker } from "commonts/src/Interfaces/IModelFactory";
+import { IChunkRequest, IChunkResponse } from "commonts/src/Types/ChunkApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure";
 

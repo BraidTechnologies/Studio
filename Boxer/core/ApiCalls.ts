@@ -14,7 +14,7 @@ import { SessionKey } from "./Keys";
 import { logApiError } from "./Logging";
 import { EConfigNumbers } from "./ConfigStrings";
 import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
-import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/SummariseApi.Types"
+import { ISummariseRequest, ISummariseResponse} from "../../CommonTs/src/Types/SummariseApi.Types"
 import { EPromptPersona } from "../../CommonTs/src/IPromptPersona";
 
 

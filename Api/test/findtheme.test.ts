@@ -6,8 +6,8 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
+import {getEnvironment} from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
 
 declare var process: any;
 
@@ -15,7 +15,7 @@ let themedText = "Surfing is a surface water sport in which an individual, a sur
 + "\n\n"
 + "The term surfing refers to a person riding a wave using a board, regardless of the stance. There are several types of boards. The Moche of Peru would often surf on reed craft, while the native peoples of the Pacific surfed waves on alaia, paipo, and other such water craft. Ancient cultures often surfed on their belly and knees, while the modern-day definition of surfing most often refers to a surfer riding a wave standing on a surfboard; this is also referred to as stand-up surfing."
 
-import { IFindThemeRequest, IFindThemeResponse } from "../../CommonTs/src/FindThemeApi.Types";
+import { IFindThemeRequest, IFindThemeResponse } from "commonts/src/Types/FindThemeApi.Types";
 
 describe("FindTheme", async function () {
 

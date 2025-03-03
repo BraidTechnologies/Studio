@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "sourceMap": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "declaration": true, 
+    "declarationMap": true, 
+    "composite": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "commonts/*": ["node_modules/commonts/dist/*"]
+    }
+  },
+  "references": [],
+  "include": [
+    "**/*.ts",
+    "**/*.json",
+    "src/**/*.ts",
+    "commonts/**/*.ts",
+    "../PromptManager/prompts/GeneratedBoxerPromptNames.ts", "../PromptManager/prompts/GeneratedDefaultPromptNames.ts", "../PromptManager/prompts/GeneratedPromptNames.ts", "../PromptManager/prompts/GeneratedSalonPromptNames.ts", "../PromptManager/prompts/GeneratedWaterfallPromptNames.ts"  ]
+}

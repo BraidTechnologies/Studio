@@ -12,7 +12,7 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
+import { IEnvironment } from "./Interfaces/IEnvironment";
 
 /**
  * Represents a class for handling login operations.

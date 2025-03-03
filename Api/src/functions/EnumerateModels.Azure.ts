@@ -13,8 +13,8 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { getDefaultChatModelDriver, getDefaultEmbeddingModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
-import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "../../../CommonTs/src/EnumerateModelsApi.Types"
+import { getDefaultChatModelDriver, getDefaultEmbeddingModelDriver, getDefaultTextChunker } from "commonts/src/Interfaces/IModelFactory";
+import { IEnumerateModelsRequest, IEnumerateModelsResponse} from "commonts/src/Types/EnumerateModelsApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure";
 

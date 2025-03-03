@@ -13,7 +13,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IEnumerateRepositoriesRequest, IEnumerateReposotoriesResponse} from "../../../CommonTs/src/EnumerateModelsApi.Types"
+import { IEnumerateRepositoriesRequest, IEnumerateReposotoriesResponse} from "../../../CommonTs/src/Types/EnumerateModelsApi.Types"
 import { sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { isSessionValid } from "./Utility.Azure"
 import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";

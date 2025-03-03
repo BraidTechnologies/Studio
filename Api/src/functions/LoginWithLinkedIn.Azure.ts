@@ -14,7 +14,7 @@ import axios from "axios";
 import * as QueryString from "qs";
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { getDefaultEnvironment } from "../../../CommonTs/src/IEnvironmentFactory";
+import { getDefaultEnvironment } from "commonts/src/Interfaces/IEnvironmentFactory";
 import { isSessionValid } from "./Utility.Azure";
 
 export async function LoginWithLinkedIn(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {

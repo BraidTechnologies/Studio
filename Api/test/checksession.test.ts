@@ -7,9 +7,9 @@ import { describe, it } from 'mocha';
 
 declare var process: any;
 
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { SessionApi } from "../../CommonTs/src/SessionApi";
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { SessionApi } from "commonts/src/SessionApi";
 
 describe("CheckSession", async function () {
 

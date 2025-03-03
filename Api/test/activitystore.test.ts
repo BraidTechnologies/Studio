@@ -5,11 +5,11 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { ActivityRepostoryApi } from '../../CommonTs/src/ActivityRepositoryApi';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { ActivityRepostoryApi } from 'commonts/src/ActivityRepositoryApi';
 import { randomKey, saveLoadRemove, failSave } from './storable';
-import { IStorable, IStorableMultiQuerySpec } from '../../CommonTs/src/IStorable';
+import { IStorable, IStorableMultiQuerySpec } from 'commonts/src/Interfaces/IStorable';
 
 declare var process: any;
 

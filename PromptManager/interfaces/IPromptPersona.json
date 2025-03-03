@@ -1,0 +1,8 @@
+{
+    "IPromptPersona": {
+      "name": "string",
+      "systemPrompt": "string",
+      "userPrompt": "string"
+    }
+  }
+  

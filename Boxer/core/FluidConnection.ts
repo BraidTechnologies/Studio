@@ -18,7 +18,7 @@ import { IFluidContainer, ConnectionState } from "fluid-framework";
 import { AzureClient } from "@fluidframework/azure-client";
 
 import { FluidClientProps } from "../../CommonTs/src/FluidTokenProvider";
-import { IFluidTokenRequest } from "../../CommonTs/src/Fluid";
+import { IFluidTokenRequest } from "../../CommonTs/src/Interfaces/Fluid";
 import { throwIfUndefined } from "./Asserts";
 import { logApiError } from "./Logging";
 import { ConnectionError, InvalidOperationError, InvalidStateError} from './Errors';

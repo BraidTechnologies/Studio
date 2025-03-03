@@ -15,8 +15,8 @@ import axios, {AxiosInstance, AxiosStatic} from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { IFluidTokenRequest } from './Fluid';
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { IFluidTokenRequest } from "./Interfaces/Fluid";
 
 export class FluidApi extends Api {
 

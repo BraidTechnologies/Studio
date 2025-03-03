@@ -6,9 +6,9 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { IClassifyRequest, IClassifyResponse } from '../../CommonTs/src/ClassifyApi.Types';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { IClassifyRequest, IClassifyResponse } from 'commonts/src/Types/ClassifyApi.Types';
 
 declare var process: any;
 
