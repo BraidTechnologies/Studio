@@ -1,0 +1,13 @@
+{
+  "id": "theme_003",
+  "name": "Football Different Theme Test",
+  "type": "system",
+  "description": "Test football description returns different theme",
+  "prompt_id": "3a34093d-95ea-4d46-8cf9-8f2f784d09da",
+  "start_time": "2025-03-04T11:07:57.175873",
+  "status": "passed",
+  "end_time": "2025-03-04T11:07:59.491062",
+  "details": {
+    "result": "None"
+  }
+}

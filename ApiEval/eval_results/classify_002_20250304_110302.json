@@ -1,0 +1,13 @@
+{
+  "id": "classify_002",
+  "name": "Similar Basketball Classification",
+  "type": "mutation",
+  "description": "Test similar basketball text with different wording should yield same classification",
+  "prompt_id": "af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9",
+  "start_time": "2025-03-04T11:03:00.008664",
+  "status": "passed",
+  "end_time": "2025-03-04T11:03:02.355524",
+  "details": {
+    "result": "None"
+  }
+}

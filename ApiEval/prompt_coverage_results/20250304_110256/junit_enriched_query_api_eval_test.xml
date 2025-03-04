@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="1" tests="9" time="286.906" timestamp="2025-03-04T11:03:04.847581+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_query_invalid_payload" time="3.684" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_query_success" time="0.000"><skipped type="pytest.skip" message="Helper function, not a test">C:\Code\Studio\ApiEval\evals\enriched_query_api_eval_test.py:195: Helper function, not a test</skipped></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function" time="10.744" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_variant" time="11.756" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_negative" time="2.720" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_list" time="84.134"><failure message="AssertionError: Chunk is not similar to the expected response:To handle multi-turn conversations in Python applications, use the `transformers` library by Hugging Face. Implement a model like GPT-3 or GPT-4 and maintain the conversation history by appending previous interactions. Example:&#10;  &#10;  ```python&#10;  from transformers import GPT2LMHeadModel, GPT2Tokenizer&#10;  &#10;  model_name = &quot;gpt2&quot;&#10;  tokenizer = GPT2Tokenizer.from_pretrained(model_name)&#10;  model = GPT2LMHeadModel.from_pretrained(model_name)&#10;  &#10;  conversation_history = &quot;User: Hello\nAI: Hi! How can I help you?\n&quot;&#10;  &#10;  input_ids = tokenizer.encode(conversation_history + &quot;User: I need some help with Python.\n&quot;, return_tensors='pt')&#10;  output = model.generate(input_ids)&#10;  &#10;  response = tokenizer.decode(output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)&#10;  print(response)&#10;  ```&#10;  &#10;  Keep appending to `conversation_history` for multi-turn interactions.&#10;assert 0.27242816062881775 &gt; 0.3&#10; +  where 0.27242816062881775 = cosine_similarity([-0.010962636, -0.026348406, -0.022247488, -0.013035065, 0.02712465, 0.0016916292, ...], [-0.0017871151, -0.020561865, -0.011295882, -0.02346798, 0.016925568, -0.0013280145, ...])">@system_test(
+        test_id="enriched_004",
+        name="Enriched Query Sample List Test",
+        description="Test the enriched query API with a list of primed questions and answers",
+        prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+    )
+    def test_enriched_simple_function_list():
+        '''
+        Test the enriched query API with a list of primed questions and answers.
+        '''
+    
+        for qa in sampleqas:
+            try:
+                valid_request = copy.deepcopy(valid_request_payload())
+                valid_request.question = qa['q']
+                embedded_answer = embed_text(qa['a'])
+&gt;               test_enriched_query_success(valid_request, 1, embedded_answer, 0.3)
+
+ApiEval\evals\enriched_query_api_eval_test.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = &lt;CommonPy.src.enriched_query_api_types.IEnrichedQueryRequest object at 0x00000121951E5550&gt;, expected_chunks = 1
+expected_embedding = [-0.0017871151, -0.020561865, -0.011295882, -0.02346798, 0.016925568, -0.0013280145, ...], threshold = 0.3, is_youtube = False
+dont_care = True
+
+    @pytest.mark.skip(reason='Helper function, not a test')
+    def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                    expected_chunks: int,
+                                    expected_embedding: list[float],
+                                    threshold: float,
+                                    is_youtube: bool = False,
+                                    dont_care = True):
+        '''
+        Test the enriched query API with a successful response.
+        Makes a request to the API and checks the response, including checking cosine similarity against a target response,
+        then enumerating relevant chunks and also testing their cosine similarity
+        '''
+        has_youtube = False
+        has_non_youtube = False
+    
+        try:
+           enriched_query_api = EnrichedQueryApi()
+           enriched_response = enriched_query_api.enriched_query(payload)
+        except requests.exceptions.RequestException as e:
+            pytest.fail(f"API request failed: {e}")
+    
+    
+        assert enriched_response.answer is not None, "Response JSON does not contain 'answer'"
+        assert enriched_response.chunks is not None, "Response JSON does not contain 'chunks'"
+    
+        assert isinstance(enriched_response.answer,
+                          str), "'answer' should be a string"
+        assert isinstance(enriched_response.chunks,
+                          list), "'chunks' should be a list"
+        assert len(enriched_response.chunks) == expected_chunks, f"Expected {
+            expected_chunks} chunks, got {len(enriched_response.chunks)}"
+    
+        if expected_chunks &gt; 0 and expected_embedding is not None:
+            embedded_answer = embed_text(enriched_response.answer)
+            assert cosine_similarity(
+                embedded_answer, expected_embedding) &gt; threshold, "Answer is not similar to the expected response:" + enriched_response.answer
+    
+            for chunk in enriched_response.chunks:
+                # pylint: disable=no-member
+                embedded_chunk = embed_text(chunk.chunk.summary)
+                if chunk.chunk.url.lower().find("youtube") != -1:
+                    has_youtube = True
+                else:
+                    has_non_youtube = True
+&gt;               assert cosine_similarity(
+                    embedded_chunk, expected_embedding) &gt; threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+E               AssertionError: Chunk is not similar to the expected response:To handle multi-turn conversations in Python applications, use the `transformers` library by Hugging Face. Implement a model like GPT-3 or GPT-4 and maintain the conversation history by appending previous interactions. Example:
+E                 
+E                 ```python
+E                 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+E                 
+E                 model_name = "gpt2"
+E                 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+E                 model = GPT2LMHeadModel.from_pretrained(model_name)
+E                 
+E                 conversation_history = "User: Hello\nAI: Hi! How can I help you?\n"
+E                 
+E                 input_ids = tokenizer.encode(conversation_history + "User: I need some help with Python.\n", return_tensors='pt')
+E                 output = model.generate(input_ids)
+E                 
+E                 response = tokenizer.decode(output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+E                 print(response)
+E                 ```
+E                 
+E                 Keep appending to `conversation_history` for multi-turn interactions.
+E               assert 0.27242816062881775 &gt; 0.3
+E                +  where 0.27242816062881775 = cosine_similarity([-0.010962636, -0.026348406, -0.022247488, -0.013035065, 0.02712465, 0.0016916292, ...], [-0.0017871151, -0.020561865, -0.011295882, -0.02346798, 0.016925568, -0.0013280145, ...])
+
+ApiEval\evals\enriched_query_api_eval_test.py:239: AssertionError</failure></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_from_youtube" time="17.901" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_from_html" time="23.302" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_evaluate_coverage" time="132.484" /></testsuite></testsuites>

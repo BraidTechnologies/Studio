@@ -1,0 +1,13 @@
+{
+  "id": "classify_003",
+  "name": "Different Sport Classification",
+  "type": "system",
+  "description": "Test different sport text should yield different classification",
+  "prompt_id": "af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9",
+  "start_time": "2025-03-03T15:51:24.789813",
+  "status": "passed",
+  "end_time": "2025-03-03T15:51:27.233969",
+  "details": {
+    "result": "None"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "classify_001",
+  "name": "Basic Basketball Classification",
+  "type": "simple",
+  "description": "Test basic basketball-related text classification",
+  "prompt_id": "af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9",
+  "start_time": "2025-03-04T11:02:57.382548",
+  "status": "passed",
+  "end_time": "2025-03-04T11:02:59.994387",
+  "details": {
+    "result": "None"
+  }
+}
