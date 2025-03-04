@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# List of directories to process
+directories=("ApiEval")
+
 # Get the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -46,6 +49,17 @@ trap cleanup EXIT
 if [ -d "$PROJECT_ROOT/venv" ]; then
     source "$PROJECT_ROOT/venv/bin/activate"
 fi
+
+for dir in "${directories[@]}"; do
+    if [ -d "$dir"]; then 
+        echo "Entering directory: $dir"
+        cd "$dir"
+        python run_evals/run_evals.py "$@"
+        cd ..
+    else
+        echo "Directory $dir not found, skipping..."
+    fi
+done
 
 # Run the evaluation script
 python "$PROJECT_ROOT/ApiEval/run_evals/run_evals.py" "$@"
