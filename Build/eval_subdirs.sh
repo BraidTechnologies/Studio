@@ -51,18 +51,13 @@ if [ -d "$PROJECT_ROOT/venv" ]; then
 fi
 
 for dir in "${directories[@]}"; do
-    if [ -d "$dir"]; then 
-        echo "Entering directory: $dir"
-        cd "$dir"
-        python run_evals/run_evals.py "$@"
-        cd ..
+    if [ -d "$dir" ]; then 
+        # Run the evaluation script
+        python "$PROJECT_ROOT/$dir/run_evals/run_evals.py" "$@"
     else
         echo "Directory $dir not found, skipping..."
     fi
 done
-
-# Run the evaluation script
-python "$PROJECT_ROOT/ApiEval/run_evals/run_evals.py" "$@"
 
 # Generate a simple report of the results
 echo "Evaluation completed. Check the results directory for detailed reports."
