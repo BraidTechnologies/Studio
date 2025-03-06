@@ -50,7 +50,14 @@ This directory contains various shell scripts for building, testing, and maintai
   - Counts lines of code (excluding whitespace)
   - Separates counts by language (Python, TypeScript)
   - Distinguishes between source and test files
-  - Usage: `./count_loc.sh <base_directory>`
+
+
+### Evaluation
+- `eval_subdirs.sh`: Runs evaluation scripts
+  - Starts required services (local-fluid, func, test-warm)
+  - Handles database warm-up
+  - Executes evaluation scripts in specified directories
+  - Includes automatic cleanup of background processes
 
 ## Project Structure
 
