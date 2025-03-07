@@ -1,0 +1,13 @@
+{
+  "id": "theme_002",
+  "name": "Alternative Basketball Theme Test",
+  "type": "mutation",
+  "description": "Test different basketball description returns same basketball theme",
+  "prompt_id": "3a34093d-95ea-4d46-8cf9-8f2f784d09da",
+  "start_time": "2025-02-27T20:13:49.758893",
+  "status": "failed",
+  "end_time": "2025-02-27T20:13:51.803108",
+  "details": {
+    "error": "assert 404 == 200\n +  where 404 = <Response [404]>.status_code"
+  }
+}

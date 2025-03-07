@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="7" skipped="1" tests="9" time="16.698" timestamp="2025-02-28T15:07:00.182766+00:00" hostname="Braid-Daniel"><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_query_invalid_payload" time="2.045" /><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_query_success" time="0.001"><skipped type="pytest.skip" message="Helper function, not a test">C:\Code\Studio\ApiEval\test\enriched_query_api_eval_test.py:195: Helper function, not a test</skipped></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function" time="2.034"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853E00170&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SIMPLE, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:260: in test_enriched_simple_function
+    embedded_target_response = embed_text(SAMPLE_RESPONSE)
+ApiEval\test\enriched_query_api_eval_test.py:62: in embed_text
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.embed_api.EmbeddingApi object at 0x0000024853E1DFA0&gt;
+embedding_request = &lt;CommonPy.src.embed_api_types.IEmbedRequest object at 0x000002485113A7B0&gt;
+
+    def embed(self, embedding_request: IEmbedRequest) -&gt; IEmbedResponse:
+    
+        logger.debug('Generating question for: %s', embedding_request.text)
+    
+        wrapped = {
+            'request': embedding_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/Embed?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/Embed?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            return safe_dict_to_object(response.json(), IEmbedResponse)
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\embed_api.py:74: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_variant" time="2.062"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853E35160&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.MUTATION, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:279: in test_enriched_simple_function_variant
+    embedded_target_response = embed_text(SAMPLE_RESPONSE)
+ApiEval\test\enriched_query_api_eval_test.py:62: in embed_text
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.embed_api.EmbeddingApi object at 0x0000024853E37500&gt;
+embedding_request = &lt;CommonPy.src.embed_api_types.IEmbedRequest object at 0x0000024853E376B0&gt;
+
+    def embed(self, embedding_request: IEmbedRequest) -&gt; IEmbedResponse:
+    
+        logger.debug('Generating question for: %s', embedding_request.text)
+    
+        wrapped = {
+            'request': embedding_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/Embed?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/Embed?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            return safe_dict_to_object(response.json(), IEmbedResponse)
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\embed_api.py:74: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_negative" time="2.064"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853E36840&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SIMPLE, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:300: in test_enriched_simple_function_negative
+    test_enriched_query_success(valid_request, 0, None, 0.45)
+ApiEval\test\enriched_query_api_eval_test.py:212: in test_enriched_query_success
+    enriched_response = enriched_query_api.enriched_query(payload)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.enriched_query_api.EnrichedQueryApi object at 0x0000024853E36AE0&gt;
+enriched_query_request = &lt;CommonPy.src.enriched_query_api_types.IEnrichedQueryRequest object at 0x0000024853E375C0&gt;
+
+    def enriched_query (self, enriched_query_request: IEnrichedQueryRequest) -&gt; IEnrichedResponse:
+    
+        logger.debug('Generating enriched query for: %s', enriched_query_request.question)
+    
+        wrapped = {
+            'request': enriched_query_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/QueryModelWithEnrichment?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            response_json = response.json()
+    
+            return_obj = safe_dict_to_object(response_json, IEnrichedResponse)
+    
+            return_obj.chunks = []
+            for chunk in response_json['chunks']:
+                chunk_obj = safe_dict_to_object(chunk['chunk'])
+                safe_chunk_obj = safe_cast(chunk_obj, IEnrichedChunkSummary)
+                relevance = chunk['relevance']
+                relevant_chunk = IRelevantEnrichedChunk()
+                relevant_chunk.chunk = safe_chunk_obj
+                relevant_chunk.relevance = relevance
+                return_obj.chunks.append(relevant_chunk)
+            return return_obj
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\enriched_query_api.py:113: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_simple_function_list" time="2.063"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853570140&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:320: in test_enriched_simple_function_list
+    embedded_answer = embed_text(qa['a'])
+ApiEval\test\enriched_query_api_eval_test.py:62: in embed_text
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.embed_api.EmbeddingApi object at 0x0000024852B5E2A0&gt;
+embedding_request = &lt;CommonPy.src.embed_api_types.IEmbedRequest object at 0x0000024853E1EFF0&gt;
+
+    def embed(self, embedding_request: IEmbedRequest) -&gt; IEmbedResponse:
+    
+        logger.debug('Generating question for: %s', embedding_request.text)
+    
+        wrapped = {
+            'request': embedding_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/Embed?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/Embed?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            return safe_dict_to_object(response.json(), IEmbedResponse)
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\embed_api.py:74: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_from_youtube" time="2.053"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x000002485113BB90&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:336: in test_enriched_from_youtube
+    embedded_target_response = embed_text(VIDEO_SUMMARY)
+ApiEval\test\enriched_query_api_eval_test.py:62: in embed_text
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.embed_api.EmbeddingApi object at 0x000002485113B020&gt;
+embedding_request = &lt;CommonPy.src.embed_api_types.IEmbedRequest object at 0x000002485113ABD0&gt;
+
+    def embed(self, embedding_request: IEmbedRequest) -&gt; IEmbedResponse:
+    
+        logger.debug('Generating question for: %s', embedding_request.text)
+    
+        wrapped = {
+            'request': embedding_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/Embed?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/Embed?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            return safe_dict_to_object(response.json(), IEmbedResponse)
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\embed_api.py:74: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_enriched_from_html" time="2.030"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853876A50&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:356: in test_enriched_from_html
+    embedded_target_response = embed_text(PAGE_SUMMARY)
+ApiEval\test\enriched_query_api_eval_test.py:62: in embed_text
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.embed_api.EmbeddingApi object at 0x00000248538764E0&gt;
+embedding_request = &lt;CommonPy.src.embed_api_types.IEmbedRequest object at 0x0000024853876B70&gt;
+
+    def embed(self, embedding_request: IEmbedRequest) -&gt; IEmbedResponse:
+    
+        logger.debug('Generating question for: %s', embedding_request.text)
+    
+        wrapped = {
+            'request': embedding_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/Embed?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/Embed?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            return safe_dict_to_object(response.json(), IEmbedResponse)
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\embed_api.py:74: RuntimeError</failure></testcase><testcase classname="test.enriched_query_api_eval_test" name="test_evaluate_coverage" time="2.039"><failure message="RuntimeError: Error returned from API:">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853E36D50&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ApiEval\test\enriched_query_api_eval_test.py:387: in test_evaluate_coverage
+    enriched_response = enriched_query_api.enriched_query(valid_request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;CommonPy.src.enriched_query_api.EnrichedQueryApi object at 0x0000024853E37020&gt;
+enriched_query_request = &lt;CommonPy.src.enriched_query_api_types.IEnrichedQueryRequest object at 0x0000024853E36D20&gt;
+
+    def enriched_query (self, enriched_query_request: IEnrichedQueryRequest) -&gt; IEnrichedResponse:
+    
+        logger.debug('Generating enriched query for: %s', enriched_query_request.question)
+    
+        wrapped = {
+            'request': enriched_query_request.__dict__
+        }
+    
+        # send the request to the API
+        # question_url = f'https://braid-api.azurewebsites.net/api/QueryModelWithEnrichment?session={SESSION_KEY}'
+        question_url = f'http://localhost:7071/api/QueryModelWithEnrichment?session={SESSION_KEY}'
+    
+        response = self.session.post(
+            question_url, json=wrapped, headers=headers, timeout=request_timeout)
+    
+        # Check for successful response
+        if response.status_code == 200:
+            response_json = response.json()
+    
+            return_obj = safe_dict_to_object(response_json, IEnrichedResponse)
+    
+            return_obj.chunks = []
+            for chunk in response_json['chunks']:
+                chunk_obj = safe_dict_to_object(chunk['chunk'])
+                safe_chunk_obj = safe_cast(chunk_obj, IEnrichedChunkSummary)
+                relevance = chunk['relevance']
+                relevant_chunk = IRelevantEnrichedChunk()
+                relevant_chunk.chunk = safe_chunk_obj
+                relevant_chunk.relevance = relevance
+                return_obj.chunks.append(relevant_chunk)
+            return return_obj
+        else:
+&gt;           raise RuntimeError('Error returned from API:' + response.text)
+E           RuntimeError: Error returned from API:
+
+CommonPy\src\enriched_query_api.py:113: RuntimeError</failure></testcase></testsuite></testsuites>

@@ -26,7 +26,7 @@ Important classes/functions are `DefaultAdminRepository`, `Persona`, and `EIcon`
 
 **aiconnection.test.ts**
 
-The code provided sets up a test suite using Mocha for the `AIConnection` and various utility functions imported from the '../core' and '../../CommonTs/src' directories.
+The code provided sets up a test suite using Mocha for the `AIConnection` and various utility functions imported from the '../core' directory and 'commonts module'.
 
 **Important Classes/Functions:**
 1. **Persona**: Represents an author or bot within the messaging system.

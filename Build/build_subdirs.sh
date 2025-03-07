@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of directories to process
-directories=("CommonTs" "Api" "Cascade" "WaterfallBrowser" "Boxer" "Teams")
+directories=("CommonTs" "Api" "Cascade" "WaterfallBrowser" "Boxer" "Teams" "ApiEval")
 
 # Iterate through the specified directories
 for dir in "${directories[@]}"; do

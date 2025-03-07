@@ -7,12 +7,12 @@ import { describe, it } from 'mocha';
 
 declare var process: any;
 
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
-import { QueryModelApi } from '../../CommonTs/src/QueryEnrichedModelApi';
-import { IEnrichedResponse, IQuestionGenerationResponse } from '../../CommonTs/src/EnrichedQuery.Api.Types';
-import { IModelConversationElement, EModelConversationRole } from '../../CommonTs/src/IModelDriver';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EChunkRepository } from 'commonts/src/EnrichedChunk';
+import { QueryModelApi } from 'commonts/src/QueryEnrichedModelApi';
+import { IEnrichedResponse, IQuestionGenerationResponse } from 'commonts/src/Types/EnrichedQuery.Api.Types';
+import { IModelConversationElement, EModelConversationRole } from 'commonts/src/Interfaces/IModelDriver';
 
 let question = "What are the main user interface considerations for building an application using an LLM?"
 let summary = "Financial services will adopt generative AI, powered by large language models (LLMs), faster than expected. LLMs can create new content by training on vast amounts of unstructured data, with unlimited computational power. This transformation has the potential to revolutionize the financial services market, going beyond traditional AI/ML capabilities.";

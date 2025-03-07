@@ -1,0 +1,13 @@
+{
+  "id": "enriched_007",
+  "name": "Evaluate Coverage Test",
+  "type": "system",
+  "description": "Test the enriched query API with a list of primed questions and answers for coverage",
+  "prompt_id": "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d",
+  "start_time": "2025-02-27T20:13:45.203853",
+  "status": "failed",
+  "end_time": "2025-02-27T20:13:47.246114",
+  "details": {
+    "error": "Error returned from API:"
+  }
+}

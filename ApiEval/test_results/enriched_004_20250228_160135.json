@@ -1,0 +1,13 @@
+{
+  "id": "enriched_004",
+  "name": "Enriched Query Sample List Test",
+  "type": "system",
+  "description": "Test the enriched query API with a list of primed questions and answers",
+  "prompt_id": "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d",
+  "start_time": "2025-02-28T16:00:37.098063",
+  "status": "failed",
+  "end_time": "2025-02-28T16:01:35.977475",
+  "details": {
+    "error": "Chunk is not similar to the expected response:To ensure data privacy when using an LLM, you can:\n  \n  1. Anonymize sensitive data.\n  2. Use encrypted communications.\n  3. Apply access controls.\n  4. Regularly audit and monitor data usage.\n  5. Consider federated learning. \n  \n  Always follow privacy regulations like GDPR.\nassert 0.29901093156454317 > 0.3\n +  where 0.29901093156454317 = cosine_similarity([-0.015491182, -0.022547936, -0.015269224, -0.021093724, -0.005656118, 0.0073935185, ...], [-0.050887417, 0.012924939, -0.020439101, -0.021918725, 0.04952384, 0.00036741243, ...])"
+  }
+}

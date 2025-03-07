@@ -12,10 +12,10 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec } from "commonts/src/Types/EnrichedQuery.Api.Types";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
-import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
+import { EChunkRepository } from "commonts/src/EnrichedChunk";
 
 export async function FindRelevantEnrichedChunksFromSummary(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 

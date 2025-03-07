@@ -1,0 +1,8 @@
+{
+    "id": "string",
+    "version": "string",
+    "personaName": "string",
+    "systemPrompt": "string",
+    "userPrompt": "string"
+  }
+  

@@ -18,8 +18,8 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrichedChunkSummary, IRelevantEnrichedChunk } from './EnrichedQuery.Api.Types';
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { IChunkQueryRelevantToSummarySpec, IChunkQueryRelevantToUrlSpec, IEnrichedChunkSummary, IRelevantEnrichedChunk } from './Types/EnrichedQuery.Api.Types';
 
 
 /**

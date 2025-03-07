@@ -20,8 +20,8 @@ import { InvocationContext } from "@azure/functions";
 import axios from "axios";
 
 // Internal imports
-import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
-import { IStorable, IStorableMultiQuerySpec } from "../../../CommonTs/src/IStorable";
+import { throwIfUndefined } from "commonts/src/Asserts";
+import { IStorable, IStorableMultiQuerySpec } from "commonts/src/Interfaces/IStorable";
 
 const chunkPartitionKey: string = "c02af798a60b48129c5e223e645a9b72";
 const chunkCollectionPath = "dbs/Studio/colls/Chunk";

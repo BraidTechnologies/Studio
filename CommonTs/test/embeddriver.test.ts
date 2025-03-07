@@ -5,8 +5,8 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EModel, EModelProvider} from '../../CommonTs/src/IModelDriver';
-import { getEmbeddingModelDriver, getDefaultEmbeddingModelDriver } from '../../CommonTs/src/IModelFactory';
+import { EModel, EModelProvider} from '../../CommonTs/src/Interfaces/IModelDriver';
+import { getEmbeddingModelDriver, getDefaultEmbeddingModelDriver } from '../../CommonTs/src/Interfaces/IModelFactory';
 
 describe("Embedding Driver", function () {
 

@@ -19,10 +19,10 @@ let groq: Groq | null = null;
 
 
 // Internal imports
-import { EModel, EModelProvider, IChatModelDriver,IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams} from './IModelDriver';
-import { EPromptPersona } from './IPromptPersona';
+import { EModel, EModelProvider, IChatModelDriver,IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams} from './Interfaces/IModelDriver';
+import { EPromptPersona } from 'promptmanager/dist';
 import { IOpenAiChatModelInit, IOpenAiTextChunkerInit, OpenAIChatElement } from './ModelDrivers.OpAi';
-import { getChatPersona } from "./IPromptPersonaFactory";
+import { getChatPersona } from "promptmanager/dist/src";
 import { ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions";
 
 
@@ -70,7 +70,7 @@ export class DeepSeekR1ChatModelDriver implements IChatModelDriver {
    }
 
 
-   generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+   generateResponse(persona: keyof typeof EPromptPersona, prompt: IModelConversationPrompt, 
       params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
       return chat(persona, prompt, params);
@@ -107,7 +107,7 @@ function stripLeadingCRLF(input: string): string {
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
-async function chat(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+async function chat(persona: keyof typeof EPromptPersona, prompt: IModelConversationPrompt, 
    params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
    const summariser = getChatPersona(persona, prompt.prompt, params);

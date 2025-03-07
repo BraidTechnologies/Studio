@@ -17,11 +17,11 @@
 
 import { AzureRemoteConnectionConfig, AzureClientProps, ITokenProvider, ITokenResponse } from "@fluidframework/azure-client";
 
-import { IEnvironment, EEnvironment } from "./IEnvironment";
+import { IEnvironment, EEnvironment } from "./Interfaces/IEnvironment";
 import { FluidApi } from "./FluidApi";
-import { IFluidUser, IFluidTokenRequest } from "./Fluid";
+import { IFluidUser, IFluidTokenRequest } from "./Interfaces/Fluid";
 import { ConnectionError } from "./Errors";
-import { getDefaultFluidEnvironment, getEnvironment } from "./IEnvironmentFactory";
+import { getDefaultFluidEnvironment, getEnvironment } from "./Interfaces/IEnvironmentFactory";
 
 /**
  * Token Provider implementation for connecting to an Azure Function endpoint for

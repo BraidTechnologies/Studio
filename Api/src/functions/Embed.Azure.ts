@@ -16,9 +16,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
-import { getDefaultEmbeddingModelDriver, getDefaultTextChunker, } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultEmbeddingModelDriver, getDefaultTextChunker, } from "commonts/src/Interfaces/IModelFactory";
 import { recursiveSummarize } from "./Summarize";
-import { IEmbedRequest, IEmbedResponse } from "../../../CommonTs/src/EmbedApi.Types";
+import { IEmbedRequest, IEmbedResponse } from "commonts/src/Types/EmbedApi.Types";
 
 const chunker = getDefaultTextChunker();
 const driver = getDefaultEmbeddingModelDriver();

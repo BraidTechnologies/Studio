@@ -5,9 +5,9 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EModel, EModelProvider, IModelConversationPrompt, EModelConversationRole} from '../../CommonTs/src/IModelDriver';
-import { getChatModelDriver, getDefaultChatModelDriver } from '../../CommonTs/src/IModelFactory';
-import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
+import { EModel, EModelProvider, IModelConversationPrompt, EModelConversationRole} from '../../CommonTs/src/Interfaces/IModelDriver';
+import { getChatModelDriver, getDefaultChatModelDriver } from '../../CommonTs/src/Interfaces/IModelFactory';
+import { EPromptPersona } from 'promptmanager/dist';
 
 describe("Chat Driver", function () {
 

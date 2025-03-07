@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="7.716" timestamp="2025-02-27T19:45:09.430072+00:00" hostname="Braid-Daniel"><testcase classname="test.summarise_eval" name="test_basic_sports_summary" time="2.517" /><testcase classname="test.summarise_eval" name="test_same_game_different_wording" time="2.564" /><testcase classname="test.summarise_eval" name="test_different_game_different_summary" time="2.540"><failure message="AssertionError: assert (-1 != -1 or -1 != -1)&#10; +  where -1 = &lt;built-in method find of str object at 0x000001C710607990&gt;('Warriors defeated Lakers')&#10; +    where &lt;built-in method find of str object at 0x000001C710607990&gt; = 'Warriors beat Lakers.\n\nLeBron scored zero.'.find&#10; +  and   -1 = &lt;built-in method find of str object at 0x000001C710607990&gt;('Warriers beat Lakers')&#10; +    where &lt;built-in method find of str object at 0x000001C710607990&gt; = 'Warriors beat Lakers.\n\nLeBron scored zero.'.find">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x000001C710BF9190&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @system_test(
+        test_id="summarise_003",
+        name="Different Game Summary Test",
+        description="Test that a different game produces a different summary",
+        prompt_id="716c667d-9074-4d9a-8335-3194212eba90"  # article-summariser prompt
+    )
+    def test_different_game_different_summary():
+        '''Test that a different game produces a different summary'''
+        request_data = {'request': {
+            'persona': 'ArticleSummariser',
+            'text': 'The Warriors defeated the Lakers 120-110 in a regular season NBA game. LeBron James scored 0 points.',
+            'lengthInWords': 3
+        }}
+    
+        response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+        result = response.json()
+    
+        assert response.status_code == 200
+        assert 'summary' in result
+&gt;       assert result['summary'].find('Warriors defeated Lakers') != - \
+            1 or result['summary'].find('Warriers beat Lakers') != -1
+E       AssertionError: assert (-1 != -1 or -1 != -1)
+E        +  where -1 = &lt;built-in method find of str object at 0x000001C710607990&gt;('Warriors defeated Lakers')
+E        +    where &lt;built-in method find of str object at 0x000001C710607990&gt; = 'Warriors beat Lakers.\n\nLeBron scored zero.'.find
+E        +  and   -1 = &lt;built-in method find of str object at 0x000001C710607990&gt;('Warriers beat Lakers')
+E        +    where &lt;built-in method find of str object at 0x000001C710607990&gt; = 'Warriors beat Lakers.\n\nLeBron scored zero.'.find
+
+ApiEval\test\summarise_eval.py:88: AssertionError</failure></testcase></testsuite></testsuites>

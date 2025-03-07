@@ -20,13 +20,13 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
-import { IRelevantEnrichedChunk, IEnrichedQueryRequest, IEnrichedResponse } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
-import { getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
+import { IModelConversationPrompt } from "commonts/dist/src/Interfaces/IModelDriver";
+import { IRelevantEnrichedChunk, IEnrichedQueryRequest, IEnrichedResponse } from "commonts/dist/src/Types/EnrichedQuery.Api.Types";
+import { getDefaultChatModelDriver, getDefaultTextChunker } from "commonts/dist/src/Interfaces/IModelFactory";
 
 import { getEnrichedChunkRepository } from "./EnrichedChunkRepositoryFactory";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
-import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { EPromptPersona } from "promptmanager";
 
 const chunker = getDefaultTextChunker();
 const minimumEnrichmentTokens = 50; // we use 50 word summaries. if we get half this, the key is too short for a meaningful search. 

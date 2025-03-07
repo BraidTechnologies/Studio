@@ -15,11 +15,11 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 import { sessionFailResponse, defaultErrorResponse, isSessionValid, invalidRequestResponse } from "./Utility.Azure";
 
-import { IFindThemeRequest, IFindThemeResponse } from "../../../CommonTs/src/FindThemeApi.Types";
-import { throwIfUndefined } from "../../../CommonTs/src/Asserts";
-import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
-import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
-import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { IFindThemeRequest, IFindThemeResponse } from "commonts/dist/src/Types/FindThemeApi.Types";
+import { throwIfUndefined } from "commonts/dist/src/Asserts";
+import { IModelConversationPrompt } from "commonts/dist/src/Interfaces/IModelDriver";
+import { getDefaultChatModelDriver } from "commonts/dist/src/Interfaces/IModelFactory";
+import { EPromptPersona } from "promptmanager";
 
 const minimumTextLength = 50;
 

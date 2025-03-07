@@ -3,8 +3,8 @@
 
 import { expect } from 'expect';
 
-import { IStorable } from '../../CommonTs/src/IStorable';
-import { IStorableRepostoryApiWrapper } from '../../CommonTs/src/StorableRepositoryApi'; 
+import { IStorable } from 'commonts/src/Interfaces/IStorable';
+import { IStorableRepostoryApiWrapper } from 'commonts/src/StorableRepositoryApi'; 
 
 export function randomInt(min : number, max: number) : number {
    return Math.floor(Math.random() * (max - min)) + min;

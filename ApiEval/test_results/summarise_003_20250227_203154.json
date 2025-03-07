@@ -1,0 +1,13 @@
+{
+  "id": "summarise_003",
+  "name": "Different Game Summary Test",
+  "type": "system",
+  "description": "Test that a different game produces a different summary",
+  "prompt_id": "716c667d-9074-4d9a-8335-3194212eba90",
+  "start_time": "2025-02-27T20:31:51.448980",
+  "status": "passed",
+  "end_time": "2025-02-27T20:31:54.184793",
+  "details": {
+    "result": "None"
+  }
+}

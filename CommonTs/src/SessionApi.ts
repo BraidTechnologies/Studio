@@ -14,7 +14,7 @@ import axios from 'axios';
  */
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
+import { IEnvironment } from "./Interfaces/IEnvironment";
 
 
 export class SessionApi extends Api {

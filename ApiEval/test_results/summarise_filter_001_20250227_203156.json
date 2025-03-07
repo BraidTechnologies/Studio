@@ -1,0 +1,13 @@
+{
+  "id": "summarise_filter_001",
+  "name": "Basic HTML Summary Test",
+  "type": "simple",
+  "description": "Test basic summarization with a simple sports event description in HTML",
+  "prompt_id": "716c667d-9074-4d9a-8335-3194212eba90",
+  "start_time": "2025-02-27T20:31:54.354512",
+  "status": "failed",
+  "end_time": "2025-02-27T20:31:56.845843",
+  "details": {
+    "error": "assert (-1 != -1 or -1 != -1)\n +  where -1 = <built-in method find of str object at 0x0000020B72BA72D0>('Lakers defeated Warriors')\n +    where <built-in method find of str object at 0x0000020B72BA72D0> = 'Lakers beat Warriors.\\n\\nLeBron James scored.'.find\n +  and   -1 = <built-in method find of str object at 0x0000020B72BA72D0>('Lakers beat Warriers')\n +    where <built-in method find of str object at 0x0000020B72BA72D0> = 'Lakers beat Warriors.\\n\\nLeBron James scored.'.find"
+  }
+}

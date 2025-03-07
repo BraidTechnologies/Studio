@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "lib": ["ES2022", "DOM"],
+        "outDir": "./src",
+        "rootDir": ".",
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "declaration": true,
+        "declarationMap": true,
+        "composite": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "promptmanager/*": ["node_modules/promptmanager/dist/*"]
+        }
+    },
+    "references": [],
+    "include": [
+        "src/**/*.ts",
+        "src/*.ts",
+        "src/*.*.ts",
+        "**/*.ts",
+        "**/*.json",
+        "src/**/*.json",
+        "src/Interfaces/index.ts",
+        "src/Types/index.ts"
+    ]
+}

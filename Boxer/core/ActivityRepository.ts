@@ -21,8 +21,8 @@ import { IStoredActivity, IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMes
 import { SessionKey } from "./Keys";
 import { IActivityRepository } from "./IActivityRepository";
 
-import { getDefaultEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
-import { ActivityRepostoryApi} from '../../CommonTs/src/ActivityRepositoryApi';
+import { getDefaultEnvironment } from "commonts/src/Interfaces/IEnvironmentFactory";
+import { ActivityRepostoryApi} from 'commonts/src/ActivityRepositoryApi';
 
 
 // ActivityRepositoryCosmos 

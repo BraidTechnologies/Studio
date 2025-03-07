@@ -6,11 +6,11 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
 import { failSave, randomKey, saveLoadRemove, saveFindRemove } from './storable';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { ChunkRepostoryApi } from '../../CommonTs/src/ChunkRepositoryApi'
-import { IStoredChunk } from '../../CommonTs/src/ChunkRepositoryApi.Types';
-import { IStorableMultiQuerySpec } from '../../CommonTs/src/IStorable';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { ChunkRepostoryApi } from 'commonts/src/ChunkRepositoryApi'
+import { IStoredChunk } from 'commonts/src/Types/ChunkRepositoryApi.Types';
+import { IStorableMultiQuerySpec } from 'commonts/src/Interfaces/IStorable';
 
 declare var process: any;
 

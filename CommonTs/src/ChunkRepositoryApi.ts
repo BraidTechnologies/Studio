@@ -19,8 +19,8 @@
  */
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { IStorable, IStorableMultiQuerySpec} from "./IStorable";
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { IStorable, IStorableMultiQuerySpec} from "./Interfaces/IStorable";
 import { StorableRepostoryApi, IStorableRepostoryApiWrapper} from './StorableRepositoryApi';
 
 /**

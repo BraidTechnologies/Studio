@@ -23,7 +23,7 @@ import { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functio
 
 // Internal imports
 import { isSessionValid, sessionFailResponse, notFoundResponse } from "./Utility.Azure";
-import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "../../../CommonTs/src/IStorable";
+import { IStorable, IStorableQuerySpec, IStorableMultiQuerySpec, IStorableOperationResult} from "commonts/src/Interfaces/IStorable";
 import {AzureLogger, findStorable, loadStorable, saveStorable, removeStorable, 
         loadRecentStorables, ICosmosStorableParams, StorableTransformer} from './StorableApi.Cosmos';
 

@@ -1,0 +1,206 @@
+{
+  "prompt_coverage": {
+    "3983ba1b-895d-46fe-a47e-e4230b06c0d6": {
+      "simple_tests": 0,
+      "mutation_tests": 0,
+      "system_tests": 0,
+      "total_tests": 0,
+      "last_tested": null,
+      "test_history": [],
+      "metadata": {
+        "name": "default",
+        "version": "1.0",
+        "personaName": "Default"
+      }
+    },
+    "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d": {
+      "simple_tests": 2,
+      "mutation_tests": 1,
+      "system_tests": 4,
+      "total_tests": 7,
+      "last_tested": "2025-02-27T20:29:14.990678",
+      "test_history": [
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:27:07.814173"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:27:18.862192"
+        },
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:27:30.004968"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:27:33.171495"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:28:39.318314"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:28:57.046584"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:29:14.990678"
+        }
+      ],
+      "metadata": {
+        "name": "developer-assistant",
+        "version": "1.0",
+        "personaName": "DeveloperAssistant"
+      }
+    },
+    "716c667d-9074-4d9a-8335-3194212eba90": {
+      "simple_tests": 2,
+      "mutation_tests": 2,
+      "system_tests": 1,
+      "total_tests": 5,
+      "last_tested": "2025-02-27T20:31:56.868613",
+      "test_history": [
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:31:46.418854"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:31:48.969550"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:31:51.448980"
+        },
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:31:54.354512"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:31:56.868613"
+        }
+      ],
+      "metadata": {
+        "name": "article-summariser",
+        "version": "1.0",
+        "personaName": "ArticleSummariser"
+      }
+    },
+    "72213d46-9e6d-4604-a6bd-32d8e2f594f3": {
+      "simple_tests": 1,
+      "mutation_tests": 1,
+      "system_tests": 1,
+      "total_tests": 3,
+      "last_tested": "2025-02-27T20:31:46.275504",
+      "test_history": [
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:31:46.211549"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:31:46.243376"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:31:46.275504"
+        }
+      ],
+      "metadata": {
+        "name": "developer-question-generator",
+        "version": "1.0",
+        "personaName": "DeveloperQuestionGenerator"
+      }
+    },
+    "af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9": {
+      "simple_tests": 1,
+      "mutation_tests": 1,
+      "system_tests": 1,
+      "total_tests": 3,
+      "last_tested": "2025-02-27T20:27:01.146107",
+      "test_history": [
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:26:55.675006"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:26:58.593677"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:27:01.146107"
+        }
+      ],
+      "metadata": {
+        "name": "article-classifier",
+        "version": "1.0",
+        "personaName": "ArticleClassifier"
+      }
+    },
+    "3a34093d-95ea-4d46-8cf9-8f2f784d09da": {
+      "simple_tests": 1,
+      "mutation_tests": 1,
+      "system_tests": 1,
+      "total_tests": 3,
+      "last_tested": "2025-02-27T20:31:43.456226",
+      "test_history": [
+        {
+          "type": "simple",
+          "timestamp": "2025-02-27T20:31:38.555594"
+        },
+        {
+          "type": "mutation",
+          "timestamp": "2025-02-27T20:31:40.988398"
+        },
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:31:43.456226"
+        }
+      ],
+      "metadata": {
+        "name": "theme-finder",
+        "version": "1.0",
+        "personaName": "ThemeFinder"
+      }
+    },
+    "cbfc5d7b-9404-451e-aec5-585a717d56a6": {
+      "simple_tests": 0,
+      "mutation_tests": 0,
+      "system_tests": 1,
+      "total_tests": 1,
+      "last_tested": "2025-02-27T20:31:59.429137",
+      "test_history": [
+        {
+          "type": "system",
+          "timestamp": "2025-02-27T20:31:59.429137"
+        }
+      ],
+      "metadata": {
+        "name": "test-for-summmarise-failure",
+        "version": "1.0",
+        "personaName": "TestForSummariseFail"
+      }
+    }
+  },
+  "summary": {
+    "total_prompts": 7,
+    "prompts_with_tests": 6,
+    "total_tests": 22,
+    "untested_prompts": [
+      {
+        "id": "3983ba1b-895d-46fe-a47e-e4230b06c0d6",
+        "name": "default",
+        "persona": "Default"
+      }
+    ],
+    "test_type_distribution": {
+      "simple": 7,
+      "mutation": 6,
+      "system": 9
+    }
+  }
+}

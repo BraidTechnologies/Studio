@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="0.078" timestamp="2025-02-28T15:07:23.567258+00:00" hostname="Braid-Daniel"><testcase classname="test.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_simple_summary" time="0.002"><failure message="TypeError: test_generate_follow_up_suggestions_simple_summary() missing 1 required positional argument: 'suggest_content_fixture'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853EF7B00&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SIMPLE, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+E           TypeError: test_generate_follow_up_suggestions_simple_summary() missing 1 required positional argument: 'suggest_content_fixture'
+
+ApiEval\src\test_utils.py:135: TypeError</failure></testcase><testcase classname="test.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_slightly_varied_summary" time="0.002"><failure message="TypeError: test_generate_follow_up_suggestions_slightly_varied_summary() missing 1 required positional argument: 'suggest_content_fixture'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853F37380&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.MUTATION, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+E           TypeError: test_generate_follow_up_suggestions_slightly_varied_summary() missing 1 required positional argument: 'suggest_content_fixture'
+
+ApiEval\src\test_utils.py:152: TypeError</failure></testcase><testcase classname="test.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_significantly_varied_summary" time="0.002"><failure message="TypeError: test_generate_follow_up_suggestions_significantly_varied_summary() missing 1 required positional argument: 'suggest_content_fixture'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000024853F34620&gt;
+
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+        logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+        try:
+&gt;           result = func(*args, **kwargs)
+E           TypeError: test_generate_follow_up_suggestions_significantly_varied_summary() missing 1 required positional argument: 'suggest_content_fixture'
+
+ApiEval\src\test_utils.py:169: TypeError</failure></testcase></testsuite></testsuites>

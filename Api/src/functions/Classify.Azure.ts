@@ -18,10 +18,10 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
-import { IClassifyRequest, IClassifyResponse } from "../../../CommonTs/src/ClassifyApi.Types";
-import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
-import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
-import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { IClassifyRequest, IClassifyResponse } from "commonts/dist/src/Types/ClassifyApi.Types";
+import { IModelConversationPrompt } from "commonts/dist/src/Interfaces/IModelDriver";
+import { getDefaultChatModelDriver } from "commonts/dist/src/Interfaces/IModelFactory";
+import { EPromptPersona } from "promptmanager"
 
 /**
  * Decodes the initial classification string to a human-readable format.

@@ -20,9 +20,9 @@
  * - 'func start' to run locally
  */
 
-import { getChatModelDriver, getDefaultChatModelDriver, getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
-import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
-import { IModelConversationPrompt, EModel, EModelProvider } from "../../../CommonTs/src/IModelDriver";
+import { getChatModelDriver, getDefaultChatModelDriver, getDefaultTextChunker } from "commonts/dist/src/Interfaces/IModelFactory";
+import { EPromptPersona } from "promptmanager";
+import { IModelConversationPrompt, EModel, EModelProvider } from "commonts/dist/src/Interfaces/IModelDriver";
 
 const chunker = getDefaultTextChunker();
 
@@ -48,7 +48,7 @@ function chunkText(text: string, overlapWords: number): Array<string> {
  * @param words The number of words to use for the summary.
  * @returns A Promise that resolves to the summarized text.
  */
-async function singleShotSummarize(persona: EPromptPersona, text: string, words: number): Promise<string> {
+async function singleShotSummarize(persona: keyof typeof EPromptPersona, text: string, words: number): Promise<string> {
 
    let modelDriver = getDefaultChatModelDriver();
 
@@ -76,7 +76,7 @@ async function singleShotSummarize(persona: EPromptPersona, text: string, words:
  * @param words The maximum number of words in the summary.
  * @returns A Promise that resolves to the generated summary string.
  */
-export async function recursiveSummarize(persona: EPromptPersona, text: string, level: number, words: number): Promise<string> {
+export async function recursiveSummarize(persona: keyof typeof EPromptPersona, text: string, level: number, words: number): Promise<string> {
 
    let overallSummary: string | undefined = undefined;
    const chunks = chunkText(text, 0);
@@ -121,7 +121,7 @@ export async function recursiveSummarize(persona: EPromptPersona, text: string, 
     * @param words The number of words to use for the summary.
     * @returns A Promise that resolves to the summarized text.
     */
-export async function summarizeContextForSingleChunk(persona: EPromptPersona, context: string, chunk: string, words: number): Promise<string> {
+export async function summarizeContextForSingleChunk(persona: keyof typeof EPromptPersona, context: string, chunk: string, words: number): Promise<string> {
 
    let modelDriver = getDefaultChatModelDriver();
 

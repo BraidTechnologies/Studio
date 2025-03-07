@@ -16,9 +16,9 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 // Internal imports
-import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams, ITextChunker} from './IModelDriver';
-import { EPromptPersona } from './IPromptPersona';
-import { getChatPersona } from "./IPromptPersonaFactory";
+import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams, ITextChunker} from './Interfaces/IModelDriver';
+import { EPromptPersona } from 'promptmanager/dist';
+import { getChatPersona } from "promptmanager/dist/src/PromptPersonaFactory";
 import { InvalidParameterError } from './Errors';
 
 import GPT4Tokenizer from 'gpt4-tokenizer';
@@ -183,7 +183,7 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
    }
 
 
-   generateResponse(persona: EPromptPersona, prompt: IModelConversationPrompt, 
+   generateResponse(persona: keyof typeof EPromptPersona, prompt: IModelConversationPrompt, 
       params: IChatModelDriverParams): Promise<IModelConversationElement> {
 
       return chat(persona, this.urlElement, prompt, params, this.drivenModelType !== EModel.kReasoning);
@@ -201,7 +201,7 @@ export class OpenAIChatModelDriver implements IChatModelDriver {
  * @returns A Promise that resolves to a model conversation element containing the LLM response
  */
 
-async function chat(persona: EPromptPersona, urlElement: string, prompt: IModelConversationPrompt, 
+async function chat(persona: keyof typeof EPromptPersona, urlElement: string, prompt: IModelConversationPrompt, 
    params: IChatModelDriverParams, useAzure: boolean): Promise<IModelConversationElement> {
 
    // Up to 5 retries if we hit rate limit
