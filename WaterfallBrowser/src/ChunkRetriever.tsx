@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IStoredChunk } from './CommonTs/src/ChunkRepositoryApi.Types';
-import { ChunkRepostoryApi } from './CommonTs/src/ChunkRepositoryApi';
-import { getDefaultEnvironment } from './CommonTs/src/IEnvironmentFactory';
+import { IStoredChunk } from 'commonts/src/Types/ChunkRepositoryApi.Types';
+import { ChunkRepostoryApi } from 'commonts/src/ChunkRepositoryApi';
+import { getDefaultEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
 import { ChunkView } from './ChunkView';
 import { ChunkViewError } from './ChunkViewError';
 import { ChunkViewLoading } from './ChunkViewLoading';

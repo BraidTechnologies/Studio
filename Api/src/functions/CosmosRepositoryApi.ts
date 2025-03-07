@@ -16,7 +16,7 @@
 // 3rd party imports
 const crypto = require("crypto");
 
-import { LooseObject } from "../../../CommonTs/src/LooseObject";
+import { LooseObject } from "commonts/src/Interfaces/LooseObject";
 
 /**
  * Generates an authorization token using the provided master key for the given verb, resource type, resource ID, and date.

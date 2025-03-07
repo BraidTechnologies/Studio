@@ -13,11 +13,11 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IQuestionGenerationResponse, IGenerateQuestionRequest} from "../../../CommonTs/src/EnrichedQuery.Api.Types";
-import { IModelConversationPrompt } from "../../../CommonTs/src/IModelDriver";
+import { IQuestionGenerationResponse, IGenerateQuestionRequest} from "commonts/src/Types/EnrichedQuery.Api.Types";
+import { IModelConversationPrompt } from "commonts/src/Interfaces/IModelDriver";
 import { isSessionValid, sessionFailResponse, defaultErrorResponse} from "./Utility.Azure";
-import { getDefaultChatModelDriver } from "../../../CommonTs/src/IModelFactory";
-import { EPromptPersona } from "../../../CommonTs/src/IPromptPersona";
+import { getDefaultChatModelDriver } from "commonts/src/Interfaces/IModelFactory";
+import { EPromptPersona } from "promptmanager/entry";
 
 async function askModel(query: IGenerateQuestionRequest): Promise<IQuestionGenerationResponse> {
 

@@ -13,8 +13,8 @@
 import { EConfigStrings } from "./ConfigStrings";
 import { SessionKey, ConversationKey } from "./Keys";
 
-import { getDefaultFluidEnvironment } from "../../CommonTs/src/IEnvironmentFactory";
-import { EEnvironment } from "../../CommonTs/src/IEnvironment";
+import { getDefaultFluidEnvironment } from "commonts/src/Interfaces/IEnvironmentFactory";
+import { EEnvironment } from "commonts/src/Interfaces/IEnvironment";
 
 var qs = require('qs');
 

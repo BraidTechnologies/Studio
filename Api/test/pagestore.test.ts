@@ -6,10 +6,10 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
 import { randomKey } from './storable';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { PageRepostoryApi } from '../../CommonTs/src/PageRepositoryApi'
-import { IStoredPage } from '../../CommonTs/src/PageRepositoryApi.Types';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { PageRepostoryApi } from 'commonts/src/PageRepositoryApi'
+import { IStoredPage } from 'commonts/src/Types/PageRepositoryApi.Types';
 
 declare var process: any;
 

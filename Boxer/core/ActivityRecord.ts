@@ -14,7 +14,7 @@
  * handling dates in UTC format for consistent storage.
  */
 
-import { IStorable } from '../../CommonTs/src/IStorable';
+import { IStorable } from 'commonts/src/Interfaces/IStorable';
 
 export const activityRecordClassName = "IStoredActivity";
 export const activityRecordSchemaNumber = 1;

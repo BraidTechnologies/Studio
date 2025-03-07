@@ -6,7 +6,7 @@
  * This module provides a base class for interacting with an environment.
  */
 
-import {EEnvironment, IEnvironment} from './IEnvironment';
+import {EEnvironment, IEnvironment} from './Interfaces/IEnvironment';
 
 /**
  * Class representing the Development Environment with methods to retrieve various API endpoints.

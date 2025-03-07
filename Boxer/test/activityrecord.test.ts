@@ -3,7 +3,7 @@
 import {  IStoredUrlActivity, IStoredLikeUrlActivity, IStoredMessageActivity, 
    urlActivityRecordClassName, urlLikeActivityRecordClassName, messageActivityRecordClassName,
    urlActivityRecordSchemaNumber, urlLikeActivityRecordSchemaNumber, messageActivityRecordSchemaNumber } from '../core/ActivityRecord';
-import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
+import { EStorableApplicationIds } from 'commonts/src/Interfaces/IStorable';
 import { SessionKey } from '../core/Keys';
 import { getRecordRepository } from '../core/IActivityRepositoryFactory';
 import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';

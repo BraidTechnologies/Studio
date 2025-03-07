@@ -7,10 +7,10 @@ import { describe, it } from 'mocha';
 
 declare var process: any;
 
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EChunkRepository } from '../../CommonTs/src/EnrichedChunk';
-import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EChunkRepository } from 'commonts/src/EnrichedChunk';
+import { FindEnrichedChunkApi } from 'commonts/src/FindEnrichedChunkApi';
 
 let boxerUrls = ["https://www.youtube.com/watch?v=roEKOzxilq4&t=00m",
    "https://karpathy.medium.com/software-2-0-a64152b37c35"];

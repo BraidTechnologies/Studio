@@ -4,8 +4,8 @@
 import { expect } from 'expect';
 import { describe, it } from 'mocha';
 
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { getEnvironment, getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { getEnvironment, getDefaultEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
 
 describe("Environment", async function () {
 

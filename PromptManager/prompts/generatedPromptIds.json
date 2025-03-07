@@ -1,0 +1,14 @@
+{
+  "defaultPromptId": "3983ba1b-895d-46fe-a47e-e4230b06c0d6",
+  "developerAssistantPromptId": "4761bf88-9329-4bd0-95ca-dc3bc70b6d4d",
+  "developerImaginedAnswerGeneratorPromptId": "e21e32bf-7bbf-4c9a-988a-f99d9379fb2b",
+  "developerQuestionGeneratorPromptId": "72213d46-9e6d-4604-a6bd-32d8e2f594f3",
+  "articleSummariserPromptId": "716c667d-9074-4d9a-8335-3194212eba90",
+  "articleClassifierPromptId": "af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9",
+  "themeFinderPromptId": "3a34093d-95ea-4d46-8cf9-8f2f784d09da",
+  "testForSummmariseFailurePromptId": "cbfc5d7b-9404-451e-aec5-585a717d56a6",
+  "surveySummariserPromptId": "28195632-b8ac-4666-852f-109e2e028c33",
+  "articleContextSummariserPromptId": "8340054d-f96a-426a-8ae2-0632a01faca1",
+  "codeSummariserPromptId": "3b524aa3-9395-48e7-8ae5-5687760385e5",
+  "c4DiagrammerPromptId": "862e2015-98f1-4147-82ea-0dc87a1c3a82"
+}

@@ -8,11 +8,11 @@ import { AzureClient } from "@fluidframework/azure-client";
 import { ContainerSchema } from "fluid-framework";
 import { SharedString } from "fluid-framework/legacy";
 
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { FluidApi } from '../../CommonTs/src/FluidApi'
-import { IFluidTokenRequest } from '../../CommonTs/src/Fluid';
-import { FluidClientProps } from '../../CommonTs/src/FluidTokenProvider'
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { FluidApi } from 'commonts/src/FluidApi'
+import { IFluidTokenRequest } from 'commonts/src/Interfaces/Fluid';
+import { FluidClientProps } from 'commonts/src/FluidTokenProvider'
 
 declare var process: any;
 

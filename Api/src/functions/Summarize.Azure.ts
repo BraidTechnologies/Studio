@@ -24,9 +24,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
-import { ISummariseRequest, ISummariseContextRequest, ISummariseResponse } from "../../../CommonTs/src/SummariseApi.Types";
+import { ISummariseRequest, ISummariseContextRequest, ISummariseResponse } from "commonts/src/Types/SummariseApi.Types";
 import { recursiveSummarize, summarizeContextForSingleChunk} from "./Summarize";
-import { getDefaultTextChunker } from "../../../CommonTs/src/IModelFactory";
+import { getDefaultTextChunker } from "commonts/src/Interfaces/IModelFactory";
 
 
 /**

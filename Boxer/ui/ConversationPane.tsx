@@ -49,7 +49,7 @@ import { MessagePrompt } from './ConversationMessagePrompt';
 import { Media } from '../core/Media';
 import { SharedEmbedding, findInMap } from '../core/SharedEmbedding';
 
-import { IRelevantEnrichedChunk } from '../../CommonTs/src/EnrichedQuery.Api.Types';
+import { IRelevantEnrichedChunk } from 'commonts/src/Types/EnrichedQuery.Api.Types';
 
 export interface IConversationHeaderProps {
 

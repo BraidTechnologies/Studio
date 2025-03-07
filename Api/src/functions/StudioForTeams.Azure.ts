@@ -21,11 +21,11 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { IStudioBoxerResponseEnrichment} from "../../../CommonTs/src/StudioApi.Types";
-import { IEnrichedQueryRequest } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
+import { IStudioBoxerResponseEnrichment} from "commonts/src/Types/StudioApi.Types";
+import { IEnrichedQueryRequest } from "commonts/src/Types/EnrichedQuery.Api.Types";
 import { defaultErrorResponse, invalidRequestResponse } from "./Utility.Azure";
 import { askModel } from "./QueryModelWithEnrichment";
-import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
+import { EChunkRepository } from "commonts/src/EnrichedChunk";
 import { kDefaultMinimumCosineSimilarity } from "./IEnrichedChunkRepository";
 
 function makeIconPath (url: string) : string {

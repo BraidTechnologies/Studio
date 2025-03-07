@@ -4,7 +4,7 @@
     "target": "es6",
     "lib": ["ES2022", "DOM"],
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "..",
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
@@ -12,11 +12,15 @@
     "declarationMap": true, 
     "composite": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "promptmanager/*": ["node_modules/promptmanager/dist/*"]
+    }
   },
   "references": [],
   "include": [
     "src/**/*.ts",
-    "src/**/*.json"
-  ]
+    "src/**/*.json"]
 }

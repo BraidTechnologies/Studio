@@ -19,15 +19,15 @@
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 import { IEnrichedChunkRepository } from "./IEnrichedChunkRepository";
-import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IRelevantEnrichedChunk, IEnrichedChunkSummary } from "../../../CommonTs/src/EnrichedQuery.Api.Types";
+import { IChunkQueryRelevantToUrlSpec, IChunkQueryRelevantToSummarySpec, IEnrichedChunk, IRelevantEnrichedChunk, IEnrichedChunkSummary } from "commonts/src/Types/EnrichedQuery.Api.Types";
 import { EnrichedChunkRepositoryInMemory } from "./EnrichedChunkRepository";
-import { throwIfFalse } from "../../../CommonTs/src/Asserts";
+import { throwIfFalse } from "commonts/src/Asserts";
 import { ConsoleLogger, loadStorables } from "./StorableApi.Cosmos";
-import { EChunkRepository } from "../../../CommonTs/src/EnrichedChunk";
-import { storedChunkClassName } from "../../../CommonTs/src/ChunkRepositoryApi.Types";
+import { EChunkRepository } from "commonts/src/EnrichedChunk";
+import { storedChunkClassName } from "commonts/src/Types/ChunkRepositoryApi.Types";
 import { chunkStorableAttributes } from "./StorableApi.Cosmos";
-import { IStorable } from "../../../CommonTs/src/IStorable";
-import { IStoredChunk } from "../../../CommonTs/src/ChunkRepositoryApi.Types";
+import { IStorable } from "commonts/src/Interfaces/IStorable";
+import { IStoredChunk } from "commonts/src/Types/ChunkRepositoryApi.Types";
 
 
 /**

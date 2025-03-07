@@ -29,11 +29,11 @@ import { getDefaultKeyGenerator } from '../core/IKeyGeneratorFactory';
 import { getDetaultAdminRepository} from '../core/IAdminRepository';
 import { makeSummaryCall } from '../core/ApiCalls';
 
-import { FindEnrichedChunkApi } from '../../CommonTs/src/FindEnrichedChunkApi';
-import { getDefaultEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { IEnrichedChunkSummary } from '../../CommonTs/src/EnrichedQuery.Api.Types';
-import { EChunkRepository, kDefaultSimilarityThreshold } from '../../CommonTs/src/EnrichedChunk';
-import { EStorableApplicationIds } from '../../CommonTs/src/IStorable';
+import { FindEnrichedChunkApi } from 'commonts/src/FindEnrichedChunkApi';
+import { getDefaultEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { IEnrichedChunkSummary } from 'commonts/src/Types/EnrichedQuery.Api.Types';
+import { EChunkRepository, kDefaultSimilarityThreshold } from 'commonts/src/EnrichedChunk';
+import { EStorableApplicationIds } from 'commonts/src/Interfaces/IStorable';
 
 export interface IConversationControllerProps {
 

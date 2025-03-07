@@ -16,9 +16,9 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 // Internal imports
 import { pageStorableAttributes } from './StorableApi.Cosmos';
 import { getStorableApiFromQuery, saveStorableApi } from "./StorableApi.Azure";
-import { IStorable } from "../../../CommonTs/src/IStorable";
-import { IStoredPage } from "../../../CommonTs/src/PageRepositoryApi.Types";
-import { decompressString } from "../../../CommonTs/src/Compress";
+import { IStorable } from "commonts/src/Interfaces/IStorable";
+import { IStoredPage } from "commonts/src/Types/PageRepositoryApi.Types";
+import { decompressString } from "commonts/src/Compress";
 
 // A transformer function that can be applied to a storable to transform it to decompress the html field
 function decompressHtml (storable: IStorable) : IStorable {

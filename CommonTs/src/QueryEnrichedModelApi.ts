@@ -12,8 +12,8 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse } from './EnrichedQuery.Api.Types';
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse } from './Types/EnrichedQuery.Api.Types';
 
 /**
  * Represents a QueryModelApi class that interacts with the specified environment to query models with enrichment and generate questions.

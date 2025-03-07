@@ -14,8 +14,8 @@
  */
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { IStorable} from "./IStorable";
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { IStorable} from "./Interfaces/IStorable";
 import { StorableRepostoryApi, IStorablePageRepostoryApiWrapper} from './StorableRepositoryApi';
 import { compressString, decompressString } from './Compress';
 /**

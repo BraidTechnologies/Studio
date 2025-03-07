@@ -6,9 +6,9 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import { getEnvironment } from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { IChunkRequest, IChunkResponse } from '../../CommonTs/src/ChunkApi.Types';
+import { getEnvironment } from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { IChunkRequest, IChunkResponse } from 'commonts/src/Types/ChunkApi.Types';
 import { lookLikeSameSource } from '../src/functions/EnrichedChunkRepository';
 
 declare var process: any;

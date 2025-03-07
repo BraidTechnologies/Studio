@@ -5,11 +5,11 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import { getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { ISummariseRequest, ISummariseContextRequest, ISummariseResponse } from "../../CommonTs/src/SummariseApi.Types";
-import { SummariseApi } from '../../CommonTs/src/SummariseApi';
-import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
+import { getEnvironment} from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { ISummariseRequest, ISummariseContextRequest, ISummariseResponse } from "commonts/src/Types/SummariseApi.Types";
+import { SummariseApi } from 'commonts/src/SummariseApi';
+import { EPromptPersona } from 'promptmanager/entry';
 
 declare var process: any;
 

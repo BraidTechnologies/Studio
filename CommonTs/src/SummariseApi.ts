@@ -15,9 +15,9 @@
 import axios from 'axios';
 
 import { Api } from './Api';
-import { IEnvironment } from "./IEnvironment";
-import { ISummariseContextRequest, ISummariseRequest, ISummariseResponse } from './SummariseApi.Types';
-import { EPromptPersona } from './IPromptPersona';
+import { IEnvironment } from "./Interfaces/IEnvironment";
+import { ISummariseContextRequest, ISummariseRequest, ISummariseResponse } from './Types/SummariseApi.Types';
+import { EPromptPersona } from 'promptmanager/entry';
 
 /**
  * Class representing an API for summarising text.
@@ -36,7 +36,7 @@ export class SummariseApi extends Api {
    }  
 
 
-   async summarise (persona: EPromptPersona, text: string) : Promise<ISummariseResponse | undefined> {
+   async summarise (persona: keyof typeof EPromptPersona, text: string) : Promise<ISummariseResponse | undefined> {
 
       let apiUrl = this.environment.summariseApi() + "?session=" + this.sessionKey.toString();
       var response: any;

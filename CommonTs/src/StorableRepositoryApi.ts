@@ -14,7 +14,7 @@ import axios from 'axios';
  * PageRepositoryApi while ensuring consistent storage patterns across the application.
  */
 
-import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./IStorable";
+import { IStorable, IStorableMultiQuerySpec as IStorablesQuerySpec, IStorableQuerySpec} from "./Interfaces/IStorable";
 
 /**
  * Represents a wrapper for interacting with a repository of storable objects.

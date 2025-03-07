@@ -6,10 +6,10 @@ import { expect } from 'expect';
 import { describe, it } from 'mocha';
 import axios from 'axios';
 
-import {getEnvironment} from '../../CommonTs/src/IEnvironmentFactory';
-import { EEnvironment } from '../../CommonTs/src/IEnvironment';
-import { IEmbedRequest, IEmbedResponse } from "../../CommonTs/src/EmbedApi.Types";
-import { EPromptPersona } from '../../CommonTs/src/IPromptPersona';
+import {getEnvironment} from 'commonts/src/Interfaces/IEnvironmentFactory';
+import { EEnvironment } from 'commonts/src/Interfaces/IEnvironment';
+import { IEmbedRequest, IEmbedResponse } from "commonts/src/Types/EmbedApi.Types";
+import { EPromptPersona } from 'promptmanager/entry';
 
 declare var process: any;
 

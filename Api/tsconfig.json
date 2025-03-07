@@ -7,11 +7,11 @@
     "sourceMap": true,
     "strict": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node"],
   },
   "include": [
-     "./src/functions/*.ts",
-     "./../CommonTs/src/*.ts",     
+     "./src/functions/*.ts"  
   ],  
   "references": [
    {

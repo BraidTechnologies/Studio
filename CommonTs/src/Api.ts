@@ -9,7 +9,7 @@
 
 import axios from 'axios';
 
-import { IEnvironment } from "./IEnvironment";
+import { IEnvironment } from "./Interfaces/IEnvironment";
 
 /**
  * Represents an API class that interacts with the specified environment using the provided session key. 
