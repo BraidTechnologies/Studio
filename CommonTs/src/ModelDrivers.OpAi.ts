@@ -17,8 +17,8 @@ import axiosRetry from 'axios-retry';
 
 // Internal imports
 import { EModel, EModelProvider, IEmbeddingModelDriver, IChatModelDriver, IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams, ITextChunker} from './Interfaces/IModelDriver';
-import { EPromptPersona } from 'promptmanager/entry';
-import { getChatPersona } from "promptmanager/src/PromptPersonaFactory";
+import { EPromptPersona } from 'promptmanager/dist';
+import { getChatPersona } from "promptmanager/dist/src/PromptPersonaFactory";
 import { InvalidParameterError } from './Errors';
 
 import GPT4Tokenizer from 'gpt4-tokenizer';

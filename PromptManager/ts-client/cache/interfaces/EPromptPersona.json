@@ -1,0 +1,17 @@
+{
+    "EPromptPersona": {
+      "kDefault": "Default",
+      "kArticleSummariser": "ArticleSummariser",
+      "kArticleContextSummariser": "ArticleContextSummariser",
+      "kCodeSummariser": "CodeSummariser",
+      "kC4Diagrammer": "C4Diagrammer",
+      "kSurveySummariser": "SurveySummariser",
+      "kTestForSummariseFail": "TestForSummariseFail",
+      "kArticleClassifier": "ArticleClassifier",
+      "kThemeFinder": "ThemeFinder",
+      "kDeveloperAssistant": "DeveloperAssistant",
+      "kDeveloperImaginedAnswerGenerator": "DeveloperImaginedAnswerGenerator",
+      "kDeveloperQuestionGenerator": "DeveloperQuestionGenerator"
+    }
+  }
+  

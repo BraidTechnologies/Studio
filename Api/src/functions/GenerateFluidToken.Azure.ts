@@ -15,7 +15,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import { generateToken } from "@fluidframework/server-services-client";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
-import { IFluidTokenRequest } from "../../../CommonTs/src/Interfaces/Fluid";
+import { IFluidTokenRequest } from "commonts/src/Interfaces/Fluid";
 
 const key = process.env.FLUID_TENANT_KEY;
 const tenantId = "b9576484-5c2e-4613-bfdf-039948cdd521";

@@ -3,8 +3,8 @@
     "module": "commonjs",
     "target": "es6",
     "lib": ["ES2022", "DOM"],
-    "outDir": "dist",
-    "rootDir": "..",
+    "outDir": "./src",
+    "rootDir": ".",
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
@@ -22,5 +22,11 @@
   "references": [],
   "include": [
     "src/**/*.ts",
-    "src/**/*.json"]
+    "src/*.ts",
+    "src/*.*.ts",
+    "**/*.ts",
+    "**/*.json",
+    "src/**/*.json",
+    "src/Interfaces/index.ts",
+    "src/Types/index.ts"]
 }

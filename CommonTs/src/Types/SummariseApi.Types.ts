@@ -12,7 +12,7 @@
  * text summarisation operations.
  */
 
-import { EPromptPersona } from "promptmanager/entry";
+import { EPromptPersona } from "promptmanager/dist";
 /**
  * Defines the structure of a summarise request object.
  */

@@ -17,7 +17,7 @@
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
 
 
-import { IChatModelDriverParams } from "commonts/src/Interfaces/IModelDriver";
+import { IChatModelDriverParams } from "./IModelDriver";
 import { EPromptPersona, IPromptPersona , IStoredPrompt,
     GeneratedDefaultPromptNames,
     GeneratedBoxerPromptNames,
@@ -27,7 +27,7 @@ import { EPromptPersona, IPromptPersona , IStoredPrompt,
 
 import { allPromptsArray as allPrompts} from "../entry";
 import { PromptInMemoryRepository} from "./IPromptRepository";
-import { throwIfUndefined } from "commonts/src/Asserts";
+import { throwIfUndefined } from "./Asserts";
 
 import  ProcessPrompt  from "./helpers/ProcessPrompt";
 import  ProcessClassifierPrompt  from "./helpers/ProcessClassifierPrompt";
@@ -73,7 +73,7 @@ export function getChatPersona(persona: keyof typeof EPromptPersona, userPrompt:
       
       // Boxer Prompts   
       case EPromptPersona.kDeveloperAssistant:
-         prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames.eveloperAssistantPromptId);
+         prompt = promptRepository.getPrompt(GeneratedBoxerPromptNames.developerAssistantPromptId);
          return ProcessPrompt(prompt, wordTarget, userPrompt);
        
       case EPromptPersona.kDeveloperQuestionGenerator:

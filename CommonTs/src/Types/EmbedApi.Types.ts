@@ -9,7 +9,7 @@
 // Copyright (c) 2024, 2025 Braid Technologies Ltd
 // Definitions for the data elements of the Embed API
 
-import { EPromptPersona } from "promptmanager/entry";
+import { EPromptPersona } from "promptmanager/dist";
 
 /**
  * Interface for the embedding request object.

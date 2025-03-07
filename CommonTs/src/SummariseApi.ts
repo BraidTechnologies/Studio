@@ -17,7 +17,7 @@ import axios from 'axios';
 import { Api } from './Api';
 import { IEnvironment } from "./Interfaces/IEnvironment";
 import { ISummariseContextRequest, ISummariseRequest, ISummariseResponse } from './Types/SummariseApi.Types';
-import { EPromptPersona } from 'promptmanager/entry';
+import { EPromptPersona } from 'promptmanager/dist';
 
 /**
  * Class representing an API for summarising text.

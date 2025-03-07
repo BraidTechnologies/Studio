@@ -36,7 +36,7 @@ export enum EModelProvider {
    kDeepSeek = "DeepSeek"
 }
 
-import { EPromptPersona } from 'promptmanager/entry';
+import { EPromptPersona } from 'promptmanager/dist';
 /**
  * Enum representing the roles in a conversation with a model.
  * 

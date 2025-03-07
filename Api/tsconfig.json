@@ -8,14 +8,8 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node"]
   },
   "include": [
-     "./src/functions/*.ts"  
-  ],  
-  "references": [
-   {
-     "path": "../CommonTs"
-   }    
-]  
+     "./src/functions/*.ts"  ]
 }

@@ -15,15 +15,12 @@
     "resolveJsonModule": true,
     "types": ["node"],  
     "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "commonts/*": ["node_modules/commonts/dist/*"]
-    }
   },
   "references": [],
   "include": [
     "**/*.ts",
     "**/*.json",
     "src/**/*.ts",
-    "commonts/**/*.ts" ]
+    "cache/**/*.ts"
+  ]
 }

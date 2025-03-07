@@ -20,9 +20,9 @@
  * - 'func start' to run locally
  */
 
-import { getChatModelDriver, getDefaultChatModelDriver, getDefaultTextChunker } from "commonts/src/Interfaces/IModelFactory";
-import { EPromptPersona } from "promptmanager/entry";
-import { IModelConversationPrompt, EModel, EModelProvider } from "commonts/src/Interfaces/IModelDriver";
+import { getChatModelDriver, getDefaultChatModelDriver, getDefaultTextChunker } from "commonts/dist/src/Interfaces/IModelFactory";
+import { EPromptPersona } from "promptmanager";
+import { IModelConversationPrompt, EModel, EModelProvider } from "commonts/dist/src/Interfaces/IModelDriver";
 
 const chunker = getDefaultTextChunker();
 

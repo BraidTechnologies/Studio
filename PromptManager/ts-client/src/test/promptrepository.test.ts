@@ -18,7 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { PromptFileRepository, PromptInMemoryRepository, replacePromptPlaceholders } from '../IPromptRepository';
-import { throwIfUndefined } from 'commonts/src/Asserts';
+import { throwIfUndefined } from '../Asserts';
 import { getChatPersona } from '../PromptPersonaFactory';
 import { EPromptPersona, IStoredPrompt} from '../../entry';
 

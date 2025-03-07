@@ -20,9 +20,9 @@ let groq: Groq | null = null;
 
 // Internal imports
 import { EModel, EModelProvider, IChatModelDriver,IModelConversationElement, IModelConversationPrompt, EModelConversationRole, IChatModelDriverParams} from './Interfaces/IModelDriver';
-import { EPromptPersona } from 'promptmanager/entry';
+import { EPromptPersona } from 'promptmanager/dist';
 import { IOpenAiChatModelInit, IOpenAiTextChunkerInit, OpenAIChatElement } from './ModelDrivers.OpAi';
-import { getChatPersona } from "promptmanager/src/PromptPersonaFactory";
+import { getChatPersona } from "promptmanager/dist/src";
 import { ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions";
 
 

@@ -24,10 +24,10 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import { isSessionValid, sessionFailResponse, defaultErrorResponse } from "./Utility.Azure";
-import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "commonts/src/Types/TestForSummariseFailApi.Types";
-import { getDefaultChatModelDriver } from "commonts/src/Interfaces/IModelFactory";
-import { IModelConversationPrompt } from "commonts/src/Interfaces/IModelDriver";
-import { EPromptPersona } from "promptmanager/entry";
+import { ITestForSummariseFailRequest, ITestForSummariseFailResponse, ETestForSummariseFail } from "commonts/dist/src/Types/TestForSummariseFailApi.Types";
+import { getDefaultChatModelDriver } from "commonts/dist/src/Interfaces/IModelFactory";
+import { IModelConversationPrompt } from "commonts/dist/src/Interfaces/IModelDriver";
+import { EPromptPersona } from "promptmanager";
 
 const minimumTextLength = 64;
 
