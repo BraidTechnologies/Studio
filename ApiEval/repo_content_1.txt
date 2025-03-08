@@ -1,0 +1,982 @@
+****************************************
+classify_eval.py
+****************************************
+'''
+Test module for the text classification API endpoint.
+This module contains test cases for the text classification API endpoint,
+covering various scenarios including:
+- Basic classification of sports-related text
+- Classification consistency with similar phrasings
+- Differentiation between similar sports contexts
+
+This module contains integration tests for the /classify endpoint, which is responsible
+for categorizing input text into predefined classifications. The tests verify the 
+API's ability to correctly classify sports-related text and maintain consistent 
+classifications for similar content.
+
+Environment Variables Required:
+    - BRAID_SESSION_KEY: Authentication token for API access
+'''
+
+from CommonPy.src.request_utilities import request_timeout
+import os
+import pytest
+import requests
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import article_classifier_prompt_id
+
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
+
+# Construct the full URL to the /chunk endpoint
+API_ENDPOINT = f'{BASE_URL}/classify?session=' + SESSION_KEY
+
+@simple_test(
+    test_id="classify_001",
+    name="Basic Basketball Classification",
+    description="Test basic basketball-related text classification",
+    prompt_id=article_classifier_prompt_id  # article-classifier prompt
+)
+def test_basic_basketball_classification():
+    request_data = {'request': {
+        'text': 'Shooting hoops at the basketball court',
+        'classifications': ['basketball', 'soccer', 'tennis']
+    }}
+
+    response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    result = response.json()
+    assert result['classification'] == 'basketball'
+
+
+@mutation_test(
+    test_id="classify_002",
+    name="Similar Basketball Classification",
+    description="Test similar basketball text with different wording should yield same classification",
+    prompt_id=article_classifier_prompt_id  # article-classifier prompt
+)
+def test_similar_basketball_classification():
+    request_data = {'request': {
+        'text': 'Shooting hoops at the gym',
+        'classifications': ['basketball', 'soccer', 'tennis']
+    }}
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    result = response.json()
+    assert result['classification'] == 'basketball'
+
+
+@variant_test(
+    test_id="classify_003",
+    name="Different Sport Classification",
+    description="Test different sport text should yield different classification",
+    prompt_id=article_classifier_prompt_id  # article-classifier prompt
+)
+def test_different_sport_classification():
+    request_data = {'request': {
+        'text': 'Practicing free serves on the court',
+        'classifications': ['basketball', 'soccer', 'tennis']
+    }}
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    result = response.json()
+    assert result['classification'] == 'tennis'
+****************************************
+
+****************************************
+enriched_query_api_eval_test.py
+****************************************
+'''
+Test module for the enriched query API endpoint.
+
+This module contains a suite of test cases for the `/queryModelWithEnrichment` endpoint, 
+which processes enriched search queries within the context of a specific repository. 
+The tests are designed to ensure the endpoint functions correctly under various conditions and inputs. The key areas covered include:
+
+- **Valid Requests**: 
+    - Verifying that requests with all required parameters return successful responses.
+    - Ensuring the returned data structures match the expected format and content.
+
+- **Invalid Requests**: 
+    - Assessing the endpoint's response to missing or incorrect parameters.
+    - Checking for appropriate error messages and status codes when encountering malformed inputs.
+  
+- **Simple Evals**:
+    - Confirming that the API works for queries with a set of sample questions and template answers
+  
+The objective of this module is to evaluate the accuracy of the enriched query API, ensuring it meets the expected standards.
+
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-001-Question-with-0-many-related-documents.feature.md
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-003-Ingest-youtube-and-html.feature.md
+@link bdd/Boxer-005-System-is-evaluated-for-completeness.feature.md 
+
+'''
+
+# pylint: disable=inconsistent-quotes
+
+import os
+import copy
+import random
+import pytest
+import requests
+
+from CommonPy.src.enriched_query_api_types import IEnrichedQueryRequest, IEnrichedResponse, IGenerateQuestionRequest, IQuestionGenerationResponse
+from CommonPy.src.enriched_query_api import EnrichedQueryApi
+from CommonPy.src.cosine_similarity import cosine_similarity
+
+from CommonPy.src.embed_api import EmbeddingApi
+from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
+
+from CommonPy.src.request_utilities import request_timeout
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import developer_assistant_prompt_id
+
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
+
+# Construct the full URL to the /chunk endpoint
+EMBED_URL = f'{BASE_URL}/embed?session=' + SESSION_KEY
+
+PAGE_SUMMARY = 'The State of Open Source AI Book discusses the role of hardware in machine learning, specifically GPUs. GPUs are well-suited for AI computations due to their parallelization capabilities and specialized hardware for deep learning operations.'
+VIDEO_SUMMARY = 'The video discusses the patterns for augmenting language models with external context, including retrieval augmentation, chaining, and tool use. It explores the limitations of language models and the need for additional data and tools to enhance their performance. The video provides an overview of information retrieval techniques and explains how to make the most of the limited context window of language models.'
+ 
+
+def embed_text(text_to_embed: str) -> list[float]:
+
+    embed_api = EmbeddingApi()
+    embed_request = IEmbedRequest()
+    embed_request.text = text_to_embed
+    embed_response : IEmbedResponse = embed_api.embed(embed_request)
+
+    # Check if embedding is a list
+    return embed_response.embedding
+
+
+SAMPLE_RESPONSE = (
+    "LLMs use deep learning to generate human-like text. They are trained on vast "
+    "amounts of text data. When given a prompt, they predict the next word based "
+    "on patterns learned during training. This process repeats to generate "
+    "coherent and contextually relevant text."
+)
+
+SAMPLE_YOUTUBE_RESPONSE = (
+   "Welcome to CS25s introductory lecture on Transformers, a course created and taught at Stanford "
+   "in Fall 2021. This course focuses on deep learning models known as transformers, which have "
+   "revolutionized fields such as NLP, computer vision, and reinforcement learning. The lecture "
+   "introduces the instructors and covers the basics of transformer architecture, including "
+   "self-attention mechanisms, encoder-decoder structure, and their advantages and drawbacks."
+)
+
+sampleqas = [
+    {'q': "How do I integrate an LLM into my Python application?",
+     'a': "Use APIs like OpenAI's `openai` Python library or Hugging Face's `transformers`. "
+          "Install the library, authenticate, and call the model using provided methods. "
+          "Ensure you preprocess input and postprocess outputs for your application's context, "
+          "like formatting responses or handling incomplete answers."
+     },
+    {'q': "How can I fine-tune an LLM for my specific use case?",
+     'a': "Fine-tune using frameworks like Hugging Face. Prepare domain-specific data in a proper "
+          "format (e.g., text files or JSON). Use transfer learning to update the model weights "
+          "without training from scratch. For larger models, leverage pre-trained checkpoints and "
+          "cloud resources to minimize time and cost."
+     },
+    {'q': "How do I handle LLM input token limitations?",
+     'a': "Token limits vary per model. Truncate or summarize inputs exceeding limits, or divide "
+          "the input into chunks and process sequentially. Use tools like `tiktoken` to estimate "
+          "token counts before submission to avoid errors and ensure complete processing."
+     },
+    {'q': "How do I optimize LLM API calls for cost and performance?",
+     'a': "Minimize input size by sending only relevant text. Use smaller models when feasible. "
+          "Cache responses for repeated queries and consider batching requests where supported. "
+          "Monitor usage and adapt model configurations to balance cost and performance."
+     },
+    {'q': "How do I ensure data privacy when using an LLM?",
+     'a': "Avoid sending sensitive data to external APIs unless securely encrypted and anonymized. "
+          "For critical applications, consider deploying self-hosted LLMs using frameworks like "
+          "Hugging Face or OpenLLM to keep data within your control."
+     },
+    {'q': "How do I manage the unpredictability of LLM responses?",
+     'a': "Implement response validation. Use prompt engineering to guide model behavior and reduce "
+          "randomness with parameters like `temperature`. For structured outputs, provide clear "
+          "instructions in the prompt, such as 'Respond in JSON format.'"
+     },
+    {'q': "How do I handle multi-turn conversations in Python applications?",
+     'a': "Maintain context by appending previous conversation turns to the prompt. Ensure the "
+          "context does not exceed token limits. Tools like OpenAI's `ChatCompletion` API and "
+          "conversational transformers are optimized for such scenarios."
+     },
+    {'q': "How do I choose the right LLM for my application?",
+     'a': "Evaluate models based on requirements like accuracy, cost, latency, and token limits. "
+          "General-purpose models like GPT-4 are versatile, while domain-specific models (e.g., "
+          "legal, medical) may provide better performance for specialized tasks."
+     },
+    {'q': "How can I deploy an LLM at scale?",
+     'a': "Use containerization tools like Docker for packaging and orchestration platforms like "
+          "Kubernetes to scale. Cloud providers offer LLM-hosting services for scalable deployments. "
+          "Optimize latency by using edge deployments or regional hosting for geographically "
+          "distributed applications."
+     }]
+
+
+def valid_request_payload():
+    '''
+    Return a valid request payload. This function is used by both fixtures and test functions.
+    '''
+    shell = IEnrichedQueryRequest()
+    shell.repositoryId = "Boxer"
+    shell.similarityThreshold = 0.4
+    shell.maxCount = 1
+    shell.history = []
+    shell.question = "What is an LLM?"
+    shell.wordTarget = 50
+    return shell
+
+
+def invalid_request_payload():
+    '''
+    Return an invalid request payload. This function is used by both fixtures and test functions.
+    '''
+    shell = IEnrichedQueryRequest()
+    shell.repositoryId = "this_wont_work"
+    shell.similarityThreshold = 0.4
+    shell.maxCount = 1
+    shell.history = []
+    shell.question = "What is an LLM?"
+    shell.wordTarget = 50
+    return shell
+
+
+@pytest.fixture
+def valid_request_payload_fixture():
+    '''
+    Return a valid request payload
+    '''
+    return valid_request_payload()
+
+
+@pytest.fixture
+def invalid_request_payload_fixture():
+    '''
+    Return an invalid request payload
+    '''
+    return invalid_request_payload()
+
+
+# pylint: disable=redefined-outer-name
+def test_enriched_query_invalid_payload(invalid_request_payload_fixture: IEnrichedQueryRequest) -> IEnrichedResponse:
+    '''
+    Test the enriched query API with an invalid payload.
+    '''
+    enriched_response = None
+
+    try:
+        enriched_query_api = EnrichedQueryApi()
+        enriched_response = enriched_query_api.enriched_query(invalid_request_payload_fixture)
+        assert False, "Should not parse invalid response"
+    except RuntimeError:
+        assert True, "Correctly detected invalid response"
+   
+    return enriched_response
+
+
+@pytest.mark.skip(reason='Helper function, not a test')
+def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                expected_chunks: int,
+                                expected_embedding: list[float],
+                                threshold: float,
+                                is_youtube: bool = False,
+                                dont_care = True):
+    '''
+    Test the enriched query API with a successful response.
+    Makes a request to the API and checks the response, including checking cosine similarity against a target response,
+    then enumerating relevant chunks and also testing their cosine similarity
+    '''
+    has_youtube = False
+    has_non_youtube = False
+
+    try:
+       enriched_query_api = EnrichedQueryApi()
+       enriched_response = enriched_query_api.enriched_query(payload)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"API request failed: {e}")
+
+
+    assert enriched_response.answer is not None, "Response JSON does not contain 'answer'"
+    assert enriched_response.chunks is not None, "Response JSON does not contain 'chunks'"
+
+    assert isinstance(enriched_response.answer,
+                      str), "'answer' should be a string"
+    assert isinstance(enriched_response.chunks,
+                      list), "'chunks' should be a list"
+    assert len(enriched_response.chunks) == expected_chunks, f"Expected {
+        expected_chunks} chunks, got {len(enriched_response.chunks)}"
+
+    if expected_chunks > 0 and expected_embedding is not None:
+        embedded_answer = embed_text(enriched_response.answer)
+        assert cosine_similarity(
+            embedded_answer, expected_embedding) > threshold, "Answer is not similar to the expected response:" + enriched_response.answer
+
+        for chunk in enriched_response.chunks:
+            # pylint: disable=no-member
+            embedded_chunk = embed_text(chunk.chunk.summary)
+            if chunk.chunk.url.lower().find("youtube") != -1:
+                has_youtube = True
+            else:
+                has_non_youtube = True
+            assert cosine_similarity(
+                embedded_chunk, expected_embedding) > threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+
+    if not dont_care:
+      if is_youtube:
+        assert has_youtube, "Expected YouTube URL in the response"
+      else:
+        assert has_non_youtube, "Expected non-YouTube URL in the response"
+
+
+@simple_test(
+    test_id="enriched_001",
+    name="Simple Enriched Query Test",
+    description="Test the enriched query API with a simple function",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_simple_function():
+    '''
+    Test the enriched query API with a simple function.
+    '''
+    try:
+        embedded_target_response = embed_text(SAMPLE_RESPONSE)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.question = "How does an LLM work?"
+        test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Simple function test failed: {e}")
+
+
+@mutation_test(
+    test_id="enriched_002",
+    name="Enriched Query Variant Test",
+    description="Test the enriched query API with a simple function variant",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_simple_function_variant():
+    '''
+    Test the enriched query API with a simple function variant.
+    '''
+    try:
+        embedded_target_response = embed_text(SAMPLE_RESPONSE)        
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.question = "How do LLMs work?"
+        test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Simple function positive variant test failed: {e}")
+
+
+@simple_test(
+    test_id="enriched_003",
+    name="Enriched Query Negative Test",
+    description="Test the enriched query API with a simple function negative variant",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_simple_function_negative():
+    '''
+    Test the enriched query API with a simple function negative variant.
+    '''
+    try:
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.question = "How does a BLT work?"
+        test_enriched_query_success(valid_request, 0, None, 0.45)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Simple function test negative variant failed: {e}")
+
+
+@variant_test(
+    test_id="enriched_004",
+    name="Enriched Query Sample List Test",
+    description="Test the enriched query API with a list of primed questions and answers",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_simple_function_list():
+    '''
+    Test the enriched query API with a list of primed questions and answers.
+    '''
+
+    for qa in sampleqas:
+        try:
+            valid_request = copy.deepcopy(valid_request_payload())
+            valid_request.question = qa['q']
+            embedded_answer = embed_text(qa['a'])
+            test_enriched_query_success(valid_request, 1, embedded_answer, 0.3)
+        except requests.exceptions.RequestException as e:
+            pytest.fail(f"Function from sample list failed: {e}")
+
+@variant_test(
+    test_id="enriched_005",
+    name="Enriched Query YouTube Test",
+    description="Test the enriched query API with a simple function where we specifically want a youtube URL",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_from_youtube():
+    '''
+    Test the enriched query API with a simple function where we specifically want a youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(VIDEO_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + VIDEO_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.4, True, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Youtube test failed: {e}")
+
+@variant_test(
+    test_id="enriched_006",
+    name="Enriched Query HTML Test",
+    description="Test the enriched query API with a simple function where we specifically want a non-youtube URL",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_enriched_from_html():
+    '''
+    Test the enriched query API with a simple function where we specifically want a non-youtube URL
+    '''
+    try:
+        embedded_target_response = embed_text(PAGE_SUMMARY)
+        valid_request = copy.deepcopy(valid_request_payload())
+        valid_request.maxCount = 4
+        valid_request.question = 'Please summarise the following text in 50 words: ' + PAGE_SUMMARY
+
+        test_enriched_query_success(valid_request, 4, embedded_target_response, 0.4, False, False)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Html content test failed: {e}")
+
+@variant_test(
+    test_id="enriched_007",
+    name="Evaluate Coverage Test",
+    description="Test the enriched query API with a list of primed questions and answers for coverage",
+    prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+)
+def test_evaluate_coverage():
+    '''
+    Test the enriched query API with a list of primed questions and answers.
+    '''
+
+    valid_request = copy.deepcopy(valid_request_payload())
+    valid_request.similarityThreshold = 0.3
+    valid_request.question = 'What is an LLM?'
+    enriched_query_api = EnrichedQueryApi()
+    last_chunk_url = ''
+
+    relevances: list[float] = [];
+                
+    count = 50
+    for i in range(count):
+       try:
+          enriched_response = enriched_query_api.enriched_query(valid_request)
+
+          if (enriched_response.chunks is not None and len(enriched_response.chunks) > 0):
+             relevances.append(enriched_response.chunks[0].relevance)
+
+             #If we pull back the same chaunk as last time, try a new question
+             if last_chunk_url == enriched_response.chunks[0].chunk.url:
+                 valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']
+             else:
+                 last_chunk_url = enriched_response.chunks[0].chunk.url
+
+                 follow_up_question_request: IGenerateQuestionRequest = IGenerateQuestionRequest()
+                 follow_up_question_request.summary = enriched_response.chunks[0].chunk.summary
+                 follow_up_question_request.wordTarget = 15
+                 new_question : IQuestionGenerationResponse= enriched_query_api.generate_question(follow_up_question_request)
+                 valid_request.question = new_question.question
+          else:
+             print(f'No relevant document found for question: {valid_request.question}')
+             valid_request.question = sampleqas[random.randint(0, len(sampleqas)-1)]['q']             
+
+       except requests.exceptions.RequestException as e:
+          pytest.fail(f"API request failed: {e}")
+
+    
+    print(f'{len(relevances)} relevances, average: {sum(relevances) / len(relevances)}')
+
+    assert len(relevances) > count * 0.95, "Less than 95% of relevances found"
+    assert sum(relevances) / len(relevances) > 0.5, "Average relevance is less than 50%"
+
+
+if __name__ == '__main__':
+    pytest.main()
+****************************************
+
+****************************************
+find_theme_eval.py
+****************************************
+'''
+Test module for the theme finding API endpoint.
+This module contains test cases for the theme finding API endpoint,
+covering various scenarios including:
+- Basic theme detection for basketball content
+- Theme consistency with similar descriptions 
+- Theme differentiation between sports
+
+This module contains integration tests for the /findtheme endpoint, which is responsible
+for identifying the main theme of input text. The tests verify the API's ability to
+correctly identify sports themes and maintain consistent theme detection for similar content.
+
+Environment Variables Required:
+    - BRAID_SESSION_KEY: Authentication token for API access
+'''
+
+
+import os
+import pytest
+import requests  # assuming the API is accessed via HTTP
+
+from CommonPy.src.request_utilities import request_timeout
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import theme_finder_prompt_id
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
+
+# Construct the full URL to the /chunk endpoint
+API_ENDPOINT = f'{BASE_URL}/findtheme?session=' + SESSION_KEY
+
+
+@simple_test(
+    test_id="theme_001",
+    name="Basic Basketball Theme Test",
+    description="Test basic basketball description returns basketball theme",
+    prompt_id=theme_finder_prompt_id  # theme-finder prompt
+)
+def test_basic_basketball_theme():
+    '''Test basic basketball description returns basketball theme'''
+    request_data = {'request': {
+        'text': 'The player dribbled down the court and scored a basket from inside the three point line',
+        'length': 1
+    }}
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    response_data = response.json()
+    assert response_data['theme'].lower().find('basketball') != -1
+
+
+@mutation_test(
+    test_id="theme_002",
+    name="Alternative Basketball Theme Test",
+    description="Test different basketball description returns same basketball theme",
+    prompt_id=theme_finder_prompt_id  # theme-finder prompt
+)
+def test_alternative_basketball_description():
+    '''Test different basketball description returns same basketball theme'''
+    request_data = {'request': {
+        'text': 'The player dribbled down the court but missed the basket from inside the three point line',
+        'length': 1
+    }}
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    response_data = response.json()
+    assert response_data['theme'].lower().find('basketball') != -1
+
+
+@variant_test(
+    test_id="theme_003",
+    name="Football Different Theme Test",
+    description="Test football description returns different theme",
+    prompt_id=theme_finder_prompt_id  # theme-finder prompt
+)
+def test_football_different_theme():
+    '''Test football description returns different theme'''
+    request_data = {'request': {
+        'text': 'The quarterback threw a perfect touchdown pass to the receiver',
+        'length': 1
+    }}
+
+    response = requests.post(
+        API_ENDPOINT, json=request_data, timeout=request_timeout)
+    assert response.status_code == 200
+
+    response_data = response.json()
+    assert response_data['theme'].lower().find('football') != -1
+****************************************
+
+****************************************
+generate_follow_up_question_api_eval_test.py
+****************************************
+'''
+Test the generate_follow_up_question API
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-002-Suggest-related-content.feature.md
+'''
+
+import pytest
+
+from CommonPy.src.enriched_query_api import EnrichedQueryApi
+from CommonPy.src.enriched_query_api_types import IGenerateQuestionRequest, IQuestionGenerationResponse
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import developer_question_generator_prompt_id
+
+def suggest_content(request: IGenerateQuestionRequest) -> IQuestionGenerationResponse:
+    enriched_query_api = EnrichedQueryApi()
+    return enriched_query_api.generate_question(request)
+
+@pytest.fixture
+def suggest_content_fixture():
+    return suggest_content
+
+# pylint: disable=redefined-outer-name
+@simple_test(
+    test_id="follow_up_001",
+    name="Simple Follow-up Question Test",
+    description="Generate follow-up suggestions from a simple summary of how LLMs work",
+    prompt_id=developer_question_generator_prompt_id  # developer-question-generator prompt
+)
+def test_generate_follow_up_suggestions_simple_summary(suggest_content_fixture):
+    '''
+    Scenario: Generate follow-up suggestions from a simple summary of how LLMs work
+    '''
+    request = IGenerateQuestionRequest()
+    request.summary='A large language model (LLM) is an AI system that uses deep learning techniques to understand and generate human-like text based on the input it receives.'
+    request.wordTarget=50
+
+    response: IQuestionGenerationResponse = suggest_content_fixture(request)
+    assert response.question, 'The response should contain a follow-up question.'
+    assert 'LLM' in response.question, 'The question should be related to LLMs.'
+
+# pylint: disable=redefined-outer-name
+@mutation_test(
+    test_id="follow_up_002",
+    name="Varied Follow-up Question Test",
+    description="Generate follow-up suggestions from a slightly varied summary of how LLMs work",
+    prompt_id=developer_question_generator_prompt_id  # developer-question-generator prompt
+)
+def test_generate_follow_up_suggestions_slightly_varied_summary(suggest_content_fixture):
+    '''
+    Scenario: Generate follow-up suggestions from a slightly varied summary of how LLMs work
+    '''
+    request = IGenerateQuestionRequest()
+    request.summary = 'LLMs are AI models utilizing deep learning to comprehend and produce text similar to human language based on given inputs.'
+    request.wordTarget=50
+
+    response: IQuestionGenerationResponse = suggest_content_fixture(request)
+    assert response.question, 'The response should contain a follow-up question.'
+    assert 'LLM' in response.question, 'The question should be related to LLMs.'
+
+# pylint: disable=redefined-outer-name
+@variant_test(
+    test_id="follow_up_003",
+    name="Different Topic Follow-up Question Test",
+    description="Generate follow-up suggestions from a significantly varied summary on a different topic",
+    prompt_id=developer_question_generator_prompt_id  # developer-question-generator prompt
+)
+def test_generate_follow_up_suggestions_significantly_varied_summary(suggest_content_fixture):
+    '''
+    Scenario: Generate follow-up suggestions from a significantly varied summary on a different topic
+    '''
+    request = IGenerateQuestionRequest()
+    request.summary='An article about climate change discusses the impact of rising temperatures on global ecosystems and human societies.'
+    request.wordTarget=50
+
+    response: IQuestionGenerationResponse = suggest_content_fixture(request)
+    assert response.question, 'The response should contain a follow-up question.'
+    assert 'climate change' in response.question.lower() or 'global warming' in response.question.lower(), 'The question should be related to climate change.'
+****************************************
+
+****************************************
+ReadMe.Salon.md
+****************************************
+**classify_eval.py**
+
+This code is a test module for a text classification API endpoint. It contains integration tests for the `/classify` endpoint, focusing on sports-related text classification. The tests evaluate the API's accuracy in differentiating among predefined classifications, such as basketball, soccer, and tennis.
+
+Three main test functions are defined:
+
+1. `test_basic_basketball_classification()`: Ensures basic basketball-related text is correctly classified as "basketball".
+
+2. `test_similar_basketball_classification()`: Verifies that text with different wording but similar context to basketball is consistently classified as "basketball".
+
+3. `test_different_sport_classification()`: Checks that text related to a different sport, such as tennis, is correctly classified as "tennis".
+
+Important components: `simple_test`, `mutation_test`, `variant_test`, `request_timeout`, `article_classifier_prompt_id`, `BASE_URL`, `SESSION_KEY`, `API_ENDPOINT`.
+
+**enriched_query_api_eval_test.py**
+
+This module tests the enriched query API endpoint `/queryModelWithEnrichment`, validating its functionality under various conditions. Key aspects include checking valid and invalid requests, and the accuracy of responses for sample queries.
+
+Functions `valid_request_payload()` and `invalid_request_payload()` create valid and invalid payloads for testing. 
+
+The `test_enriched_query_invalid_payload` tests handling of invalid payloads, ensuring appropriate error responses.
+
+The function `test_enriched_query_success()` validates correct responses, including accuracy checks using cosine similarity.
+
+Specific tests (`test_enriched_simple_function`, `test_enriched_simple_function_variant`, `test_enriched_simple_function_negative`, `test_enriched_simple_function_list`, `test_enriched_from_youtube`, and `test_enriched_from_html`) verify correct functioning under different scenarios. 
+
+These tests use fixtures such as `valid_request_payload_fixture()` and `invalid_request_payload_fixture()` for payload preparation. 
+
+Important classes/functions in the module: `EnrichedQueryApi`, `valid_request_payload`, `invalid_request_payload`, `test_enriched_query_invalid_payload`, `test_enriched_query_success`, `test_enriched_simple_function`, `test_enriched_simple_function_variant`, `test_enriched_simple_function_negative`, `test_enriched_simple_function_list`, `test_enriched_from_youtube`, `test_enriched_from_html`.
+
+**find_theme_eval.py**
+
+This module tests the theme finding API endpoint using integration tests for the `/findtheme` endpoint, which identifies the main theme of input text. It verifies if the API correctly identifies sports themes and maintains consistency for similar content.
+
+Environment variables like `BRAID_SESSION_KEY` are required for authentication.
+
+Key tests:
+- `test_basic_basketball_theme`: Basic basketball description should be identified as basketball.
+- `test_alternative_basketball_description`: Variant basketball description should still be identified as basketball.
+- `test_football_different_theme`: A football description should return a football theme.
+
+Important classes/functions:
+- `simple_test`, `mutation_test`, `variant_test` (decorators).
+- `test_basic_basketball_theme`
+- `test_alternative_basketball_description`
+- `test_football_different_theme`
+
+**generate_follow_up_question_api_eval_test.py**
+
+The code tests the `generate_follow_up_question` API within three distinct scenarios using the `pytest` framework.
+
+The `suggest_content` function calls the `generate_question` method of the `EnrichedQueryApi` class, passing an `IGenerateQuestionRequest` object and returning an `IQuestionGenerationResponse` object.
+
+A pytest fixture named `suggest_content_fixture` is defined to call the `suggest_content` function.
+
+Three decorated test functions utilize `simple_test`, `mutation_test`, and `variant_test` decorators. These functions, `test_generate_follow_up_suggestions_simple_summary`, `test_generate_follow_up_suggestions_slightly_varied_summary`, and `test_generate_follow_up_suggestions_significantly_varied_summary`, each check that a valid follow-up question is generated based on different input summaries.
+
+Important classes/functions/modules: `suggest_content`, `suggest_content_fixture`, `EnrichedQueryApi`, `IGenerateQuestionRequest`, `IQuestionGenerationResponse`, `simple_test`, `mutation_test`, `variant_test`.
+
+**summarise_eval.py**
+
+This code module is an integration test suite for the `/summarize` API endpoint, focusing on sports event summarization. It verifies the endpoint's consistency, accuracy, and handling of different inputs.
+
+- `BASE_URL` and `API_ENDPOINT` configure the base and full URL for the API calls.
+- `test_basic_sports_summary` checks basic summarization of a simple sports event.
+- `test_same_game_different_wording` verifies that different wordings of the same event produce similar summaries.
+- `test_different_game_different_summary` ensures that a different game's summary is accurately reflected.
+
+The main functions are `test_basic_sports_summary`, `test_same_game_different_wording`, and `test_different_game_different_summary`. These tests use `simple_test`, `mutation_test`, and `variant_test` decorators for categorization.
+
+**summarise_filter_eval.py**
+
+This code tests the summarization functionality of an API.
+
+The `BASE_URL` for the API endpoints is configured using an environment variable for the session key.
+
+Three test functions (`test_basic_summary`, `test_different_summary`, `test_different_game_different_summary`) leverage decorators (`@simple_test`, `@mutation_test`, `@variant_test`) for running categorized tests.
+
+`test_basic_summary` ensures that the summarizer correctly summarizes a simple sports event HTML text.
+
+`test_different_summary` checks to see if reworded versions of the same event consistently produce similar summaries.
+
+`test_different_game_different_summary` verifies that empty or nonsensical HTML inputs lead to a failed summary and the failure is detectable via a second endpoint.
+
+Important functions/classes: `simple_test`, `mutation_test`, `variant_test`, and `requests.post`.
+
+Generated by Salon from Braid Technologies, 06/03/2025
+****************************************
+
+****************************************
+summarise_eval.py
+****************************************
+"""Test suite for the summarization API endpoint.
+
+This module contains integration tests that verify the behavior of the /summarize endpoint,
+focusing on sports event summarization capabilities. Tests check for consistency, accuracy,
+and appropriate handling of different input variations.
+"""
+
+import os
+import requests
+import pytest
+
+from CommonPy.src.request_utilities import request_timeout
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import article_summariser_prompt_id
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
+
+# Construct the full URL to the /chunk endpoint
+API_ENDPOINT = f'{BASE_URL}/summarize?session=' + SESSION_KEY
+
+
+@simple_test(
+    test_id="summarise_001",
+    name="Basic Sports Summary Test",
+    description="Test basic summarization with a simple sports event description",
+    prompt_id=article_summariser_prompt_id  # article-summariser prompt
+)
+def test_basic_sports_summary():
+    '''Test basic summarization with a simple sports event description'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': 'The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 30 points.',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+    assert result['summary'].find('Lakers defeated Warriors') != - \
+        1 or result['summary'].find('Lakers beat Warriors') != -1
+
+
+@mutation_test(
+    test_id="summarise_002",
+    name="Same Game Different Wording Test",
+    description="Test that different wording of the same event produces similar summary",
+    prompt_id=article_summariser_prompt_id  # article-summariser prompt
+)
+def test_same_game_different_wording():
+    '''Test that different wording of the same event produces similar summary'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': 'The Lakers defeated the Warriors 120-110 in a regular season NBA game. LeBron James scored 10 points.',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+    assert result['summary'].find('Lakers defeated Warriors') != - \
+        1 or result['summary'].find('Lakers beat Warriors') != -1
+
+
+@variant_test(
+    test_id="summarise_003",
+    name="Different Game Summary Test",
+    description="Test that a different game produces a different summary",
+    prompt_id=article_summariser_prompt_id  # article-summariser prompt
+)
+def test_different_game_different_summary():
+    '''Test that a different game produces a different summary'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': 'The Warriors defeated the Lakers 120-110 in a regular season NBA game. LeBron James scored 0 points.',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+    assert result['summary'].find('Warriors defeated Lakers') != - \
+        1 or result['summary'].find('Warriors beat Lakers') != -1
+****************************************
+
+****************************************
+summarise_filter_eval.py
+****************************************
+"""
+Test the summarise filter
+@link https://github.com/BraidTechnologies/Studio/blob/develop/bdd/Boxer-006-System-ignores-html.feature.md
+"""
+
+import os
+import requests
+import pytest
+
+from CommonPy.src.request_utilities import request_timeout
+from src.test_utils import simple_test, mutation_test, variant_test
+from CommonPy.src.generated_prompt_names import article_summariser_prompt_id, test_for_summmarise_failure_prompt_id
+
+# Configure the base URL for the API.
+BASE_URL = 'http://localhost:7071/api'
+SESSION_KEY = os.environ['BRAID_SESSION_KEY']
+
+# Construct the full URL to the /chunk endpoint
+SUMMARISE_API_ENDPOINT = f'{BASE_URL}/summarize?session=' + SESSION_KEY
+TEST_SUMMARISE_FAIL_API_ENDPOINT = f'{BASE_URL}/TestForSummariseFail?session=' + SESSION_KEY
+
+
+@simple_test(
+    test_id="summarise_filter_001",
+    name="Basic HTML Summary Test",
+    description="Test basic summarization with a simple sports event description in HTML",
+    prompt_id=article_summariser_prompt_id  # article-summariser prompt
+)
+def test_basic_summary():
+    '''Test basic summarization with a simple sports event description'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': '<body><p>In a tough game, the Lakers defeated the Warriors 120-110 in a regular season NBA game.</p><p>LeBron James scored 30 points.</p></body>',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(SUMMARISE_API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+    assert result['summary'].find('Lakers defeated Warriors') != - \
+        1 or result['summary'].find('Lakers beat Warriors') != -1
+
+
+@mutation_test(
+    test_id="summarise_filter_002",
+    name="Different HTML Summary Test",
+    description="Test that different wording of the same event in HTML produces similar summary",
+    prompt_id=article_summariser_prompt_id  # article-summariser prompt
+)
+def test_different_summary():
+    '''Test that different wording of the same event produces similar summary'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': '<body><p>In a tough game, the Lakers defeated the Warriors 120-110 in a regular season NBA game.</p><p>LeBron James scored 10 points.</p></body>',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(SUMMARISE_API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+    assert result['summary'].find('Lakers defeated Warriors') != - \
+        1 or result['summary'].find('Lakers beat Warriors') != -1
+
+
+@variant_test(
+    test_id="summarise_filter_003",
+    name="Empty HTML Summary Test",
+    description="Test that a no input produces a failed summary, and that we can detect the failure",
+    prompt_id=test_for_summmarise_failure_prompt_id  # test-for-summmarise-failure prompt
+)
+def test_different_game_different_summary():
+    '''Test that a no input produces a failed summary, and that we can detect the failure'''
+    request_data = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': '<body><a></a><a></a><a></a><a></a><a></a><a></a><a></a><p></p><p></p><p></p><p></p><p></p><p></p><p></p>  <p></p><p></p><p></p></body>',
+        'lengthInWords': 3
+    }}
+
+    response = requests.post(SUMMARISE_API_ENDPOINT, json=request_data, timeout=request_timeout)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert 'summary' in result
+
+    request_data_2 = {'request': {
+        'persona': 'ArticleSummariser',
+        'text': result['summary']
+    }}
+
+    response = requests.post(TEST_SUMMARISE_FAIL_API_ENDPOINT, json=request_data_2, timeout=request_timeout)
+    result = response.text
+
+    assert result.lower().find('failed') != -1
+****************************************

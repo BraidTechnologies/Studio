@@ -1,0 +1,308 @@
+****************************************
+junit_classify_eval.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="6.224" timestamp="2025-03-08T19:30:39.370125+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.classify_eval" name="test_basic_basketball_classification" time="3.102" /><testcase classname="ApiEval.evals.classify_eval" name="test_similar_basketball_classification" time="2.604" /><testcase classname="ApiEval.evals.classify_eval" name="test_different_sport_classification" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B09D085C0&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = 'af0c1ede-3e3a-4fbe-a361-bb8b4fc6d8c9', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************
+
+****************************************
+junit_enriched_query_api_eval_test.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="1" tests="9" time="30.215" timestamp="2025-03-08T19:30:45.762372+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_query_invalid_payload" time="3.999" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_query_success" time="0.000"><skipped type="pytest.skip" message="Helper function, not a test">C:\Code\Studio\ApiEval\evals\enriched_query_api_eval_test.py:195: Helper function, not a test</skipped></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function" time="11.509"><failure message="AssertionError: Chunk is not similar to the expected response:An LLM (Large Language Model) works by using neural networks to process and generate human-like text. It learns language patterns, grammar, and context from vast datasets. During inference, it predicts and generates relevant text based on input prompts using learned patterns.&#10;assert 0.3629315905518207 &gt; 0.45&#10; +  where 0.3629315905518207 = cosine_similarity([0.009594488, 0.020005813, -0.0319236, 0.029084755, 0.02881694, -0.0060124565, ...], [-0.016857278, 0.0011740375, -0.020983376, -0.016694406, 0.00026424325, 0.0023378956, ...])">@simple_test(
+        test_id="enriched_001",
+        name="Simple Enriched Query Test",
+        description="Test the enriched query API with a simple function",
+        prompt_id=developer_assistant_prompt_id  # developer-assistant prompt
+    )
+    def test_enriched_simple_function():
+        '''
+        Test the enriched query API with a simple function.
+        '''
+        try:
+            embedded_target_response = embed_text(SAMPLE_RESPONSE)
+            valid_request = copy.deepcopy(valid_request_payload())
+            valid_request.question = "How does an LLM work?"
+&gt;           test_enriched_query_success(valid_request, 1, embedded_target_response, 0.45)
+
+ApiEval\evals\enriched_query_api_eval_test.py:263: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = &lt;CommonPy.src.enriched_query_api_types.IEnrichedQueryRequest object at 0x0000017B0C20B560&gt;
+expected_chunks = 1
+expected_embedding = [-0.016857278, 0.0011740375, -0.020983376, -0.016694406, 0.00026424325, 0.0023378956, ...]
+threshold = 0.45, is_youtube = False, dont_care = True
+
+    @pytest.mark.skip(reason='Helper function, not a test')
+    def test_enriched_query_success(payload: IEnrichedQueryRequest,
+                                    expected_chunks: int,
+                                    expected_embedding: list[float],
+                                    threshold: float,
+                                    is_youtube: bool = False,
+                                    dont_care = True):
+        '''
+        Test the enriched query API with a successful response.
+        Makes a request to the API and checks the response, including checking cosine similarity against a target response,
+        then enumerating relevant chunks and also testing their cosine similarity
+        '''
+        has_youtube = False
+        has_non_youtube = False
+    
+        try:
+           enriched_query_api = EnrichedQueryApi()
+           enriched_response = enriched_query_api.enriched_query(payload)
+        except requests.exceptions.RequestException as e:
+            pytest.fail(f"API request failed: {e}")
+    
+    
+        assert enriched_response.answer is not None, "Response JSON does not contain 'answer'"
+        assert enriched_response.chunks is not None, "Response JSON does not contain 'chunks'"
+    
+        assert isinstance(enriched_response.answer,
+                          str), "'answer' should be a string"
+        assert isinstance(enriched_response.chunks,
+                          list), "'chunks' should be a list"
+        assert len(enriched_response.chunks) == expected_chunks, f"Expected {
+            expected_chunks} chunks, got {len(enriched_response.chunks)}"
+    
+        if expected_chunks &gt; 0 and expected_embedding is not None:
+            embedded_answer = embed_text(enriched_response.answer)
+            assert cosine_similarity(
+                embedded_answer, expected_embedding) &gt; threshold, "Answer is not similar to the expected response:" + enriched_response.answer
+    
+            for chunk in enriched_response.chunks:
+                # pylint: disable=no-member
+                embedded_chunk = embed_text(chunk.chunk.summary)
+                if chunk.chunk.url.lower().find("youtube") != -1:
+                    has_youtube = True
+                else:
+                    has_non_youtube = True
+&gt;               assert cosine_similarity(
+                    embedded_chunk, expected_embedding) &gt; threshold, "Chunk is not similar to the expected response:" + enriched_response.answer
+E               AssertionError: Chunk is not similar to the expected response:An LLM (Large Language Model) works by using neural networks to process and generate human-like text. It learns language patterns, grammar, and context from vast datasets. During inference, it predicts and generates relevant text based on input prompts using learned patterns.
+E               assert 0.3629315905518207 &gt; 0.45
+E                +  where 0.3629315905518207 = cosine_similarity([0.009594488, 0.020005813, -0.0319236, 0.029084755, 0.02881694, -0.0060124565, ...], [-0.016857278, 0.0011740375, -0.020983376, -0.016694406, 0.00026424325, 0.0023378956, ...])
+
+ApiEval\evals\enriched_query_api_eval_test.py:239: AssertionError</failure></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_variant" time="11.575" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_negative" time="3.038" /><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_simple_function_list" time="0.002"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0C9CE780&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '4761bf88-9329-4bd0-95ca-dc3bc70b6d4d', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_from_youtube" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0C9CF8F0&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '4761bf88-9329-4bd0-95ca-dc3bc70b6d4d', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_enriched_from_html" time="0.000"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0C95D670&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '4761bf88-9329-4bd0-95ca-dc3bc70b6d4d', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase><testcase classname="ApiEval.evals.enriched_query_api_eval_test" name="test_evaluate_coverage" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0C95E510&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '4761bf88-9329-4bd0-95ca-dc3bc70b6d4d', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************
+
+****************************************
+junit_find_theme_eval.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="4.863" timestamp="2025-03-08T19:31:16.087662+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.find_theme_eval" name="test_basic_basketball_theme" time="2.328" /><testcase classname="ApiEval.evals.find_theme_eval" name="test_alternative_basketball_description" time="2.472" /><testcase classname="ApiEval.evals.find_theme_eval" name="test_football_different_theme" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0C95FA70&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '3a34093d-95ea-4d46-8cf9-8f2f784d09da', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************
+
+****************************************
+junit_generate_follow_up_question_api_eval_test.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="5.106" timestamp="2025-03-08T19:31:21.018192+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_simple_summary" time="2.455" /><testcase classname="ApiEval.evals.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_slightly_varied_summary" time="2.594" /><testcase classname="ApiEval.evals.generate_follow_up_question_api_eval_test" name="test_generate_follow_up_suggestions_significantly_varied_summary" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {'suggest_content_fixture': &lt;function suggest_content at 0x0000017B0CA25EE0&gt;}
+logger = &lt;src.test_utils.TestLogger object at 0x0000017B0CA93B90&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '72213d46-9e6d-4604-a6bd-32d8e2f594f3', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************
+
+****************************************
+junit_summarise_eval.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="5.223" timestamp="2025-03-08T19:31:26.184553+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.summarise_eval" name="test_basic_sports_summary" time="2.493" /><testcase classname="ApiEval.evals.summarise_eval" name="test_same_game_different_wording" time="2.684" /><testcase classname="ApiEval.evals.summarise_eval" name="test_different_game_different_summary" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0CAC4DD0&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = '716c667d-9074-4d9a-8335-3194212eba90', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************
+
+****************************************
+junit_summarise_filter_eval.xml
+****************************************
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="5.366" timestamp="2025-03-08T19:31:31.470365+00:00" hostname="Braid-Daniel"><testcase classname="ApiEval.evals.summarise_filter_eval" name="test_basic_summary" time="2.602" /><testcase classname="ApiEval.evals.summarise_filter_eval" name="test_different_summary" time="2.715" /><testcase classname="ApiEval.evals.summarise_filter_eval" name="test_different_game_different_summary" time="0.001"><failure message="KeyError: 'system_tests'">args = (), kwargs = {}, logger = &lt;src.test_utils.TestLogger object at 0x0000017B0CAC7590&gt;
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = TestLogger()
+&gt;       logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+
+ApiEval\src\test_utils.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ApiEval\src\test_utils.py:40: in start_test
+    self.coverage_tracker.record_test(prompt_id, test_type)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;src.test_utils.PromptCoverageTracker object at 0x0000017B09C40E60&gt;
+prompt_id = 'cbfc5d7b-9404-451e-aec5-585a717d56a6', test_type = &lt;TestType.SYSTEM: 'system'&gt;
+
+    def record_test(self, prompt_id: str, test_type: TestType):
+        """Record that a test was run for a specific prompt."""
+        if prompt_id in self.coverage_data:
+&gt;           self.coverage_data[prompt_id][f"{test_type.value}_tests"] += 1
+E           KeyError: 'system_tests'
+
+ApiEval\src\test_utils.py:88: KeyError</failure></testcase></testsuite></testsuites>
+****************************************

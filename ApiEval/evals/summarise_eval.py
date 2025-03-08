@@ -10,7 +10,7 @@ import requests
 import pytest
 
 from CommonPy.src.request_utilities import request_timeout
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import article_summariser_prompt_id
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -66,7 +66,7 @@ def test_same_game_different_wording():
         1 or result['summary'].find('Lakers beat Warriors') != -1
 
 
-@system_test(
+@variant_test(
     test_id="summarise_003",
     name="Different Game Summary Test",
     description="Test that a different game produces a different summary",

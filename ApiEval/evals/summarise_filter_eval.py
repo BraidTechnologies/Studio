@@ -8,7 +8,7 @@ import requests
 import pytest
 
 from CommonPy.src.request_utilities import request_timeout
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import article_summariser_prompt_id, test_for_summmarise_failure_prompt_id
 
 # Configure the base URL for the API.
@@ -66,7 +66,7 @@ def test_different_summary():
         1 or result['summary'].find('Lakers beat Warriors') != -1
 
 
-@system_test(
+@variant_test(
     test_id="summarise_filter_003",
     name="Empty HTML Summary Test",
     description="Test that a no input produces a failed summary, and that we can detect the failure",

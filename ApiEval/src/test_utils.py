@@ -8,7 +8,7 @@ import functools
 class TestType(Enum):
     SIMPLE = "simple"
     MUTATION = "mutation"
-    SYSTEM = "system"
+    VARIANT = "variant"
 
 class TestLogger:
     coverage_tracker = None  # Class variable for coverage tracking
@@ -76,7 +76,7 @@ class PromptCoverageTracker:
                             self.coverage_data[prompt_id] = {
                                 "simple_tests": 0,
                                 "mutation_tests": 0,
-                                "system_tests": 0,
+                                "variant_tests": 0,
                                 "total_tests": 0,
                                 "last_tested": None,
                                 "test_history": []
@@ -121,7 +121,7 @@ class PromptCoverageTracker:
                 "test_type_distribution": {
                     "simple": sum(p["simple_tests"] for p in self.coverage_data.values()),
                     "mutation": sum(p["mutation_tests"] for p in self.coverage_data.values()),
-                    "system": sum(p["system_tests"] for p in self.coverage_data.values())
+                    "system": sum(p["variant_tests"] for p in self.coverage_data.values())
                 }
             }
         }
@@ -160,13 +160,13 @@ def mutation_test(test_id: str, name: str, description: str, prompt_id: Optional
         return wrapper
     return decorator
 
-def system_test(test_id: str, name: str, description: str, prompt_id: Optional[str] = None):
+def variant_test(test_id: str, name: str, description: str, prompt_id: Optional[str] = None):
     """Decorator for system/integration tests."""
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             logger = TestLogger()
-            logger.start_test(test_id, name, TestType.SYSTEM, description, prompt_id)
+            logger.start_test(test_id, name, TestType.VARIANT, description, prompt_id)
             try:
                 result = func(*args, **kwargs)
                 logger.end_test(True, {"result": str(result)})

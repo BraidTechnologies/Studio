@@ -19,7 +19,7 @@ from CommonPy.src.request_utilities import request_timeout
 import os
 import pytest
 import requests
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import article_classifier_prompt_id
 
 # Configure the base URL for the API.
@@ -68,7 +68,7 @@ def test_similar_basketball_classification():
     assert result['classification'] == 'basketball'
 
 
-@system_test(
+@variant_test(
     test_id="classify_003",
     name="Different Sport Classification",
     description="Test different sport text should yield different classification",

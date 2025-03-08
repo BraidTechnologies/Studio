@@ -7,7 +7,7 @@ import pytest
 
 from CommonPy.src.enriched_query_api import EnrichedQueryApi
 from CommonPy.src.enriched_query_api_types import IGenerateQuestionRequest, IQuestionGenerationResponse
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import developer_question_generator_prompt_id
 
 def suggest_content(request: IGenerateQuestionRequest) -> IQuestionGenerationResponse:
@@ -57,7 +57,7 @@ def test_generate_follow_up_suggestions_slightly_varied_summary(suggest_content_
     assert 'LLM' in response.question, 'The question should be related to LLMs.'
 
 # pylint: disable=redefined-outer-name
-@system_test(
+@variant_test(
     test_id="follow_up_003",
     name="Different Topic Follow-up Question Test",
     description="Generate follow-up suggestions from a significantly varied summary on a different topic",

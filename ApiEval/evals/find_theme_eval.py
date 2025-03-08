@@ -20,7 +20,7 @@ import pytest
 import requests  # assuming the API is accessed via HTTP
 
 from CommonPy.src.request_utilities import request_timeout
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import theme_finder_prompt_id
 # Configure the base URL for the API.
 BASE_URL = 'http://localhost:7071/api'
@@ -72,7 +72,7 @@ def test_alternative_basketball_description():
     assert response_data['theme'].lower().find('basketball') != -1
 
 
-@system_test(
+@variant_test(
     test_id="theme_003",
     name="Football Different Theme Test",
     description="Test football description returns different theme",

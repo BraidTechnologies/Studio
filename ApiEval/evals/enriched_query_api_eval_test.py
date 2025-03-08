@@ -40,7 +40,7 @@ from CommonPy.src.embed_api import EmbeddingApi
 from CommonPy.src.embed_api_types import IEmbedRequest, IEmbedResponse
 
 from CommonPy.src.request_utilities import request_timeout
-from src.test_utils import simple_test, mutation_test, system_test
+from src.test_utils import simple_test, mutation_test, variant_test
 from CommonPy.src.generated_prompt_names import developer_assistant_prompt_id
 
 # Configure the base URL for the API.
@@ -302,7 +302,7 @@ def test_enriched_simple_function_negative():
         pytest.fail(f"Simple function test negative variant failed: {e}")
 
 
-@system_test(
+@variant_test(
     test_id="enriched_004",
     name="Enriched Query Sample List Test",
     description="Test the enriched query API with a list of primed questions and answers",
@@ -322,7 +322,7 @@ def test_enriched_simple_function_list():
         except requests.exceptions.RequestException as e:
             pytest.fail(f"Function from sample list failed: {e}")
 
-@system_test(
+@variant_test(
     test_id="enriched_005",
     name="Enriched Query YouTube Test",
     description="Test the enriched query API with a simple function where we specifically want a youtube URL",
@@ -342,7 +342,7 @@ def test_enriched_from_youtube():
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Youtube test failed: {e}")
 
-@system_test(
+@variant_test(
     test_id="enriched_006",
     name="Enriched Query HTML Test",
     description="Test the enriched query API with a simple function where we specifically want a non-youtube URL",
@@ -362,7 +362,7 @@ def test_enriched_from_html():
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Html content test failed: {e}")
 
-@system_test(
+@variant_test(
     test_id="enriched_007",
     name="Evaluate Coverage Test",
     description="Test the enriched query API with a list of primed questions and answers for coverage",
