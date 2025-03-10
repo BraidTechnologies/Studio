@@ -67,3 +67,25 @@ class FileHandler:
         except IOError as e:
             print(f"Error writing to {candidate}: {e}")
             return None
+
+    def write_file(self, directory: Path, file_name: str, content: str) -> Path:
+        """
+        Write or overwrite a file without versioning.
+        
+        Args:
+            directory: The directory where the file should be written
+            file_name: The name of the file to write
+            content: The content to write to the file
+            
+        Returns:
+            Path to the written file or None if an error occurred
+        """
+        file_path = directory / file_name
+        try:
+            with open(file_path, 'w', encoding=self.encoding) as f:
+                f.write(content)
+            print(f"Wrote to {file_path}")
+            return file_path
+        except IOError as e:
+            print(f"Error writing to {file_path}: {e}")
+            return None

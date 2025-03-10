@@ -77,7 +77,7 @@ class ReadmeGenerator(DirectoryProcessor):
                 f"{datetime.now().strftime('%d/%m/%Y')}"
             )
             content = "\n".join(new_readme) + salon_comment
-            self.file_handler.write_file_version(directory_data.path, self.SUMMARY_FILENAME, content) # Use FileHandler to write files
+            self.file_handler.write_file(directory_data.path, self.SUMMARY_FILENAME, content)
             print(f"Created/Updated {readme_path}")   
             return readme_path
         return None
